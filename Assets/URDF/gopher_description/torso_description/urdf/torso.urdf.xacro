@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<robot name="robot_torso" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="load_torso_urdf" params="prefix parent">
+
+    <link name="${prefix}torso">
+      <inertial>
+        <origin rpy="0 0 0" xyz="0.0 0.0 0.4" />
+        <mass value="12.0" />
+        <inertia ixx="0.68" ixy="0.0" ixz="0.0" iyy="0.73" iyz="0.0" izz="0.13" />
+      </inertial>
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <geometry>
+          <mesh filename="package://gopher_description/torso_description/meshes/torso.dae" />
+        </geometry>
+        <material name="">
+          <color rgba="0.3 0.3 0.3 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <geometry>
+          <mesh filename="package://gopher_description/torso_description/meshes/torso.dae" />
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}torso_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="${prefix}torso"/>
+      <origin xyz="-0.0 0 0.36" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+    </joint>
+    
+    <link name="${prefix}main_cam_support">
+      <collision>
+        <origin rpy="0 0 0" xyz="0 0 0.01"/>
+        <geometry>
+          <box size="0.08 0.08 0.02"/>
+        </geometry>
+      </collision>
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 0.01"/>
+        <geometry>
+          <box size="0.08 0.08 0.02"/>
+        </geometry>
+        <material name="">
+          <color rgba="0.5 0.6 0.7 1"/>
+        </material>
+      </visual>
+      <inertial>
+        <origin rpy="0 0 0" xyz="0 0 0.01"/>
+        <mass value="0.36"/>
+        <inertia ixx="2.04e-04" ixy="0.0" ixz="0.0" iyy="2.04e-04" iyz="0.0" izz="3.84e-04"/>
+      </inertial>
+    </link>
+
+    <joint name="${prefix}main_cam_support_joint" type="fixed">
+      <parent link="${prefix}torso"/>
+      <child link="${prefix}main_cam_support"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.8"/>
+      <axis xyz="0 0 1"/>
+    </joint>
+
+    <link name="${prefix}main_cam_yaw_link">
+      <collision>
+        <origin rpy="0 0 0" xyz="0 0 0.03"/>
+        <geometry>
+          <box size="0.03 0.03 0.06"/>
+        </geometry>
+      </collision>
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 0.03"/>
+        <geometry>
+          <box size="0.03 0.03 0.06"/>
+        </geometry>
+        <material name="blue">
+          <color rgba="0 0 1 1"/>
+        </material>
+      </visual>
+      <inertial>
+        <origin rpy="0 0 0" xyz="0 0 0.03"/>
+        <mass value="0.36"/>
+        <inertia ixx="1.35e-01" ixy="0.0" ixz="0.0" iyy="1.35e-01" iyz="0.0" izz="5.4e-02"/>
+      </inertial>
+    </link>
+
+    <joint name="${prefix}main_cam_yaw_joint" type="revolute">
+      <parent link="${prefix}main_cam_support"/>
+      <child link="${prefix}main_cam_yaw_link"/>
+      <origin rpy="0 0 0" xyz="0 0 0.02"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="20" lower="-1.047" upper="1.047" velocity="1.0"/>
+    </joint>
+
+    <link name="${prefix}main_cam_pitch_link">
+      <collision>
+        <origin rpy="0 1.5708 0" xyz="0.03 0 0"/>
+        <geometry>
+          <box size="0.03 0.03 0.06"/>
+        </geometry>
+      </collision>
+      <visual>
+        <origin rpy="0 1.5708 0" xyz="0.03 0 0"/>
+        <geometry>
+          <box size="0.03 0.03 0.06"/>
+        </geometry>
+        <material name="red">
+          <color rgba="1 0 0 1"/>
+        </material>
+      </visual>
+      <inertial>
+        <origin rpy="0 1.5708 0" xyz="0.03 0 0"/>
+        <mass value="0.36"/>
+        <inertia ixx="1.35e-01" ixy="0.0" ixz="0.0" iyy="1.35e-01" iyz="0.0" izz="5.4e-02"/>
+      </inertial>
+    </link>
+
+    <joint name="${prefix}main_cam_pitch_joint" type="revolute">
+      <parent link="${prefix}main_cam_yaw_link"/>
+      <child link="${prefix}main_cam_pitch_link"/>
+      <origin rpy="1.5708 0 0" xyz="0.0 0.0 0.06"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="20" lower="-1.047" upper="1.047" velocity="1.0"/>
+    </joint>
+
+    </xacro:macro>
+</robot>

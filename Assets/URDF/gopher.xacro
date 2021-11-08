@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+
+<robot name="Gopher" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <!-- Arguments -->
+    <xacro:arg name="robot_name" default="gopher" />
+    <xacro:arg name="prefix" default="$(arg robot_name)/" />
+    <xacro:arg name="with_arms" default="true" />
+
+    <xacro:arg name="right_prefix" default="$(arg prefix)right_arm_" />
+    <xacro:arg name="left_prefix" default="$(arg prefix)left_arm_" />
+    <xacro:arg name="arm" default="gen3" />
+    <xacro:arg name="gripper" default="robotiq_2f_85" />
+    <xacro:arg name="dof" default="7" />
+    <xacro:arg name="vision" default="true" />
+    
+    <!-- Simulate in gazebo -->
+    <xacro:arg name="sim" default="false" />
+
+
+    <!-- Include files -->
+    <xacro:include filename="$(find gopher_description)/fetch_description/urdf/freight.urdf.xacro" />
+    <xacro:include filename="$(find gopher_description)/torso_description/urdf/torso.urdf.xacro" />
+    <xacro:include filename="$(find gopher_description)/realsense2_description/urdf/_d435.urdf.xacro" />
+    <xacro:include filename="$(find gopher_description)/kortex_description/arms/urdf/kortex_robot.xacro" />
+
+    <!-- Load urdf -->
+    <!-- base -->
+    <xacro:load_freight_urdf prefix="$(arg prefix)" />
+    <!-- torso -->
+    <xacro:load_torso_urdf prefix="$(arg prefix)" parent="$(arg prefix)chassis_link" />
+    <!-- main camera -->
+    <xacro:sensor_d435 prefix="$(arg prefix)main_cam_" parent="$(arg prefix)main_cam_pitch_link">
+        <origin xyz="0.06 -0.01 0.0" rpy="-1.57 0 0" />
+    </xacro:sensor_d435>
+    <!-- arms -->
+    <xacro:if value="$(arg with_arms)">
+        <xacro:load_kortex arm="$(arg arm)" gripper="$(arg gripper)" dof="$(arg dof)" 
+                           vision="$(arg vision)" sim="$(arg sim)" 
+                           prefix="$(arg right_prefix)" parent="$(arg prefix)torso">
+            <origin xyz="-0.03 -0.03 0.7" rpy="1.5708 0 0" />
+        </xacro:load_kortex>
+        <xacro:load_kortex arm="$(arg arm)" gripper="$(arg gripper)" dof="$(arg dof)" 
+                           vision="$(arg vision)" sim="$(arg sim)" 
+                           prefix="$(arg left_prefix)" parent="$(arg prefix)torso">
+            <origin xyz="-0.03 0.03 0.7" rpy="1.5708 0 3.1416" />
+        </xacro:load_kortex>
+    </xacro:if>
+    
+    
+    <!-- Load gazebo control pulgin -->
+    <xacro:if value="$(arg sim)">
+        <xacro:include filename="$(find gopher_description)/fetch_description/urdf/freight.gazebo.xacro" />
+        <xacro:include filename="$(find gopher_description)/torso_description/urdf/torso.gazebo.xacro" />
+        <xacro:include filename="$(find gopher_description)/realsense2_description/urdf/_d435.gazebo.xacro" />
+
+        <xacro:load_freight_gazebo prefix="$(arg prefix)" />
+        <xacro:load_torso_gazebo prefix="$(arg prefix)" />
+        <xacro:gazebo_d435 camera_name="main_cam" reference_link="$(arg prefix)main_cam_link" 
+                           frame_name="main_cam_color_optical_frame"
+                           fov="69.4" width="1080" height="720" update_rate="30" />
+
+        <xacro:if value="$(arg with_arms)">
+            <link name="$(arg left_prefix)cam_link" />
+            <link name="$(arg right_prefix)cam_link" />
+            <joint name="$(arg left_prefix)cam_joint" type="fixed">
+                <origin xyz="0 0 0" rpy="0 -1.5709 1.5709" />
+                <parent link="$(arg left_prefix)camera_link" />
+                <child link="$(arg left_prefix)cam_link" />
+            </joint>
+            <joint name="$(arg right_prefix)cam_joint" type="fixed">
+                <origin xyz="0 0 0" rpy="0 -1.5709 1.5709" />
+                <parent link="$(arg right_prefix)camera_link" />
+                <child link="$(arg right_prefix)cam_link" />
+            </joint>
+            <xacro:gazebo_d435 camera_name="left_arm_cam" reference_link="$(arg left_prefix)cam_link" 
+                            frame_name="left_arm_camera_color_frame"
+                            fov="69.4" width="1080" height="720" update_rate="30" /> 
+            <xacro:gazebo_d435 camera_name="right_arm_cam" reference_link="$(arg right_prefix)cam_link" 
+                            frame_name="right_arm_camera_color_frame"
+                            fov="69.4" width="1080" height="720" update_rate="30" />                                       
+            <!-- Wide FOV camera setting
+            fov="114" width="1.5555*1080" height="720" update_rate="30"
+            -->
+        </xacro:if>
+        
+        <gazebo>
+            <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+                <legacyModeNS>true</legacyModeNS>
+            </plugin>
+        </gazebo>
+    </xacro:if>
+
+</robot>

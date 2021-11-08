@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <asset>
+    <contributor>
+      <author>Blender User</author>
+      <authoring_tool>Blender 2.93.1 commit date:2021-06-22, commit time:05:57, hash:1b8d33b18c2f</authoring_tool>
+    </contributor>
+    <created>2021-07-19T21:25:55</created>
+    <modified>2021-07-19T21:25:55</modified>
+    <unit name="meter" meter="1"/>
+    <up_axis>Z_UP</up_axis>
+  </asset>
+  <library_effects>
+    <effect id="Glass-effect">
+      <profile_COMMON>
+        <technique sid="common">
+          <lambert>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <diffuse>
+              <color sid="diffuse">1 1 1 1</color>
+            </diffuse>
+            <index_of_refraction>
+              <float sid="ior">1.45</float>
+            </index_of_refraction>
+          </lambert>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Aluminium-effect">
+      <profile_COMMON>
+        <technique sid="common">
+          <lambert>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <diffuse>
+              <color sid="diffuse">0.5596044 0.5596044 0.5596044 1</color>
+            </diffuse>
+            <reflectivity>
+              <float sid="specular">1</float>
+            </reflectivity>
+            <index_of_refraction>
+              <float sid="ior">1.45</float>
+            </index_of_refraction>
+          </lambert>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="DoorWood-effect">
+      <profile_COMMON>
+        <newparam sid="DoorWood_jpg-surface">
+          <surface type="2D">
+            <init_from>DoorWood_jpg</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="DoorWood_jpg-sampler">
+          <sampler2D>
+            <source>DoorWood_jpg-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <lambert>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <diffuse>
+              <texture texture="DoorWood_jpg-sampler" texcoord="TV_Furniture-mesh-map-0"/>
+            </diffuse>
+            <index_of_refraction>
+              <float sid="ior">1.45</float>
+            </index_of_refraction>
+          </lambert>
+        </technique>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+  <library_images>
+    <image id="DoorWood_jpg" name="DoorWood_jpg">
+      <init_from>DoorWood.jpg</init_from>
+    </image>
+  </library_images>
+  <library_materials>
+    <material id="Glass-material" name="Glass">
+      <instance_effect url="#Glass-effect"/>
+    </material>
+    <material id="Aluminium-material" name="Aluminium">
+      <instance_effect url="#Aluminium-effect"/>
+    </material>
+    <material id="DoorWood-material" name="DoorWood">
+      <instance_effect url="#DoorWood-effect"/>
+    </material>
+  </library_materials>
+  <library_geometries>
+    <geometry id="TV_Furniture_002-mesh" name="TV Furniture.002">
+      <mesh>
+        <source id="TV_Furniture_002-mesh-positions">
+          <float_array id="TV_Furniture_002-mesh-positions-array" count="12">0.1662875 0.3790904 0.1529996 0.1670752 0.08635616 0.1529996 0.1670752 0.3790904 -0.1456024 0.1662875 0.08635616 -0.1456024</float_array>
+          <technique_common>
+            <accessor source="#TV_Furniture_002-mesh-positions-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="TV_Furniture_002-mesh-normals">
+          <float_array id="TV_Furniture_002-mesh-normals-array" count="12">1 3.05185e-5 -3.05185e-5 0.999993 0.002685666 -0.00262463 1 -3.05185e-5 3.05185e-5 0.999993 -0.002685666 0.00262463</float_array>
+          <technique_common>
+            <accessor source="#TV_Furniture_002-mesh-normals-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="TV_Furniture_002-mesh-map-0">
+          <float_array id="TV_Furniture_002-mesh-map-0-array" count="12">14.9301 14.6366 14.9301 0 0 0 14.9301 14.6366 0 0 0 14.6366</float_array>
+          <technique_common>
+            <accessor source="#TV_Furniture_002-mesh-map-0-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="TV_Furniture_002-mesh-vertices">
+          <input semantic="POSITION" source="#TV_Furniture_002-mesh-positions"/>
+        </vertices>
+        <triangles material="Glass-material" count="2">
+          <input semantic="VERTEX" source="#TV_Furniture_002-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#TV_Furniture_002-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#TV_Furniture_002-mesh-map-0" offset="2" set="0"/>
+          <p>0 0 0 1 1 1 3 2 2 0 0 3 3 2 4 2 3 5</p>
+        </triangles>
+      </mesh>
+    </geometry>
+    <geometry id="TV_Furniture_001-mesh" name="TV Furniture.001">
+      <mesh>
+        <source id="TV_Furniture_001-mesh-positions">
+          <float_array id="TV_Furniture_001-mesh-positions-array" count="54">0.1639989 0.1766415 0.1930502 0.1639989 0.2396345 0.1878007 0.1750214 0.17506 0.1982997 0.1750214 0.17506 0.1825516 0.1750214 0.2396345 0.1825516 0.1750214 0.2396345 0.1982997 0.1759618 0.1689072 0.182698 0.1757329 0.1731572 0.1746872 0.1757555 0.2417345 0.1748159 0.1757329 0.2474985 0.1827695 0.1757899 0.2474719 0.1981528 0.1757329 0.2416639 0.2061617 0.1786776 0.170949 0.201788 0.1786776 0.2444677 0.2027633 0.1786778 0.2440977 0.1777179 0.1786778 0.1718091 0.1780869 0.1761925 0.1687735 0.1983433 0.1763066 0.1723915 0.2052683</float_array>
+          <technique_common>
+            <accessor source="#TV_Furniture_001-mesh-positions-array" count="18" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="TV_Furniture_001-mesh-normals">
+          <float_array id="TV_Furniture_001-mesh-normals-array" count="54">-0.3142241 -0.9417263 -0.1200619 -0.8219703 0.5558134 0.1242431 -0.291242 -0.3633582 -0.884957 -0.9648019 -0.2624647 0.01641929 0.9947031 -0.09238076 -0.04507642 -0.8057234 0.5742306 -0.1451523 -0.8469378 -0.5100671 0.1500933 0.7776556 0.4723126 -0.4149369 -0.3349171 0.2728716 -0.9018712 0.7719027 0.490298 0.4046904 -0.3141021 0.9377894 -0.1479563 -0.3273786 0.9342818 0.1412119 0.5407651 0.6754757 -0.5013041 0.8510683 -0.4337439 -0.2958871 -0.6231647 -0.09592074 -0.7761862 -0.3020187 0.2614891 0.9167378 -0.3933899 -0.253796 0.883647 -0.83937 -0.3589365 0.4081945</float_array>
+          <technique_common>
+            <accessor source="#TV_Furniture_001-mesh-normals-array" count="18" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="TV_Furniture_001-mesh-map-0">
+          <float_array id="TV_Furniture_001-mesh-map-0-array" count="240">0.7874 0 0.7874 0 0.7874 0 0.7874 0 0 3.1496 0 0 3.1496 0 0 1.9685 0 0 3.1496 0 0 1.9685 0 0 0.7874 3.1496 0.7874 0 0.7874 3.1496 0 3.1496 0.7874 3.1496 0 3.1496 0 0 0.7874 0 0.7874 0 0.7874 3.1496 0.7874 3.1496 0.7874 3.1496 0 0 0.7874 0 0 0 0.7874 3.1496 0.7874 3.1496 0 3.1496 0.7874 0 0.7874 0 0.7874 3.1496 0 3.1496 0 3.1496 0 3.1496 0 3.1496 0 3.1496 0 0 0 3.1496 0.7874 3.1496 0.7874 3.1496 0 3.1496 0 3.1496 0.7874 3.1496 0 0 0 3.1496 0 3.1496 0 0 0 0 0 3.1496 0.7874 0 0.7874 0 0 0 0.7874 0 0.7874 0 0.7874 0 0.7874 0 0.7874 3.1496 0 3.1496 0.2624667 0 0.7874 1.9685 0 1.9685 3.1496 0 3.1496 1.9685 0 1.9685 0.262459 0 0.7874 1.9685 0 1.9685 3.1496 0 3.1496 1.9685 0 1.9685 0.7874 3.1496 0.7874 0 0.7874 0 0 0 0 3.1496 0 1.5748 0 3.1496 0.7874 3.1496 0.7874 3.1496 0.7874 3.1496 0.7874 3.1496 0.7874 3.1496 0.7874 3.1496 0.7874 0 0.7874 0 0.7874 3.1496 0.7874 3.1496 0.7874 0 0.7874 0 0.3937 0 0 0 0 3.1496 0 3.1496 0.7874 3.1496 0.7874 3.1496 0.7874 3.1496 0.7874 0 0 3.1496 0 3.1496 0 3.1496 0 0 0 1.5748 0 3.1496 0.3937 0 0 1.5748 0 0 0 0 0.3937 0 0.7874 0 0 0 0 3.1496 0 3.1496 0.7874 0 0.7874 0 0.3937 0 0 0 0 0 0 1.5748</float_array>
+          <technique_common>
+            <accessor source="#TV_Furniture_001-mesh-map-0-array" count="120" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="TV_Furniture_001-mesh-vertices">
+          <input semantic="POSITION" source="#TV_Furniture_001-mesh-positions"/>
+        </vertices>
+        <triangles material="Aluminium-material" count="40">
+          <input semantic="VERTEX" source="#TV_Furniture_001-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#TV_Furniture_001-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#TV_Furniture_001-mesh-map-0" offset="2" set="0"/>
+          <p>6 0 0 3 1 1 7 2 2 3 1 3 5 3 4 2 4 5 1 5 6 3 1 7 0 6 8 0 6 9 5 3 10 1 5 11 14 7 12 7 2 13 8 8 14 13 9 15 9 10 16 10 11 17 12 12 18 6 0 19 15 13 20 9 10 21 8 8 22 4 14 23 12 12 24 3 1 25 2 4 26 9 10 27 4 14 28 5 3 29 7 2 30 3 1 31 4 14 32 11 15 33 10 11 34 5 3 35 11 15 36 5 3 37 2 4 38 5 3 39 4 14 40 14 7 41 13 9 42 5 3 43 14 7 44 2 4 45 5 3 46 13 9 47 12 12 48 2 4 49 13 9 50 15 13 51 3 1 52 12 12 53 7 2 54 15 13 55 6 0 56 3 1 57 4 14 58 5 3 59 0 6 60 3 1 61 2 4 62 1 5 63 4 14 64 3 1 65 1 5 66 5 3 67 4 14 68 0 6 69 2 4 70 5 3 71 14 7 72 15 13 73 7 2 74 12 12 75 11 15 76 17 16 77 13 9 78 14 7 79 9 10 80 9 10 81 14 7 82 8 8 83 4 14 84 3 1 85 15 13 86 14 7 87 4 14 88 15 13 89 3 1 90 16 17 91 12 12 92 5 3 93 10 11 94 9 10 95 4 14 96 8 8 97 7 2 98 11 15 99 13 9 100 10 11 101 2 4 102 17 16 103 11 15 104 16 17 105 17 16 106 12 12 107 12 12 108 16 17 109 6 0 110 12 12 111 13 9 112 11 15 113 3 1 114 6 0 115 16 17 116 2 4 117 12 12 118 17 16 119</p>
+        </triangles>
+      </mesh>
+    </geometry>
+    <geometry id="TV_Furniture-mesh" name="TV Furniture">
+      <mesh>
+        <source id="TV_Furniture-mesh-positions">
+          <float_array id="TV_Furniture-mesh-positions-array" count="117">9.32798e-4 9.84238e-4 0.2345474 9.32798e-4 0.4650756 0.2345474 9.32798e-4 0.4650756 -0.230383 9.32798e-4 9.84238e-4 -0.230383 0.1662875 0.230917 0.2168996 0.1662875 0.2351456 -0.2127324 0.1662875 9.84238e-4 -0.230383 0.1662875 9.84238e-4 0.2345474 0.1662875 0.4650756 -0.230383 0.1662875 0.4536477 0.2168996 0.1662875 0.4536477 -0.2127324 0.1662875 0.01241391 -0.2127324 0.1662875 0.01241391 0.2168996 0.008807241 0.4536477 0.2168996 0.008807241 0.4536477 -0.2127324 0.008807241 0.01241391 0.2168996 0.008807241 0.2351456 0.2168996 0.008807241 0.01241391 -0.2127324 0.008807241 0.2393742 -0.2127324 0.008807241 0.2266884 -0.2127324 0.172704 8.19253e-4 0.2348735 0.172704 0.00190258 -0.2302429 0.1662875 0.3790904 0.1529996 0.172704 0.08635616 0.1525305 0.172704 0.08635616 0.2348716 0.172704 0.3790904 0.1536139 0.172704 0.37909 -0.1451341 0.1662875 0.3790904 -0.2302286 0.172704 0.08635616 -0.2306987 0.172704 0.08635598 -0.1462165 0.1670752 0.08635616 0.1529996 0.1670752 0.3790904 -0.1456024 0.1662875 0.08635616 -0.1456024 0.172704 0.378645 0.2348735 0.1662875 0.4641362 0.2348735 0.1727018 0.4646054 -0.2302429 0.172704 0.379729 -0.2302429 0.1739225 0.463522 0.2348735 0.1662875 0.2330299 -0.230383</float_array>
+          <technique_common>
+            <accessor source="#TV_Furniture-mesh-positions-array" count="39" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="TV_Furniture-mesh-normals">
+          <float_array id="TV_Furniture-mesh-normals-array" count="132">-0.5765357 0.5787025 0.5768104 -0.5773503 -0.5773503 -0.5773503 -0.5774012 -0.5774927 0.577157 0.3074812 -0.6761839 0.6695003 -0.5773503 0.5773503 -0.5773503 0.7071068 0 -0.7071068 0.3875342 -0.6637339 -0.6397457 0.3652831 0.6636683 -0.652773 0.3618061 0.6656562 0.6526854 0.9045396 -0.301503 -0.301503 0.9045396 -0.301503 0.301503 0.9045396 0.301503 0.301503 0.9045396 0.301503 -0.301503 0.5773503 -0.5773503 0.5773503 0.584819 0.5657442 0.5813092 0.5897282 -0.5619555 0.580023 0.5773503 0.5773503 -0.5773503 0.7090269 2.13636e-4 -0.7051814 0.6178048 -0.01376426 0.7862111 0.8433923 0.01657176 -0.5370427 0.5773503 -0.5773503 -0.5773503 0.5773503 0.5773503 0.5773503 0.8204857 -0.4151565 0.3929994 -0.001098692 -0.9999354 -0.01132267 0.9047433 -0.4259572 -9.15578e-5 0.7066334 -8.24009e-4 -0.7075795 0.6022936 0.5470846 0.581327 0.7058845 0.009369432 0.708265 -0.09174096 -0.1701755 0.9811341 0.8831842 0.06027466 0.4651374 0.9043805 0.02234017 -0.4261419 -6.40904e-4 -0.01947122 -0.9998102 0.6010893 0.5557062 -0.5743538 0.08041685 -0.009979605 -0.9967115 0.06030601 -0.6875681 0.7236114 0.6192387 -0.5334792 -0.5761453 0.5571057 -0.5833221 0.5910741 -0.05075478 2.22824e-5 0.9987112 0.6875398 1.83116e-4 -0.7261468 1 0 0 -0.04112637 -7.03486e-4 0.9991537 0.6924149 -4.88304e-4 0.7214995 1 0 0 1 0 0</float_array>
+          <technique_common>
+            <accessor source="#TV_Furniture-mesh-normals-array" count="44" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="TV_Furniture-mesh-map-0">
+          <float_array id="TV_Furniture-mesh-map-0-array" count="444">0.9691218 1.023654 -0.02769756 0.0250321 -0.02769756 1.023654 0.2414835 0.0250321 0.596648 1.023654 0.2414835 1.023654 0.2414835 0.9691218 0.596648 0.4707121 0.596648 -0.02769756 0.2414835 1.023654 0.596648 0.0250321 0.2414835 0.0250321 0.2414835 -0.02769756 0.596648 -0.02769756 0.596648 0.9671041 0.9445759 0.985748 0.9445759 0.06294369 0.9691218 0.0250321 -0.003147721 0.06294369 -0.003147721 0.985748 -0.02769756 1.023654 0.9671041 1.024354 -0.003147721 0.985748 0.9445759 0.985748 -0.02769756 0.0250321 0.9445759 0.06294369 -0.003147721 0.06294369 0.596648 0.985748 0.258397 0.06294369 0.596648 0.06294369 0.596648 0.9445759 0.258397 0.484339 0.258397 0.4570912 -0.003147721 0.985748 0.4570912 0.06294369 0.4752564 0.985748 0.9445759 0.06294369 0.4752564 0.985748 0.484339 0.06294369 0.258397 0.06294369 0.596648 0.985748 0.258397 0.985748 0.258397 0.484339 0.596648 0.4752564 0.258397 0.4570912 0.258397 0.985748 0.596648 0.06294369 0.258397 0.06294369 0.9691218 1.023654 0.9691218 0.0250321 -0.02769756 0.0250321 0.2414835 0.0250321 0.596648 0.0250321 0.596648 1.023654 0.2414835 -0.02769756 0.2414835 0.9691218 0.596648 -0.02769756 0.2414835 1.023654 0.596648 1.024354 0.596648 0.0250321 0.2414835 0.9691218 0.2414835 -0.02769756 0.596648 0.9671041 0.9691218 0.0250321 0.9671041 1.024354 0.9445759 0.985748 -0.02769756 1.023654 -0.02769756 0.0250321 -0.003147721 0.06294369 0.9671041 1.024354 -0.02769756 1.023654 -0.003147721 0.985748 0.4707121 0.0250321 0.9445759 0.06294369 -0.02769756 0.0250321 0.596648 0.985748 0.258397 0.985748 0.258397 0.06294369 0.258397 0.9445759 0.596648 0.9445759 0.258397 0.4752564 0.596648 0.9445759 0.596648 -0.003147721 0.258397 0.4752564 0.596648 -0.003147721 0.258397 -0.003147721 0.258397 0.4752564 0.258397 -0.003147721 0.596648 -0.003147721 0.258397 0.4570912 0.596648 -0.003147721 0.596648 0.9445759 0.258397 0.4570912 0.596648 0.9445759 0.258397 0.9445759 0.258397 0.484339 -0.003147721 0.985748 -0.003147721 0.06294369 0.4570912 0.06294369 0.9445759 0.06294369 0.9445759 0.985748 0.4752564 0.985748 0.258397 0.06294369 0.596648 0.06294369 0.596648 0.985748 0.258397 0.985748 0.596648 0.985748 0.596648 0.06294369 0.61043 0.84749 0.596648 0.2071318 0.61043 0.2058128 0.7858063 0.02533298 0.9657848 1.024354 0.783478 1.024354 0.596648 0.7844347 0.61043 0.1556723 0.61043 0.7844347 0.596648 0.8484978 0.61043 1.024354 0.61043 0.8498169 0.596648 0.1556723 0.61043 0.155672 0.61043 0.7844339 0.596648 0.02536368 0.61043 0.2081377 0.61043 0.02533298 0.7858063 0.02533298 0.9681119 0.02533298 0.9657848 1.024354 0.596648 0.02536368 0.61043 0.02533298 0.61043 1.024354 0.5983399 0.7844347 0.61043 0.155672 0.596648 0.1556723 0.5983399 0.1556723 0.61043 0.1556723 0.596648 0.7844347 0.596648 0.8484978 0.5983399 0.2071318 0.61043 0.8498169 0.6104254 0.02533298 0.596648 1.024354 0.6130474 1.024354 0.596648 0.0250321 0.596648 1.024354 0.6104254 0.02533298 0.61043 0.02533298 0.61043 1.024354 0.596648 1.023654 0.596648 0.0250321 0.61043 0.02533298 0.596648 1.023654 0.61043 0.1556723 0.596648 -0.02769756 0.61043 -0.02805191 0.596648 -0.02769756 0.61043 0.1556723 0.61043 -0.02572506 0.596648 0.7844347 0.61043 0.1556723 0.596648 -0.02769756 0.61043 0.7858063 0.596648 0.9691218 0.6104254 0.9681119 0.596648 0.7844347 0.596648 0.9691218 0.61043 0.7858063 0.596648 0.985748 0.258397 0.06294369 0.258397 0.985748 0.783478 1.024354 0.1556723 0.84749 0.7844347 0.8498169 0.7844339 0.2081377 0.1556723 0.02435398 0.7858063 0.02533298 0.596648 0.9671041 0.61043 0.783478 0.6130474 0.9657848 0.596648 -0.02769756 0.61043 0.1556723 0.596648 0.9671041 -0.02572506 0.02533298 0.1556723 1.02435 -0.02805191 1.024354 0 0 0 0 0 0 0.2414835 0.9691218 0.596648 0.9691218 0.596648 0.4707121 0.4707121 0.0250321 0.9691218 0.0250321 0.9445759 0.06294369 0.61043 0.84749 0.5983399 0.8484978 0.596648 0.2071318 0.5983399 0.7844347 0.61043 0.7844339 0.61043 0.155672 0.596648 0.7844347 0.61043 0.7858063 0.61043 0.1556723 0.596648 0.985748 0.596648 0.06294369 0.258397 0.06294369 0.783478 1.024354 0.1556723 1.02435 0.1556723 0.84749 0.7844339 0.2081377 0.155672 0.2058128 0.1556723 0.02435398 0.596648 0.9671041 0.61043 0.1556723 0.61043 0.783478 -0.02572506 0.02533298 0.1556723 0.02435398 0.1556723 1.02435 0 0 0 0 0 0</float_array>
+          <technique_common>
+            <accessor source="#TV_Furniture-mesh-map-0-array" count="222" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="TV_Furniture-mesh-vertices">
+          <input semantic="POSITION" source="#TV_Furniture-mesh-positions"/>
+        </vertices>
+        <triangles material="DoorWood-material" count="72">
+          <input semantic="VERTEX" source="#TV_Furniture-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#TV_Furniture-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#TV_Furniture-mesh-map-0" offset="2" set="0"/>
+          <p>1 0 0 3 1 1 0 2 2 3 1 3 7 3 4 0 2 5 2 4 6 38 5 7 6 6 8 1 0 9 8 7 10 2 4 11 0 2 12 7 3 13 34 8 14 9 9 15 10 10 16 8 7 17 11 11 18 12 12 19 7 3 20 34 8 21 12 12 22 9 9 23 6 6 24 10 10 25 11 11 26 9 9 27 14 13 28 10 10 29 10 10 30 18 14 31 19 15 32 15 16 33 19 15 34 16 17 35 14 13 36 16 17 37 18 14 38 19 15 39 4 18 40 16 17 41 18 14 42 5 19 43 19 15 44 16 17 45 5 19 46 18 14 47 1 0 48 2 4 49 3 1 50 3 1 51 6 6 52 7 3 53 3 1 54 2 4 55 6 6 56 1 0 57 34 8 58 8 7 59 1 0 60 0 2 61 34 8 62 8 7 63 34 8 64 9 9 65 7 3 66 6 6 67 11 11 68 34 8 69 7 3 70 12 12 71 38 5 72 10 10 73 6 6 74 9 9 75 13 20 76 14 13 77 13 20 78 9 9 79 16 17 80 9 9 81 12 12 82 16 17 83 12 12 84 15 16 85 16 17 86 17 21 87 11 11 88 19 15 89 11 11 90 10 10 91 19 15 92 10 10 93 14 13 94 18 14 95 15 16 96 17 21 97 19 15 98 14 13 99 13 20 100 16 17 101 19 15 102 5 19 103 4 18 104 16 17 105 4 18 106 5 19 107 23 22 108 32 23 109 29 24 110 36 25 111 37 26 112 33 27 113 22 28 114 23 22 115 25 29 116 22 28 117 33 27 118 25 29 119 32 23 120 29 24 121 26 30 122 27 31 123 26 30 124 36 25 125 36 25 126 35 32 127 37 26 128 27 31 129 36 25 130 33 27 131 31 33 132 29 24 133 32 23 134 30 34 135 23 22 136 22 28 137 22 28 138 31 33 139 25 29 140 35 32 141 34 8 142 37 26 143 8 7 144 34 8 145 35 32 146 21 35 147 20 36 148 7 3 149 6 6 150 21 35 151 7 3 152 24 37 153 7 37 154 20 37 155 6 6 156 28 38 157 21 35 158 27 31 159 28 38 160 6 6 161 36 25 162 8 7 163 35 32 164 27 31 165 8 7 166 36 25 167 12 12 168 17 21 169 15 16 170 33 27 171 23 22 172 25 29 173 26 39 174 28 39 175 36 39 176 34 8 177 33 27 178 37 26 179 7 40 180 24 40 181 34 40 182 21 35 183 24 41 184 20 36 185 2 4 189 8 7 190 38 5 191 38 5 192 8 7 193 10 10 194 23 22 195 30 34 196 32 23 197 31 33 198 26 30 199 29 24 200 27 31 201 36 25 202 28 38 203 12 12 204 11 11 205 17 21 206 33 27 207 24 41 208 23 22 209 26 42 210 29 42 211 28 42 212 34 8 213 24 41 214 33 27 215 21 35 216 28 38 217 24 41 218</p>
+        </triangles>
+        <triangles material="Glass-material" count="2">
+          <input semantic="VERTEX" source="#TV_Furniture-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#TV_Furniture-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#TV_Furniture-mesh-map-0" offset="2" set="0"/>
+          <p>26 42 186 23 42 187 29 42 188 26 43 219 25 43 220 23 43 221</p>
+        </triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_visual_scenes>
+    <visual_scene id="Scene" name="Scene">
+      <node id="Glass" name="Glass" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 -4.37114e-8 -1 0 0 1 -4.37114e-8 0 0 0 0 1</matrix>
+        <instance_geometry url="#TV_Furniture_002-mesh" name="Glass">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="Glass-material" target="#Glass-material">
+                <bind_vertex_input semantic="TV_Furniture-mesh-map-0" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="TV_Furniture_001" name="TV Furniture.001" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 -4.37114e-8 -1 0 0 1 -4.37114e-8 0 0 0 0 1</matrix>
+        <instance_geometry url="#TV_Furniture_001-mesh" name="TV Furniture.001">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="Aluminium-material" target="#Aluminium-material">
+                <bind_vertex_input semantic="TV_Furniture-mesh-map-0" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="TV_Furniture" name="TV Furniture" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 -4.37114e-8 -1 0 0 1 -4.37114e-8 0 0 0 0 1</matrix>
+        <instance_geometry url="#TV_Furniture-mesh" name="TV Furniture">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="DoorWood-material" target="#DoorWood-material">
+                <bind_vertex_input semantic="TV_Furniture-mesh-map-0" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+              <instance_material symbol="Aluminium-material" target="#Aluminium-material">
+                <bind_vertex_input semantic="TV_Furniture-mesh-map-0" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+              <instance_material symbol="Glass-material" target="#Glass-material">
+                <bind_vertex_input semantic="TV_Furniture-mesh-map-0" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#Scene"/>
+  </scene>
+</COLLADA>
