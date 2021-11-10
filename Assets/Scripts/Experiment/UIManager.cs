@@ -52,7 +52,7 @@ public class UIManager : MonoBehaviour
     public GameObject levelDropDown;
 
     // Data
-    private DataRecorder dataRecorder;
+    private GopherDataRecorder dataRecorder;
     public GameObject recordIconImage;
     
     // Others
@@ -72,6 +72,12 @@ public class UIManager : MonoBehaviour
     public GameObject NumberBoardAnswerField;
     public GameObject FinishUI;
 
+    void SetGameManager(GameManager gameManager)
+    {
+        this.gameManager = gameManager;
+        this.dataRecorder = gameManager.dataRecorder;
+    }
+
     void Start()
     {
         // Screen
@@ -87,9 +93,6 @@ public class UIManager : MonoBehaviour
 
         cameraDisplayRect = cameraDisplay.GetComponent<RectTransform>();
         surveyUI = new GameObject[] {surveyCameraUI, surveyTaskUI};
-
-        // Data
-        dataRecorder = gameManager.dataRecorder;
 
         // Text to update
         allStatePanelText = allStateDisplay.GetComponentInChildren<TextMeshProUGUI>();
@@ -172,6 +175,12 @@ public class UIManager : MonoBehaviour
     }
     private bool CheckArmPose()
     {
+        if (gameManager == null)
+        {
+            Debug.Log("Game manager doesn't exist!");
+            return false;
+        }
+        
         if (gameManager.dataRecorder != null && 
             gameManager.robot != null &&
             Mathf.Abs(dataRecorder.states[14] + 1.57f) < 0.02)
@@ -234,14 +243,11 @@ public class UIManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.Confined;
             Time.timeScale = 0f;
 
-            NumberBoardAnswerUI.SetActive(gameManager.taskIndex == 4);
+            if (gameManager != null)
+                NumberBoardAnswerUI.SetActive(gameManager.taskIndex == 4);
         }
 
         UIs[6].SetActive(!UIs[6].activeSelf);
-    }
-    public void Quit()
-    {
-        gameManager.Quit();
     }
 
     public void LoadRobotUI()
@@ -252,7 +258,7 @@ public class UIManager : MonoBehaviour
         cameraDisplay.GetComponent<RawImage>().texture = 
             gameManager.cameraRenderTextures[gameManager.cameraFOVIndex];
         cameraDisplay.SetActive(true);
-
+        
         if(gameManager.isExperimenting)
             UIs[3].SetActive(true);
         else
