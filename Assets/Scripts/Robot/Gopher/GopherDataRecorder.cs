@@ -43,6 +43,9 @@ public class GopherDataRecorder : MonoBehaviour
 
     public void setRobot(GameObject robot)
     {
+        if (robot == null)
+            return;
+
         // Get sensors
         this.robot = robot;
         stateReader = robot.GetComponentInChildren<StateReader>();
@@ -88,6 +91,7 @@ public class GopherDataRecorder : MonoBehaviour
         {
             states = new float[18];
             collisions = new string[2];
+            return;
         }
         
         // Record state

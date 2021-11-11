@@ -42,6 +42,10 @@ public class GopherManager : MonoBehaviour
         wideCameraRendertexture = new RenderTexture (2560, 1080, 24);
         cameraRenderTextures = new RenderTexture[] {regularCameraRendertexture, 
                                                     wideCameraRendertexture};
+        
+        // Data
+        dataRecorder = gameObject.AddComponent<GopherDataRecorder>();
+                                                    
         cameraDesiredFrameRate = 30; //TODO
     }
 

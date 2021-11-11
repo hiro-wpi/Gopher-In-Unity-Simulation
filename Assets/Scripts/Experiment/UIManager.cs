@@ -1,3 +1,4 @@
+using System.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,8 +10,7 @@ using TMPro;
 public class UIManager : MonoBehaviour
 {
     // Game manager
-    public GameManager gameManager;
-    public Experiment experiment;
+    public ExperimentManager experimentManager;
 
     // Screen
     public bool isWideScreen;
@@ -72,11 +72,12 @@ public class UIManager : MonoBehaviour
     public GameObject NumberBoardAnswerField;
     public GameObject FinishUI;
 
-    void SetGameManager(GameManager gameManager)
+    public void SetExperimentManager(ExperimentManager experimentManager)
     {
-        this.gameManager = gameManager;
-        this.dataRecorder = gameManager.dataRecorder;
+        this.experimentManager = experimentManager;
+        dataRecorder = experimentManager.gopherManager.dataRecorder;
     }
+
 
     void Start()
     {
@@ -169,20 +170,19 @@ public class UIManager : MonoBehaviour
         UIs[UIIndex].SetActive(true);
 
         yield return new WaitForSeconds(4.0f);
-        //yield return new WaitUntil(() => CheckArmPose() == true);
+        //yield return new WaitUntil(() => CheckArmPose() == true); //TODO
 
         LoadRobotUI();
     }
-    private bool CheckArmPose()
+    private bool CheckArmPose() // TODO
     {
-        if (gameManager == null)
+        if (experimentManager == null)
         {
             Debug.Log("Game manager doesn't exist!");
             return false;
         }
         
-        if (gameManager.dataRecorder != null && 
-            gameManager.robot != null &&
+        if (dataRecorder != null && experimentManager.robot != null &&
             Mathf.Abs(dataRecorder.states[14] + 1.57f) < 0.02)
             return true;
         return false;
@@ -197,21 +197,6 @@ public class UIManager : MonoBehaviour
         UIs[UIIndex].SetActive(true);
     }
 
-    public void StartExperiment()
-    {
-        Toggle[] toggles = experimentConditionUI.GetComponentsInChildren<Toggle>();
-        bool[] conditions = new bool[toggles.Length];
-
-        for (int i = 0; i < toggles.Length; ++i)
-            conditions[i] = toggles[i].isOn;
-        // Experiment condition
-        experiment.SetExperimentConditions(conditions);
-
-        // Start
-        experiment.StartExperiment();
-        StartCoroutine(LoadLoading());
-    }
-
     public void LoadNextLevelUI()
     {
         Time.timeScale = 0.0f;
@@ -223,10 +208,8 @@ public class UIManager : MonoBehaviour
     }
 
     public void LoadNextLevel()
-    {
+    { 
         Time.timeScale = 1.0f;
-
-        experiment.NextLevel();
         StartCoroutine(LoadLoading());
     }
 
@@ -239,12 +222,13 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            previousCursorState = Cursor.lockState;
+            
+            Cursor.lockState = Cursor.lockState;
             Cursor.lockState = CursorLockMode.Confined;
             Time.timeScale = 0f;
 
-            if (gameManager != null)
-                NumberBoardAnswerUI.SetActive(gameManager.taskIndex == 4);
+            if (experimentManager != null)
+                NumberBoardAnswerUI.SetActive(experimentManager.taskIndex == 4);
         }
 
         UIs[6].SetActive(!UIs[6].activeSelf);
@@ -256,10 +240,10 @@ public class UIManager : MonoBehaviour
             UI.SetActive(false);
 
         cameraDisplay.GetComponent<RawImage>().texture = 
-            gameManager.gopherManager.cameraRenderTextures[gameManager.gopherManager.cameraFOVIndex];
+            experimentManager.gopherManager.cameraRenderTextures[experimentManager.gopherManager.cameraFOVIndex];
         cameraDisplay.SetActive(true);
         
-        if(gameManager.isExperimenting)
+        if(experimentManager.isExperimenting)
             UIs[3].SetActive(true);
         else
             UIs[4].SetActive(true);
@@ -270,33 +254,118 @@ public class UIManager : MonoBehaviour
         else
             displaySize = resolution;
 
-        if (gameManager.gopherManager.cameraFOVIndex == 0)
+        if (experimentManager.gopherManager.cameraFOVIndex == 0)
         {
             UIIndex = 5;
             UIs[UIIndex].SetActive(true);
             cameraDisplayRect.sizeDelta = displaySize[0];
         }
-        else if (gameManager.gopherManager.cameraFOVIndex == 1)
+        else if (experimentManager.gopherManager.cameraFOVIndex == 1)
         {
             UIIndex = 4;
             cameraDisplayRect.sizeDelta = displaySize[1];
         }
     }
 
-    // experiment
+    // Scene
+    public void ChangeScene()
+    {
+        StartCoroutine(LoadLoading());
+        
+        int taskIndex = taskDropDown.GetComponent<TMP_Dropdown>().value;
+        int levelIndex = levelDropDown.GetComponent<TMP_Dropdown>().value;
+        experimentManager.LoadSceneWithRobot(taskIndex, levelIndex);
+    }
+
+    public void loadLevel()
+    {
+        Time.timeScale = 1f;
+        StartCoroutine(LoadLoading());
+    }
+
+    // Task
+    public int GetNumberBoardAnswer()
+    {
+        // Get answer from input field
+        TMP_InputField answerField = NumberBoardAnswerField.GetComponent<TMP_InputField>();
+        int answer;
+        int.TryParse(answerField.text, out answer);
+        
+        answerField.text = "";
+        return answer;
+    }
+
+    // Experiment
+    public void StartExperiment()
+    {
+        // Load loading scene
+        StartCoroutine(LoadLoading());
+    }
+
+    public (int[], int[], int[], int[]) GetExperimentCondition()
+    {
+        // Get current condition blocks
+        Toggle[] toggles = experimentConditionUI.GetComponentsInChildren<Toggle>();
+        bool[] conditions = new bool[toggles.Length];
+        for (int i = 0; i < toggles.Length; ++i)
+            conditions[i] = toggles[i].isOn;
+
+        // Task array
+        int[] runTask = ConditionToIndexArray(conditions.Skip(0).Take(5).ToArray());
+
+        // Camera configuration array
+        bool[] cameraConditionsTemp = new bool[4];
+        cameraConditionsTemp[0] = true;
+        conditions.Skip(5).Take(3).ToArray().CopyTo(cameraConditionsTemp, 1);
+
+        int[] runCamera = ConditionToIndexArray(cameraConditionsTemp);
+
+        // Level array
+        int[] runLevel = ConditionToIndexArray(conditions.Skip(8).Take(4).ToArray());
+
+        // Trial array
+        int[] runTrial = ConditionToIndexArray(conditions.Skip(12).Take(2).ToArray());
+
+        return (runTask, runLevel, runTrial, runCamera);
+    }
+
+    private int[] ConditionToIndexArray(bool[] conditions)
+    {
+        int[] indices;
+
+        // Initialization
+        int count = 0;
+        foreach (bool condition in conditions)
+            if (condition)
+                count += 1;
+        indices = new int[count];
+
+        // Fill
+        int i = 0;
+        for (int c = 0; c < conditions.Length; ++c)
+            if (conditions[c])
+            {
+                indices[i] = c;
+                i += 1;
+            }
+        return indices;
+    }
+
     public void LoadSurvey(int index)
     {
         if (surveyUI[index].activeSelf)
         {
             surveyUI[index].SetActive(false);
+            Time.timeScale = 1;
         }
         else
         {
             surveyUI[index].SetActive(true);
+            Time.timeScale = 0;
         }
     }
 
-    // additional
+    // Additional
     public void ChangeAllStateDisplay()
     {
         allStateDisplay.SetActive(!allStateDisplay.activeSelf);
@@ -325,43 +394,6 @@ public class UIManager : MonoBehaviour
         messagePanel.SetActive(false);
     }
 
-    // Scene
-    public void ChangeScene()
-    {
-        StartCoroutine(LoadLoading());
-        
-        int taskIndex = taskDropDown.GetComponent<TMP_Dropdown>().value;
-        int levelIndex = levelDropDown.GetComponent<TMP_Dropdown>().value;
-        gameManager.LoadSceneWithRobot(taskIndex, levelIndex);
-    }
-
-    public void Reload()
-    {
-        // In quit scene
-        Time.timeScale = 1f;
-
-        StartCoroutine(LoadLoading());
-
-        if (gameManager.isExperimenting)
-        {
-            experiment.ReloadLevel();
-        }
-        else
-        {
-            gameManager.ReloadScene();
-        }
-    }
-
-    // task
-    public void CheckNumberBoardAnswer()
-    {
-        TMP_InputField answerField = NumberBoardAnswerField.GetComponent<TMP_InputField>();
-        int answer;
-        if(int.TryParse(answerField.text, out answer))
-            gameManager.CheckNumberBoardAnswer(answer);
-        
-        answerField.text = "";
-    }
     
     // Update panels
     private void UpdateExperimentPanel()
@@ -369,18 +401,18 @@ public class UIManager : MonoBehaviour
         if (experimentUI.activeSelf)
         {
             int trialIndex = 1;
-            if (experiment.currentIndex < experiment.trialIndices.Length)
-                trialIndex = experiment.trialIndices[experiment.currentIndex] + 1;
+            if (experimentManager.experimentIndex < experimentManager.trialIndices.Length)
+                trialIndex = experimentManager.trialIndices[experimentManager.experimentIndex] + 1;
             experimentTaskPanelText.text =
                 "Task: \n" + 
-                "\t" + gameManager.tasks[gameManager.taskIndex] + "\n" + 
-                "Level: " + "\tLevel " + string.Format("{0:0}", gameManager.levelIndex) + "\n" +
+                "\t" + experimentManager.tasks[experimentManager.taskIndex] + "\n" + 
+                "Level: " + "\tLevel " + string.Format("{0:0}", experimentManager.levelIndex) + "\n" +
                 "Trial: " + "\tTrial " + string.Format("{0:0}", trialIndex) + "\n" +
-                "Speed: \t" + string.Format("{0:0.0}", gameManager.GetRobotSpeed());
+                "Speed: \t" + string.Format("{0:0.0}", experimentManager.GetRobotSpeed());
 
             if (experimentStatePanelText != null)
                 experimentStatePanelText.text =
-                    taskMessage[gameManager.taskIndex] +  "\n" + 
+                    taskMessage[experimentManager.taskIndex] +  "\n" + 
                     "Try not to hit any obstacles." + "\n\n" + 
                     "FPS: " + string.Format("{0:0}", FPS);
         }
@@ -391,9 +423,9 @@ public class UIManager : MonoBehaviour
         if (wideViewUI.activeSelf)
         {
             taskStatePanelText.text =
-                "Task: \n\t" + gameManager.tasks[gameManager.taskIndex] + "\n" + 
+                "Task: \n\t" + experimentManager.tasks[experimentManager.taskIndex] + "\n" + 
                 "\n" +
-                "Level: \t" + "level " + string.Format("{0:0}", gameManager.levelIndex+1) + "\n" +
+                "Level: \t" + "level " + string.Format("{0:0}", experimentManager.levelIndex+1) + "\n" +
                 "FPS: " + string.Format("{0:0}", FPS);
             robotStatePanelText.text = 
                 "x: \t\t" + string.Format("{0:0.00}", dataRecorder.states[1]) + "\n" +
