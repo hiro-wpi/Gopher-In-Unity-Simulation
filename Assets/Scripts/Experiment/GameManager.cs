@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 
     // Robot
     public GopherManager gopherManager;
-    private GameObject robot;
+    public GameObject robot;
 
     // Scene
     public string mainScene;
@@ -92,6 +92,7 @@ public class GameManager : MonoBehaviour
                              {new Vector3(-10f, 0f, -16.4f), new Vector3(-2.5f, 0f, -16.4f)}};
 
         // Temp - Simulate camera stream rate
+        // Should be replaced by GopherManager.CameraRender()
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 30;
     }
@@ -117,20 +118,21 @@ public class GameManager : MonoBehaviour
 
     public void ReloadScene()
     {
-        LoadSceneWithRobot(taskIndex, levelIndex, cameraIndex, cameraFOVIndex, cameraMobility);
+        LoadSceneWithRobot(taskIndex, levelIndex, gopherManager.cameraIndex, 
+                           gopherManager.cameraFOVIndex, gopherManager.cameraMobility);
     }
 
     public void LoadSceneWithRobot(int taskIndex, int levelIndex,
-                                   int cameraIndex=0, int cameraFOVIndex=0, int cameraMobility=0)
+                                   int cameraIndex=0, int cameraFOVIndex=0, bool cameraMobility=false)
     {   
         // Load task
         this.taskIndex = taskIndex;
         this.levelIndex = levelIndex;
 
         // Load camera configuration
-        this.cameraIndex = cameraIndex;
-        this.cameraFOVIndex = cameraFOVIndex;
-        this.cameraMobility = cameraMobility;
+        gopherManager.cameraIndex = cameraIndex;
+        gopherManager.cameraFOVIndex = cameraFOVIndex;
+        gopherManager.cameraMobility = cameraMobility;
 
         // Keep this manager
         DontDestroyOnLoad(gameObject);
@@ -337,17 +339,15 @@ public class GameManager : MonoBehaviour
 
     private void SpawnRobot()
     {
-        // Spawn
-        // robot
+        // Spawn robot
         int spawnIndex = taskIndex;
         if (taskIndex == 4)
             spawnIndex += levelIndex;
         if (levelIndex != 3)
-            robot = Instantiate(robotPrefab, spawnPositions[spawnIndex], 
-                                         Quaternion.Euler(spawnRotations[spawnIndex]));
+            gopherManager.SpawnRobot(0, spawnPositions[spawnIndex], spawnRotations[spawnIndex]);
         else
-            robot = Instantiate(robotPrefab2, spawnPositions[spawnIndex],
-                                         Quaternion.Euler(spawnRotations[spawnIndex]));
+            gopherManager.SpawnRobot(1, spawnPositions[spawnIndex], spawnRotations[spawnIndex]);
+
         // goal
         currentGoalPosition = goalPositions[taskIndex];
         if (taskIndex == 4)
@@ -358,16 +358,6 @@ public class GameManager : MonoBehaviour
             currentGoalPosition = goalPositions[taskIndex + 7];
         StopCoroutine(CheckGoalCoroutine());
         StartCoroutine(CheckGoalCoroutine());
-
-        // Get components
-        wheelController = robot.GetComponentInChildren<KeyboardWheelControl>();
-        cameras = robot.GetComponentsInChildren<Camera>();
-        cameraControllers = robot.GetComponentsInChildren<MouseCameraControl>();
-        // Initialization
-        InitializeCameras();
-        
-        // Set up data recorder
-        StartCoroutine(InitializeDataRecorder());
     }
 
     private IEnumerator CheckGoalCoroutine()
@@ -422,7 +412,7 @@ public class GameManager : MonoBehaviour
     {
         if (robot == null)
             return;
-        robot.ChangeCameraView();
+        gopherManager.ChangeCameraView();
     }
 
     // Camera - FOV
@@ -430,7 +420,7 @@ public class GameManager : MonoBehaviour
     {
         if (robot == null)
             return;
-        robot.ChangeCameraFOV();
+        gopherManager.ChangeCameraFOV();
 
         // Reload UI
         uIManager.LoadRobotUI();
@@ -441,7 +431,7 @@ public class GameManager : MonoBehaviour
     {
         if (robot == null)
             return;
-        robot.ChangeCameraMobility();
+        gopherManager.ChangeCameraMobility();
     }
  
     // Wheel
@@ -449,30 +439,38 @@ public class GameManager : MonoBehaviour
     {
         if (robot == null)
             return;
-        robot.ChangeRobotSpeed();
+        gopherManager.ChangeRobotSpeed();
+    }
+
+    public float GetRobotSpeed()
+    {
+        return gopherManager.GetRobotSpeed();
     }
 
     // Data
     public void Record(string filePrefix = "")
     {
         // Start or stop recording
-        if (!robot.isRecording)
+        if (!gopherManager.isRecording)
         {   
-            string indexNumber = filePrefix + "" +
-                                 cameraIndex + "." + cameraFOVIndex + "." +
-                                 (cameraControllers[cameraIndex].enabled? 1:0) +
+            string indexNumber = filePrefix + 
+                                 " " +
+                                 gopherManager.cameraIndex + "." + 
+                                 gopherManager.cameraFOVIndex + "." +
+                                 (gopherManager.cameraMobility? 1:0) +
                                  "; " +
                                  taskIndex + "." + levelIndex + 
-                                 " " + System.DateTime.Now.ToString("MM-dd HH-mm-ss");
-            robot.Record(indexNumber);
+                                 " " + 
+                                 System.DateTime.Now.ToString("MM-dd HH-mm-ss");
+            gopherManager.Record(indexNumber);
         }
         else
         {
-            robot.Record("");
+            gopherManager.Record("");
         }
 
         // Record Icon
-        uIManager.recordIconImage.SetActive(robot.isRecording);
+        uIManager.recordIconImage.SetActive(gopherManager.isRecording);
     }
 
     // System

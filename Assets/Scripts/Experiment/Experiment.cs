@@ -69,7 +69,7 @@ public class Experiment : MonoBehaviour
                                        levelIndices[currentIndex],
                                        cameraConfigurations[cameraConfigIndex, 0],
                                        cameraConfigurations[cameraConfigIndex, 1],
-                                       cameraConfigurations[cameraConfigIndex, 2]);
+                                       (cameraConfigurations[cameraConfigIndex, 2] == 1)? true:false);
 
         moved = false;
         StartCoroutine(StartRecordOnAction());
@@ -114,7 +114,7 @@ public class Experiment : MonoBehaviour
                                            levelIndices[currentIndex],
                                            cameraConfigurations[cameraConfigIndex, 0],
                                            cameraConfigurations[cameraConfigIndex, 1],
-                                           cameraConfigurations[cameraConfigIndex, 2]);
+                                           (cameraConfigurations[cameraConfigIndex, 2] == 1)? true:false);
             moved = false;
             StartCoroutine(StartRecordOnAction());
         }
@@ -129,10 +129,10 @@ public class Experiment : MonoBehaviour
         yield return new WaitUntil(() => moved == true);
         if (levelIndices[0] == 0)
             gameManager.Record((currentIndex-(testCamera.Length * testTask.Length)).ToString() + 
-                           "- " + trialIndices[currentIndex].ToString() + "; ");
+                           "- " + trialIndices[currentIndex].ToString() + ";");
         else
             gameManager.Record((currentIndex).ToString() + 
-                           "- " + trialIndices[currentIndex].ToString() + "; ");
+                           "- " + trialIndices[currentIndex].ToString() + ";");
     }
 
     private IEnumerator SurveyCoroutine(int type)
