@@ -28,7 +28,7 @@ public class GopherManager : MonoBehaviour
 
     // Robot state
     public GopherDataRecorder dataRecorder;
-    private bool isRecording;
+    public bool isRecording;
 
 
     void Start()

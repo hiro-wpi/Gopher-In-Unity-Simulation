@@ -256,7 +256,7 @@ public class UIManager : MonoBehaviour
             UI.SetActive(false);
 
         cameraDisplay.GetComponent<RawImage>().texture = 
-            gameManager.cameraRenderTextures[gameManager.cameraFOVIndex];
+            gameManager.gopherManager.cameraRenderTextures[gameManager.gopherManager.cameraFOVIndex];
         cameraDisplay.SetActive(true);
         
         if(gameManager.isExperimenting)
@@ -270,13 +270,13 @@ public class UIManager : MonoBehaviour
         else
             displaySize = resolution;
 
-        if (gameManager.cameraFOVIndex == 0)
+        if (gameManager.gopherManager.cameraFOVIndex == 0)
         {
             UIIndex = 5;
             UIs[UIIndex].SetActive(true);
             cameraDisplayRect.sizeDelta = displaySize[0];
         }
-        else if (gameManager.cameraFOVIndex == 1)
+        else if (gameManager.gopherManager.cameraFOVIndex == 1)
         {
             UIIndex = 4;
             cameraDisplayRect.sizeDelta = displaySize[1];
