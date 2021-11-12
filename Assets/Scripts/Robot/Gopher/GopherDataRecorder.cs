@@ -124,7 +124,8 @@ public class GopherDataRecorder : MonoBehaviour
 
         // write to csv
         if (isRecording)
-            stateTextWriter.WriteLine(ArrayToCSVLine<float>(states));
+            states[17] = states[17]; // temp
+            //stateTextWriter.WriteLine(ArrayToCSVLine<float>(states));
 
         // Record collision
         if (collisionStorageIndex != collisionReader.storageIndex)
@@ -137,10 +138,11 @@ public class GopherDataRecorder : MonoBehaviour
 
             // write to csv
             if (isRecording)
-                collisionTextWriter.WriteLine(string.Format("{0:0.000}", states[0]) + "," + 
+                states[17] = states[17];
+                /*collisionTextWriter.WriteLine(string.Format("{0:0.000}", states[0]) + "," + 
                                               string.Format("{0:0.000}", states[1]) + "," + 
                                               string.Format("{0:0.000}", states[2]) + "," + 
-                                              ArrayToCSVLine<string>(collisions));
+                                              ArrayToCSVLine<string>(collisions)); */
         }
     }
 
