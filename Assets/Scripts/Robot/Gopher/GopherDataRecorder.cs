@@ -176,6 +176,9 @@ public class GopherDataRecorder : MonoBehaviour
 
     private int GetLaserMinIndex(float[] ranges)
     {
+        if (ranges.Length == 0) 
+            return 0;
+
         // Get smallest index of laser scan
         float minValue = ranges.Min();
         int minIndex = ranges.ToList().IndexOf(minValue);

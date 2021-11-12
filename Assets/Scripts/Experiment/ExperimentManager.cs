@@ -266,6 +266,8 @@ public class ExperimentManager : MonoBehaviour
                            gopherManager.cameraIndex, 
                            gopherManager.cameraMobility,
                            gopherManager.cameraFOVIndex);
+        // Loading UI
+        uIManager.loadLevel();
     }
 
     public void ChangeScene()
@@ -284,8 +286,6 @@ public class ExperimentManager : MonoBehaviour
     /********** Task **********/
     private void GenerateHumanModel()
     {
-        Debug.Log(levelIndex);
-        Debug.Log(taskIndex);
         // level 0-2
         // The followed human for Human following
         if (levelIndex != 3 && taskIndex == 0)
@@ -323,7 +323,7 @@ public class ExperimentManager : MonoBehaviour
                 StartCoroutine(CharacterMoveOnAction(taskNurse, 0, humanTrajectory30));
             }
             // extra human as dynamic obstacles, same as previous level
-            if (taskIndex == 0 && taskIndex == 1)
+            if (taskIndex == 0 || taskIndex == 1)
             {
                 GameObject levelNurse = Instantiate(humanModelPrefab,
                                                     humanSpawnPose[taskIndex+1, 0],
@@ -371,16 +371,17 @@ public class ExperimentManager : MonoBehaviour
         }
     }
     private IEnumerator CharacterMoveOnAction(GameObject character, int index, Vector3[] trajectory)
-    {
-        if (character == null)
-            yield break; 
-            
+    {    
         // Wait for the robot to start
         float xLower = humanActionDectionRange[index, 0];
         float xUpper = humanActionDectionRange[index, 1];
         float zLower = humanActionDectionRange[index, 2];
         float zUpper = humanActionDectionRange[index, 3];
         yield return new WaitUntil(() => RobotInArea(xLower, xUpper, zLower, zUpper) == true);
+
+        // In case level changed before robot moves into zone
+        if (character == null)
+            yield break; 
 
         // Set trajectory
         CharacterWalk characterWalk = character.GetComponent<CharacterWalk>();
@@ -444,7 +445,8 @@ public class ExperimentManager : MonoBehaviour
                                      Quaternion.Euler(new Vector3(0f, yRotation, 0f)));
         }
     }
-    private void CheckNumberBoardAnswer()
+    
+    public void CheckNumberBoardAnswer()
     {
         uIManager.LoadQuitScene();
 
