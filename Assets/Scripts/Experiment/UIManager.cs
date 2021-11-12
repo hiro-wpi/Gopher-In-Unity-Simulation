@@ -268,13 +268,12 @@ public class UIManager : MonoBehaviour
     }
 
     // Scene
-    public void ChangeScene()
-    {
-        StartCoroutine(LoadLoading());
-        
+    public (int, int) GetSceneLoadingInfo()
+    {   
         int taskIndex = taskDropDown.GetComponent<TMP_Dropdown>().value;
         int levelIndex = levelDropDown.GetComponent<TMP_Dropdown>().value;
-        experimentManager.LoadSceneWithRobot(taskIndex, levelIndex);
+
+        return (taskIndex, levelIndex);
     }
 
     public void loadLevel()

@@ -169,16 +169,14 @@ public class ExperimentManager : MonoBehaviour
     // Camera - view point
     public void ChangeCameraView()
     {
-        if (robot == null)
-            return;
+        if (robot == null) return;
         gopherManager.ChangeCameraView();
     }
 
     // Camera - FOV
     public void ChangeCameraFOV()
     {
-        if (robot == null)
-            return;
+        if (robot == null) return;
         gopherManager.ChangeCameraFOV();
 
         // Reload UI
@@ -188,21 +186,20 @@ public class ExperimentManager : MonoBehaviour
     // Camera - mobility
     public void ChangeCameraMobility()
     {
-        if (robot == null)
-            return;
+        if (robot == null) return;
         gopherManager.ChangeCameraMobility();
     }
  
     // Wheel
     public void ChangeRobotSpeed()
     {
-        if (robot == null)
-            return;
+        if (robot == null) return;
         gopherManager.ChangeRobotSpeed();
     }
 
     public float GetRobotSpeed()
     {
+        if (robot == null) return -1f;
         return gopherManager.GetRobotSpeed();
     }
 
@@ -263,7 +260,7 @@ public class ExperimentManager : MonoBehaviour
         SpawnRobot();
     }
 
-    public void ReloadScene()
+    private void ReloadScene()
     {
         LoadSceneWithRobot(taskIndex, levelIndex, 
                            gopherManager.cameraIndex, 
@@ -271,10 +268,24 @@ public class ExperimentManager : MonoBehaviour
                            gopherManager.cameraFOVIndex);
     }
 
+    public void ChangeScene()
+    {
+        // Get current seleted scene
+        (taskIndex, levelIndex) = uIManager.GetSceneLoadingInfo();
+        LoadSceneWithRobot(taskIndex, levelIndex, 
+                           gopherManager.cameraIndex, 
+                           gopherManager.cameraMobility,
+                           gopherManager.cameraFOVIndex);
+        // Loading UI
+        uIManager.loadLevel();
+    }
+
 
     /********** Task **********/
     private void GenerateHumanModel()
     {
+        Debug.Log(levelIndex);
+        Debug.Log(taskIndex);
         // level 0-2
         // The followed human for Human following
         if (levelIndex != 3 && taskIndex == 0)
@@ -315,8 +326,8 @@ public class ExperimentManager : MonoBehaviour
             if (taskIndex == 0 && taskIndex == 1)
             {
                 GameObject levelNurse = Instantiate(humanModelPrefab,
-                                                    humanSpawnPose[taskIndex + 1, 0],
-                                                    Quaternion.Euler(humanSpawnPose[taskIndex + 1, 1]));
+                                                    humanSpawnPose[taskIndex+1, 0],
+                                                    Quaternion.Euler(humanSpawnPose[taskIndex+1, 1]));
                 StartCoroutine(CharacterMoveOnAction(levelNurse, taskIndex+1, GetRow<Vector3>(humanTrajectory, taskIndex+1)));
             }
             // extra human as dynamic obstacles, different from  previous level
@@ -469,6 +480,7 @@ public class ExperimentManager : MonoBehaviour
             gopherManager.SpawnRobot(0, spawnPositions[spawnIndex], spawnRotations[spawnIndex]);
         else
             gopherManager.SpawnRobot(1, spawnPositions[spawnIndex], spawnRotations[spawnIndex]);
+        robot = gopherManager.robot;
 
         // Set goal
         currentGoalPosition = goalPositions[taskIndex];
@@ -566,7 +578,7 @@ public class ExperimentManager : MonoBehaviour
                                 "- " + trialIndices[experimentIndex].ToString() + ";");
     }
 
-    public void ReloadLevel()
+    public void Reload()
     {
         if (isExperimenting)
             LoadLevel();

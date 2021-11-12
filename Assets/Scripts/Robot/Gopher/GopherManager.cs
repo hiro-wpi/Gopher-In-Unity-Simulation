@@ -24,7 +24,7 @@ public class GopherManager : MonoBehaviour
     private RenderTexture wideCameraRendertexture;
     public RenderTexture[] cameraRenderTextures;
     // framerate
-    public int cameraDesiredFrameRate; //TODO
+    public int cameraDesiredFrameRate = 30; //TODO
 
     // Robot state
     public GopherDataRecorder dataRecorder;
@@ -42,11 +42,6 @@ public class GopherManager : MonoBehaviour
         wideCameraRendertexture = new RenderTexture (2560, 1080, 24);
         cameraRenderTextures = new RenderTexture[] {regularCameraRendertexture, 
                                                     wideCameraRendertexture};
-        
-        // Data
-        dataRecorder = gameObject.AddComponent<GopherDataRecorder>();
-                                                    
-        cameraDesiredFrameRate = 30; //TODO
     }
 
     void Update()
@@ -152,7 +147,6 @@ public class GopherManager : MonoBehaviour
     public void ChangeRobotSpeed()
     {
         if (robot == null) return;
-
         // Change wheel controller maximum speed
         if (wheelController.speed == 1.5f)
         {

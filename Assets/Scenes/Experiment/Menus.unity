@@ -184,11 +184,15 @@ PrefabInstance:
       objectReference: {fileID: 598018753}
     - target: {fileID: 5175743611748537060, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ReloadLevel
+      value: Reload
       objectReference: {fileID: 0}
     - target: {fileID: 5175743611748537060, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: ExperimentManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175743611748537066, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5175743611820678698, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -196,7 +200,7 @@ PrefabInstance:
       objectReference: {fileID: 598018753}
     - target: {fileID: 5175743611820678698, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ReloadLevel
+      value: Reload
       objectReference: {fileID: 0}
     - target: {fileID: 5175743611820678698, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -250,6 +254,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: GameManager, Assembly-CSharp
       objectReference: {fileID: 0}
+    - target: {fileID: 5175743612042602395, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5175743612052538679, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -260,11 +268,43 @@ PrefabInstance:
       objectReference: {fileID: 598018753}
     - target: {fileID: 5175743612194535372, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ReloadLevel
+      value: ChangeScene
       objectReference: {fileID: 0}
     - target: {fileID: 5175743612194535372, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: ExperimentManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175743612276533840, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 598018753}
+    - target: {fileID: 5175743612276533840, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ChangeScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175743612276533840, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ExperimentManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175743612311689065, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175743612311689065, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175743612311689065, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175743612311689065, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175743612311689070, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5175743612430979980, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
       propertyPath: experiment
@@ -274,6 +314,10 @@ PrefabInstance:
       propertyPath: gameManager
       value: 
       objectReference: {fileID: 598018753}
+    - target: {fileID: 5175743612430979980, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
+      propertyPath: experimentManager
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5175743612505659021, guid: ba228af2a943a0c4f902ad923f13c41d, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -399,6 +443,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26ba111a4ab21ae0484d496ad94f70a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &474016625
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 474016627}
+  - component: {fileID: 474016626}
+  m_Layer: 0
+  m_Name: GopherDataRecorder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &474016626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474016625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a229b94a75204f5d9023e303e39921f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  robot: {fileID: 0}
+  updateRate: 10
+  states: []
+  collisions: []
+--- !u!4 &474016627
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474016625}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 3.4104338, y: -7.1809797, z: -2.9877558}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 730234800}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &598018753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -476,6 +567,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1739164870}
+  - {fileID: 474016627}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -529,6 +621,6 @@ MonoBehaviour:
   cameraMobility: 0
   cameraFOVIndex: 0
   cameraRenderTextures: []
-  cameraDesiredFrameRate: 0
-  dataRecorder: {fileID: 0}
+  cameraDesiredFrameRate: 30
+  dataRecorder: {fileID: 474016626}
   isRecording: 0
