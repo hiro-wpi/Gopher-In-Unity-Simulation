@@ -18,7 +18,7 @@ public class GopherDataRecorder : MonoBehaviour
 
     // Recorder
     public float updateRate = 10;
-    private bool isRecording;
+    public bool isRecording;
     public float[] states;
     public string[] collisions;
 
@@ -123,9 +123,11 @@ public class GopherDataRecorder : MonoBehaviour
         states[17] = -stateReader.velocities[21];
 
         // write to csv
+        
         if (isRecording)
-            states[17] = states[17]; // temp
-            //stateTextWriter.WriteLine(ArrayToCSVLine<float>(states));
+        {
+            stateTextWriter.WriteLine(ArrayToCSVLine<float>(states));  
+        }
 
         // Record collision
         if (collisionStorageIndex != collisionReader.storageIndex)
@@ -138,11 +140,12 @@ public class GopherDataRecorder : MonoBehaviour
 
             // write to csv
             if (isRecording)
-                states[17] = states[17];
-                /*collisionTextWriter.WriteLine(string.Format("{0:0.000}", states[0]) + "," + 
+            {
+                collisionTextWriter.WriteLine(string.Format("{0:0.000}", states[0]) + "," + 
                                               string.Format("{0:0.000}", states[1]) + "," + 
                                               string.Format("{0:0.000}", states[2]) + "," + 
-                                              ArrayToCSVLine<string>(collisions)); */
+                                              ArrayToCSVLine<string>(collisions));
+            }
         }
     }
 
@@ -152,9 +155,9 @@ public class GopherDataRecorder : MonoBehaviour
         // Add value to line
         foreach (T value in array)
         {
-            if (value is string)
+            if (value is float || value is int)
                 line += string.Format("{0:0.000}", value) + ",";
-            else if (value is int)
+            else if (value is string)
                 line += value + ",";
         }
         // Remove "," in the end

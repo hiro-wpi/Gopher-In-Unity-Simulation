@@ -222,8 +222,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            
-            Cursor.lockState = Cursor.lockState;
+            previousCursorState = Cursor.lockState;
             Cursor.lockState = CursorLockMode.Confined;
             Time.timeScale = 0f;
 
