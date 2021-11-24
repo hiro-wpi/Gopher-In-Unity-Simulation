@@ -42,13 +42,16 @@ public class GopherManager : MonoBehaviour
         wideCameraRendertexture = new RenderTexture (2560, 1080, 24);
         cameraRenderTextures = new RenderTexture[] {regularCameraRendertexture, 
                                                     wideCameraRendertexture};
+        // If a robot is given
+        if (robot != null)
+            InitializeRobot();                                     
     }
 
     void Update()
     {}
 
-    public void SpawnRobot(int prefabIndex,
-                           Vector3 position = new Vector3(), 
+    public void SpawnRobot(int prefabIndex = 0,
+                           Vector3 position = new Vector3(),
                            Vector3 rotation = new Vector3())
     {
         if (robot != null)
@@ -60,6 +63,12 @@ public class GopherManager : MonoBehaviour
         else
             robot = Instantiate(robotWithObjectPrefab, position, Quaternion.Euler(rotation));
 
+        // Initialization
+        InitializeRobot();
+    }
+
+    private void InitializeRobot()
+    {
         // Get components
         // wheel
         wheelController = robot.GetComponentInChildren<KeyboardWheelControl>();
