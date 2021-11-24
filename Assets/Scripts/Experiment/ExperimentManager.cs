@@ -14,8 +14,6 @@ public class ExperimentManager : MonoBehaviour
     private GopherManager[] gopherManagers; // Future work - Multi-robot
     public GopherManager gopherManager;
     public GameObject robot;
-    // data
-    private bool isRecording = false;
 
     // Scene
     public string mainScene;
@@ -266,6 +264,8 @@ public class ExperimentManager : MonoBehaviour
                            gopherManager.cameraIndex, 
                            gopherManager.cameraMobility,
                            gopherManager.cameraFOVIndex);
+        if (gopherManager.isRecording)
+            Record();
         // Loading UI
         uIManager.loadLevel();
     }
@@ -461,7 +461,7 @@ public class ExperimentManager : MonoBehaviour
             else
             {
                 // Level up
-                if(isRecording)
+                if(gopherManager.isRecording)
                     Record();
                 uIManager.LoadNextLevelUI();
             }
@@ -512,7 +512,7 @@ public class ExperimentManager : MonoBehaviour
             else
             {
                 // Level up
-                if(isRecording)
+                if(gopherManager.isRecording)
                     Record();
                 uIManager.LoadNextLevelUI();
             }
@@ -562,7 +562,7 @@ public class ExperimentManager : MonoBehaviour
         
         // Stop previous recording
         StopCoroutine(StartRecordOnAction());
-        if (isRecording)
+        if (gopherManager.isRecording)
             Record();
         // Record
         trialStarted = false;
