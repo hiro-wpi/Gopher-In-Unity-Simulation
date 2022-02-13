@@ -10,12 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7696023401025187064}
   - component: {fileID: 8412888653030167162}
-  - component: {fileID: 437699982249212045}
-  - component: {fileID: 230225814559004415}
-  - component: {fileID: 6344333413333192636}
-  - component: {fileID: 2880488365326037313}
-  - component: {fileID: 8877715534772269982}
-  - component: {fileID: 6778018284928641635}
   m_Layer: 0
   m_Name: ROSConnectionPrefab
   m_TagString: Untagged
@@ -49,82 +43,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7acef0b79454c9b4dae3f8139bc4ba77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_RosIPAddress: 192.168.0.175
+  m_RosIPAddress: 192.168.1.124
   m_RosPort: 10000
   m_ConnectOnStart: 0
   m_KeepaliveTime: 1
   m_NetworkTimeoutSeconds: 2
   m_SleepTimeSeconds: 0.01
   m_ShowHUD: 1
---- !u!114 &437699982249212045
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4087217601374119986}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e22dfed9de9543ce99aa7e1ab505588, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &230225814559004415
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4087217601374119986}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e22dfed9de9543ce99aa7e1ab505588, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6344333413333192636
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4087217601374119986}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e22dfed9de9543ce99aa7e1ab505588, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2880488365326037313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4087217601374119986}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e22dfed9de9543ce99aa7e1ab505588, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &8877715534772269982
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4087217601374119986}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e22dfed9de9543ce99aa7e1ab505588, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6778018284928641635
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4087217601374119986}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e22dfed9de9543ce99aa7e1ab505588, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_TFTopics:
+  - /tf
+  listenForTFMessages: 1
