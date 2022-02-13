@@ -26,7 +26,7 @@ public class CameraControlSubscriber : MonoBehaviour
     void Start()
     {
         // Get ROS connection static instance
-        ros = ROSConnection.instance;
+        ros = ROSConnection.GetOrCreateInstance();
 
         // Get joints
         articulationChain = cameraJoints.GetComponentsInChildren<ArticulationBody>();

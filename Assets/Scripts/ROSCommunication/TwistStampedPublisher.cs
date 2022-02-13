@@ -36,7 +36,7 @@ public class TwistStampedPublisher : MonoBehaviour
     void Start()
     {
         // Get ROS connection static instance
-        ros = ROSConnection.instance;
+        ros = ROSConnection.GetOrCreateInstance();
 
         previousPosition = publishedTransform.position;
         previousRotation = publishedTransform.rotation.eulerAngles;
@@ -76,6 +76,6 @@ public class TwistStampedPublisher : MonoBehaviour
         twistStamped.twist.linear = linearVelocity.To<FLU>();
         twistStamped.twist.angular = angularVelocity.To<FLU>();
         
-        ros.Send(twistStampedTopicName, twistStamped);
+        ros.Publish(twistStampedTopicName, twistStamped);
     }
 }

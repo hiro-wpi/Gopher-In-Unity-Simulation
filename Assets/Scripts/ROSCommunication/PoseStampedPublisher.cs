@@ -28,7 +28,7 @@ public class PoseStampedPublisher : MonoBehaviour
     void Start()
     {
         // Get ROS connection static instance
-        ros = ROSConnection.instance;
+        ros = ROSConnection.GetOrCreateInstance();
 
         // Initialize message
         poseStamped = new PoseStampedMsg
@@ -49,6 +49,6 @@ public class PoseStampedPublisher : MonoBehaviour
         poseStamped.pose.position = publishedTransform.position.To<FLU>();
         poseStamped.pose.orientation = publishedTransform.rotation.To<FLU>();
 
-        ros.Send(poseStampedTopicName, poseStamped);
+        ros.Publish(poseStampedTopicName, poseStamped);
     }
 }

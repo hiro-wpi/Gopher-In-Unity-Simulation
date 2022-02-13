@@ -28,7 +28,7 @@ public class LaserScanPublisher : MonoBehaviour
     void Start()
     {
         // Get ROS connection static instance
-        ros = ROSConnection.instance;
+        ros = ROSConnection.GetOrCreateInstance();
 
         // Initialize messages
         float angle_increment = (laser.angleMax - laser.rangeMin)/(laser.samples-1);
@@ -61,6 +61,6 @@ public class LaserScanPublisher : MonoBehaviour
         laserScan.header.Update();
         laserScan.ranges = laser.GetCurrentScanRanges();
 
-        ros.Send(laserTopicName, laserScan);
+        ros.Publish(laserTopicName, laserScan);
     }
 }

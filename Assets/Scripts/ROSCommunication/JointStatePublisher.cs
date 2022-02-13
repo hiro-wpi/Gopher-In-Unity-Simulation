@@ -38,7 +38,7 @@ public class JointStatePublisher : MonoBehaviour
     void Start()
     {
         // Get ROS connection static instance
-        ros = ROSConnection.instance;
+        ros = ROSConnection.GetOrCreateInstance();
 
         // Get joints
         articulationChain = jointRoot.GetComponentsInChildren<ArticulationBody>();
@@ -87,6 +87,6 @@ public class JointStatePublisher : MonoBehaviour
         jointState.velocity = Array.ConvertAll(velocities, x => (double)x);
         jointState.effort = Array.ConvertAll(forces, x => (double)x);
 
-        ros.Send(jointStateTopicName, jointState);
+        ros.Publish(jointStateTopicName, jointState);
     }
 }

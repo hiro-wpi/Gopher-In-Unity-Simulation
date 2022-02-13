@@ -32,7 +32,7 @@ public class JointControlSubscriber : MonoBehaviour
     void Start()
     {
         // Get ROS connection static instance
-        ros = ROSConnection.instance;
+        ros = ROSConnection.GetOrCreateInstance();
 
         // Get joints
         articulationChain = robot.GetComponentsInChildren<ArticulationBody>();

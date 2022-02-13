@@ -26,7 +26,7 @@ public class TwistSubscriber : MonoBehaviour
     void Start()
     {
         // Get ROS connection static instance
-        ros = ROSConnection.instance;
+        ros = ROSConnection.GetOrCreateInstance();
 
         targetLinearVelocity = 0f;
         targetAngularVelocity = 0f;

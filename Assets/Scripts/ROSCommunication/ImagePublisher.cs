@@ -32,7 +32,7 @@ public class ImagePublisher : MonoBehaviour
     void Start()
     {
         // Get ROS connection static instance
-        ros = ROSConnection.instance;
+        ros = ROSConnection.GetOrCreateInstance();
 
         // Initialize renderer
         texture2D = new Texture2D(resolutionWidth, resolutionHeight, TextureFormat.ARGB32, false);
@@ -58,7 +58,7 @@ public class ImagePublisher : MonoBehaviour
             texture2D.ReadPixels(rect, 0, 0);
             compressedImage.data = texture2D.EncodeToJPG(qualityLevel);
 
-            ros.Send(cameraTopicName, compressedImage);
+            ros.Publish(cameraTopicName, compressedImage);
         }
     }
 }
