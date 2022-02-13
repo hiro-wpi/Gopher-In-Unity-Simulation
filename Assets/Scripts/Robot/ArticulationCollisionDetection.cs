@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+///     This script detects ArticulationBody collision with
+///     ohter RididBody/ArticulationBody/collider. The result
+///     is sent to the sensor "collisionReader".
+/// </summary>
 public class ArticulationCollisionDetection : MonoBehaviour
 {
     public GameObject parent;

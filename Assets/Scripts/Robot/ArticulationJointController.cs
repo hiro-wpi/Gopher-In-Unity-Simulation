@@ -5,7 +5,8 @@ using UnityEngine;
 
 /// <summary>
 ///     This script allows robot joints to be 
-///     controlled and initialized.
+///     controlled with SetJointTarget() and StopJoint().
+///     It also provides joint pose intializaiton.
 /// </summary>
 public class ArticulationJointController : MonoBehaviour
 {
@@ -63,7 +64,6 @@ public class ArticulationJointController : MonoBehaviour
             speed = jointSpeed;
         SetJointTarget(articulationChain[jointNum], target, speed);
     }
-
     public void SetJointTarget(ArticulationBody joint, float target, float speed=0f)
     {
         // If speed not given, set to default speed
@@ -97,7 +97,6 @@ public class ArticulationJointController : MonoBehaviour
     {
         StopJoint(articulationChain[jointNum]);
     }
-
     public void StopJoint(ArticulationBody joint)
     {
         ArticulationDrive drive = joint.xDrive;

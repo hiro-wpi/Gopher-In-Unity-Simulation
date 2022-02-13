@@ -6,7 +6,8 @@ using UnityEngine;
 /// <summary>
 ///     This script converts linear velocity and 
 ///     angular velocity to joint velocities for
-///     differential drive robot.
+///     differential drive robot. Velocity can be 
+///     set with SetRobotVelocity().
 /// </summary>
 public class ArticulationWheelController : MonoBehaviour
 {

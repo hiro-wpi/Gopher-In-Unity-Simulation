@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+///     This script attach audio file
+/// </summary>
 public class JointAudioPlayer : MonoBehaviour
 {
     public ArticulationBody[] jointRoots;
@@ -22,7 +25,6 @@ public class JointAudioPlayer : MonoBehaviour
     public float minimumPitch = 0.0f;
     public float maximumPitch = 1.0f;
     
-    // Start is called before the first frame update
     void Start()
     {
         foreach (ArticulationBody jointRoot in jointRoots)
@@ -30,6 +32,7 @@ public class JointAudioPlayer : MonoBehaviour
             currentList = jointRoot.GetComponentsInChildren<ArticulationBody>();
             currentList = currentList.Where(joint => joint.jointType 
                           != ArticulationJointType.FixedJoint).ToArray();
+            // Add current list of joints to the all-joint list
             AddToJointList(currentList);
         }
         
@@ -52,7 +55,6 @@ public class JointAudioPlayer : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         for (int i=0; i<allJointsList.Length; ++i)
@@ -87,6 +89,7 @@ public class JointAudioPlayer : MonoBehaviour
         }
     }
 
+    // Add a list of joints to all-joint list
     private void AddToJointList(ArticulationBody[] newList)
     {
         if (allJointsList == null)
