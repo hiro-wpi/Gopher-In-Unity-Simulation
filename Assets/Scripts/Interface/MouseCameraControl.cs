@@ -64,9 +64,35 @@ public class MouseCameraControl : MonoBehaviour
         pitchRotation = Mathf.Clamp(pitchRotation, 
                                     pitchOffsetDeg-angleLimit, pitchOffsetDeg+angleLimit);
         
-        jointController.SetJointTarget(cameraYawJoint, yawRotation, speed);
-        jointController.SetJointTarget(cameraPitchJoint, pitchRotation, speed);
+        MoveJoint(cameraYawJoint, yawRotation, speed);
+        MoveJoint(cameraPitchJoint, pitchRotation, speed);
     }
+
+    private void MoveJoint(ArticulationBody joint, float target, float speed)
+    {
+        // Get drive
+        ArticulationDrive drive = joint.xDrive;
+
+        // Speed limit
+        float deltaPosition = speed*Mathf.Rad2Deg * Time.fixedDeltaTime;
+        if (Mathf.Abs(drive.target - target) > deltaPosition)
+            target = drive.target + deltaPosition * Mathf.Sign(target-drive.target);
+
+        // Joint limit
+        if (joint.twistLock == ArticulationDofLock.LimitedMotion)
+        {
+            if (target > drive.upperLimit)
+                target = drive.upperLimit;
+            else if (target < drive.lowerLimit)
+                target = drive.lowerLimit;
+        }
+
+        // Set target
+        drive.target = target;
+        joint.xDrive = drive;
+    }
+
+
 
     public void HomeCameraJoints()
     {
@@ -82,9 +108,9 @@ public class MouseCameraControl : MonoBehaviour
         bool pitchHomed = cameraPitchJoint.xDrive.target == pitchOffsetDeg;
 
         if (!yawHomed)
-            jointController.SetJointTarget(cameraYawJoint, yawOffsetDeg, speed);
+            MoveJoint(cameraYawJoint, yawOffsetDeg, speed);
         if (!pitchHomed)
-            jointController.SetJointTarget(cameraPitchJoint, pitchOffsetDeg, speed);
+            MoveJoint(cameraPitchJoint, pitchOffsetDeg, speed);
         if (yawHomed && pitchHomed)
             return true;
         return false;

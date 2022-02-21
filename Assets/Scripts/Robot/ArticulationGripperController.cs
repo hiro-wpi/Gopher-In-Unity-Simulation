@@ -1,45 +1,55 @@
-using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-///     This script initializes the articulation bodies by 
-///     setting stiffness, damping and force limit of
-///     the non-fixed ones.
+///     This script is used to control the robotic
+///     end-effector. This script is specifically used 
+///     for robotic 2F-85. But others can also be used
+///     with minor modification.
 /// </summary>
 public class ArticulationGripperController : MonoBehaviour
 {
-    [System.Serializable]
-    private class FingerJoint {
-        public ArticulationBody body;
-        public float target;
-    }
-
-    [SerializeField]
-    private FingerJoint[] fingerJoints;
+    
+    public ArticulationBody[] leftFingerChain;
+    public ArticulationBody[] rightFingerChain;
 
     void Start()
     {
     }
 
-    public void SetGrippers(float closeValue) {
-        foreach (FingerJoint fj in fingerJoints) {
-            SetTarget(fj.body, closeValue * fj.target);
+    public void SetGrippers(float closeValue) 
+    {
+        for (int i=0; i < leftFingerChain.Length; ++i)
+        {
+            if (i == 2) // left inner finger
+            {
+                SetTarget(leftFingerChain[i], -closeValue);
+                SetTarget(rightFingerChain[i], -closeValue);
+            }
+            else
+            {
+                SetTarget(leftFingerChain[i], closeValue);
+                SetTarget(rightFingerChain[i], closeValue);
+            }
         }
+    }
+    
+    public void CloseGrippers() 
+    {
+        SetGrippers(45f); // Deg
+    }
+
+    public void OpenGrippers() 
+    {
+        SetGrippers(0f); // Deg
     }
 
     void SetTarget(ArticulationBody joint, float target)
     {
         ArticulationDrive drive = joint.xDrive;
         drive.target = target;
-        joint.xDrive = drive;
-    }
-
-    public void StopJoint(ArticulationBody joint)
-    {
-        ArticulationDrive drive = joint.xDrive;
-        drive.target = joint.jointPosition[0];
         joint.xDrive = drive;
     }
 }

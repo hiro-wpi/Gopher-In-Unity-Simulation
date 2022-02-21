@@ -5,7 +5,7 @@ using UnityEngine;
 
 /// <summary>
 ///     This script allows robot joints to be 
-///     controlled with SetJointTarget() and StopJoint().
+///     controlled with SetJointTarget(), SetJointSpeed().
 ///     It also provides joint pose intializaiton.
 /// </summary>
 public class ArticulationJointController : MonoBehaviour
@@ -13,7 +13,7 @@ public class ArticulationJointController : MonoBehaviour
     // Robot object
     public GameObject jointRoot;
 
-    public float jointSpeed = 1f; 
+    public float jointMaxSpeed = 1f; 
     
     // Articulation Bodies
     public float[] homePosition = {0f, 0f, 0f, 0f, 0f, 0f, 0f};
@@ -58,18 +58,24 @@ public class ArticulationJointController : MonoBehaviour
         return false;
     }
 
-    public void SetJointTarget(int jointNum, float target, float speed=0f)
+    public void SetJointTarget(int jointNum, float target)
     {
-        if (speed == 0f)
-            speed = jointSpeed;
-        SetJointTarget(articulationChain[jointNum], target, speed);
+        SetJointTarget(articulationChain[jointNum], target, jointMaxSpeed);
     }
-    public void SetJointTarget(ArticulationBody joint, float target, float speed=0f)
+    public void SetJointTarget(int jointNum, float target, float speed)
     {
-        // If speed not given, set to default speed
-        if (speed == 0f)
-            speed = jointSpeed;
-
+        if (jointNum >= 0 && jointNum < articulationChain.Length)
+            SetJointTarget(articulationChain[jointNum], target, speed);
+    }
+    public void SetJointTarget(ArticulationBody joint, float target)
+    {
+        SetJointTarget(joint, target, jointMaxSpeed);
+    }
+    public void SetJointTarget(ArticulationBody joint, float target, float speed)
+    {
+        if (float.IsNaN(target))
+            return;
+        
         // Get drive
         ArticulationDrive drive = joint.xDrive;
         float currentTarget = drive.target;
@@ -93,14 +99,57 @@ public class ArticulationJointController : MonoBehaviour
         joint.xDrive = drive;
     }
 
+    public void SetJointSpeed(int jointNum)
+    {
+        SetJointSpeed(jointNum, jointMaxSpeed);
+    }
+    public void SetJointSpeed(int jointNum, float speed)
+    {
+        if (jointNum >= 0 && jointNum < articulationChain.Length)
+            SetJointSpeed(articulationChain[jointNum], speed);
+    }
+    public void SetJointSpeed(ArticulationBody joint)
+    {
+        SetJointSpeed(joint, jointMaxSpeed);
+    }
+    public void SetJointSpeed(ArticulationBody joint, float speed)
+    {
+        // Get drive
+        ArticulationDrive drive = joint.xDrive;
+        float currentTarget = drive.target;
+
+        // Speed limit
+        float deltaPosition = speed*Mathf.Rad2Deg * Time.fixedDeltaTime;
+        float target = currentTarget + deltaPosition;
+
+        // Joint limit
+        if (joint.twistLock == ArticulationDofLock.LimitedMotion)
+        {
+            if (target > drive.upperLimit)
+                target = drive.upperLimit;
+            else if (target < drive.lowerLimit)
+                target = drive.lowerLimit;
+        }
+
+        // Set target
+        drive.target = target;
+        joint.xDrive = drive;
+    } 
+
     public void StopJoint(int jointNum)
     {
-        StopJoint(articulationChain[jointNum]);
+        if (jointNum >= 0 && jointNum < articulationChain.Length)
+            StopJoint(articulationChain[jointNum]);
     }
     public void StopJoint(ArticulationBody joint)
     {
+        float currPosition =  joint.jointPosition[0] * Mathf.Rad2Deg;
         ArticulationDrive drive = joint.xDrive;
-        drive.target = joint.jointPosition[0];
-        joint.xDrive = drive;
+
+        if (Mathf.Abs(drive.target - currPosition) > 1)
+        {
+            drive.target = currPosition;
+            joint.xDrive = drive;
+        }
     }
 }
