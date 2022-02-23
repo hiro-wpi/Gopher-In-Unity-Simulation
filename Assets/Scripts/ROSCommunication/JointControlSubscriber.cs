@@ -7,20 +7,22 @@ using Unity.Robotics.ROSTCPConnector;
 using Unity.Robotics.ROSTCPConnector.ROSGeometry;
 using RosMessageTypes.Std;
 
-
+/// <summary>
+///     This script subscribes joints' control commands.
+/// </summary>
 public class JointControlSubscriber : MonoBehaviour
 {
     // ROS Connector
     private ROSConnection ros;
 
     // Variables required for ROS communication
-    public string joint1ControllerTopicName = "joint_1_position_controller/command";
-    public string joint2ControllerTopicName = "joint_2_position_controller/command";
-    public string joint3ControllerTopicName = "joint_3_position_controller/command";
-    public string joint4ControllerTopicName = "joint_4_position_controller/command";
-    public string joint5ControllerTopicName = "joint_5_position_controller/command";
-    public string joint6ControllerTopicName = "joint_6_position_controller/command";
-    public string joint7ControllerTopicName = "joint_7_position_controller/command";
+    public string joint1ControllerTopicName = "j1_pos_cmd";
+    public string joint2ControllerTopicName = "j2_pos_cmd";
+    public string joint3ControllerTopicName = "j3_pos_cmd";
+    public string joint4ControllerTopicName = "j4_pos_cmd";
+    public string joint5ControllerTopicName = "j5_pos_cmd";
+    public string joint6ControllerTopicName = "j6_pos_cmd";
+    public string joint7ControllerTopicName = "j7_pos_cmd";
     
     // Robot object
     public GameObject robot;

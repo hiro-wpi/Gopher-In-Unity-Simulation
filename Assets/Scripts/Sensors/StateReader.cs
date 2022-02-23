@@ -3,16 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Unity.Robotics.UrdfImporter;
+
 /// <summary>
 ///     This script reads robot positions, velocities,
 ///     joint states, etc.
 /// </summary>
 public class StateReader : MonoBehaviour
 {
+    // Robot
     public GameObject robot;
+
     public int updateRate = 10;
     private float deltaTime;
 
+    // Position, Rotation & Velocity
     private Transform tf;
     private Rigidbody rb;
     public Vector3 position;
@@ -21,7 +26,8 @@ public class StateReader : MonoBehaviour
     public Vector3 linearVelocity;
     public Vector3 angularVelocity;
 
-    private ArticulationBody[] articulationChain;
+    // Joint states
+    private UrdfJoint[] jointChain;
     private int jointStateLength;
     public string[] names;
     public float[] positions;
@@ -30,25 +36,29 @@ public class StateReader : MonoBehaviour
 
     void Start()
     {
-        deltaTime = 1f/updateRate;
-        InvokeRepeating("ReadState", 1f, deltaTime);
-
         // Get robot transform
         tf = robot.transform;
         rb = robot.GetComponent<Rigidbody>();
     
         // Get joints
-        articulationChain = robot.GetComponentsInChildren<ArticulationBody>();
-        articulationChain = articulationChain.Where(joint => joint.jointType 
-                                                        != ArticulationJointType.FixedJoint).ToArray();
-        jointStateLength = articulationChain.Length;
+        jointChain = robot.GetComponentsInChildren<UrdfJoint>();
+        jointChain = jointChain.Where(joint => 
+                        (joint.JointType == UrdfJoint.JointTypes.Revolute || 
+                         joint.JointType == UrdfJoint.JointTypes.Continuous)).ToArray();
+        
+        jointStateLength = jointChain.Length;
+        
         names = new string[jointStateLength];
         positions = new float[jointStateLength];
         velocities = new float[jointStateLength];
         forces = new float[jointStateLength];
 
         for (int i = 0; i < jointStateLength; ++i)
-            names[i] = articulationChain[i].name;
+            names[i] = jointChain[i].jointName;
+
+        // Update
+        deltaTime = 1f/updateRate;
+        InvokeRepeating("ReadState", 1f, deltaTime);
     }
 
     void Update()
@@ -90,9 +100,9 @@ public class StateReader : MonoBehaviour
         // Joint states
         for (int i = 0; i < jointStateLength; ++i)
         {   
-            positions[i] = articulationChain[i].jointPosition[0];
-            velocities[i] = articulationChain[i].jointVelocity[0];
-            forces[i] = articulationChain[i].jointForce[0];
+            positions[i] = jointChain[i].GetPosition();
+            velocities[i] = jointChain[i].GetVelocity();
+            forces[i] = jointChain[i].GetEffort();
         }
         
     }

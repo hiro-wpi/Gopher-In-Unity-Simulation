@@ -14,6 +14,8 @@ public class ArticulationGripperController : MonoBehaviour
     
     public ArticulationBody[] leftFingerChain;
     public ArticulationBody[] rightFingerChain;
+    public float closeValue = 48f;
+    public float openValue = 0f;
 
     void Start()
     {
@@ -38,12 +40,12 @@ public class ArticulationGripperController : MonoBehaviour
     
     public void CloseGrippers() 
     {
-        SetGrippers(45f); // Deg
+        SetGrippers(closeValue); // Deg
     }
 
     public void OpenGrippers() 
     {
-        SetGrippers(0f); // Deg
+        SetGrippers(openValue); // Deg
     }
 
     void SetTarget(ArticulationBody joint, float target)

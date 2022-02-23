@@ -8,11 +8,11 @@ using UnityEngine;
 /// </summary>
 public class MouseCameraControl : MonoBehaviour
 {
+    private bool controlEnabled;
     public float mouseSensitivity = 150f;
 
     public ArticulationBody cameraYawJoint;
     public ArticulationBody cameraPitchJoint;
-    public ArticulationJointController jointController;
     public float speed = 1.0f;
 
     private float mouseX;
@@ -32,7 +32,7 @@ public class MouseCameraControl : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        controlEnabled = false;
         
         yawOffsetDeg = yawOffset * Mathf.Rad2Deg;
         pitchOffsetDeg = pitchOffset * Mathf.Rad2Deg;
@@ -43,9 +43,29 @@ public class MouseCameraControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        mouseX = Input.GetAxis("Mouse X");
-        mouseY = Input.GetAxis("Mouse Y");
+        // Switch control on/off
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            controlEnabled = !controlEnabled;
+            if (controlEnabled)
+                Cursor.lockState = CursorLockMode.Locked;
+            else
+                Cursor.lockState = CursorLockMode.Confined;
+        }
 
+        // Get input from mouse
+        if (controlEnabled)
+        {
+            mouseX = Input.GetAxis("Mouse X");
+            mouseY = Input.GetAxis("Mouse Y");
+        }
+        else
+        {
+            mouseX = 0f;
+            mouseY = 0f;
+        }
+
+        // Home robot
         if (Input.GetMouseButtonDown(2))
             HomeCameraJoints();
     }
@@ -91,7 +111,6 @@ public class MouseCameraControl : MonoBehaviour
         drive.target = target;
         joint.xDrive = drive;
     }
-
 
 
     public void HomeCameraJoints()

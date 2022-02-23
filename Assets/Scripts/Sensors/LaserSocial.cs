@@ -84,7 +84,7 @@ public class LaserSocial : MonoBehaviour
     private Quaternion GetRayRotation(int sampleInd) 
     {
         float angle = (angleMin + (angleIncrement * sampleInd)) * Mathf.Rad2Deg;
-        return Quaternion.AngleAxis(angle, laserLink.transform.up);
+        return Quaternion.Euler(new Vector3(0f, angle, 0f));
     }
 
     public float[] GetCurrentScanObstacleRanges()

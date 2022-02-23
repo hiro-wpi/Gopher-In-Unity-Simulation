@@ -33,6 +33,7 @@ public class ImagePublisher : MonoBehaviour
     {
         // Get ROS connection static instance
         ros = ROSConnection.GetOrCreateInstance();
+        ros.RegisterPublisher<CompressedImageMsg>(cameraTopicName);
 
         // Initialize renderer
         texture2D = new Texture2D(resolutionWidth, resolutionHeight, TextureFormat.ARGB32, false);

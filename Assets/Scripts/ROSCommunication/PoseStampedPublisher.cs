@@ -23,12 +23,13 @@ public class PoseStampedPublisher : MonoBehaviour
     // Message
     private PoseStampedMsg poseStamped;
     private string frameId = "model_pose";
-    public float publishRate;
+    public float publishRate = 10f;
 
     void Start()
     {
         // Get ROS connection static instance
         ros = ROSConnection.GetOrCreateInstance();
+        ros.RegisterPublisher<PoseStampedMsg>(poseStampedTopicName);
 
         // Initialize message
         poseStamped = new PoseStampedMsg

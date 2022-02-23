@@ -7,31 +7,27 @@ using Unity.Robotics.ROSTCPConnector;
 using Unity.Robotics.ROSTCPConnector.ROSGeometry;
 using RosMessageTypes.Std;
 
-
+/// <summary>
+///     This script subscribes camera joints' control commands.
+/// </summary>
 public class CameraControlSubscriber : MonoBehaviour
 {
     // ROS Connector
     private ROSConnection ros;
 
     // Variables required for ROS communication
-    public string cameraYawControllerTopicName = "main_cam_yaw_controller/command";
-    public string cameraPitchControllerTopicName = "main_cam_pitch_controller/command";
+    public string cameraYawControllerTopicName = "cam/yaw_pos_cmd";
+    public string cameraPitchControllerTopicName = "cam/pitch_pos_cmd";
     
     // Robot object
-    public GameObject cameraJoints;
-    // Articulation Bodies
-    private ArticulationBody[] articulationChain;
+    public ArticulationBody cameraYawJoint;
+    public ArticulationBody cameraPitchJoint;
 
     // Start is called before the first frame update
     void Start()
     {
         // Get ROS connection static instance
         ros = ROSConnection.GetOrCreateInstance();
-
-        // Get joints
-        articulationChain = cameraJoints.GetComponentsInChildren<ArticulationBody>();
-        articulationChain = articulationChain.Where(joint => joint.jointType 
-                                                    != ArticulationJointType.FixedJoint).ToArray();
 
         // Initialize robot position
         HomeRobot();
@@ -48,28 +44,25 @@ public class CameraControlSubscriber : MonoBehaviour
 
     public void HomeRobot()
     {
-        for (int i = 0; i < articulationChain.Length; ++i)
-            if (articulationChain[i].xDrive.target != 0f)
-            {
-                moveJoint(i, 0f);
-            }
+        if (cameraYawJoint.xDrive.target != 0f)
+            moveJoint(cameraYawJoint, 0f);
+        if (cameraPitchJoint.xDrive.target != 0f)
+            moveJoint(cameraPitchJoint, 0f);
     }
 
     // Callback functions
-    public void moveJoint(int jointNum, float target)
+    public void moveJoint(ArticulationBody joint, float target)
     {
-        ArticulationDrive drive = articulationChain[jointNum].xDrive;
+        ArticulationDrive drive = joint.xDrive;
         drive.target = target;
-        articulationChain[jointNum].xDrive = drive;
+        joint.xDrive = drive;
     }
-
     private void moveYawJoint(Float64Msg target)
     {
-        moveJoint(0, (float)target.data);
+        moveJoint(cameraYawJoint, (float)target.data);
     }
-
     private void movePitchJoint(Float64Msg target)
     {
-        moveJoint(1, (float)target.data);
+        moveJoint(cameraPitchJoint, (float)target.data);
     }
 }

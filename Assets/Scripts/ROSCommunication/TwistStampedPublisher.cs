@@ -29,7 +29,7 @@ public class TwistStampedPublisher : MonoBehaviour
     // Message
     private TwistStampedMsg twistStamped;
     private string frameId = "model_twist";
-    public float publishRate;
+    public float publishRate = 10f;
     private float deltaTime;
 
 
@@ -37,6 +37,7 @@ public class TwistStampedPublisher : MonoBehaviour
     {
         // Get ROS connection static instance
         ros = ROSConnection.GetOrCreateInstance();
+        ros.RegisterPublisher<TwistStampedMsg>(twistStampedTopicName);
 
         previousPosition = publishedTransform.position;
         previousRotation = publishedTransform.rotation.eulerAngles;
