@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Unity.Robotics.Core;
 using Unity.Robotics.ROSTCPConnector;
 using Unity.Robotics.ROSTCPConnector.ROSGeometry;
 using RosMessageTypes.Std;
@@ -45,10 +46,8 @@ public class TwistStampedPublisher : MonoBehaviour
         // Initialize message
         twistStamped = new TwistStampedMsg
         {
-            header = new HeaderMsg()
-            {
-                frame_id = frameId
-            }
+            header = new HeaderMsg(Clock.GetCount(), 
+                                   new TimeStamp(Clock.time), frameId)
         };
 
         deltaTime = 1f/publishRate;
@@ -57,7 +56,8 @@ public class TwistStampedPublisher : MonoBehaviour
 
     private void PublishTwistStamped()
     {
-        twistStamped.header.Update();
+        twistStamped.header = new HeaderMsg(Clock.GetCount(), 
+                                            new TimeStamp(Clock.time), frameId);
 
         // Linear
         linearVelocity = (publishedTransform.position - previousPosition)

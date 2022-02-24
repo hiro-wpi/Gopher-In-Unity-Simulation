@@ -77,7 +77,7 @@ public class KeyboardJointControl : MonoBehaviour
         // Joint control
         if (controlMode == ControlMode.JointControl)
         {
-            jointController.SetJointSpeed(selectedIndex, currSpeed);
+            jointController.SetJointSpeedStep(selectedIndex, currSpeed);
         }
 
         // Position control
@@ -294,14 +294,11 @@ public class KeyboardJointControl : MonoBehaviour
         return resultJointAngles;
     }
 
-    private void MoveJoints(float[] joints, bool isDegree=false)
+    private void MoveJoints(float[] joints)
     {
         for (int i=0; i < joints.Length; ++i)
         {
-            if (isDegree)
-                jointController.SetJointTarget(i, joints[i]);
-            else
-                jointController.SetJointTarget(i, joints[i] * Mathf.Rad2Deg);
+            jointController.SetJointTarget(i, joints[i]);
         }
     }
 
