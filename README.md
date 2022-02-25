@@ -4,7 +4,7 @@ This package simulates Gopher nursing robot in [Unity](https://unity.com/), whic
 ![image](Demo/Gopher_in_Unity.jpg)
 
 ## Dependencies
-This repository has been developed and tested in Ubuntu 18.04 and ROS Melodic, with the latest Unity version 2021.1. There are some known issues with collision detection and lighting in the previous 2020 LTS Unity versions.
+This repository has been developed and tested in Ubuntu 18.04 and ROS Melodic, with the Unity 2020.3 LTS.
 
 Before running this package, it is highly recommended to go through the tutorial of [Unity Robotics Hub](https://github.com/Unity-Technologies/Unity-Robotics-Hub) demo first. They provided a very detailed instruction to set up a robot arm in Unity. Also, you should try this [tutorial on how to set up a mobile robot](https://github.com/ZhuoyunZhong/Mobile-Robot-Demo-with-Unity-ROS). The second tutorial provides more robot sensors and ROS publishers and subscribers examples. After these two tutorials, you should be able to understand how to set up a robot in Unity and how to communicate between ROS and Unity.
 
@@ -40,18 +40,13 @@ It's worth mention that if you don't need to use any ROS packages, you don't hav
 If you need to use ROS packages, some examples of publishers and subscribers are provided in the **Script/ROSCommunication** folder. To use these scripts to talk to ROS, you need to launch the endpoint server on the ROS side by simply
 
 ```
-roslaunch Gopher-ROS-Unity server.launch
+roslaunch gopher_unity_endpoint gopher_presence_server.launch
+roslaunch gopher_unity_endpoint gopher_server.launch
+roslaunch gopher_unity_endpoint kinova_server.launch
 ```
 
 ## More
 
-- This Unity simulation uses [URP](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@13.0/manual/index.html) in stead of the default render pipeline for better graphical performance.
-
-- Currently, we do not have velocity inverse kinematic solution for the 7-DOF robot arm. You could only manually control the velocity of each joint. If you really require velocity IK, I would recommend you to import a robot arm with no more than 6-DOF, and write the velocity IK solver yourself.
-
-  For inverse kinematic solution, you could use the Move-It ROS package. But each computation usually can take up to a few seconds, which means it's not meant to be used for real-time.
-
-- RGB-D camera sensor is still under development
-
-- Robot State Publisher (Publish tf frames) will be released soon
-
+- This Unity simulation uses [URP](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@13.0/manual/index.html) in stead of the default render pipeline for better graphical performance. But we may switch to Bakery in the future.
+- RGB-D camera sensor is still under development.
+- Some warning messages are constantly showing up on the ROS side.
