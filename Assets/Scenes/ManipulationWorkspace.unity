@@ -897,7 +897,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &334744435
 Transform:
   m_ObjectHideFlags: 0
@@ -978,7 +978,7 @@ MonoBehaviour:
   joint5ControllerTopicName: kinova/j5_pos_cmd
   joint6ControllerTopicName: kinova/j6_pos_cmd
   joint7ControllerTopicName: kinova/j7_pos_cmd
-  robot: {fileID: 8340433699430406797}
+  jointController: {fileID: 3552918512869087569}
 --- !u!114 &334744440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2274,7 +2274,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 978438865}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a9d374cc8dc29d448326ee624e63af9, type: 3}
   m_Name: 
@@ -2426,12 +2426,32 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 642435481}
     m_Modifications:
+    - target: {fileID: 109696701229904656, guid: a5af0ed6009716ed59db4484573a2a06, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1594156911096734138, guid: a5af0ed6009716ed59db4484573a2a06, type: 3}
       propertyPath: m_Name
       value: Ikea Desk
       objectReference: {fileID: 0}
     - target: {fileID: 1594156911096734138, guid: a5af0ed6009716ed59db4484573a2a06, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4958204364014635510, guid: a5af0ed6009716ed59db4484573a2a06, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5557890366485580365, guid: a5af0ed6009716ed59db4484573a2a06, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5760811488926798026, guid: a5af0ed6009716ed59db4484573a2a06, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7869129201198937947, guid: a5af0ed6009716ed59db4484573a2a06, type: 3}
+      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8187006626307717504, guid: a5af0ed6009716ed59db4484573a2a06, type: 3}
@@ -2968,6 +2988,10 @@ PrefabInstance:
     - target: {fileID: 1594156911096734138, guid: a5af0ed6009716ed59db4484573a2a06, type: 3}
       propertyPath: m_Name
       value: Ikea Desk (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1594156911096734138, guid: a5af0ed6009716ed59db4484573a2a06, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8187006626307717504, guid: a5af0ed6009716ed59db4484573a2a06, type: 3}
       propertyPath: m_RootOrder
@@ -14171,6 +14195,10 @@ PrefabInstance:
     - target: {fileID: 4057350141855912022, guid: 9f582b48d920422749e33fcbc2bde462, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7334071294384497992, guid: 9f582b48d920422749e33fcbc2bde462, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9f582b48d920422749e33fcbc2bde462, type: 3}

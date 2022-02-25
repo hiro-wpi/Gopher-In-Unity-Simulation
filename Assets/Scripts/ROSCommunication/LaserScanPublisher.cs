@@ -24,7 +24,6 @@ public class LaserScanPublisher : MonoBehaviour
     // Message
     private LaserScanMsg laserScan;
     public float publishRate = 10f;
-    public float angleIncrement;
 
     void Start()
     {
@@ -33,7 +32,7 @@ public class LaserScanPublisher : MonoBehaviour
         ros.RegisterPublisher<LaserScanMsg>(laserTopicName);
 
         // Initialize messages
-        angleIncrement = (laser.angleMax - laser.angleMin)/(laser.samples-1);
+        float angleIncrement = (laser.angleMax - laser.angleMin)/(laser.samples-1);
         float scanTime = 1f / laser.updateRate;
         float timeIncrement = scanTime / laser.samples;
         float[] intensities = new float[laser.ranges.Length];

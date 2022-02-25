@@ -185,6 +185,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8931785111314269366, guid: d578d51f26ba087a1a93327ccd33aaea, type: 3}
   m_PrefabInstance: {fileID: 798973}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8147159 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3928315738656980290, guid: 32167ae204a279138a903dbea46be490, type: 3}
+  m_PrefabInstance: {fileID: 3928315738234714535}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &32754411
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2930,7 +2935,7 @@ Transform:
   - {fileID: 82907366}
   - {fileID: 135738343}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1528672498
 PrefabInstance:
@@ -7904,13 +7909,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3928315737821590325, guid: 32167ae204a279138a903dbea46be490, type: 3}
+      propertyPath: robotRoot
+      value: 
+      objectReference: {fileID: 8147159}
+    - target: {fileID: 3928315738651084602, guid: 32167ae204a279138a903dbea46be490, type: 3}
+      propertyPath: visualization
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3928315738656980290, guid: 32167ae204a279138a903dbea46be490, type: 3}
       propertyPath: m_Name
       value: Gopher Presence
       objectReference: {fileID: 0}
     - target: {fileID: 3928315738656980303, guid: 32167ae204a279138a903dbea46be490, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3928315738656980303, guid: 32167ae204a279138a903dbea46be490, type: 3}
       propertyPath: m_LocalPosition.x

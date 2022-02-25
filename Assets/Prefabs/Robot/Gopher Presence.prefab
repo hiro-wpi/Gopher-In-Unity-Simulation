@@ -1641,8 +1641,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
+  near clip plane: 0.05
+  far clip plane: 100
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -1979,6 +1979,7 @@ GameObject:
   - component: {fileID: 3928315737509677637}
   - component: {fileID: 3928315737509677632}
   - component: {fileID: 3928315737509677634}
+  - component: {fileID: 1101404140764047647}
   - component: {fileID: 3928315737509677633}
   - component: {fileID: 3928315737509677635}
   - component: {fileID: 3928315737509677636}
@@ -1988,7 +1989,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3928315737509677637
 Transform:
   m_ObjectHideFlags: 0
@@ -2034,6 +2035,22 @@ MonoBehaviour:
   - gopher_presence/odom
   robot: {fileID: 3928315739042675498}
   publishRate: 30
+--- !u!114 &1101404140764047647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3928315737509677638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 088bfb714286501a7bfb2e7e4deab6a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jointStateTopicName: joint_states
+  frameId: base_link
+  jointRoot: {fileID: 3928315739042675498}
+  publishRate: 10
 --- !u!114 &3928315737509677633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2843,7 +2860,6 @@ GameObject:
   - component: {fileID: 3928315737821590327}
   - component: {fileID: 3928315737821590324}
   - component: {fileID: 3928315737821590325}
-  - component: {fileID: 3928315737821590326}
   m_Layer: 8
   m_Name: State
   m_TagString: Untagged
@@ -2906,22 +2922,6 @@ MonoBehaviour:
   storageLength: 0
   collisionSelfNames: []
   collisionOtherNames: []
---- !u!114 &3928315737821590326
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3928315737821590312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 088bfb714286501a7bfb2e7e4deab6a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jointStateTopicName: joint_states
-  frameId: base_link
-  jointRoot: {fileID: 3928315739042675498}
-  publishRate: 10
 --- !u!1 &3928315737828942366
 GameObject:
   m_ObjectHideFlags: 0
@@ -3319,7 +3319,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3928315737969430244}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 175dcee44f1132d50a22ebaaab98f83c, type: 3}
   m_Name: 
@@ -3334,12 +3334,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3928315737969430244}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ed25e574fe21afd5bcbbf099d1f9c99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   mouseSensitivity: 200
+  jointContoller: {fileID: 8265386736706314782}
   cameraYawJoint: {fileID: 3928315739055805383}
   cameraPitchJoint: {fileID: 3928315737557416942}
   speed: 1
@@ -4512,6 +4513,7 @@ GameObject:
   - component: {fileID: 3928315738651084605}
   - component: {fileID: 3928315738651084600}
   - component: {fileID: 3928315738651084601}
+  - component: {fileID: 8265386736706314782}
   - component: {fileID: 3928315738651084602}
   - component: {fileID: 3928315738651084603}
   m_Layer: 8
@@ -4569,6 +4571,24 @@ MonoBehaviour:
   rightWheel: {fileID: 3928315737035518537}
   wheelTrackLength: 0.37476
   wheelRadius: 0.0605
+--- !u!114 &8265386736706314782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3928315738651084606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2be2a1692cf9e9cea634d8682b5c26c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jointRoot: {fileID: 3928315737713445478}
+  numJoint: 2
+  jointMaxSpeed: 1
+  homePosition:
+  - 0
+  - 0
 --- !u!114 &3928315738651084602
 MonoBehaviour:
   m_ObjectHideFlags: 0

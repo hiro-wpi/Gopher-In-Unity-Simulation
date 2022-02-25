@@ -11,6 +11,7 @@ public class MouseCameraControl : MonoBehaviour
     private bool controlEnabled;
     public float mouseSensitivity = 150f;
 
+    public ArticulationJointController jointContoller;
     public ArticulationBody cameraYawJoint;
     public ArticulationBody cameraPitchJoint;
     public float speed = 1.0f;
@@ -84,34 +85,9 @@ public class MouseCameraControl : MonoBehaviour
         pitchRotation = Mathf.Clamp(pitchRotation, 
                                     pitchOffsetDeg-angleLimit, pitchOffsetDeg+angleLimit);
         
-        MoveJoint(cameraYawJoint, yawRotation, speed);
-        MoveJoint(cameraPitchJoint, pitchRotation, speed);
+        jointContoller.SetJointTargetStep(cameraYawJoint, yawRotation*Mathf.Deg2Rad, speed);
+        jointContoller.SetJointTargetStep(cameraPitchJoint, pitchRotation*Mathf.Deg2Rad, speed);
     }
-
-    private void MoveJoint(ArticulationBody joint, float target, float speed)
-    {
-        // Get drive
-        ArticulationDrive drive = joint.xDrive;
-
-        // Speed limit
-        float deltaPosition = speed*Mathf.Rad2Deg * Time.fixedDeltaTime;
-        if (Mathf.Abs(drive.target - target) > deltaPosition)
-            target = drive.target + deltaPosition * Mathf.Sign(target-drive.target);
-
-        // Joint limit
-        if (joint.twistLock == ArticulationDofLock.LimitedMotion)
-        {
-            if (target > drive.upperLimit)
-                target = drive.upperLimit;
-            else if (target < drive.lowerLimit)
-                target = drive.lowerLimit;
-        }
-
-        // Set target
-        drive.target = target;
-        joint.xDrive = drive;
-    }
-
 
     public void HomeCameraJoints()
     {
@@ -123,13 +99,13 @@ public class MouseCameraControl : MonoBehaviour
     }
     private bool HomeCameraAndCheck()
     {
-        bool yawHomed = cameraYawJoint.xDrive.target == yawOffsetDeg;
-        bool pitchHomed = cameraPitchJoint.xDrive.target == pitchOffsetDeg;
+        bool yawHomed = Mathf.Abs(cameraYawJoint.xDrive.target - yawOffsetDeg) < 0.001;
+        bool pitchHomed = Mathf.Abs(cameraPitchJoint.xDrive.target - pitchOffsetDeg) < 0.001;
 
         if (!yawHomed)
-            MoveJoint(cameraYawJoint, yawOffsetDeg, speed);
+            jointContoller.SetJointTargetStep(cameraYawJoint, yawOffset, speed);
         if (!pitchHomed)
-            MoveJoint(cameraPitchJoint, pitchOffsetDeg, speed);
+            jointContoller.SetJointTargetStep(cameraPitchJoint, pitchOffset, speed);
         if (yawHomed && pitchHomed)
             return true;
         return false;
