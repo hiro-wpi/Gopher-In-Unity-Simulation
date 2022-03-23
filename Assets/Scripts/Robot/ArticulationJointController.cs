@@ -194,4 +194,12 @@ public class ArticulationJointController : MonoBehaviour
         targets = targets.Select(r => r * Mathf.Deg2Rad).ToArray();
         return targets;
     }
+
+    public void SetJointTargets(float[] targets)
+    {
+        for (int i=0; i < articulationChain.Length; ++i)
+        {
+            SetJointTarget(articulationChain[i], targets[i]);
+        }
+    }
 }
