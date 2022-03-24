@@ -131,7 +131,6 @@ public static class JacobianTools
             SwapRows(jacobian, diagonal, maxRow);
             SwapRows(jacobianInv, diagonal, maxRow);
 
-
             float inverseElement = 1 / jacobian[diagonal, diagonal];
             for (int col = diagonal; col < jacobian.columns; col++)
                 jacobian[diagonal, col] *= inverseElement;

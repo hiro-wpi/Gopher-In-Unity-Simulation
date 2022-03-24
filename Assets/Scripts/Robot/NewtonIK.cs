@@ -11,10 +11,11 @@ public class NewtonIK : MonoBehaviour
     public List<ArticulationBody> IKChain;
     public Transform IKTarget;
     public ArticulationJointController jointController;
+    public ArticulationBody endEffector;
     
     // We have to initialize it, or Unity CRASHES (gosh I love Unity, this definitely didn't take an hour to figure out)
     private ArticulationJacobian jacobian = new ArticulationJacobian(1, 1);
-    private List<int> articulationInices = new List<int>();
+    private List<int> articulationIndices = new List<int>();
     private List<int> articulationDOFs = new List<int>();
 
     private float[] jointAngles;
@@ -37,15 +38,16 @@ public class NewtonIK : MonoBehaviour
     {
         // Get DOF of each joint
         List<int> DOFs = new List<int>();
-        root.GetDofStartIndices(DOFs);
+        int totalDOF = root.GetDofStartIndices(DOFs);
 
         // For each sub-body in our IK chain, add it's index to the articulationInices list
         foreach (ArticulationBody body in IKChain)
         {
-            articulationInices.Add(body.index);
+            articulationIndices.Add(body.index);
             articulationDOFs.Add(DOFs[body.index]);
         }
-        PrintList(articulationInices);
+        Debug.Log(totalDOF);
+        PrintList(articulationIndices);
         PrintList(articulationDOFs);
     }
 
@@ -53,23 +55,18 @@ public class NewtonIK : MonoBehaviour
         Debug.Log("SolveIK called");
         root.GetDenseJacobian(ref jacobian);
 
-        int endEffectorIndex = articulationInices[articulationInices.Count - 1]; // the index of the end effector
+        int endEffectorIndex = articulationIndices[articulationIndices.Count - 1]; // the index of the end effector
         Debug.Log("End effector index: " + endEffectorIndex);
 
         JacobianTools.Print(jacobian);
 
-        //ArticulationJacobian minJ = JacobianTools.FillMatrix(endEffectorIndex*6, articulationDOFs, jacobian);
-        // JacobianTools.PrintJacobian(minJ);
-
         // Test alternative
-        ArticulationJacobian minJ = JacobianTools.FillMatrix(endEffectorIndex*6 - 6, articulationDOFs, jacobian);
+        // TODO: If base is not fixed, need to subtract 6
+        ArticulationJacobian minJ = JacobianTools.FillMatrix(endEffectorIndex*6, articulationDOFs, jacobian);
         JacobianTools.Print(minJ);
         
-        // First get the end effector, the end of the IK chain
-        ArticulationBody endEffector = IKChain[IKChain.Count - 1];
-        Transform endEffectorTransform = endEffector.transform;
-        Vector3 endEffectorPosition = endEffectorTransform.position;
-        Quaternion endEffectorRotation = endEffectorTransform.rotation;
+        Vector3 endEffectorPosition = endEffector.transform.position;
+        Quaternion endEffectorRotation = endEffector.transform.rotation;
 
         // Get the target position
         targetPosition = IKTarget.position;
@@ -85,11 +82,12 @@ public class NewtonIK : MonoBehaviour
 
         // Solve for the psuedo inverse Jacobian
         // Degenerate? Switching to transpose
-        // ArticulationJacobian invJ = JacobianTools.PsuedoJacobianInverse(minJ);
-        ArticulationJacobian invJ = JacobianTools.Transpose(minJ);
+        ArticulationJacobian invJ = JacobianTools.PsuedoInverse(minJ);
+        // ArticulationJacobian invJ = JacobianTools.Transpose(minJ);
 
         // Calculate the delta angles
         List<float> deltaAngles = JacobianTools.Multiply(invJ, deltaTarget);
+
         Debug.Log("Predicted Angles:");
         PrintList(deltaAngles);
 
@@ -99,7 +97,7 @@ public class NewtonIK : MonoBehaviour
         // Calculate the new joint angles
         List<float> newJointAngles = new List<float>();
         // TODO: This is bad, change to smarter way of getting indices
-        for (int i = 0; i < articulationInices.Count - 1; i++)
+        for (int i = 0; i < articulationIndices.Count; i++)
         {
             newJointAngles.Add(jointAngles[i] + deltaAngles[i]);
         }
@@ -111,7 +109,7 @@ public class NewtonIK : MonoBehaviour
 
         // TODO: Compute Newton-Rapshon
         // Initialize the error
-        float error = Vector3.Distance(IKTarget.position, endEffectorTransform.position);
+        float error = Vector3.Distance(IKTarget.position, endEffector.transform.position);
         Debug.Log("Current Error:" + error);
     }
 
