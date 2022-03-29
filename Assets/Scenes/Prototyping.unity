@@ -203,7 +203,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 341294020}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &341294024
 Transform:
   m_ObjectHideFlags: 0
@@ -357,7 +357,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8340433699420264367, guid: 1967807ff55d0acfda395f110fd952d7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8340433699515969849, guid: 1967807ff55d0acfda395f110fd952d7, type: 3}
       propertyPath: m_RootOrder
@@ -421,19 +421,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8340433700001638764, guid: 1967807ff55d0acfda395f110fd952d7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8340433700385720902, guid: 1967807ff55d0acfda395f110fd952d7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8340433700388783652, guid: 1967807ff55d0acfda395f110fd952d7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8340433701077155972, guid: 1967807ff55d0acfda395f110fd952d7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8340433701089294754, guid: 1967807ff55d0acfda395f110fd952d7, type: 3}
       propertyPath: m_Enabled
@@ -441,11 +441,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8340433701089294758, guid: 1967807ff55d0acfda395f110fd952d7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8340433701113968055, guid: 1967807ff55d0acfda395f110fd952d7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1967807ff55d0acfda395f110fd952d7, type: 3}
@@ -478,6 +478,9 @@ MonoBehaviour:
   IKTarget: {fileID: 341294024}
   jointController: {fileID: 464697350}
   endEffector: {fileID: 576937385}
+  dampedSquaresLambda: 10
+  inverseStep: 0.01
+  inverseMethod: 2
 --- !u!171741748 &1122462059 stripped
 ArticulationBody:
   m_CorrespondingSourceObject: {fileID: 8340433700877194083, guid: 1967807ff55d0acfda395f110fd952d7, type: 3}
@@ -592,7 +595,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!171741748 &1729480028 stripped
 ArticulationBody:
@@ -617,7 +620,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1754342933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -709,12 +712,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1754342932}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.00950582, y: 1.0832708, z: -0.5423507}
+  m_LocalRotation: {x: -5.9557004e-23, y: 3.2921788e-22, z: -1.4837549e-33, w: 1}
+  m_LocalPosition: {x: 0.009505825, y: 1.0832708, z: -0.5423507}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!171741748 &1845184254 stripped
 ArticulationBody:

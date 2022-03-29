@@ -12,6 +12,19 @@ public class NewtonIK : MonoBehaviour
     public Transform IKTarget;
     public ArticulationJointController jointController;
     public ArticulationBody endEffector;
+    public float dampedSquaresLambda = 20f;
+    public float inverseStep = 0.1f;
+
+    // Enum for the type of inverse method to use
+    public enum InverseMethod
+    {
+        Transpose,
+        DampedLeastSquares,
+        PsuedoInverse,
+        UnstableInverse
+    }
+
+    public InverseMethod inverseMethod = InverseMethod.Transpose;
     
     // We have to initialize it, or Unity CRASHES (gosh I love Unity, this definitely didn't take an hour to figure out)
     private ArticulationJacobian jacobian = new ArticulationJacobian(1, 1);
@@ -51,19 +64,25 @@ public class NewtonIK : MonoBehaviour
         PrintList(articulationDOFs);
     }
 
-    void SolveIK() {
+    void SolveIK(Vector3 deltaPosition, Vector3 deltaRotation) {
         Debug.Log("SolveIK called");
         root.GetDenseJacobian(ref jacobian);
 
         int endEffectorIndex = articulationIndices[articulationIndices.Count - 1]; // the index of the end effector
         Debug.Log("End effector index: " + endEffectorIndex);
 
-        JacobianTools.Print(jacobian);
-
         // Test alternative
         // TODO: If base is not fixed, need to subtract 6
-        ArticulationJacobian minJ = JacobianTools.FillMatrix(endEffectorIndex*6, articulationDOFs, jacobian);
-        JacobianTools.Print(minJ);
+        int offset = 0;
+        if (!root.immovable)
+        {
+            offset = 6;
+        }
+        
+        ArticulationJacobian minJ = JacobianTools.FillMatrix(endEffectorIndex*6 - offset, articulationDOFs, jacobian);
+
+        // Convert the euler angles in the jacobian to quaternions
+        // minJ = JacobianTools.EulerToQuaternion(minJ);
         
         Vector3 endEffectorPosition = endEffector.transform.position;
         Quaternion endEffectorRotation = endEffector.transform.rotation;
@@ -72,21 +91,52 @@ public class NewtonIK : MonoBehaviour
         targetPosition = IKTarget.position;
         targetRotation = IKTarget.rotation;
 
-        // Calculate the delta position between the end effector and the target
-        Vector3 deltaPosition = targetPosition - endEffectorPosition;
-        Quaternion deltaRotation = targetRotation * Quaternion.Inverse(endEffectorRotation);
-        // Delta rotation needs to be converted to a vector
-        Vector3 deltaRotationVector = deltaRotation * Vector3.forward;
-        // List<float> deltaTarget = new List<float> {deltaPosition.x, deltaPosition.y, deltaPosition.z, deltaRotationVector.x, deltaRotationVector.y, deltaRotationVector.z};
-        List<float> deltaTarget = new List<float> {deltaPosition.x, deltaPosition.y, deltaPosition.z, 0f, 0f, 0f};
+        List<float> deltaTarget = new List<float> {
+            deltaPosition.x, deltaPosition.y, deltaPosition.z,
+            deltaRotation.x, deltaRotation.y, deltaRotation.z
+        };
+        Debug.Log("Target list");
+        PrintList(deltaTarget);
+        // List<float> deltaTarget = new List<float> {deltaPosition.x, deltaPosition.y, deltaPosition.z, 0f, 0f, 0f};
 
         // Solve for the psuedo inverse Jacobian
         // Degenerate? Switching to transpose
-        ArticulationJacobian invJ = JacobianTools.PsuedoInverse(minJ);
-        // ArticulationJacobian invJ = JacobianTools.Transpose(minJ);
+        
+        // Switch case for different IK types
+        ArticulationJacobian invJ = new ArticulationJacobian(1, 1);
+        switch (inverseMethod)
+        {
+            case InverseMethod.Transpose:
+                invJ = JacobianTools.Transpose(minJ);
+                invJ = JacobianTools.Multiply(invJ, inverseStep);
+                break;
+            case InverseMethod.DampedLeastSquares:
+                invJ = JacobianTools.DampedLeastSquares(minJ, dampedSquaresLambda);
+                invJ = JacobianTools.Multiply(invJ, inverseStep);
+                break;
+            case InverseMethod.PsuedoInverse:
+                invJ = JacobianTools.PsuedoInverse(minJ);
+                invJ = JacobianTools.Multiply(invJ, inverseStep);
+                break;
+            case InverseMethod.UnstableInverse:
+                invJ = JacobianTools.Inverse(minJ);
+                invJ = JacobianTools.Multiply(invJ, inverseStep);
+                break;
+            default:
+                Debug.Log("Invalid IK type, using Transpose");
+                invJ = JacobianTools.Transpose(minJ);
+                invJ = JacobianTools.Multiply(invJ, inverseStep);
+                break;
+        }
 
         // Calculate the delta angles
         List<float> deltaAngles = JacobianTools.Multiply(invJ, deltaTarget);
+        
+        // Wrap all angles to PI
+        for (int i = 0; i < deltaAngles.Count; i++)
+        {
+            deltaAngles[i] = JacobianTools.WrapToPI(deltaAngles[i]);
+        }
 
         Debug.Log("Predicted Angles:");
         PrintList(deltaAngles);
@@ -114,11 +164,51 @@ public class NewtonIK : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         // On press of the "R" key, solve the IK
-        if (Input.GetKeyDown("r")) {
-            SolveIK();
+        Vector3 deltaPosition = Vector3.zero;
+        if (Input.GetKey("w")) {
+            deltaPosition.y += 1f;
+        }
+        if (Input.GetKey("s")) {
+            deltaPosition.y -= 1f;
+        }
+        if (Input.GetKey("a")) {
+            deltaPosition.x -= 1f;
+        }
+        if (Input.GetKey("d")) {
+            deltaPosition.x += 1f;
+        }
+        if (Input.GetKey("q")) {
+            deltaPosition.z -= 1f;
+        }
+        if (Input.GetKey("e")) {
+            deltaPosition.z += 1f;
+        }
+
+        Vector3 deltaRotation = Vector3.zero;
+        if (Input.GetKey("i")) {
+            deltaRotation.y += 1f;
+        }
+        if (Input.GetKey("k")) {
+            deltaRotation.y -= 1f;
+        }
+        if (Input.GetKey("j")) {
+            deltaRotation.x -= 1f;
+        }
+        if (Input.GetKey("l")) {
+            deltaRotation.x += 1f;
+        }
+        if (Input.GetKey("u")) {
+            deltaRotation.z -= 1f;
+        }
+        if (Input.GetKey("o")) {
+            deltaRotation.z += 1f;
+        }
+
+        if (Input.GetKey(KeyCode.Space)) {
+            SolveIK(deltaPosition, deltaRotation);
         }
 
         // Draw a line from the end effector to the target

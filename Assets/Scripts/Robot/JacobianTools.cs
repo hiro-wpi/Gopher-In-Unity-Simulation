@@ -7,14 +7,13 @@ public static class JacobianTools
 {
     public static void Print(ArticulationJacobian jacobian)
     {
-        Debug.Log("Jacobian of size " + jacobian.rows + "x" + jacobian.columns);
         string jacobianString = "";
         for (int i = 0; i < jacobian.rows; i++)
         {
             string row = "";
             for (int j = 0; j < jacobian.columns; j++)
             {
-                row += jacobian[i,j] + " ";
+                row += jacobian[i,j] + ", ";
             }
             jacobianString += row + "\n";
         }
@@ -92,15 +91,55 @@ public static class JacobianTools
         return jacobian;
     }
 
+    public static ArticulationJacobian EulerToQuaternion(ArticulationJacobian jacobian)
+    {
+        if (jacobian.rows != 6)
+            throw new Exception("Can't convert Euler to Quaternion, jacobian.columns != 6!");
+        ArticulationJacobian result = new ArticulationJacobian(7, jacobian.columns);
+        for (int c = 0; c < jacobian.columns; c++)
+        {
+            result[0, c] = jacobian[0, c];
+            result[1, c] = jacobian[1, c];
+            result[2, c] = jacobian[2, c];
+
+            Quaternion q = Quaternion.Euler(jacobian[3, c], jacobian[4, c], jacobian[5, c]);
+            result[3, c] = q.x;
+            result[4, c] = q.y;
+            result[5, c] = q.z;
+            result[6, c] = q.w;
+        }
+        return result;
+    }
+
     // J* = (J.T*J)^-1*J.T
     public static ArticulationJacobian PsuedoInverse(ArticulationJacobian jacobian)
     {
-        ArticulationJacobian jacobianT = Transpose(jacobian);
-        ArticulationJacobian jacobianTjacobian = Multiply(jacobianT, jacobian);
-        ArticulationJacobian jacobianTjacobianInv = Inverse(jacobianTjacobian);
-        ArticulationJacobian jacobianTjacobianInvjacobianT = Multiply(jacobianTjacobianInv, jacobianT);
-        return jacobianTjacobianInvjacobianT;
+        ArticulationJacobian jT = Transpose(jacobian);
+        ArticulationJacobian jTj = Multiply(jT, jacobian);
+        try {
+            ArticulationJacobian jTj_inv = Inverse(jTj);
+            ArticulationJacobian psuedoInverseJ = Multiply(jTj_inv, jT);
+            Debug.Log("Inverse of jacobian was successful!");
+            Print(jTj_inv);
+            Print(psuedoInverseJ);
+            return psuedoInverseJ;
+        } catch (Exception e) {
+            Debug.Log("Inverse failed: " + e.Message);
+            return jT;
+        }   
     }
+
+    public static ArticulationJacobian DampedLeastSquares(ArticulationJacobian jacobian, float lambda)
+    {
+        ArticulationJacobian jT = Transpose(jacobian);
+        ArticulationJacobian jjT = Multiply(jacobian, jT);
+        ArticulationJacobian identity = new ArticulationJacobian(jjT.rows, jjT.columns);
+        AssignIdentity(ref identity);
+        ArticulationJacobian inverseTerm = Inverse(Add(jjT, Multiply(identity, lambda * lambda)));
+        ArticulationJacobian result = Multiply(jT, inverseTerm);
+        return result;
+    }
+
 
     public static ArticulationJacobian Inverse(ArticulationJacobian jacobian)
     {
@@ -126,8 +165,10 @@ public static class JacobianTools
                     maxValue = currentValue;
                 }
             }
-            if (maxValue < deltaE)
-                throw new Exception("Jacobian is degenerate, can't compute inverse!");
+            if (maxValue < deltaE) {
+                Print(jacobian);
+                throw new Exception("Jacobian is degenerate on row " + (diagonal + 1) + "!");
+            }
             SwapRows(jacobian, diagonal, maxRow);
             SwapRows(jacobianInv, diagonal, maxRow);
 
@@ -175,5 +216,62 @@ public static class JacobianTools
             }
         }
         return minJ;
+    }
+
+    public static float rotationError(Quaternion q1, Quaternion q2)
+    {
+        Quaternion q = q1 * Quaternion.Inverse(q2);
+        float theta = Mathf.Clamp( Mathf.Abs(q.w), -1, 1 ); // avoid overflow
+        float errRotation = 2 * Mathf.Acos(theta);
+        return errRotation;
+    }
+
+    public static Vector3 quaternionToEuler(Quaternion q)
+    {
+        float sqw = q.w * q.w;
+        float sqx = q.x * q.x;
+        float sqy = q.y * q.y;
+        float sqz = q.z * q.z;
+        float unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
+        float test = q.x * q.w - q.y * q.z;
+        Vector3 v;
+
+        if (test > 0.499 * unit)
+        { // singularity at north pole
+            v.x = 2 * Mathf.Atan2(q.x, q.w);
+            v.y = Mathf.PI / 2;
+            v.z = 0;
+            return NormalizeAngle(v);
+        }
+        if (test < -0.499 * unit)
+        { // singularity at south pole
+            v.x = -2 * Mathf.Atan2(q.x, q.w);
+            v.y = -Mathf.PI / 2;
+            v.z = 0;
+            return NormalizeAngle(v);
+        }
+        Quaternion q2 = new Quaternion(q.w, -q.x, -q.y, -q.z);
+        v.x = Mathf.Atan2(2 * q.y * q.w - 2 * q.x * q.z, sqx - sqy - sqz + sqw);
+        v.y = Mathf.Asin(2 * test / unit);
+        v.z = Mathf.Atan2(2 * q.x * q.w - 2 * q.y * q.z, -sqx + sqy - sqz + sqw);
+        return NormalizeAngle(v);
+    }
+
+    public static Vector3 NormalizeAngle(Vector3 v)
+    {
+        v.x = WrapToPI(v.x);
+        v.y = WrapToPI(v.y);
+        v.z = WrapToPI(v.z);
+        return v;
+    }
+
+    public static float WrapToPI(float angle)
+    {
+        angle = angle % (2 * Mathf.PI);
+        if (angle < -Mathf.PI)
+            angle += 2 * Mathf.PI;
+        else if (angle > Mathf.PI)
+            angle -= 2 * Mathf.PI;
+        return angle;
     }
 }
