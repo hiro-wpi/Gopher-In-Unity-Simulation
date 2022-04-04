@@ -341,7 +341,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 857220229, guid: 1967807ff55d0acfda395f110fd952d7, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 857220230, guid: 1967807ff55d0acfda395f110fd952d7, type: 3}
       propertyPath: m_Enabled
@@ -449,6 +449,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1967807ff55d0acfda395f110fd952d7, type: 3}
+--- !u!114 &906010673 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 857220229, guid: 1967807ff55d0acfda395f110fd952d7, type: 3}
+  m_PrefabInstance: {fileID: 906010672}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 918244563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 337e5bb46c406ac49a39caf4e27dfb50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &918244563 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5012463508999516895, guid: 1967807ff55d0acfda395f110fd952d7, type: 3}
@@ -466,6 +477,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c4bdf48aad5eb146828cc5681ce4d33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fk: {fileID: 906010673}
   root: {fileID: 1209744988}
   IKChain:
   - {fileID: 349574518}
@@ -478,9 +490,10 @@ MonoBehaviour:
   IKTarget: {fileID: 341294024}
   jointController: {fileID: 464697350}
   endEffector: {fileID: 576937385}
-  dampedSquaresLambda: 10
-  inverseStep: 0.01
-  inverseMethod: 2
+  dampedSquaresLambda: 0.01
+  inverseStep: 0.0005
+  epochs: 20
+  inverseMethod: 1
 --- !u!171741748 &1122462059 stripped
 ArticulationBody:
   m_CorrespondingSourceObject: {fileID: 8340433700877194083, guid: 1967807ff55d0acfda395f110fd952d7, type: 3}

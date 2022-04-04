@@ -7,6 +7,7 @@ using static JacobianTools;
 
 public class NewtonIK : MonoBehaviour
 {
+    public ForwardKinematics fk;
     public ArticulationBody root;
     public List<ArticulationBody> IKChain;
     public Transform IKTarget;
@@ -14,6 +15,7 @@ public class NewtonIK : MonoBehaviour
     public ArticulationBody endEffector;
     public float dampedSquaresLambda = 20f;
     public float inverseStep = 0.1f;
+    public int epochs = 20;
 
     // Enum for the type of inverse method to use
     public enum InverseMethod
@@ -25,7 +27,7 @@ public class NewtonIK : MonoBehaviour
     }
 
     public InverseMethod inverseMethod = InverseMethod.Transpose;
-    
+
     // We have to initialize it, or Unity CRASHES (gosh I love Unity, this definitely didn't take an hour to figure out)
     private ArticulationJacobian jacobian = new ArticulationJacobian(1, 1);
     private List<int> articulationIndices = new List<int>();
@@ -64,100 +66,78 @@ public class NewtonIK : MonoBehaviour
         PrintList(articulationDOFs);
     }
 
-    void SolveIK(Vector3 deltaPosition, Vector3 deltaRotation) {
+    void SolveIK(Vector3 deltaPosition, Quaternion deltaRotation)
+    {
         Debug.Log("SolveIK called");
-        root.GetDenseJacobian(ref jacobian);
-
-        int endEffectorIndex = articulationIndices[articulationIndices.Count - 1]; // the index of the end effector
-        Debug.Log("End effector index: " + endEffectorIndex);
-
-        // Test alternative
-        // TODO: If base is not fixed, need to subtract 6
-        int offset = 0;
-        if (!root.immovable)
-        {
-            offset = 6;
-        }
-        
-        ArticulationJacobian minJ = JacobianTools.FillMatrix(endEffectorIndex*6 - offset, articulationDOFs, jacobian);
-
-        // Convert the euler angles in the jacobian to quaternions
-        // minJ = JacobianTools.EulerToQuaternion(minJ);
-        
-        Vector3 endEffectorPosition = endEffector.transform.position;
-        Quaternion endEffectorRotation = endEffector.transform.rotation;
-
-        // Get the target position
-        targetPosition = IKTarget.position;
-        targetRotation = IKTarget.rotation;
-
-        List<float> deltaTarget = new List<float> {
-            deltaPosition.x, deltaPosition.y, deltaPosition.z,
-            deltaRotation.x, deltaRotation.y, deltaRotation.z
-        };
-        Debug.Log("Target list");
-        PrintList(deltaTarget);
-        // List<float> deltaTarget = new List<float> {deltaPosition.x, deltaPosition.y, deltaPosition.z, 0f, 0f, 0f};
-
-        // Solve for the psuedo inverse Jacobian
-        // Degenerate? Switching to transpose
-        
-        // Switch case for different IK types
-        ArticulationJacobian invJ = new ArticulationJacobian(1, 1);
-        switch (inverseMethod)
-        {
-            case InverseMethod.Transpose:
-                invJ = JacobianTools.Transpose(minJ);
-                invJ = JacobianTools.Multiply(invJ, inverseStep);
-                break;
-            case InverseMethod.DampedLeastSquares:
-                invJ = JacobianTools.DampedLeastSquares(minJ, dampedSquaresLambda);
-                invJ = JacobianTools.Multiply(invJ, inverseStep);
-                break;
-            case InverseMethod.PsuedoInverse:
-                invJ = JacobianTools.PsuedoInverse(minJ);
-                invJ = JacobianTools.Multiply(invJ, inverseStep);
-                break;
-            case InverseMethod.UnstableInverse:
-                invJ = JacobianTools.Inverse(minJ);
-                invJ = JacobianTools.Multiply(invJ, inverseStep);
-                break;
-            default:
-                Debug.Log("Invalid IK type, using Transpose");
-                invJ = JacobianTools.Transpose(minJ);
-                invJ = JacobianTools.Multiply(invJ, inverseStep);
-                break;
-        }
-
-        // Calculate the delta angles
-        List<float> deltaAngles = JacobianTools.Multiply(invJ, deltaTarget);
-        
-        // Wrap all angles to PI
-        for (int i = 0; i < deltaAngles.Count; i++)
-        {
-            deltaAngles[i] = JacobianTools.WrapToPI(deltaAngles[i]);
-        }
-
-        Debug.Log("Predicted Angles:");
-        PrintList(deltaAngles);
+        // root.GetDenseJacobian(ref jacobian);
 
         // Get the current joint angles
         jointAngles = jointController.GetCurrentJointTargets();
 
-        // Calculate the new joint angles
-        List<float> newJointAngles = new List<float>();
-        // TODO: This is bad, change to smarter way of getting indices
-        for (int i = 0; i < articulationIndices.Count; i++)
+        // Remember target position and rotation
+        targetPosition = deltaPosition + endEffector.transform.position;
+        targetRotation = deltaRotation * endEffector.transform.rotation;
+
+        for (int e = 0; e < epochs; e++)
         {
-            newJointAngles.Add(jointAngles[i] + deltaAngles[i]);
+            jacobian = fk.ComputeJacobian(jointAngles);
+
+            // Calculate the delta to our target position and rotation
+            Vector3 iterativeDeltaPosition = targetPosition - endEffector.transform.position;
+            Quaternion iterativeDeltaRotation = targetRotation * Quaternion.Inverse(endEffector.transform.rotation);
+
+            List<float> deltaTarget = new List<float> {
+                iterativeDeltaPosition.x, iterativeDeltaPosition.y, iterativeDeltaPosition.z,
+                iterativeDeltaRotation.x, iterativeDeltaRotation.y, iterativeDeltaRotation.z, iterativeDeltaRotation.w
+            };
+
+            // Switch case for different IK types
+            ArticulationJacobian invJ = new ArticulationJacobian(1, 1);
+            switch (inverseMethod)
+            {
+                case InverseMethod.Transpose:
+                    invJ = JacobianTools.Transpose(jacobian);
+                    invJ = JacobianTools.Multiply(invJ, inverseStep);
+                    break;
+                case InverseMethod.DampedLeastSquares:
+                    invJ = JacobianTools.DampedLeastSquares(jacobian, dampedSquaresLambda);
+                    invJ = JacobianTools.Multiply(invJ, inverseStep);
+                    break;
+                case InverseMethod.PsuedoInverse:
+                    invJ = JacobianTools.PsuedoInverse(jacobian);
+                    invJ = JacobianTools.Multiply(invJ, inverseStep);
+                    break;
+                case InverseMethod.UnstableInverse:
+                    invJ = JacobianTools.Inverse(jacobian);
+                    invJ = JacobianTools.Multiply(invJ, inverseStep);
+                    break;
+                default:
+                    Debug.Log("Invalid IK type, using Transpose");
+                    invJ = JacobianTools.Transpose(jacobian);
+                    invJ = JacobianTools.Multiply(invJ, inverseStep);
+                    break;
+            }
+
+            // Calculate the delta angles
+            List<float> deltaAngles = JacobianTools.Multiply(invJ, deltaTarget);
+
+            // Wrap all angles to PI
+            // for (int i = 0; i < deltaAngles.Count; i++)
+            // {
+            //     deltaAngles[i] = JacobianTools.WrapToPI(deltaAngles[i]);
+            // }
+
+            // TODO: This is bad, change to smarter way of getting indices
+            for (int i = 0; i < jointAngles.Length; i++)
+            {
+                // TODO: this crashed unity lol
+                jointAngles[i] += deltaAngles[i] / (float)e;
+            }
         }
-        Debug.Log("New Joint Angles:");
-        PrintList(newJointAngles);
 
         // Set the new joint angles
-        jointController.SetJointTargets(newJointAngles.ToArray());
+        jointController.SetJointTargets(jointAngles);
 
-        // TODO: Compute Newton-Rapshon
         // Initialize the error
         float error = Vector3.Distance(IKTarget.position, endEffector.transform.position);
         Debug.Log("Current Error:" + error);
@@ -167,47 +147,41 @@ public class NewtonIK : MonoBehaviour
     void FixedUpdate()
     {
         // On press of the "R" key, solve the IK
+        float speed = 0.1f;
         Vector3 deltaPosition = Vector3.zero;
-        if (Input.GetKey("w")) {
-            deltaPosition.y += 1f;
+        if (Input.GetKey("w"))
+        {
+            deltaPosition.y += speed;
         }
-        if (Input.GetKey("s")) {
-            deltaPosition.y -= 1f;
+        if (Input.GetKey("s"))
+        {
+            deltaPosition.y -= speed;
         }
-        if (Input.GetKey("a")) {
-            deltaPosition.x -= 1f;
+        if (Input.GetKey("a"))
+        {
+            deltaPosition.x -= speed;
         }
-        if (Input.GetKey("d")) {
-            deltaPosition.x += 1f;
+        if (Input.GetKey("d"))
+        {
+            deltaPosition.x += speed;
         }
-        if (Input.GetKey("q")) {
-            deltaPosition.z -= 1f;
+        if (Input.GetKey("q"))
+        {
+            deltaPosition.z -= speed;
         }
-        if (Input.GetKey("e")) {
-            deltaPosition.z += 1f;
-        }
-
-        Vector3 deltaRotation = Vector3.zero;
-        if (Input.GetKey("i")) {
-            deltaRotation.y += 1f;
-        }
-        if (Input.GetKey("k")) {
-            deltaRotation.y -= 1f;
-        }
-        if (Input.GetKey("j")) {
-            deltaRotation.x -= 1f;
-        }
-        if (Input.GetKey("l")) {
-            deltaRotation.x += 1f;
-        }
-        if (Input.GetKey("u")) {
-            deltaRotation.z -= 1f;
-        }
-        if (Input.GetKey("o")) {
-            deltaRotation.z += 1f;
+        if (Input.GetKey("e"))
+        {
+            deltaPosition.z += speed;
         }
 
-        if (Input.GetKey(KeyCode.Space)) {
+        // Quaternion deltaRotation = new Quaternion(0f, 0f, 0f, 0f);
+
+        // Vector3 deltaPosition = IKTarget.position - endEffector.transform.position;
+        // Quaternion deltaRotation = targetRotation * Quaternion.Inverse(endEffector.transform.rotation);
+        Quaternion deltaRotation = new Quaternion(0f, 0f, 0f, 0f);
+
+        if (Input.GetKey(KeyCode.Space))
+        {
             SolveIK(deltaPosition, deltaRotation);
         }
 

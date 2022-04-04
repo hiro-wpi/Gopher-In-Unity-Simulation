@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static JacobianTools;
 
 /// <summary>
 ///     Provide util functions to compute forward kinematics
@@ -12,16 +14,16 @@ public class ForwardKinematics : MonoBehaviour
     // params has length of numJoint+1
     // world -> joint 1 -> ... -> end effector
     public int numJoint = 7;
-    public float[] alpha = new float[] {3.1415927f, 1.5707963f, 1.5707963f, 1.5707963f,  
+    public float[] alpha = new float[] {3.1415927f, 1.5707963f, 1.5707963f, 1.5707963f,
                                         1.5707963f, 1.5707963f, 1.5707963f, 3.1415927f};
-    public float[] a = new float[] {0, 0, 0, 0, 0, 0, 0, 0};
-    public float[] d = new float[] {0, -0.2848f, -0.0118f, -0.4208f, 
+    public float[] a = new float[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+    public float[] d = new float[] {0, -0.2848f, -0.0118f, -0.4208f,
                                     -0.0128f, -0.3143f, 0, -0.2874f};
-    public float[] initialTheta = new float[] {0, 0, 3.1415927f, 3.1415927f, 3.1415927f, 
+    public float[] initialTheta = new float[] {0, 0, 3.1415927f, 3.1415927f, 3.1415927f,
                                                3.1415927f, 3.1415927f, 3.1415927f};
     private float[] theta;
-    public float[] angleLowerLimits = new float[] {0, -2.41f, 0, -2.66f, 0, -2.23f, 0};
-    public float[] angleUpperLimits = new float[] {0,  2.41f, 0,  2.66f, 0,  2.23f, 0};
+    public float[] angleLowerLimits = new float[] { 0, -2.41f, 0, -2.66f, 0, -2.23f, 0 };
+    public float[] angleUpperLimits = new float[] { 0, 2.41f, 0, 2.66f, 0, 2.23f, 0 };
 
     // Homography Matrix
     private Matrix4x4[] initH;
@@ -36,24 +38,24 @@ public class ForwardKinematics : MonoBehaviour
         theta = (float[])initialTheta.Clone();
 
         // Initialize homography matrices
-        initH = new Matrix4x4[numJoint+1];
-        for (int i = 0; i < numJoint+1; ++i)
+        initH = new Matrix4x4[numJoint + 1];
+        for (int i = 0; i < numJoint + 1; ++i)
         {
             float ca = Mathf.Cos(alpha[i]);
             float sa = Mathf.Sin(alpha[i]);
 
             initH[i] = Matrix4x4.identity;
-            initH[i].SetRow( 0, new Vector4 (1, -ca,  sa, a[i]) );
-            initH[i].SetRow( 1, new Vector4 (1,  ca, -sa, a[i]) );
-            initH[i].SetRow( 2, new Vector4 (0,  sa,  ca, d[i]) );
-            initH[i].SetRow( 3, new Vector4 (0,  0,   0,  1   ) );
+            initH[i].SetRow(0, new Vector4(1, -ca, sa, a[i]));
+            initH[i].SetRow(1, new Vector4(1, ca, -sa, a[i]));
+            initH[i].SetRow(2, new Vector4(0, sa, ca, d[i]));
+            initH[i].SetRow(3, new Vector4(0, 0, 0, 1));
         }
         H = (Matrix4x4[])initH.Clone();
 
         // Initialize joint positions and rotations
-        positions = new Vector3[numJoint+1];
-        rotations = new Quaternion[numJoint+1];
-        UpdateAllH(new float[] {0f, 0f, 0f, 0f, 0f, 0f, 0f});
+        positions = new Vector3[numJoint + 1];
+        rotations = new Quaternion[numJoint + 1];
+        UpdateAllH(new float[] { 0f, 0f, 0f, 0f, 0f, 0f, 0f });
     }
 
     void Update()
@@ -87,10 +89,11 @@ public class ForwardKinematics : MonoBehaviour
         H[i][1, 1] *= ct;
         H[i][1, 2] *= ct;
         H[i][1, 3] *= st;
-        
+
         // Update joint positions and rotations
         UpdateAllPose();
     }
+
     public void UpdateAllH(float[] jointAngles)
     {
         /* Compute homography transformation matrices
@@ -99,7 +102,7 @@ public class ForwardKinematics : MonoBehaviour
         UpdateH(0, 0);
         for (int i = 0; i < numJoint; ++i)
         {
-            UpdateH(i+1, jointAngles[i]);
+            UpdateH(i + 1, jointAngles[i]);
         }
 
         // Update joint positions and rotations
@@ -110,15 +113,15 @@ public class ForwardKinematics : MonoBehaviour
     {
         // Compute H from base to end effector
         Matrix4x4 HEnd = Matrix4x4.identity;
-        for (int i = 0; i < numJoint+1; ++i)
-        {            
+        for (int i = 0; i < numJoint + 1; ++i)
+        {
             HEnd = HEnd * H[i];
             positions[i] = new Vector3(HEnd[0, 3], HEnd[1, 3], HEnd[2, 3]);
             rotations[i] = HEnd.rotation;
         }
     }
 
-    public (Vector3, Quaternion) GetPose(int i, bool toRUF=false)
+    public (Vector3, Quaternion) GetPose(int i, bool toRUF = false)
     {
         // Unity coordinate
         if (toRUF)
@@ -126,14 +129,14 @@ public class ForwardKinematics : MonoBehaviour
         else
             return (positions[i], rotations[i]);
     }
-    public (Vector3[], Quaternion[]) GetAllPose(bool toRUF=false)
+    public (Vector3[], Quaternion[]) GetAllPose(bool toRUF = false)
     {
         // Unity coordinate
         if (toRUF)
         {
-            Vector3[] positionsRUF = new Vector3[numJoint+1];
-            Quaternion[] rotationsRUF = new Quaternion[numJoint+1];
-            for (int i = 0; i < numJoint+1; ++i)
+            Vector3[] positionsRUF = new Vector3[numJoint + 1];
+            Quaternion[] rotationsRUF = new Quaternion[numJoint + 1];
+            for (int i = 0; i < numJoint + 1; ++i)
             {
                 positionsRUF[i] = ToRUF(positions[i]);
                 rotationsRUF[i] = ToRUF(rotations[i]);
@@ -152,5 +155,39 @@ public class ForwardKinematics : MonoBehaviour
     private Quaternion ToRUF(Quaternion q)
     {
         return new Quaternion(-q.y, q.z, q.x, -q.w);
+    }
+
+    public ArticulationJacobian ComputeJacobian(float[] initialJointAngles)
+    {
+        // Create a new ArticulationJacobian
+        ArticulationJacobian jacobian = new ArticulationJacobian(7, numJoint);
+
+        // Delta for calculating change in pose
+        float delta = 1e-8f;
+
+        // Get orientation and position of end effector
+        (Vector3 position, Quaternion rotation) = GetPose(numJoint);
+
+        // Compute the jacobian
+        for (int i = 0; i < numJoint; ++i)
+        {
+            UpdateAllH(initialJointAngles);
+            UpdateH(i, delta);
+            (Vector3 positionNew, Quaternion rotationNew) = GetPose(numJoint);
+
+            // Compute the change in orientation
+            Quaternion orientationDelta = rotationNew * Quaternion.Inverse(rotation);
+
+            // Compute the change in position
+            Vector3 positionDelta = positionNew - position;
+
+            // Jacobian is backwards, so calculate index as numJoint - i - 1
+            int index = i; // numJoint - i - 1;
+
+            // Compute the jacobian
+            JacobianTools.Set(jacobian, index, positionDelta, orientationDelta);
+        }
+
+        return jacobian;
     }
 }

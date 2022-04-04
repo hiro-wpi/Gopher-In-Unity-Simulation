@@ -13,7 +13,7 @@ public static class JacobianTools
             string row = "";
             for (int j = 0; j < jacobian.columns; j++)
             {
-                row += jacobian[i,j] + ", ";
+                row += jacobian[i, j] + ", ";
             }
             jacobianString += row + "\n";
         }
@@ -116,17 +116,20 @@ public static class JacobianTools
     {
         ArticulationJacobian jT = Transpose(jacobian);
         ArticulationJacobian jTj = Multiply(jT, jacobian);
-        try {
+        try
+        {
             ArticulationJacobian jTj_inv = Inverse(jTj);
             ArticulationJacobian psuedoInverseJ = Multiply(jTj_inv, jT);
             Debug.Log("Inverse of jacobian was successful!");
             Print(jTj_inv);
             Print(psuedoInverseJ);
             return psuedoInverseJ;
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             Debug.Log("Inverse failed: " + e.Message);
             return jT;
-        }   
+        }
     }
 
     public static ArticulationJacobian DampedLeastSquares(ArticulationJacobian jacobian, float lambda)
@@ -139,7 +142,6 @@ public static class JacobianTools
         ArticulationJacobian result = Multiply(jT, inverseTerm);
         return result;
     }
-
 
     public static ArticulationJacobian Inverse(ArticulationJacobian jacobian)
     {
@@ -165,7 +167,8 @@ public static class JacobianTools
                     maxValue = currentValue;
                 }
             }
-            if (maxValue < deltaE) {
+            if (maxValue < deltaE)
+            {
                 Print(jacobian);
                 throw new Exception("Jacobian is degenerate on row " + (diagonal + 1) + "!");
             }
@@ -207,10 +210,12 @@ public static class JacobianTools
     {
         ArticulationJacobian minJ = new ArticulationJacobian(6, cols.Count);
         int row = -1;
-        for (int r = startRow; r < startRow + 6; r++) {
+        for (int r = startRow; r < startRow + 6; r++)
+        {
             row += 1;
             int col = -1;
-            foreach (int c in cols) {
+            foreach (int c in cols)
+            {
                 col += 1;
                 minJ[row, col] = oldJ[r, c];
             }
@@ -221,7 +226,7 @@ public static class JacobianTools
     public static float rotationError(Quaternion q1, Quaternion q2)
     {
         Quaternion q = q1 * Quaternion.Inverse(q2);
-        float theta = Mathf.Clamp( Mathf.Abs(q.w), -1, 1 ); // avoid overflow
+        float theta = Mathf.Clamp(Mathf.Abs(q.w), -1, 1); // avoid overflow
         float errRotation = 2 * Mathf.Acos(theta);
         return errRotation;
     }
@@ -273,5 +278,16 @@ public static class JacobianTools
         else if (angle > Mathf.PI)
             angle -= 2 * Mathf.PI;
         return angle;
+    }
+
+    public static void Set(ArticulationJacobian jacobian, int i, Vector3 position, Quaternion orientation)
+    {
+        jacobian[i, 0] = position.x;
+        jacobian[i, 1] = position.y;
+        jacobian[i, 2] = position.z;
+        jacobian[i, 3] = orientation.x;
+        jacobian[i, 4] = orientation.y;
+        jacobian[i, 5] = orientation.z;
+        jacobian[i, 6] = orientation.w;
     }
 }
