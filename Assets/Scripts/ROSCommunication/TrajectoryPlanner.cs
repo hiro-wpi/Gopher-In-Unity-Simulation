@@ -35,7 +35,7 @@ public class TrajectoryPlanner : MonoBehaviour
     private JointsMsg joints;
     private PlanTrajectoryRequest request;
     private PlanTrajectoryResponse response;
-    
+
     // TODO this should be removed in the future as the 
     // motion time should be determined by the trajectory
     private const float waitTimeAfterWaypoint = 0.03f;
@@ -44,13 +44,13 @@ public class TrajectoryPlanner : MonoBehaviour
     {
         // Get ROS connection static instance
         ros = ROSConnection.GetOrCreateInstance();
-        ros.RegisterRosService<PlanTrajectoryRequest, 
+        ros.RegisterRosService<PlanTrajectoryRequest,
                                PlanTrajectoryResponse>(plannerServiceName);
-    
+
         // Robots
         numJoint = jointController.numJoint;
     }
-    
+
     public void PlanTrajectory()
     {
         // Initialize request;
@@ -73,10 +73,10 @@ public class TrajectoryPlanner : MonoBehaviour
         request.target.position = position.To<FLU>();
         request.target.orientation = pickOrientation.To<FLU>();
 
-        ros.SendServiceMessage<PlanTrajectoryResponse>(plannerServiceName, request, 
+        ros.SendServiceMessage<PlanTrajectoryResponse>(plannerServiceName, request,
                                                        TrajectoryResponse);
     }
-    
+
     private void TrajectoryResponse(PlanTrajectoryResponse response)
     {
         // Use coroutine to prevent blocking the program
@@ -110,6 +110,6 @@ public class TrajectoryPlanner : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.5f);
-        gripperController.CloseGrippers();
+        gripperController.SetGrippers(1.0f);
     }
 }

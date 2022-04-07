@@ -2,17 +2,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "IK Solver", menuName = "IK Solver/Newton IK")]
 public class NewtonIK : MonoBehaviour
 {
     public ArticulationBody[] IKChain;
     public ArticulationBody root;
     public ArticulationBody endEffector;
+    public Transform localToWorldTransform;
     public KinematicSolver kinematicSolver;
     public float dampedSquaresLambda = 0.01f;
     public float inverseStep = 0.02f;
-    public float moveSpeed = 0.1f;
-    public float rotateSpeed = 0.5f;
 
     // Enum for the type of inverse method to use
     public enum InverseMethod
@@ -48,15 +46,13 @@ public class NewtonIK : MonoBehaviour
     public float[] SolveIK(float[] jointAngles, Vector3 deltaPosition, Vector3 deltaRotation)
     {
         // translate the deltaPosition to be relative to the end effector
-        deltaPosition = endEffector.transform.TransformVector(deltaPosition);
-        deltaRotation = endEffector.transform.TransformVector(deltaRotation);
+        deltaPosition = localToWorldTransform.TransformVector(deltaPosition);
+        deltaRotation = localToWorldTransform.TransformVector(deltaRotation);
 
         kinematicSolver.UpdateAngles(jointAngles);
         kinematicSolver.CalculateAllT();
         kinematicSolver.UpdateAllPose();
         jacobian = kinematicSolver.ComputeJacobian();
-
-        Debug.Log("End Real: " + endEffector.transform.position);
 
         List<float> deltaTarget = new List<float> {
             deltaPosition.x, deltaPosition.y, deltaPosition.z,

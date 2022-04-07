@@ -11,41 +11,33 @@ using UnityEngine;
 /// </summary>
 public class ArticulationGripperController : MonoBehaviour
 {
-    
-    public ArticulationBody[] leftFingerChain;
-    public ArticulationBody[] rightFingerChain;
-    public float closeValue = 48f;
-    public float openValue = 0f;
+
+    // New class to hold the articulation body and close/open values
+    [System.Serializable]
+    public class ArticulationGripper
+    {
+        public ArticulationBody articulationBody;
+        public float closeValue;
+        public float openValue;
+    }
+
+    public ArticulationGripper[] leftFingerChain;
+    public ArticulationGripper[] rightFingerChain;
 
     void Start()
     {
     }
 
-    public void SetGrippers(float closeValue) 
+    public void SetGrippers(float value)
     {
-        for (int i=0; i < leftFingerChain.Length; ++i)
+        for (int i = 0; i < leftFingerChain.Length; ++i)
         {
-            if (i == 2) // left inner finger
-            {
-                SetTarget(leftFingerChain[i], -closeValue);
-                SetTarget(rightFingerChain[i], -closeValue);
-            }
-            else
-            {
-                SetTarget(leftFingerChain[i], closeValue);
-                SetTarget(rightFingerChain[i], closeValue);
-            }
-        }
-    }
-    
-    public void CloseGrippers() 
-    {
-        SetGrippers(closeValue); // Deg
-    }
+            float leftValue = Mathf.Lerp(leftFingerChain[i].openValue, leftFingerChain[i].closeValue, value);
+            SetTarget(leftFingerChain[i].articulationBody, leftValue);
 
-    public void OpenGrippers() 
-    {
-        SetGrippers(openValue); // Deg
+            float rightValue = Mathf.Lerp(rightFingerChain[i].openValue, rightFingerChain[i].closeValue, value);
+            SetTarget(rightFingerChain[i].articulationBody, rightValue);
+        }
     }
 
     void SetTarget(ArticulationBody joint, float target)
