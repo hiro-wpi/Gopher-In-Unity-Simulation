@@ -280,14 +280,13 @@ public static class JacobianTools
         return angle;
     }
 
-    public static void Set(ArticulationJacobian jacobian, int i, Vector3 position, Quaternion orientation)
+    public static void Set(ArticulationJacobian jacobian, int i, Vector3 position, Vector3 rotation)
     {
-        jacobian[i, 0] = position.x;
-        jacobian[i, 1] = position.y;
-        jacobian[i, 2] = position.z;
-        jacobian[i, 3] = orientation.x;
-        jacobian[i, 4] = orientation.y;
-        jacobian[i, 5] = orientation.z;
-        jacobian[i, 6] = orientation.w;
+        jacobian[0, i] = position.x;
+        jacobian[1, i] = position.y;
+        jacobian[2, i] = position.z;
+        jacobian[3, i] = rotation.x;
+        jacobian[4, i] = rotation.y;
+        jacobian[5, i] = rotation.z;
     }
 }

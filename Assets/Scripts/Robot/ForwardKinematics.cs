@@ -156,38 +156,4 @@ public class ForwardKinematics : MonoBehaviour
     {
         return new Quaternion(-q.y, q.z, q.x, -q.w);
     }
-
-    public ArticulationJacobian ComputeJacobian(float[] initialJointAngles)
-    {
-        // Create a new ArticulationJacobian
-        ArticulationJacobian jacobian = new ArticulationJacobian(7, numJoint);
-
-        // Delta for calculating change in pose
-        float delta = 1e-8f;
-
-        // Get orientation and position of end effector
-        (Vector3 position, Quaternion rotation) = GetPose(numJoint);
-
-        // Compute the jacobian
-        for (int i = 0; i < numJoint; ++i)
-        {
-            UpdateAllH(initialJointAngles);
-            UpdateH(i, delta);
-            (Vector3 positionNew, Quaternion rotationNew) = GetPose(numJoint);
-
-            // Compute the change in orientation
-            Quaternion orientationDelta = rotationNew * Quaternion.Inverse(rotation);
-
-            // Compute the change in position
-            Vector3 positionDelta = positionNew - position;
-
-            // Jacobian is backwards, so calculate index as numJoint - i - 1
-            int index = i; // numJoint - i - 1;
-
-            // Compute the jacobian
-            JacobianTools.Set(jacobian, index, positionDelta, orientationDelta);
-        }
-
-        return jacobian;
-    }
 }
