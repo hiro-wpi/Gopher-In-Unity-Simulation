@@ -21,6 +21,7 @@ public class KinematicSolver : MonoBehaviour
                                     -0.0128f, -0.3143f, 0, -0.2874f};
     public float[] thetaOffset = new float[] {0, 0, 3.1415927f, 3.1415927f, 3.1415927f,
                 3.1415927f, 3.1415927f, 3.1415927f};
+    public Transform baseTransform;
     private float[] angles = new float[] { 0, 0, 0, 0, 0, 0, 0, 0 };
 
     // Homography Matrix
@@ -79,7 +80,10 @@ public class KinematicSolver : MonoBehaviour
     public Matrix4x4[] GetMultTs()
     {
         Matrix4x4[] Ts = new Matrix4x4[numJoint + 1];
-        Matrix4x4 TTotal = Matrix4x4.identity;
+        // first T is equal to baseTransform
+        Vector3 pos = FromRUF(baseTransform.position);
+        Quaternion rot = FromRUF(baseTransform.rotation);
+        Matrix4x4 TTotal = Matrix4x4.TRS(pos, rot, Vector3.one);
         for (int i = 0; i < numJoint + 1; i++)
         {
             if (i > 0)
@@ -117,9 +121,20 @@ public class KinematicSolver : MonoBehaviour
         return new Vector3(p.y, -p.z, p.x);
     }
 
+    private Vector3 FromRUF(Vector3 p)
+    {
+        // jesus this took forever to figure out lmao
+        return new Vector3(p.z, p.x, -p.y);
+    }
+
     private Quaternion ToRUF(Quaternion q)
     {
         return new Quaternion(q.y, -q.z, q.x, q.w);
+    }
+
+    private Quaternion FromRUF(Quaternion q)
+    {
+        return new Quaternion(-q.z, -q.x, q.y, q.w);
     }
 
     public (Vector3, Quaternion) GetPose(int i)
