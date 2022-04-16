@@ -22,6 +22,7 @@ public class TwistSubscriber : MonoBehaviour
     public float angularSpeed = 1.5f;
     private float targetLinearVelocity;
     private float targetAngularVelocity;
+    private float y;
     
     void Start()
     {
@@ -42,6 +43,14 @@ public class TwistSubscriber : MonoBehaviour
     private void updateVelocity(TwistMsg twist)
     {
         targetLinearVelocity = twist.linear.From<FLU>().z * linearSpeed;
-        targetAngularVelocity = twist.angular.From<FLU>().y * angularSpeed;
+	y = twist.angular.From<FLU>().y;
+
+	if (y < 0f){
+	   y -= 0.2f;	
+	}
+	if (y > 0f){
+	   y += 0.2f;	
+	}
+        targetAngularVelocity = y * angularSpeed;
     }
 }

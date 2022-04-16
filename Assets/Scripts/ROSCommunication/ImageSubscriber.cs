@@ -31,7 +31,7 @@ public class ImageSubscriber : MonoBehaviour
 
         // Display
         texture2D = new Texture2D(1, 1);
-        meshRenderer.material = new Material(Shader.Find("Standard"));
+        //meshRenderer.material = new Material(Shader.Find("Standard"));
 
         // Subscriber
         ros.Subscribe<CompressedImageMsg>(cameraTopicName, ReceiveImage);
