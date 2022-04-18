@@ -24,6 +24,8 @@ public class AmclSubscriber : MonoBehaviour
     private TwistStampedPublisher twistStampedPublisher;
     private TwistMsg twistMsg;
 
+    private Vector3 unity_coords;
+
     private double init_x = 0.0;
     private double init_y = 0.0;
 
@@ -59,6 +61,8 @@ public class AmclSubscriber : MonoBehaviour
             // linear
         };
         
+        unity_coords = new Vector3(0.0f, 0.0f, 0.0f);
+
         ros.Subscribe<PoseWithCovarianceStampedMsg>(AmclTopicName, updatePose);
         
         init_time = Time.time; 
@@ -93,8 +97,13 @@ public class AmclSubscriber : MonoBehaviour
         twist_x = v_x;
         twist_y = v_y;
 
+        unity_coords.x = (float)(-1.0*y);
+        unity_coords.z = (float)(-1.0*x);
 
-        ros.Publish(TwistTopicName, twistMsg);
+        Debug.Log(unity_coords);
+
+        gameObject.transform.parent.transform.parent.position = unity_coords;
+        // ros.Publish(TwistTopicName, twistMsg);
 
     }
 
