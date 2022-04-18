@@ -24,7 +24,7 @@ public class AmclSubscriber : MonoBehaviour
         // Get ROS connection static instance
         ros = ROSConnection.GetOrCreateInstance();
         
-        ros.Subscribe<PoseWithCovarianceMsg>(AmclTopicName, updatePose);
+        ros.Subscribe<PoseWithCovarianceStampedMsg>(AmclTopicName, updatePose);
     }
 
     private void FixedUpdate()
@@ -32,7 +32,7 @@ public class AmclSubscriber : MonoBehaviour
         // wheelController.SetRobotVelocity(targetLinearVelocity, targetAngularVelocity);
     }
 
-    private void updatePose(PoseWithCovarianceMsg pose)
+    private void updatePose(PoseWithCovarianceStampedMsg pose)
     {
         Debug.Log("in update Pose");
     }
