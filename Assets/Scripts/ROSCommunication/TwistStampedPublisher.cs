@@ -11,7 +11,7 @@ using RosMessageTypes.Geometry;
 
 /// <summary>
 ///     This script publishes robot stamped twist
-///     with repect to the local robot frame
+///     with respect to the local robot frame
 /// </summary>
 public class TwistStampedPublisher : MonoBehaviour
 {

@@ -1984,7 +1984,7 @@ GameObject:
   - component: {fileID: 3928315737509677635}
   - component: {fileID: 3928315737509677636}
   - component: {fileID: 6358552747834948618}
-  - component: {fileID: 2312851367088021572}
+  - component: {fileID: 480256650130539557}
   m_Layer: 8
   m_Name: ROS
   m_TagString: Untagged
@@ -2076,12 +2076,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3928315737509677638}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e3c70d4a760e69013ae012cfb66325a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  twistTopicName: gopher_presence/base_controller/cmd_vel
+  twistTopicName: /cmd_vel_unity_bot
   wheelController: {fileID: 3928315738651084601}
   linearSpeed: 1.5
   angularSpeed: 1.5
@@ -2115,7 +2115,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraTopicName: camera/color/image_raw/compressed
   meshRenderer: {fileID: 0}
---- !u!114 &2312851367088021572
+--- !u!114 &480256650130539557
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2128,6 +2128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AmclTopicName: /amcl_pose
+  TwistTopicName: /cmd_vel_unity_bot
   wheelController: {fileID: 3928315738651084601}
 --- !u!1 &3928315737510121526
 GameObject:

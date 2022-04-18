@@ -36,6 +36,6 @@ def steering_talker():
 if __name__ == '__main__':
     try:
         #Testing our function
-        velocity_publisher = rospy.Publisher('cmd_vel', Twist, queue_size=10)
+        velocity_publisher = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
         steering_talker()
     except rospy.ROSInterruptException: pass
