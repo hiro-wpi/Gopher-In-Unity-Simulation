@@ -63,8 +63,6 @@ public class AmclSubscriber : MonoBehaviour
         
         init_time = Time.time; 
 
-
-
     }
 
     void LateUpdate(){
@@ -92,11 +90,9 @@ public class AmclSubscriber : MonoBehaviour
         v_x = delta_x/delta_time;
         v_y = delta_y/delta_time;
 
-        twist_x = Math.Cos(angles.yaw) * v_x + Math.Sin(angles.yaw) * v_y;
-        twist_y = Math.Cos(angles.yaw) * v_y - Math.Sin(angles.yaw) * v_x;
+        twist_x = v_x;
+        twist_y = v_y;
 
-        twistMsg.linear.x = twist_x;
-        twistMsg.linear.y = twist_y;
 
         ros.Publish(TwistTopicName, twistMsg);
 
