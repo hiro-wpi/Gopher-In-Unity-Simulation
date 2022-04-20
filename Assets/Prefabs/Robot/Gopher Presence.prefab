@@ -1985,6 +1985,7 @@ GameObject:
   - component: {fileID: 3928315737509677636}
   - component: {fileID: 6358552747834948618}
   - component: {fileID: 480256650130539557}
+  - component: {fileID: 2881489286667098619}
   m_Layer: 8
   m_Name: ROS
   m_TagString: Untagged
@@ -2122,14 +2123,33 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3928315737509677638}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5d0b186cfedfafedcb2a062d9a6949e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AmclTopicName: /amcl_pose
-  TwistTopicName: /cmd_vel_unity_bot
+  AmclBotTopicName: /pose_unity_bot
   wheelController: {fileID: 3928315738651084601}
+--- !u!114 &2881489286667098619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3928315737509677638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ce850bfe5a7ae641ae1e0005662788e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Topic: /amcl_pose
+  m_ID: 0-0
+  m_Size: 0.1
+  m_DrawUnityAxes: 0
+  m_TFTrackingSettings:
+    type: 1
+    tfTopic: /tf
 --- !u!1 &3928315737510121526
 GameObject:
   m_ObjectHideFlags: 0

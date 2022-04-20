@@ -19,7 +19,7 @@ public class AmclSubscriber : MonoBehaviour
     private ROSConnection ros;
     // Variables required for ROS communication
     public string AmclTopicName = "/amcl_pose";
-    public string TwistTopicName = "/cmd_vel_unity_bot";
+    public string AmclBotTopicName = "/pose_unity_bot";
 
     private TwistStampedPublisher twistStampedPublisher;
     private TwistMsg twistMsg;
@@ -41,6 +41,9 @@ public class AmclSubscriber : MonoBehaviour
     private double curr_time; 
     private double delta_time;
 
+    //making sphere gameobject for testing
+    private GameObject test_sphere;
+
     public ArticulationWheelController wheelController;
 
     struct EulerAngles{
@@ -53,7 +56,7 @@ public class AmclSubscriber : MonoBehaviour
     {
         // Get ROS connection static instance
         ros = ROSConnection.GetOrCreateInstance();
-        ros.RegisterPublisher<TwistMsg>(TwistTopicName);
+        //ros.RegisterPublisher<Pose>(TwistTopicName);
         
         // Initialize message
         twistMsg = new TwistMsg
@@ -61,12 +64,16 @@ public class AmclSubscriber : MonoBehaviour
             // linear
         };
         
+        //initializing sphere gameobject
+        // test_sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        // test_sphere.transform.localScale = new Vector3(1.0f ,1.0f ,1.0f);
+
+
         unity_coords = new Vector3(0.0f, 0.0f, 0.0f);
 
         ros.Subscribe<PoseWithCovarianceStampedMsg>(AmclTopicName, updatePose);
         
-        init_time = Time.time; 
-
+        init_time = Time.time;
     }
 
     void LateUpdate(){
@@ -88,7 +95,7 @@ public class AmclSubscriber : MonoBehaviour
         delta_y = y - init_y;
 
         curr_time = Time.time;
-        delta_time = init_time-curr_time;
+        delta_time = init_time-curr_time; 
         init_time = curr_time;
 
         v_x = delta_x/delta_time;
@@ -100,10 +107,11 @@ public class AmclSubscriber : MonoBehaviour
         unity_coords.x = (float)(-1.0*y);
         unity_coords.z = (float)(-1.0*x);
 
-        Debug.Log(unity_coords);
+        // Debug.Log(unity_coords);
 
-        gameObject.transform.parent.transform.parent.position = unity_coords;
-        // ros.Publish(TwistTopicName, twistMsg);
+        // gameObject.transform.parent.transform.parent.position = unity_coords;
+        // test_sphere.transform.position = unity_coords;
+        // Debug.Log(test_sphere.transform.position);
 
     }
 
