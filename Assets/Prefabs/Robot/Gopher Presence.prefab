@@ -1984,8 +1984,8 @@ GameObject:
   - component: {fileID: 3928315737509677635}
   - component: {fileID: 3928315737509677636}
   - component: {fileID: 6358552747834948618}
-  - component: {fileID: 480256650130539557}
   - component: {fileID: 2881489286667098619}
+  - component: {fileID: 5449981155308543760}
   m_Layer: 8
   m_Name: ROS
   m_TagString: Untagged
@@ -2116,21 +2116,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraTopicName: camera/color/image_raw/compressed
   meshRenderer: {fileID: 0}
---- !u!114 &480256650130539557
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3928315737509677638}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d0b186cfedfafedcb2a062d9a6949e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AmclTopicName: /amcl_pose
-  AmclBotTopicName: /pose_unity_bot
-  wheelController: {fileID: 3928315738651084601}
 --- !u!114 &2881489286667098619
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2150,6 +2135,20 @@ MonoBehaviour:
   m_TFTrackingSettings:
     type: 1
     tfTopic: /tf
+--- !u!114 &5449981155308543760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3928315737509677638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d0b186cfedfafedcb2a062d9a6949e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AmclTopicName: amcl_pose
+  articulationBody: {fileID: 4262536301528152475}
 --- !u!1 &3928315737510121526
 GameObject:
   m_ObjectHideFlags: 0
@@ -3550,7 +3549,7 @@ ArticulationBody:
   serializedVersion: 3
   m_Mass: 70.1294
   m_ParentAnchorPosition: {x: 0, y: 0, z: 0}
-  m_ParentAnchorRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_ParentAnchorRotation: {x: 0, y: 0, z: 0.7071069, w: 0.7071069}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_ComputeParentAnchor: 1
@@ -4744,6 +4743,7 @@ GameObject:
   - component: {fileID: 3928315738656980289}
   - component: {fileID: 3928315738656980301}
   - component: {fileID: 3928315738656980302}
+  - component: {fileID: 4262536301528152475}
   m_Layer: 0
   m_Name: Gopher Presence
   m_TagString: robot
@@ -4836,6 +4836,58 @@ FixedJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!171741748 &4262536301528152475
+ArticulationBody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3928315738656980290}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Mass: 1
+  m_ParentAnchorPosition: {x: 0, y: 0, z: 0}
+  m_ParentAnchorRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_AnchorPosition: {x: 0, y: 0, z: 0}
+  m_AnchorRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_ComputeParentAnchor: 1
+  m_ArticulationJointType: 0
+  m_LinearX: 2
+  m_LinearY: 2
+  m_LinearZ: 2
+  m_SwingY: 2
+  m_SwingZ: 2
+  m_Twist: 2
+  m_XDrive:
+    lowerLimit: 0
+    upperLimit: 0
+    stiffness: 0
+    damping: 0
+    forceLimit: 3.4028235e+38
+    target: 0
+    targetVelocity: 0
+  m_YDrive:
+    lowerLimit: 0
+    upperLimit: 0
+    stiffness: 0
+    damping: 0
+    forceLimit: 3.4028235e+38
+    target: 0
+    targetVelocity: 0
+  m_ZDrive:
+    lowerLimit: 0
+    upperLimit: 0
+    stiffness: 0
+    damping: 0
+    forceLimit: 3.4028235e+38
+    target: 0
+    targetVelocity: 0
+  m_LinearDamping: 0.05
+  m_AngularDamping: 0.05
+  m_JointFriction: 0.05
+  m_Immovable: 0
+  m_UseGravity: 1
+  m_CollisionDetectionMode: 0
 --- !u!1 &3928315738657595022
 GameObject:
   m_ObjectHideFlags: 0
@@ -5841,14 +5893,14 @@ PrefabInstance:
     - {fileID: 6442019449771096928, guid: c98dfddce84a0aa2596928a06a4a7c0a, type: 3}
     - {fileID: 8553325017196379280, guid: c98dfddce84a0aa2596928a06a4a7c0a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c98dfddce84a0aa2596928a06a4a7c0a, type: 3}
---- !u!1 &6943894479951360738 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6258179824892638506, guid: c98dfddce84a0aa2596928a06a4a7c0a, type: 3}
-  m_PrefabInstance: {fileID: 3928315736916101064}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1049556344889510563 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4041113936141192555, guid: c98dfddce84a0aa2596928a06a4a7c0a, type: 3}
+  m_PrefabInstance: {fileID: 3928315736916101064}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6943894479951360738 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6258179824892638506, guid: c98dfddce84a0aa2596928a06a4a7c0a, type: 3}
   m_PrefabInstance: {fileID: 3928315736916101064}
   m_PrefabAsset: {fileID: 0}
 --- !u!64 &3928315736916101077

@@ -2318,6 +2318,14 @@ PrefabInstance:
       propertyPath: m_ParentAnchorRotation.z
       value: 0.7071068
       objectReference: {fileID: 0}
+    - target: {fileID: 3928315738138691618, guid: 32167ae204a279138a903dbea46be490, type: 3}
+      propertyPath: m_ParentAnchorRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928315738138691618, guid: 32167ae204a279138a903dbea46be490, type: 3}
+      propertyPath: m_ParentAnchorRotation.z
+      value: 0.7071068
+      objectReference: {fileID: 0}
     - target: {fileID: 3928315738541897863, guid: 32167ae204a279138a903dbea46be490, type: 3}
       propertyPath: m_ParentAnchorRotation.w
       value: 0.7071068
@@ -2498,6 +2506,10 @@ PrefabInstance:
       propertyPath: m_ID
       value: 5433725128833508075-1481717587
       objectReference: {fileID: 0}
+    - target: {fileID: 5449981155308543760, guid: 32167ae204a279138a903dbea46be490, type: 3}
+      propertyPath: articulationBody
+      value: 
+      objectReference: {fileID: 1506625474}
     - target: {fileID: 5550725169147620880, guid: 32167ae204a279138a903dbea46be490, type: 3}
       propertyPath: m_ID
       value: 5550725169147620880-1481717587
@@ -2747,6 +2759,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8931785111314269366, guid: d578d51f26ba087a1a93327ccd33aaea, type: 3}
   m_PrefabInstance: {fileID: 1499435349}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1506625473 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3928315738656980290, guid: 32167ae204a279138a903dbea46be490, type: 3}
+  m_PrefabInstance: {fileID: 1481717587}
+  m_PrefabAsset: {fileID: 0}
+--- !u!171741748 &1506625474
+ArticulationBody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506625473}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Mass: 1
+  m_ParentAnchorPosition: {x: 0, y: 0, z: 0}
+  m_ParentAnchorRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_AnchorPosition: {x: 0, y: 0, z: 0}
+  m_AnchorRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_ComputeParentAnchor: 1
+  m_ArticulationJointType: 0
+  m_LinearX: 2
+  m_LinearY: 2
+  m_LinearZ: 2
+  m_SwingY: 2
+  m_SwingZ: 2
+  m_Twist: 2
+  m_XDrive:
+    lowerLimit: 0
+    upperLimit: 0
+    stiffness: 0
+    damping: 0
+    forceLimit: 3.4028235e+38
+    target: 0
+    targetVelocity: 0
+  m_YDrive:
+    lowerLimit: 0
+    upperLimit: 0
+    stiffness: 0
+    damping: 0
+    forceLimit: 3.4028235e+38
+    target: 0
+    targetVelocity: 0
+  m_ZDrive:
+    lowerLimit: 0
+    upperLimit: 0
+    stiffness: 0
+    damping: 0
+    forceLimit: 3.4028235e+38
+    target: 0
+    targetVelocity: 0
+  m_LinearDamping: 0.05
+  m_AngularDamping: 0.05
+  m_JointFriction: 0.05
+  m_Immovable: 0
+  m_UseGravity: 1
+  m_CollisionDetectionMode: 0
 --- !u!1001 &1606243186
 PrefabInstance:
   m_ObjectHideFlags: 0
