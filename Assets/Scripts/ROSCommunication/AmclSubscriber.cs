@@ -27,7 +27,7 @@ public class AmclSubscriber : MonoBehaviour
     private bool isMessageReceived;
 
     private GameObject test_sphere;
-    private Vector3 unity_coords;
+    private Vector3 unity_position;
 
     void Start()
     {
@@ -38,7 +38,7 @@ public class AmclSubscriber : MonoBehaviour
         message = new PoseWithCovarianceStampedMsg();
         // meshRenderer.material = new Material(Shader.Find("Standard"));
 
-        unity_coords = new Vector3(0.0f, 0.0f, 0.0f);
+        unity_position = new Vector3(0.0f, 0.0f, 0.0f);
         test_sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 
         // Subscriber
@@ -53,14 +53,16 @@ public class AmclSubscriber : MonoBehaviour
         if (isMessageReceived)
         {
             Vector3Msg vec = new Vector3Msg(pose.position.x,pose.position.y,pose.position.z);
-            //unity frame .To<FLU>() //teleport body
-            articulationBody.TeleportRoot(vec.From<FLU>(),pose.orientation.From<FLU>());
-            
-            // unity_coords = pose.position.From<FLU>();
+            // unity frame .To<FLU>() 
+            //teleport body
+            unity_position = vec.From<FLU>();
+            unity_position.x = 1.08f*unity_position.x + 14.11f;    //13.37f;
+            unity_position.z = 1.56f*unity_position.z + 13.48f; //8.75f*0.5f;
+            unity_position.y = 0.0f;
 
-            // Debug.Log(unity_coords);
-            
-            // test_sphere.transform.position = unity_coords;
+            // articulationBody.TeleportRoot(vec.From<FLU>(),pose.orientation.From<FLU>());
+            articulationBody.TeleportRoot(unity_position,pose.orientation.From<FLU>());
+
             isMessageReceived = false;
 
         }
