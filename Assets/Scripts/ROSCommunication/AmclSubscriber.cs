@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 using RosMessageTypes.Geometry;
 using Unity.Robotics.ROSTCPConnector;
@@ -56,8 +57,8 @@ public class AmclSubscriber : MonoBehaviour
             // unity frame .To<FLU>() 
             //teleport body
             unity_position = vec.From<FLU>();
-            unity_position.x = 1.08f*unity_position.x + 14.11f;    //13.37f;
-            unity_position.z = 1.56f*unity_position.z + 13.48f; //8.75f*0.5f;
+            unity_position.x = 1.07f*unity_position.x + 13.79f;    //through linear regression
+            unity_position.z = (float)(-0.0166*(Math.Pow(unity_position.z, 3)) - 0.4529*(Math.Pow(unity_position.z, 2)) - 2.2691*unity_position.z + 3.3724);    
             unity_position.y = 0.0f;
 
             // articulationBody.TeleportRoot(vec.From<FLU>(),pose.orientation.From<FLU>());
