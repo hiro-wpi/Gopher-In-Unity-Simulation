@@ -12,6 +12,8 @@ public class ArticulationBodyInitialization : MonoBehaviour
 {
     private ArticulationBody[] articulationChain;
 
+    public ArticulationBody[] ignoreList;
+
     public GameObject robotRoot;
     public bool assignToAllChildren = true;
     public int robotChainLength = 0;
@@ -23,8 +25,11 @@ public class ArticulationBodyInitialization : MonoBehaviour
     {
         // Get non-fixed joints
         articulationChain = robotRoot.GetComponentsInChildren<ArticulationBody>();
-        articulationChain = articulationChain.Where(joint => joint.jointType 
+        articulationChain = articulationChain.Where(joint => joint.jointType
                                                     != ArticulationJointType.FixedJoint).ToArray();
+
+        // remove joints from ignore list
+        articulationChain = articulationChain.Where(joint => !ignoreList.Contains(joint)).ToArray();
 
         // Joint length to assign
         int assignLength = articulationChain.Length;
@@ -47,7 +52,7 @@ public class ArticulationBodyInitialization : MonoBehaviour
             joint.xDrive = drive;
         }
     }
-    
+
     void Update()
     {
     }
