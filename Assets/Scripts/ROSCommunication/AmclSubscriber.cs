@@ -57,14 +57,15 @@ public class AmclSubscriber : MonoBehaviour
             // unity frame .To<FLU>() 
             //teleport body
             unity_position = vec.From<FLU>();
-            unity_position.x = 1.07f*unity_position.x + 13.79f;    //through linear regression
+            unity_position.x = 1.07f*unity_position.x + 13.79f ;    //through linear regression
             // unity_position.x = (float)(0.0100*(Math.Pow(unity_position.x,2)) + 1.2367*unity_position.x + 12.0938);
             // unity_position.x = (float)(-0.0002*(Math.Pow(unity_position.x,4)) - 0.0113*(Math.Pow(unity_position.x,3)) - 0.1475*(Math.Pow(unity_position.x,2)) + 0.5778*unity_position.x + 13.8851);
-            unity_position.z = (float)(-0.0166*(Math.Pow(unity_position.z, 3)) - 0.4529*(Math.Pow(unity_position.z, 2)) - 2.2691*unity_position.z + 1.3724);    
-            // unity_position.z = (float)(- 0.0013*(Math.Pow(unity_position.z, 2)) + 1.3667*unity_position.z + 7.3452);  
-            // unity_position.z = (float)(+ 1.1667*unity_position.z + 6.3452); 
-            // unity_position.z = (float)(0.0004*(Math.Pow(unity_position.z,5) + 0.015*(Math.Pow(unity_position.z,4)) + 0.2135*(Math.Pow(unity_position.z,3)) + 1.1681*(Math.Pow(unity_position.z,2)) + 3.0117*unity_position.z + 9.6754)); 
-
+            unity_position.z = (float)(-0.0166*(Math.Pow(unity_position.z, 3)) - 0.4529*(Math.Pow(unity_position.z, 2)) - 2.2691*unity_position.z + 1.0724);    
+            // unity_position.z = (float)(-0.00015*(Math.Pow(unity_position.z, 2)) + 1.1267*unity_position.z + 7.3452);  
+            // unity_position.z = (float)(+ 1.1257*unity_position.z + 7.452); 
+            // unity_position.z = (float)(0.0004*(Math.Pow(unity_position.z,5)) + 0.015*(Math.Pow(unity_position.z,4)) + 0.2135*(Math.Pow(unity_position.z,3)) + 1.1681*(Math.Pow(unity_position.z,2)) + 3.0117*unity_position.z + 9.6754);
+            // unity_position.z = (float)(0.0002*(Math.Pow(unity_position.z,8) + 0.0130*(Math.Pow(unity_position.z,7) +0.0004*(Math.Pow(unity_position.z,6) + 0.0004*(Math.Pow(unity_position.z,5) + 0.015*(Math.Pow(unity_position.z,4)) + 0.2135*(Math.Pow(unity_position.z,3)) + 1.1681*(Math.Pow(unity_position.z,2)) + 3.0117*unity_position.z + 9.6754)); 
+            // unity_position.z = (float)(0.0002*(Math.Pow(unity_position.z,6)) + 0.0130*(Math.Pow(unity_position.z,5)) + 0.2809*(Math.Pow(unity_position.z,4)) + 2.9642*(Math.Pow(unity_position.z,3)) + 15.5783*(Math.Pow(unity_position.z,2)) + 37.8398*unity_position.z + 38.1231); 
   
   
             
