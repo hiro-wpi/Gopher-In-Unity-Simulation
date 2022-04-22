@@ -27,7 +27,6 @@ public class AmclSubscriber : MonoBehaviour
     private PoseMsg pose;
     private bool isMessageReceived;
 
-    private GameObject test_sphere;
     private Vector3 unity_position;
 
     void Start()
@@ -40,7 +39,6 @@ public class AmclSubscriber : MonoBehaviour
         // meshRenderer.material = new Material(Shader.Find("Standard"));
 
         unity_position = new Vector3(0.0f, 0.0f, 0.0f);
-        test_sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 
         // Subscriber
         ros.Subscribe<PoseWithCovarianceStampedMsg>(AmclTopicName, ReceiveAmcl);
