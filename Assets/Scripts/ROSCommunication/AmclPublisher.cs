@@ -14,7 +14,7 @@ public class AmclPublisher : MonoBehaviour
 {
     private Transform publishedTransform;
     private ROSConnection ros;
-    public String goal_topic_name = "/move_base"; 
+    public String goal_topic_name = "/move_base/goal"; 
     private Vector2 orientation;
     private PoseStampedMsg poseStamped;
     private string frameID = "model_pose";
