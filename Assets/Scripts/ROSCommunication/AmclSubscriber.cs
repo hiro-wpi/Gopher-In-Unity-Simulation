@@ -58,7 +58,16 @@ public class AmclSubscriber : MonoBehaviour
             //teleport body
             unity_position = vec.From<FLU>();
             unity_position.x = 1.07f*unity_position.x + 13.79f;    //through linear regression
-            unity_position.z = (float)(-0.0166*(Math.Pow(unity_position.z, 3)) - 0.4529*(Math.Pow(unity_position.z, 2)) - 2.2691*unity_position.z + 3.3724);    
+            // unity_position.x = (float)(0.0100*(Math.Pow(unity_position.x,2)) + 1.2367*unity_position.x + 12.0938);
+            // unity_position.x = (float)(-0.0002*(Math.Pow(unity_position.x,4)) - 0.0113*(Math.Pow(unity_position.x,3)) - 0.1475*(Math.Pow(unity_position.x,2)) + 0.5778*unity_position.x + 13.8851);
+            unity_position.z = (float)(-0.0166*(Math.Pow(unity_position.z, 3)) - 0.4529*(Math.Pow(unity_position.z, 2)) - 2.2691*unity_position.z + 1.3724);    
+            // unity_position.z = (float)(- 0.0013*(Math.Pow(unity_position.z, 2)) + 1.3667*unity_position.z + 7.3452);  
+            // unity_position.z = (float)(+ 1.1667*unity_position.z + 6.3452); 
+            // unity_position.z = (float)(0.0004*(Math.Pow(unity_position.z,5) + 0.015*(Math.Pow(unity_position.z,4)) + 0.2135*(Math.Pow(unity_position.z,3)) + 1.1681*(Math.Pow(unity_position.z,2)) + 3.0117*unity_position.z + 9.6754)); 
+
+  
+  
+            
             unity_position.y = 0.0f;
 
             // articulationBody.TeleportRoot(vec.From<FLU>(),pose.orientation.From<FLU>());
