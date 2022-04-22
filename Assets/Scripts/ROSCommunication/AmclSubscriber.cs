@@ -67,7 +67,9 @@ public class AmclSubscriber : MonoBehaviour
             // unity_position.z = (float)(0.0002*(Math.Pow(unity_position.z,8) + 0.0130*(Math.Pow(unity_position.z,7) +0.0004*(Math.Pow(unity_position.z,6) + 0.0004*(Math.Pow(unity_position.z,5) + 0.015*(Math.Pow(unity_position.z,4)) + 0.2135*(Math.Pow(unity_position.z,3)) + 1.1681*(Math.Pow(unity_position.z,2)) + 3.0117*unity_position.z + 9.6754)); 
             // unity_position.z = (float)(0.0002*(Math.Pow(unity_position.z,6)) + 0.0130*(Math.Pow(unity_position.z,5)) + 0.2809*(Math.Pow(unity_position.z,4)) + 2.9642*(Math.Pow(unity_position.z,3)) + 15.5783*(Math.Pow(unity_position.z,2)) + 37.8398*unity_position.z + 38.1231); 
   
-  
+            //equations for the inverse
+            // z = -0.0028z^3 - 0.0042z^2 + 0.8118z - 8.141
+            // x = 0.9346x - 13.26 
             
             unity_position.y = 0.0f;
 
