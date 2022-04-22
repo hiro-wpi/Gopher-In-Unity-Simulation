@@ -55,9 +55,6 @@ public class AmclPublisher : MonoBehaviour
             
             if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
-                // Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
-                // Debug.Log("Did Hit");
-                // Debug.Log(hit.point);
                 x = hit.point.x;
                 x = 0.9346f*x - 13.26f;
 
@@ -66,23 +63,6 @@ public class AmclPublisher : MonoBehaviour
                 publishedTransform.position = new Vector3(x, 0.0f, z);
                 PublishPoseStamped();
             }
-
-            // x = Input.mousePosition.x;
-            // z = Input.mousePosition.z; 
-            // y = cam.pixelHeight - Input.mousePosition.y;
-
-            // publishedTransform.position = cam.ScreenToWorldPoint(new Vector3(x, y, (cam.farClipPlane + cam.farClipPlane)/2)); //cam.nearClipPlane
-            // // publishedTransform.position = cam.transform.InverseTransformPoint(publishedTransform.position.x, publishedTransform.position.y, publishedTransform.position.z);
-            // // publishedTransform.position =  cam.transform.InverseTransformPoint(0,0,0);
-            
-            
-
-            // x = 0.9346f*publishedTransform.position.x - 13.26f;
-            // z = (float)(-0.0028f*(Math.Pow(publishedTransform.position.z, 3)) - 0.0042f*(Math.Pow(publishedTransform.position.z,2)) + 0.8118f*publishedTransform.position.z - 8.141f);
-
-            // publishedTransform.position = new Vector3(x,0.0f,z);
-
-            // Debug.Log(publishedTransform.position);
             
         }
     }
