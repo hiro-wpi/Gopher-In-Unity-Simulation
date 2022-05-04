@@ -42,34 +42,17 @@ public class NewtonIK : MonoBehaviour
 
     public float[] SolveIK(float[] jointAngles, Vector3 targetPosition, Quaternion targetRotation, bool local = true)
     {
-        // translate the deltaPosition to be relative to the end effector
-        // if (local)
-        // {
-        //     deltaPosition = localToWorldTransform.TransformVector(deltaPosition);
-        //     deltaRotation = localToWorldTransform.TransformVector(deltaRotation);
-        // }
+        float[] endEffectorAngles = jointAngles.Clone() as float[];
 
-        // set target position and rotation to end effector
-        // then add small rotation
-
-        // targetRotation *= Quaternion.Euler(localToWorldTransform.TransformVector(new Vector3(0, 0, 0.1f)));
-        // kinematicSolver.UpdateAngles(jointAngles);
-        // kinematicSolver.CalculateAllT();
-        // kinematicSolver.UpdateAllPose();
-
-        // (Vector3 endEffectorPosition, Quaternion endEffectorRotation) = kinematicSolver.GetPose(kinematicSolver.numJoint);
-
-        // targetPosition = endEffectorPosition;
-        // targetRotation = endEffectorRotation * Quaternion.Euler(0f, 10f, 0f);
         targetRotation.z = -targetRotation.z;
         targetRotation.x = -targetRotation.x;
         targetRotation.y = -targetRotation.y;
 
-        int EPOCHS = 10;
+        int EPOCHS = 200;
         for (int e = 0; e < EPOCHS; e++)
         {
             // calculate error between our current end effector position and the target position
-            kinematicSolver.UpdateAngles(jointAngles);
+            kinematicSolver.UpdateAngles(endEffectorAngles);
             kinematicSolver.CalculateAllT();
             kinematicSolver.UpdateAllPose();
 
@@ -88,16 +71,21 @@ public class NewtonIK : MonoBehaviour
             // Function returns angle in degrees, so convert to radians
             rotationAngle = Mathf.Deg2Rad * rotationAngle;
             // Now scale the rotation axis by the angle
-            rotationAxis *= rotationAngle / EPOCHS; // Prioritize the position
+            rotationAxis *= rotationAngle; // Prioritize the position
+
+            // decay lambda over time
+            float lambda = (1 - e / EPOCHS);
+
+            rotationAxis *= lambda;
+            positionError *= lambda * 0.5f;
 
             jacobian = kinematicSolver.ComputeJacobian();
 
             List<float> errorTarget = new List<float> {
                 positionError.x, positionError.y, positionError.z,
-                // 0f, 0f, 0f,
-                // 0f, 0f, 0f,
                 rotationAxis.x, rotationAxis.y, rotationAxis.z,
             };
+
 
             // Switch case for different IK types
             ArticulationJacobian invJ = new ArticulationJacobian(1, 1);
@@ -125,14 +113,15 @@ public class NewtonIK : MonoBehaviour
             List<float> errorAngles = JacobianTools.Multiply(invJ, errorTarget);
 
             // TODO: This is bad, change to smarter way of getting indices
-            for (int i = 0; i < jointAngles.Length; i++)
+            for (int i = 0; i < endEffectorAngles.Length; i++)
             {
                 // TODO: this crashed unity lol
-                jointAngles[i] += errorAngles[i];
+                endEffectorAngles[i] += errorAngles[i];
             }
+
         }
 
         // Set the new joint angles
-        return jointAngles;
+        return endEffectorAngles;
     }
 }

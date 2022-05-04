@@ -24,6 +24,10 @@ public class KinematicSolver : MonoBehaviour
     public Transform baseTransform;
     private float[] angles = new float[] { 0, 0, 0, 0, 0, 0, 0, 0 };
 
+    // Define joint limits
+    public float[] angleLowerLimits = new float[] { 0, 0, -2.41f, 0, -2.66f, 0, -2.23f, 0 };
+    public float[] angleUpperLimits = new float[] { 0, 0, 2.41f, 0, 2.66f, 0, 2.23f, 0 };
+
     // Homography Matrix
     private Matrix4x4[] T;
 
@@ -64,8 +68,16 @@ public class KinematicSolver : MonoBehaviour
     {
         for (int i = 0; i < numJoint; i++)
         {
-            // First angle is always zero
-            angles[i + 1] = newAngles[i];
+            // Limit the joint angles, skipping first joint
+            int j = i + 1;
+            if (angleLowerLimits[j] != 0 && angleUpperLimits[j] != 0)
+            {
+                angles[j] = Mathf.Clamp(newAngles[i], angleLowerLimits[j], angleUpperLimits[j]);
+            }
+            else
+            {
+                angles[j] = newAngles[i];
+            }
         }
     }
 
