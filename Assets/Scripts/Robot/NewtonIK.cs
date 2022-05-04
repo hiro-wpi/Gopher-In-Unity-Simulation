@@ -44,14 +44,14 @@ public class NewtonIK : MonoBehaviour
     {
         float[] endEffectorAngles = jointAngles.Clone() as float[];
 
-        targetRotation.z = -targetRotation.z;
-        targetRotation.x = -targetRotation.x;
-        targetRotation.y = -targetRotation.y;
+        targetRotation.x *= -1;
+        targetRotation.y *= -1;
+        targetRotation.z *= -1;
 
         Vector3 endEffectorPosition;
         Quaternion endEffectorRotation;
 
-        int EPOCHS = 30;
+        int EPOCHS = 100;
         for (int e = 0; e < EPOCHS; e++)
         {
             // calculate error between our current end effector position and the target position
