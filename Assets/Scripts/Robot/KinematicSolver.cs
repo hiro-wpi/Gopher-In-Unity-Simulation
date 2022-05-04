@@ -95,6 +95,8 @@ public class KinematicSolver : MonoBehaviour
         return Ts;
     }
 
+    // public Quaternion QuaternionFromMatrix(Matrix4x4 m) { return Quaternion.LookRotation(m.GetColumn(2), m.GetColumn(1)); }
+
     public void UpdateAllPose()
     {
         // Compute H from base to end effector
@@ -104,38 +106,71 @@ public class KinematicSolver : MonoBehaviour
             Matrix4x4 T = Ts[i];
             axis[i] = ToRUF(T.GetColumn(2));
             positions[i] = ToRUF(T.GetColumn(3));
-            rotations[i] = ToRUF(T.rotation);
+            try
+            {
+                rotations[i] = ToRUF(T.rotation);
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+            }
         }
+    }
 
-        // Draw lines from each joint to the next
-        for (int i = 0; i < numJoint; i++)
+    public void OnDrawGizmos()
+    {
+        if (positions == null || positions.Length == 0)
         {
-            Vector3 offset = axis[i] * 0.1f;
-            Debug.DrawLine(positions[i], positions[i + 1], Color.green);
-            Debug.DrawLine(positions[i], positions[i] + offset, Color.blue);
+            return;
+        }
+        for (int i = 0; i < numJoint + 1; i++)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(positions[i], positions[i] + axis[i] * 0.1f);
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(positions[i], 0.025f);
+            // draw between joints
+            if (i > 0)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawLine(positions[i], positions[i - 1]);
+            }
         }
     }
 
-    private Vector3 ToRUF(Vector3 p)
+    // Need conversion utilities between FLU (forward, left, up) and Unity's RUF (right, up, forward)
+
+    public Vector3 ToRUF(Vector3 v)
     {
-        return new Vector3(p.y, -p.z, p.x);
+        return new Vector3(v.y, -v.z, v.x);
     }
 
-    private Vector3 FromRUF(Vector3 p)
+    public Vector3 FromRUF(Vector3 v)
     {
-        // jesus this took forever to figure out lmao
-        return new Vector3(p.z, p.x, -p.y);
+        return new Vector3(v.z, v.x, -v.y);
     }
 
-    private Quaternion ToRUF(Quaternion q)
+    public Quaternion ToRUF(Quaternion q)
     {
         return new Quaternion(q.y, -q.z, q.x, q.w);
     }
 
-    private Quaternion FromRUF(Quaternion q)
+    public Quaternion FromRUF(Quaternion q)
     {
         return new Quaternion(-q.z, -q.x, q.y, q.w);
     }
+
+    // public Quaternion ToRUF(Quaternion q)
+    // {
+    //     q = new Quaternion(-q.y, q.z, q.x, -q.w);
+    //     return q * Quaternion.Euler(0, 90, 0);
+    // }
+
+    // public Quaternion FromRUF(Quaternion q)
+    // {
+    //     q = q * Quaternion.Euler(0, -90, 0);
+    //     return new Quaternion(q.z, -q.x, q.y, -q.w);
+    // }
 
     public (Vector3, Quaternion) GetPose(int i)
     {
@@ -150,6 +185,7 @@ public class KinematicSolver : MonoBehaviour
     public ArticulationJacobian ComputeJacobian()
     {
         // Create a new ArticulationJacobian
+        // px, py, pz, rx, ry, rz
         ArticulationJacobian jacobian = new ArticulationJacobian(6, numJoint);
 
         Vector3[] zs = axis;
@@ -157,7 +193,10 @@ public class KinematicSolver : MonoBehaviour
 
         for (int i = 0; i < numJoint; i++)
         {
-            Vector3 zT = Vector3.Cross(zs[i], ts[7] - ts[i]);
+            Vector3 zT = Vector3.Cross(zs[i], ts[numJoint] - ts[i]);
+
+            // zB will be the scaled rotation representation of the joint
+            // So it's just the axis, with default length 1 (meaning a rotation of 1 radian around that axis)
             Vector3 zB = zs[i];
 
             JacobianTools.Set(jacobian, i, zT, zB);
