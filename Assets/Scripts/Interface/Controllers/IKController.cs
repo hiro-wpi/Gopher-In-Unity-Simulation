@@ -79,7 +79,12 @@ public class IKController : MonoBehaviour
         Debug.Log("Moving to hover...");
         Vector3 targetPosition = target.hoverPoint.position;
         Quaternion targetRotation = target.hoverPoint.rotation;
-        float[] targetJointAngles = newtonIK.SolveIK(jointAngles, targetPosition, targetRotation, false);
+        (bool converged, float[] targetJointAngles) = newtonIK.SolveIK(jointAngles, targetPosition, targetRotation, false);
+        if (!converged)
+        {
+            Debug.Log("IK did not converge");
+            yield break;
+        }
         yield return LerpJoints(jointAngles, targetJointAngles, 5.0f);
 
         // assume we got there
@@ -88,7 +93,12 @@ public class IKController : MonoBehaviour
         Debug.Log("Moving to grab point...");
         targetPosition = target.grabPoint.position;
         targetRotation = target.grabPoint.rotation;
-        targetJointAngles = newtonIK.SolveIK(jointAngles, targetPosition, targetRotation, false);
+        (converged, targetJointAngles) = newtonIK.SolveIK(jointAngles, targetPosition, targetRotation, false);
+        if (!converged)
+        {
+            Debug.Log("IK did not converge");
+            yield break;
+        }
         yield return LerpJoints(jointAngles, targetJointAngles, 5.0f);
 
         // close the gripper
@@ -97,7 +107,12 @@ public class IKController : MonoBehaviour
         // move back to hover point
         targetPosition = target.hoverPoint.position;
         targetRotation = target.hoverPoint.rotation;
-        targetJointAngles = newtonIK.SolveIK(jointAngles, targetPosition, targetRotation, false);
+        (converged, targetJointAngles) = newtonIK.SolveIK(jointAngles, targetPosition, targetRotation, false);
+        if (!converged)
+        {
+            Debug.Log("IK did not converge");
+            yield break;
+        }
         yield return LerpJoints(jointAngles, targetJointAngles, 5.0f);
 
         // assume we got there

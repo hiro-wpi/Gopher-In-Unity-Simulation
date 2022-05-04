@@ -40,7 +40,7 @@ public class NewtonIK : MonoBehaviour
         return angles;
     }
 
-    public float[] SolveIK(float[] jointAngles, Vector3 targetPosition, Quaternion targetRotation, bool local = true)
+    public (bool, float[]) SolveIK(float[] jointAngles, Vector3 targetPosition, Quaternion targetRotation, bool local = true)
     {
         float[] endEffectorAngles = jointAngles.Clone() as float[];
 
@@ -48,7 +48,10 @@ public class NewtonIK : MonoBehaviour
         targetRotation.x = -targetRotation.x;
         targetRotation.y = -targetRotation.y;
 
-        int EPOCHS = 200;
+        Vector3 endEffectorPosition;
+        Quaternion endEffectorRotation;
+
+        int EPOCHS = 30;
         for (int e = 0; e < EPOCHS; e++)
         {
             // calculate error between our current end effector position and the target position
@@ -56,7 +59,7 @@ public class NewtonIK : MonoBehaviour
             kinematicSolver.CalculateAllT();
             kinematicSolver.UpdateAllPose();
 
-            (Vector3 endEffectorPosition, Quaternion endEffectorRotation) = kinematicSolver.GetPose(kinematicSolver.numJoint);
+            (endEffectorPosition, endEffectorRotation) = kinematicSolver.GetPose(kinematicSolver.numJoint);
 
             Vector3 positionError = endEffectorPosition - targetPosition;
             Quaternion rotationError = Quaternion.Inverse(endEffectorRotation) * targetRotation;
@@ -118,10 +121,17 @@ public class NewtonIK : MonoBehaviour
                 // TODO: this crashed unity lol
                 endEffectorAngles[i] += errorAngles[i];
             }
-
         }
 
+        // check convergence
+        kinematicSolver.UpdateAngles(endEffectorAngles);
+        kinematicSolver.CalculateAllT();
+        kinematicSolver.UpdateAllPose();
+
+        (endEffectorPosition, endEffectorRotation) = kinematicSolver.GetPose(kinematicSolver.numJoint);
+        bool converged = (endEffectorPosition - targetPosition).magnitude < 0.01f;
+
         // Set the new joint angles
-        return endEffectorAngles;
+        return (converged, endEffectorAngles);
     }
 }
