@@ -156,15 +156,6 @@ public class IKController : MonoBehaviour
             yield break;
         }
         yield return LerpJoints(jointAngles, targetJointAngles, 5.0f);
-
-        // assume we got there
-        jointAngles = targetJointAngles;
-
-        // then lerp back to home position
-        Debug.Log("Moving to home position...");
-        targetJointAngles = articulationJointController.homePosition;
-        yield return LerpJoints(jointAngles, targetJointAngles, 5.0f);
-
         mode = Mode.CONTROL;
     }
 

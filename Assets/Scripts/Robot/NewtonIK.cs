@@ -51,7 +51,7 @@ public class NewtonIK : MonoBehaviour
         Vector3 endEffectorPosition;
         Quaternion endEffectorRotation;
 
-        int EPOCHS = 100;
+        int EPOCHS = 30;
         for (int e = 0; e < EPOCHS; e++)
         {
             // calculate error between our current end effector position and the target position
@@ -77,10 +77,10 @@ public class NewtonIK : MonoBehaviour
             rotationAxis *= rotationAngle; // Prioritize the position
 
             // decay lambda over time
-            float lambda = (1 - e / EPOCHS);
+            float lambda = (1 - e / EPOCHS) * 0.5f;
 
             rotationAxis *= lambda;
-            positionError *= lambda * 0.5f;
+            positionError *= lambda;
 
             jacobian = kinematicSolver.ComputeJacobian();
 
@@ -129,7 +129,7 @@ public class NewtonIK : MonoBehaviour
         kinematicSolver.UpdateAllPose();
 
         (endEffectorPosition, endEffectorRotation) = kinematicSolver.GetPose(kinematicSolver.numJoint);
-        bool converged = (endEffectorPosition - targetPosition).magnitude < 0.01f;
+        bool converged = (endEffectorPosition - targetPosition).magnitude < 0.1f;
 
         // Set the new joint angles
         return (converged, endEffectorAngles);
