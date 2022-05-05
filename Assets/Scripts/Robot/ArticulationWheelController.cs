@@ -29,24 +29,31 @@ public class ArticulationWheelController : MonoBehaviour
 
     public void SetRobotVelocity(float targetLinearSpeed, float targetAngularSpeed)
     {
-        // Stop the wheel if target velocity is 0
-        if (targetLinearSpeed == 0 && targetAngularSpeed == 0)
-        {
-            StopWheel(leftWheel);
-            StopWheel(rightWheel);
-        }
-        else
-        {
-            // Convert from linear x and angular z velocity to wheel speed
-            vRight = targetAngularSpeed*(wheelTrackLength/2) + targetLinearSpeed;
-            vLeft = -targetAngularSpeed*(wheelTrackLength/2) + targetLinearSpeed;
+        // // Stop the wheel if target velocity is 0
+        // if (targetLinearSpeed == 0 && targetAngularSpeed == 0)
+        // {
+        //     StopWheel(leftWheel);
+        //     StopWheel(rightWheel);
+        // }
+        // else
+        // {
+        // Convert from linear x and angular z velocity to wheel speed
+        vRight = targetAngularSpeed * (wheelTrackLength / 2) + targetLinearSpeed;
+        vLeft = -targetAngularSpeed * (wheelTrackLength / 2) + targetLinearSpeed;
 
-            SetWheelVelocity(leftWheel, vLeft / wheelRadius * Mathf.Rad2Deg);
-            SetWheelVelocity(rightWheel, vRight / wheelRadius * Mathf.Rad2Deg);
-        }
+        SetWheelVelocity(leftWheel, vLeft / wheelRadius * Mathf.Rad2Deg);
+        SetWheelVelocity(rightWheel, vRight / wheelRadius * Mathf.Rad2Deg);
+        // }
     }
 
     private void SetWheelVelocity(ArticulationBody wheel, float jointSpeed)
+    {
+        ArticulationDrive drive = wheel.xDrive;
+        drive.targetVelocity = jointSpeed;
+        wheel.xDrive = drive;
+    }
+
+    private void SetWheelTarget(ArticulationBody wheel, float jointSpeed)
     {
         ArticulationDrive drive = wheel.xDrive;
         drive.target = drive.target + jointSpeed * Time.fixedDeltaTime;

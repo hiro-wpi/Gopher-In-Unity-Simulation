@@ -9,7 +9,10 @@ public class GripperController : MonoBehaviour
 
     public void OnGrab(InputAction.CallbackContext context)
     {
-        float move = context.ReadValue<float>();
-        articulationGripperController.SetGrippers(move);
+        if (this.enabled)
+        {
+            float move = context.ReadValue<float>();
+            articulationGripperController.SetGrippers(move);
+        }
     }
 }
