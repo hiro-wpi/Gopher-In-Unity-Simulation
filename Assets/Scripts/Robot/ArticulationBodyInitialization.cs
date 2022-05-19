@@ -10,9 +10,11 @@ using UnityEngine;
 /// </summary>
 public class ArticulationBodyInitialization : MonoBehaviour
 {
-    private ArticulationBody[] articulationChain;
+    private ArticulationBody[] _articulationChain;
+    private ArticulationBody[] _massChain;
 
     public ArticulationBody[] ignoreList;
+    public ArticulationBody[] massIgnoreList;
 
     public GameObject robotRoot;
     public bool assignToAllChildren = true;
@@ -20,40 +22,45 @@ public class ArticulationBodyInitialization : MonoBehaviour
     public float stiffness = 10000f;
     public float damping = 100f;
     public float forceLimit = 1000f;
+    public float mass = 10f;
 
     void Start()
     {
         // Get non-fixed joints
-        articulationChain = robotRoot.GetComponentsInChildren<ArticulationBody>();
-        articulationChain = articulationChain.Where(joint => joint.jointType
-                                                    != ArticulationJointType.FixedJoint).ToArray();
+        _articulationChain = robotRoot.GetComponentsInChildren<ArticulationBody>();
+        _massChain = robotRoot.GetComponentsInChildren<ArticulationBody>();
+        _articulationChain = _articulationChain.Where(joint => joint.jointType
+                                                             != ArticulationJointType.FixedJoint).ToArray();
 
         // remove joints from ignore list
-        articulationChain = articulationChain.Where(joint => !ignoreList.Contains(joint)).ToArray();
+        _articulationChain = _articulationChain.Where(joint => !ignoreList.Contains(joint)).ToArray();
+        _massChain = _massChain.Where(joint => !massIgnoreList.Contains(joint)).ToArray();
 
         // Joint length to assign
-        int assignLength = articulationChain.Length;
+        var assignLength = _articulationChain.Length;
         if (!assignToAllChildren)
             assignLength = robotChainLength;
 
         // Setting stiffness, damping and force limit
-        int defDyanmicVal = 100;
+        var friction = 100;
         for (int i = 0; i < assignLength; ++i)
         {
-            ArticulationBody joint = articulationChain[i];
+            ArticulationBody joint = _articulationChain[i];
             ArticulationDrive drive = joint.xDrive;
 
-            joint.jointFriction = defDyanmicVal;
-            joint.angularDamping = defDyanmicVal;
+            joint.jointFriction = friction;
+            joint.angularDamping = friction;
 
             drive.stiffness = stiffness;
             drive.damping = damping;
             drive.forceLimit = forceLimit;
             joint.xDrive = drive;
         }
-    }
-
-    void Update()
-    {
+        
+        // For each in mass chain
+        foreach (var joint in _massChain)
+        {
+            joint.mass = mass;
+        }
     }
 }
