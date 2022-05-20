@@ -17,6 +17,30 @@ public class GopherController : MonoBehaviour
     
     [SerializeField]
     private ControlMode controlMode = ControlMode.LeftArm;
+    
+    public void OnLeft(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            controlMode = ControlMode.LeftArm;
+        }
+    }
+    
+    public void OnRight(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            controlMode = ControlMode.RightArm;
+        }
+    }
+    
+    public void OnBase(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            controlMode = ControlMode.Base;
+        }
+    }
 
     public void OnArmMove(InputAction.CallbackContext context)
     {
