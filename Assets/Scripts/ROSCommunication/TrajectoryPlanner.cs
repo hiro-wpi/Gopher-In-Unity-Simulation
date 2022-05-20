@@ -48,7 +48,7 @@ public class TrajectoryPlanner : MonoBehaviour
                                PlanTrajectoryResponse>(plannerServiceName);
 
         // Robots
-        numJoint = jointController.numJoint;
+        numJoint = jointController.GetNumJoints();
     }
 
     public void PlanTrajectory()

@@ -105,7 +105,7 @@ public class KeyboardJointControl : MonoBehaviour
     {
         // Home all joints
         if (Input.GetKeyDown(KeyCode.H))
-            jointController.HomeJoints();
+            // jointController.HomeJoints();
 
         // Gripper
         if (Input.GetKeyDown(KeyCode.G))

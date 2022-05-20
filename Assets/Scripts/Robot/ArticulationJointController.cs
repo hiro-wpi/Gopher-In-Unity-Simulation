@@ -1,6 +1,4 @@
 using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -10,39 +8,23 @@ using UnityEngine;
 /// </summary>
 public class ArticulationJointController : MonoBehaviour
 {
-    // Robot object
-    public GameObject jointRoot;
-    public int numJoint = 7;
-
-    public float jointMaxSpeed = 1f; 
+    [SerializeField]
+    private float jointMaxSpeed = 1f; 
     
     // Articulation Bodies
-    public float[] homePosition = {0f, 0f, 0f, 0f, 0f, 0f, 0f};
+    [SerializeField]
+    private float[] homePosition = {0f, 0f, 0f, 0f, 0f, 0f, 0f};
+    
+    [SerializeField]
     private ArticulationBody[] articulationChain;
 
-    void Start()
+    public int GetNumJoints()
     {
         // Get joints
-        articulationChain = jointRoot.GetComponentsInChildren<ArticulationBody>();
-        articulationChain = articulationChain.Where(joint => joint.jointType 
-                                                    != ArticulationJointType.FixedJoint).ToArray();
-        articulationChain = articulationChain.Take(numJoint).ToArray();
-        HomeJoints();
+        return articulationChain.Length;
     }
 
-    void Update()
-    {
-    }
-
-    public void HomeJoints()
-    {
-        StartCoroutine(HomeJointsCoroutine());
-    }
-    private IEnumerator HomeJointsCoroutine()
-    {
-        yield return new WaitUntil(() => HomeAndCheck() == true);
-    }
-    private bool HomeAndCheck()
+    public bool HomeAndCheck()
     {
         int count = 0;
         for (int i = 0; i < homePosition.Length; ++i)
@@ -64,6 +46,7 @@ public class ArticulationJointController : MonoBehaviour
     {
         SetJointTarget(articulationChain[jointNum], target);
     }
+    
     public void SetJointTarget(ArticulationBody joint, float target)
     {
         if (float.IsNaN(target))
@@ -104,7 +87,7 @@ public class ArticulationJointController : MonoBehaviour
     {
         if (float.IsNaN(target))
             return;
-        target = target * Mathf.Rad2Deg;
+        target *= Mathf.Rad2Deg;
         
         // Get drive
         ArticulationDrive drive = joint.xDrive;
@@ -171,6 +154,7 @@ public class ArticulationJointController : MonoBehaviour
         if (jointNum >= 0 && jointNum < articulationChain.Length)
             StopJoint(articulationChain[jointNum]);
     }
+    
     public void StopJoint(ArticulationBody joint)
     {
         float currPosition =  joint.jointPosition[0] * Mathf.Rad2Deg;
