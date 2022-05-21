@@ -28,7 +28,7 @@ public class NewtonIK : MonoBehaviour
     {
         // Wrap angle to [-pi, pi]
         float pi = Mathf.PI;
-        angle = angle - 2 * pi * Mathf.Floor((angle + pi) / (2 * pi));
+        angle -= 2 * pi * Mathf.Floor((angle + pi) / (2 * pi));
         return angle;
     }
 
@@ -40,7 +40,45 @@ public class NewtonIK : MonoBehaviour
         return angles;
     }
 
-    public (bool, float[]) SolveIK(float[] jointAngles, Vector3 targetPosition, Quaternion targetRotation, bool local = true)
+    private List<float> CalculateError(Vector3 positionError, Vector3 rotationAxis)
+    {
+        jacobian = kinematicSolver.ComputeJacobian();
+
+        List<float> errorTarget = new List<float>
+        {
+            positionError.x, positionError.y, positionError.z,
+            rotationAxis.x, rotationAxis.y, rotationAxis.z,
+        };
+
+
+        // Switch case for different IK types
+        ArticulationJacobian invJ = new ArticulationJacobian(1, 1);
+        switch (inverseMethod)
+        {
+            case InverseMethod.Transpose:
+                invJ = JacobianTools.Transpose(jacobian);
+                break;
+            case InverseMethod.DampedLeastSquares:
+                invJ = JacobianTools.DampedLeastSquares(jacobian, dampedSquaresLambda);
+                break;
+            case InverseMethod.PsuedoInverse:
+                invJ = JacobianTools.PsuedoInverse(jacobian);
+                break;
+            case InverseMethod.UnstableInverse:
+                invJ = JacobianTools.Inverse(jacobian);
+                break;
+            default:
+                Debug.Log("Invalid IK type, using Transpose");
+                invJ = JacobianTools.Transpose(jacobian);
+                break;
+        }
+
+        // Calculate the delta angles
+        List<float> errorAngles = JacobianTools.Multiply(invJ, errorTarget);
+        return errorAngles;
+    }
+
+    public (bool, float[]) SolveIK(float[] jointAngles, Vector3 targetPosition, Quaternion targetRotation)
     {
         float[] endEffectorAngles = jointAngles.Clone() as float[];
 
@@ -82,38 +120,7 @@ public class NewtonIK : MonoBehaviour
             rotationAxis *= lambda;
             positionError *= lambda;
 
-            jacobian = kinematicSolver.ComputeJacobian();
-
-            List<float> errorTarget = new List<float> {
-                positionError.x, positionError.y, positionError.z,
-                rotationAxis.x, rotationAxis.y, rotationAxis.z,
-            };
-
-
-            // Switch case for different IK types
-            ArticulationJacobian invJ = new ArticulationJacobian(1, 1);
-            switch (inverseMethod)
-            {
-                case InverseMethod.Transpose:
-                    invJ = JacobianTools.Transpose(jacobian);
-                    break;
-                case InverseMethod.DampedLeastSquares:
-                    invJ = JacobianTools.DampedLeastSquares(jacobian, dampedSquaresLambda);
-                    break;
-                case InverseMethod.PsuedoInverse:
-                    invJ = JacobianTools.PsuedoInverse(jacobian);
-                    break;
-                case InverseMethod.UnstableInverse:
-                    invJ = JacobianTools.Inverse(jacobian);
-                    break;
-                default:
-                    Debug.Log("Invalid IK type, using Transpose");
-                    invJ = JacobianTools.Transpose(jacobian);
-                    break;
-            }
-
-            // Calculate the delta angles
-            List<float> errorAngles = JacobianTools.Multiply(invJ, errorTarget);
+            var errorAngles = CalculateError(positionError, rotationAxis);
 
             // TODO: This is bad, change to smarter way of getting indices
             for (int i = 0; i < endEffectorAngles.Length; i++)
@@ -160,38 +167,7 @@ public class NewtonIK : MonoBehaviour
         positionError = localToWorldTransform.TransformVector(positionError);
         rotationAxis = localToWorldTransform.TransformVector(rotationAxis);
 
-        jacobian = kinematicSolver.ComputeJacobian();
-
-        List<float> errorTarget = new List<float> {
-            positionError.x, positionError.y, positionError.z,
-            rotationAxis.x, rotationAxis.y, rotationAxis.z,
-        };
-
-
-        // Switch case for different IK types
-        ArticulationJacobian invJ = new ArticulationJacobian(1, 1);
-        switch (inverseMethod)
-        {
-            case InverseMethod.Transpose:
-                invJ = JacobianTools.Transpose(jacobian);
-                break;
-            case InverseMethod.DampedLeastSquares:
-                invJ = JacobianTools.DampedLeastSquares(jacobian, dampedSquaresLambda);
-                break;
-            case InverseMethod.PsuedoInverse:
-                invJ = JacobianTools.PsuedoInverse(jacobian);
-                break;
-            case InverseMethod.UnstableInverse:
-                invJ = JacobianTools.Inverse(jacobian);
-                break;
-            default:
-                Debug.Log("Invalid IK type, using Transpose");
-                invJ = JacobianTools.Transpose(jacobian);
-                break;
-        }
-
-        // Calculate the delta angles
-        List<float> errorAngles = JacobianTools.Multiply(invJ, errorTarget);
+        var errorAngles = CalculateError(positionError, rotationAxis);
 
         // TODO: This is bad, change to smarter way of getting indices
         for (int i = 0; i < endEffectorAngles.Length; i++)

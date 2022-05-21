@@ -114,7 +114,7 @@ public class ArmController : MonoBehaviour
 
         _jointAngles = articulationJointController.GetCurrentJointTargets();
         var (converged, targetJointAngles) =
-            newtonIK.SolveIK(_jointAngles, targetPosition, targetRotation, false);
+            newtonIK.SolveIK(_jointAngles, targetPosition, targetRotation);
         if (!converged)
         {
             _mode = Mode.Control;
@@ -129,7 +129,7 @@ public class ArmController : MonoBehaviour
 
         // Assume we got to the target
         _jointAngles = targetJointAngles;
-        (converged, targetJointAngles) = newtonIK.SolveIK(_jointAngles, targetPosition, targetRotation, false);
+        (converged, targetJointAngles) = newtonIK.SolveIK(_jointAngles, targetPosition, targetRotation);
         if (!converged)
         {
             _mode = Mode.Control;
@@ -147,7 +147,7 @@ public class ArmController : MonoBehaviour
 
         // Assume we got to the target
         _jointAngles = targetJointAngles;
-        (converged, targetJointAngles) = newtonIK.SolveIK(_jointAngles, targetPosition, targetRotation, false);
+        (converged, targetJointAngles) = newtonIK.SolveIK(_jointAngles, targetPosition, targetRotation);
         if (!converged)
         {
             _mode = Mode.Control;
