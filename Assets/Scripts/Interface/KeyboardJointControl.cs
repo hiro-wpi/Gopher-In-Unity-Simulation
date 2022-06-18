@@ -157,7 +157,6 @@ public class KeyboardJointControl : MonoBehaviour
         {
             deltaPosition = Vector3.zero;
             float delta = linearSpeed * 0.05f; // 0.05 sample size
-
             // x -> unity coordinate
             if (Input.GetKey(KeyCode.J))
             {
