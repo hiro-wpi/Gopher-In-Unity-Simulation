@@ -1,0 +1,54 @@
+{
+    "name": "VRNurseInput",
+    "maps": [
+        {
+            "name": "VR Nurse",
+            "id": "e02e777e-7757-4e24-8a6b-81c786b68e12",
+            "actions": [
+                {
+                    "name": "Left Hand",
+                    "type": "Value",
+                    "id": "49d38f11-7628-492d-b6eb-b07cf90c79f9",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Right Hand",
+                    "type": "Value",
+                    "id": "ef2242eb-4fe1-41b4-bec3-73202197fce6",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "87201f9b-08bc-4fd6-8408-1e32a7acdee6",
+                    "path": "<XRController>{LeftHand}/trigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Left Hand",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d229d804-63a3-458f-b11b-47705eb60288",
+                    "path": "<XRController>{RightHand}/trigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Right Hand",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

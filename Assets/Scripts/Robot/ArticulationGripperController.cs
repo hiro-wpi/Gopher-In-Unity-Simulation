@@ -11,12 +11,11 @@ using UnityEngine;
 /// </summary>
 public class ArticulationGripperController : MonoBehaviour
 {
-    public ArticulationBody leftFingerRoot;
-    public ArticulationBody rightFingerRoot;
-    public ArticulationBody[] leftFingerChain;
-    public ArticulationBody[] rightFingerChain;
-    public float closeValue = 48f;
-    public float openValue = 0f;
+
+    // New class to hold the articulation body and close/open values
+
+    public ArticulationBody leftFinger;
+    public ArticulationBody rightFinger;
 
     void Start()
     {
@@ -30,31 +29,13 @@ public class ArticulationGripperController : MonoBehaviour
         */
     }
 
-    public void SetGrippers(float closeValue) 
+    public void SetGrippers(float value)
     {
-        for (int i=0; i < leftFingerChain.Length; ++i)
-        {
-            if (i == 2) // inner finger
-            {
-                SetTarget(leftFingerChain[i], -closeValue);
-                SetTarget(rightFingerChain[i], -closeValue);
-            }
-            else
-            {
-                SetTarget(leftFingerChain[i], closeValue);
-                SetTarget(rightFingerChain[i], closeValue);
-            }
-        }
-    }
-    
-    public void CloseGrippers() 
-    {
-        SetGrippers(closeValue); // Deg
-    }
+        float leftValue = Mathf.Lerp(leftFinger.xDrive.lowerLimit, leftFinger.xDrive.upperLimit, value);
+        SetTarget(leftFinger, leftValue);
 
-    public void OpenGrippers() 
-    {
-        SetGrippers(openValue); // Deg
+        float rightValue = Mathf.Lerp(rightFinger.xDrive.lowerLimit, rightFinger.xDrive.upperLimit, value);
+        SetTarget(rightFinger, rightValue);
     }
 
     void SetTarget(ArticulationBody joint, float target)

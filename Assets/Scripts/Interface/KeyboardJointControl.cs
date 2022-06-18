@@ -24,9 +24,9 @@ public class KeyboardJointControl : MonoBehaviour
     public CCDIK iK;
 
     // Control modes
-    private enum ControlMode { JointControl=0, PositionControl=1, RotationControl=2 };
+    private enum ControlMode { JointControl = 0, PositionControl = 1, RotationControl = 2 };
     private ControlMode controlMode;
-    
+
     public float jointSpeed = 0.5f;
     public float linearSpeed = 0.2f;
     public float angularSpeed = 0.15f;
@@ -51,7 +51,7 @@ public class KeyboardJointControl : MonoBehaviour
     {
         // Get joints
         articulationChain = jointRoot.GetComponentsInChildren<ArticulationBody>();
-        articulationChain = articulationChain.Where(joint => joint.jointType 
+        articulationChain = articulationChain.Where(joint => joint.jointType
                                                     != ArticulationJointType.FixedJoint).ToArray();
         jointLength = iK.numJoint;
         currJointAngles = new float[jointLength];
@@ -105,13 +105,13 @@ public class KeyboardJointControl : MonoBehaviour
     {
         // Home all joints
         if (Input.GetKeyDown(KeyCode.H))
-            jointController.HomeJoints();
+            // jointController.HomeJoints();
 
         // Gripper
         if (Input.GetKeyDown(KeyCode.G))
-            gripperController.CloseGrippers();
+            gripperController.SetGrippers(0.0f);
         else if (Input.GetKeyDown(KeyCode.R))
-            gripperController.OpenGrippers();
+            gripperController.SetGrippers(1.0f);
 
         // Switch control mode
         if (Input.GetKeyDown(KeyCode.Comma))
@@ -190,8 +190,8 @@ public class KeyboardJointControl : MonoBehaviour
         else if (controlMode == ControlMode.RotationControl)
         {
             deltaRotation = Vector3.zero;
-            float delta = angularSpeed*Mathf.Rad2Deg * 0.5f; // 0.5 sample rate
-            
+            float delta = angularSpeed * Mathf.Rad2Deg * 0.5f; // 0.5 sample rate
+
             // x -> unity coordinate
             if (Input.GetKey(KeyCode.J))
             {
@@ -244,7 +244,7 @@ public class KeyboardJointControl : MonoBehaviour
             ResetJointColors(selectedIndex);
             prevPosition = endEffector.transform.position;
         }
-        
+
         // Set delta to 0
         if (controlMode == ControlMode.PositionControl)
             deltaRotation = Vector3.zero;
@@ -258,10 +258,10 @@ public class KeyboardJointControl : MonoBehaviour
     {
         // Target position and rotation   
         Vector3 position = jointRoot.transform.InverseTransformPoint(
-                                               endEffector.transform.position) + 
+                                               endEffector.transform.position) +
                            deltaPosition;
         Vector3 rotation = (Quaternion.Inverse(jointRoot.transform.rotation) *
-                            endEffector.transform.rotation).eulerAngles + 
+                            endEffector.transform.rotation).eulerAngles +
                            deltaRotation;
 
         if (deltaPosition == Vector3.zero)
@@ -269,24 +269,24 @@ public class KeyboardJointControl : MonoBehaviour
             position = jointRoot.transform.InverseTransformPoint(
                                            prevPosition);
         }
-        if (deltaRotation == Vector3.zero)   
-        {   
+        if (deltaRotation == Vector3.zero)
+        {
             rotation = (Quaternion.Inverse(jointRoot.transform.rotation) *
                         prevRotation).eulerAngles;
         }
-        
+
         // Solve IK
         // get current joints
         for (int i = 0; i < jointLength; ++i)
             // currJointAngles[i] = articulationChain[i].jointPosition[0]; 
             // Use drive target instead of exact joint position
             // to avoid unintended oscillation due to controller's static error
-            currJointAngles[i] = articulationChain[i].xDrive.target * Mathf.Deg2Rad;       
+            currJointAngles[i] = articulationChain[i].xDrive.target * Mathf.Deg2Rad;
         iK.SetJointAngle(currJointAngles);
 
         // set target
         iK.SetTarget(position, Quaternion.Euler(rotation.x, rotation.y, rotation.z));
-        
+
         // solve
         (float[] resultJointAngles, bool foundSolution) = iK.CCD();
 
@@ -295,7 +295,7 @@ public class KeyboardJointControl : MonoBehaviour
 
     private void MoveJoints(float[] joints)
     {
-        for (int i=0; i < joints.Length; ++i)
+        for (int i = 0; i < joints.Length; ++i)
         {
             jointController.SetJointTarget(i, joints[i]);
         }
@@ -306,7 +306,7 @@ public class KeyboardJointControl : MonoBehaviour
 
     private void Highlight(int selectedIndex)
     {
-        if (selectedIndex < 0 || selectedIndex >= articulationChain.Length) 
+        if (selectedIndex < 0 || selectedIndex >= articulationChain.Length)
         {
             return;
         }
@@ -344,13 +344,13 @@ public class KeyboardJointControl : MonoBehaviour
                                                             GetComponentsInChildren<Renderer>();
         for (int counter = 0; counter < previousRendererList.Length; counter++)
         {
-            MaterialExtensions.SetMaterialColor(previousRendererList[counter].material, 
+            MaterialExtensions.SetMaterialColor(previousRendererList[counter].material,
                                                 prevColor[counter]);
         }
     }
     private void SetSelectedJointIndex(int index)
     {
-        if (articulationChain.Length > 0) 
+        if (articulationChain.Length > 0)
         {
             selectedIndex = (index + jointLength) % jointLength;
         }
