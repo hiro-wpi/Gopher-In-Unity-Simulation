@@ -1,4 +1,6 @@
 using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -6,13 +8,15 @@ using UnityEngine;
 ///     setting stiffness, damping and force limit of
 ///     the non-fixed ones.
 /// </summary>
+/// <remarks>
+///     As directly setting articulatio body velocity is still unstable,
+///     the better practice is still to set its target position.
+///     So, all joints are still initialized for the purpose of position control.
+/// </remarks>
 public class ArticulationBodyInitialization : MonoBehaviour
 {
     private ArticulationBody[] _articulationChain;
-    private ArticulationBody[] _massChain;
-
-    public ArticulationBody[] ignoreList;
-    public ArticulationBody[] massIgnoreList;
+    //public ArticulationBody[] ignoreList;
 
     public GameObject robotRoot;
     public bool assignToAllChildren = true;
@@ -20,20 +24,18 @@ public class ArticulationBodyInitialization : MonoBehaviour
     public float stiffness = 10000f;
     public float damping = 100f;
     public float forceLimit = 1000f;
-    public bool applyMass = false;
-    public float mass = 10f;
 
     private void Start()
     {
         // Get non-fixed joints
         _articulationChain = robotRoot.GetComponentsInChildren<ArticulationBody>();
-        _articulationChain = _articulationChain.Where(joint => joint.jointType != ArticulationJointType.FixedJoint)
-            .ToArray();
+        _articulationChain = _articulationChain.Where(joint => joint.jointType 
+                                                      != ArticulationJointType.FixedJoint).ToArray();
         // remove joints from ignore list
-        _articulationChain = _articulationChain.Where(joint => !ignoreList.Contains(joint)).ToArray();
+        // _articulationChain = _articulationChain.Where(joint => !ignoreList.Contains(joint)).ToArray();
 
         // Joint length to assign
-        var assignLength = _articulationChain.Length;
+        int assignLength = _articulationChain.Length;
         if (!assignToAllChildren)
             assignLength = robotChainLength;
 
@@ -41,8 +43,8 @@ public class ArticulationBodyInitialization : MonoBehaviour
         const int friction = 100;
         for (var i = 0; i < assignLength; ++i)
         {
-            var joint = _articulationChain[i];
-            var drive = joint.xDrive;
+            ArticulationBody joint = _articulationChain[i];
+            ArticulationDrive drive = joint.xDrive;
 
             joint.jointFriction = friction;
             joint.angularDamping = friction;
@@ -51,17 +53,6 @@ public class ArticulationBodyInitialization : MonoBehaviour
             drive.damping = damping;
             drive.forceLimit = forceLimit;
             joint.xDrive = drive;
-        }
-
-        if (!applyMass) return;
-        
-        _massChain = robotRoot.GetComponentsInChildren<ArticulationBody>();
-        _massChain = _massChain.Where(joint => !massIgnoreList.Contains(joint)).ToArray();
-
-        // For each in mass chain
-        foreach (var joint in _massChain)
-        {
-            joint.mass = mass;
         }
     }
 }

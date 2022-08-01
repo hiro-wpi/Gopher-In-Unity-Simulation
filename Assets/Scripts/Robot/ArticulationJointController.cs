@@ -1,4 +1,6 @@
 using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -11,42 +13,75 @@ public class ArticulationJointController : MonoBehaviour
     [SerializeField]
     private float jointMaxSpeed = 1f; 
     
-    // Articulation Bodies
-    [SerializeField]
-    private float[] homePosition = {0f, 0f, 0f, 0f, 0f, 0f, 0f};
+    // Articulation Bodies Presets
+    private static float IGNORE_VAL = -100f;
+    // preset 1 is the default joint positions
+    public float[] homePosition = {-1f, -Mathf.PI/2, -Mathf.PI/2, 2.2f, 0.0f, -1.2f, Mathf.PI};
     
     [SerializeField]
     private ArticulationBody[] articulationChain;
+    private Collider[] colliders;
 
-    public int GetNumJoints()
+    void Awake()
     {
-        // Get joints
-        return articulationChain.Length;
+        colliders = articulationChain[0].GetComponentsInChildren<Collider>();
+        // Only consider colliders that are active by default
+        colliders = colliders.Where(collider => collider.enabled == true).ToArray();
+    }
+    void Start()
+    {
+        // HomeJoints()
     }
 
-    public bool HomeAndCheck()
+    // Home joints
+    public void HomeJoints()
+    {
+        StartCoroutine(HomeJointsCoroutine(homePosition));
+    }
+    private IEnumerator HomeJointsCoroutine(float[] jointPosition)
+    {
+        SetCollidersActive(false);
+        yield return new WaitUntil(() => MoveToJointPositionStep(jointPosition) == true);
+        SetCollidersActive(true);
+    }
+    public void SetCollidersActive(bool active)
+    {
+        foreach (Collider collider in colliders)
+        {
+            collider.enabled = active;
+        }
+    }
+    public bool MoveToJointPositionStep(float[] position)
     {
         int count = 0;
-        for (int i = 0; i < homePosition.Length; ++i)
+        for (int i = 0; i < position.Length; ++i)
         {
+            // If IGNORE_VAL, skip it
+            if (position[i] == IGNORE_VAL)
+            {
+                count += 1;
+                continue;
+            }
+            
             // prevent conversion error deg->rad
             float current = articulationChain[i].xDrive.target * Mathf.Deg2Rad;
-            if (Mathf.Abs(current - homePosition[i]) > 0.00001)
-                SetJointTargetStep(i, homePosition[i]);
+            if (Mathf.Abs(current - position[i]) > 0.00001)
+                SetJointTargetStep(i, position[i]);
             else
                 count += 1;
         }
 
-        if (count == homePosition.Length)
+        if (count == position.Length)
             return true;
         return false;
     }
 
+
+    // Set joint target
     public void SetJointTarget(int jointNum, float target)
     {
         SetJointTarget(articulationChain[jointNum], target);
     }
-    
     public void SetJointTarget(ArticulationBody joint, float target)
     {
         if (float.IsNaN(target))
@@ -70,6 +105,15 @@ public class ArticulationJointController : MonoBehaviour
         joint.xDrive = drive;
     }
 
+    public void SetJointTargets(float[] targets)
+    {
+        for (int i=0; i < articulationChain.Length; ++i)
+        {
+            SetJointTarget(articulationChain[i], targets[i]);
+        }
+    }
+
+    // Set joint target step
     public void SetJointTargetStep(int jointNum, float target)
     {
         SetJointTargetStep(articulationChain[jointNum], target, jointMaxSpeed);
@@ -112,6 +156,7 @@ public class ArticulationJointController : MonoBehaviour
         joint.xDrive = drive;
     }
 
+    // Set joint speed
     public void SetJointSpeedStep(int jointNum)
     {
         SetJointSpeedStep(jointNum, jointMaxSpeed);
@@ -149,12 +194,13 @@ public class ArticulationJointController : MonoBehaviour
         joint.xDrive = drive;
     } 
 
+
+    // Stop joints
     public void StopJoint(int jointNum)
     {
         if (jointNum >= 0 && jointNum < articulationChain.Length)
             StopJoint(articulationChain[jointNum]);
     }
-    
     public void StopJoint(ArticulationBody joint)
     {
         float currPosition =  joint.jointPosition[0] * Mathf.Rad2Deg;
@@ -167,6 +213,16 @@ public class ArticulationJointController : MonoBehaviour
         }
     }
 
+
+    // Getter
+    public int GetNumJoints()
+    {
+        if (articulationChain == null)
+            return 0;
+        // Get joint length
+        return articulationChain.Length;
+    }
+
     public float[] GetCurrentJointTargets()
     {
         float[] targets = new float[articulationChain.Length];
@@ -177,13 +233,5 @@ public class ArticulationJointController : MonoBehaviour
 
         targets = targets.Select(r => r * Mathf.Deg2Rad).ToArray();
         return targets;
-    }
-
-    public void SetJointTargets(float[] targets)
-    {
-        for (int i=0; i < articulationChain.Length; ++i)
-        {
-            SetJointTarget(articulationChain[i], targets[i]);
-        }
     }
 }

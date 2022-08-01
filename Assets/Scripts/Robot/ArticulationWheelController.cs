@@ -9,6 +9,11 @@ using UnityEngine;
 ///     differential drive robot. Velocity can be 
 ///     set with SetRobotVelocity().
 /// </summary>
+/// <remarks>
+///     As directly setting articulatio body velocity is still unstable,
+///     the better practice is still to set its target position at each time step.
+///     Velocity control is simulated by position control.
+/// </remarks>
 public class ArticulationWheelController : MonoBehaviour
 {
     public ArticulationBody leftWheel;
@@ -16,9 +21,9 @@ public class ArticulationWheelController : MonoBehaviour
     public float wheelTrackLength;
     public float wheelRadius;
 
-    private float vRight;
-    private float vLeft;
-
+    private float velLeft;
+    private float velRight;
+    
     void Start()
     {
     }
@@ -29,31 +34,31 @@ public class ArticulationWheelController : MonoBehaviour
 
     public void SetRobotVelocity(float targetLinearSpeed, float targetAngularSpeed)
     {
-        // // Stop the wheel if target velocity is 0
-        // if (targetLinearSpeed == 0 && targetAngularSpeed == 0)
-        // {
-        //     StopWheel(leftWheel);
-        //     StopWheel(rightWheel);
-        // }
-        // else
-        // {
-        // Convert from linear x and angular z velocity to wheel speed
-        vRight = targetAngularSpeed * (wheelTrackLength / 2) + targetLinearSpeed;
-        vLeft = -targetAngularSpeed * (wheelTrackLength / 2) + targetLinearSpeed;
-
-        SetWheelVelocity(leftWheel, vLeft / wheelRadius * Mathf.Rad2Deg);
-        SetWheelVelocity(rightWheel, vRight / wheelRadius * Mathf.Rad2Deg);
-        // }
+        if (targetLinearSpeed != 0 || targetAngularSpeed != 0)
+        {
+            // Compute wheel joint velocity based on given speed
+            velLeft = -targetAngularSpeed * (wheelTrackLength / 2) + targetLinearSpeed;
+            velRight = targetAngularSpeed * (wheelTrackLength / 2) + targetLinearSpeed;
+            SetWheelVelocityStep(leftWheel, velLeft / wheelRadius * Mathf.Rad2Deg);
+            SetWheelVelocityStep(rightWheel, velRight / wheelRadius * Mathf.Rad2Deg);
+        }
+        else
+        {
+            StopWheel(leftWheel);
+            StopWheel(rightWheel);
+        }
     }
-
+    
+    // Deprecated
     private void SetWheelVelocity(ArticulationBody wheel, float jointSpeed)
     {
+        // setting articulatio body velocity
         ArticulationDrive drive = wheel.xDrive;
         drive.targetVelocity = jointSpeed;
         wheel.xDrive = drive;
     }
 
-    private void SetWheelTarget(ArticulationBody wheel, float jointSpeed)
+    private void SetWheelVelocityStep(ArticulationBody wheel, float jointSpeed)
     {
         ArticulationDrive drive = wheel.xDrive;
         drive.target = drive.target + jointSpeed * Time.fixedDeltaTime;

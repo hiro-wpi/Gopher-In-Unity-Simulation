@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+///     Provide util functions to compute inverse kinematics
+///     for Kinova Gen3 7-DOF robotic arm
+///     using Newton numeric IK method
+/// </summary>
 public class NewtonIK : MonoBehaviour
 {
     public ArticulationBody root;
@@ -9,6 +14,8 @@ public class NewtonIK : MonoBehaviour
     public Transform localToWorldTransform;
     public KinematicSolver kinematicSolver;
     public float dampedSquaresLambda = 0.01f;
+
+    void Start() {}
 
     // Enum for the type of inverse method to use
     public enum InverseMethod

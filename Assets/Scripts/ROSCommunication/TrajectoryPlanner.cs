@@ -110,6 +110,6 @@ public class TrajectoryPlanner : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.5f);
-        gripperController.SetGrippers(1.0f);
+        gripperController.SetGripper(1.0f);
     }
 }

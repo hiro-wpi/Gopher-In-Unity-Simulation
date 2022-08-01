@@ -4,7 +4,9 @@ using UnityEngine;
 
 /// <summary>
 ///     This script simulates a laser scanner to
-///     detect the surrounding obstacles
+///     detect the surrounding obstacles.
+///     The difference between this script and the Laser script
+///     is that the objects with tag "Human" is detected seperately.
 /// </summary>
 public class LaserSocial : MonoBehaviour
 {

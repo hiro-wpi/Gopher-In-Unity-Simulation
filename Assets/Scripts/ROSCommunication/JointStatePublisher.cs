@@ -46,8 +46,7 @@ public class JointStatePublisher : MonoBehaviour
         // link names but not joint names
         jointChain = jointRoot.GetComponentsInChildren<UrdfJoint>();
         jointChain = jointChain.Where(joint => 
-                        (joint.JointType == UrdfJoint.JointTypes.Revolute || 
-                         joint.JointType == UrdfJoint.JointTypes.Continuous)).ToArray();
+                        (joint.JointType != UrdfJoint.JointTypes.Fixed)).ToArray();
 
         jointStateLength = jointChain.Length;
         

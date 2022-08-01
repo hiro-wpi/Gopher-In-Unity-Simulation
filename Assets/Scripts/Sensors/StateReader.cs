@@ -6,58 +6,68 @@ using UnityEngine;
 using Unity.Robotics.UrdfImporter;
 
 /// <summary>
-///     This script reads robot positions, velocities,
+///     This script reads robot jointPositions, jointVelocities,
 ///     joint states, etc.
 /// </summary>
 public class StateReader : MonoBehaviour
 {
-    // Robot
-    public GameObject robot;
-
     public int updateRate = 10;
     private float deltaTime;
+
+    // Robot
+    public GameObject robot;
+    public float durationTime;
+    private float startTime;
 
     // Position, Rotation & Velocity
     private Transform tf;
     private Rigidbody rb;
     public Vector3 position;
     private Quaternion rotation;
-    public Vector3 eulerRotation;
+    public Vector3 rotationEuler;
     public Vector3 linearVelocity;
     public Vector3 angularVelocity;
 
     // Joint states
     private UrdfJoint[] jointChain;
     private int jointStateLength;
-    public string[] names;
-    public float[] positions;
-    public float[] velocities;
-    public float[] forces;
+    public string[] jointNames;
+    public float[] jointPositions;
+    public float[] jointVelocities;
+    public float[] jointForces;
+
+    // Extra
+    public GameObject[] extraObjects;
+    public Vector3[] objectPositions;
+    public Vector3[] objectRotations;
 
     void Start()
     {
+        startTime = Time.time;
+
         // Get robot transform
         tf = robot.transform;
-        rb = robot.GetComponent<Rigidbody>();
+        rb = robot.GetComponentInChildren<Rigidbody>();
     
         // Get joints
         jointChain = robot.GetComponentsInChildren<UrdfJoint>();
         jointChain = jointChain.Where(joint => 
-                        (joint.JointType == UrdfJoint.JointTypes.Revolute || 
-                         joint.JointType == UrdfJoint.JointTypes.Continuous)).ToArray();
-        
+                        (joint.JointType != UrdfJoint.JointTypes.Fixed)).ToArray();
         jointStateLength = jointChain.Length;
-        
-        names = new string[jointStateLength];
-        positions = new float[jointStateLength];
-        velocities = new float[jointStateLength];
-        forces = new float[jointStateLength];
 
+        jointNames = new string[jointStateLength];
+        jointPositions = new float[jointStateLength];
+        jointVelocities = new float[jointStateLength];
+        jointForces = new float[jointStateLength];
         for (int i = 0; i < jointStateLength; ++i)
-            names[i] = jointChain[i].jointName;
+            jointNames[i] = jointChain[i].jointName;
+
+        // Get extra object's position and rotation
+        objectPositions = new Vector3[extraObjects.Length];
+        objectRotations = new Vector3[extraObjects.Length];
 
         // Update
-        deltaTime = 1f/updateRate;
+        deltaTime = 1f / updateRate;
         InvokeRepeating("ReadState", 1f, deltaTime);
     }
 
@@ -67,43 +77,44 @@ public class StateReader : MonoBehaviour
 
     void ReadState()
     {
+        // Duration
+        durationTime = Time.time - startTime;
+        
         // Pose and Velocity
         if (rb != null)
         {
-            // lienar and angular velocity
+            // lienar and angular velocity from rigidbody
             linearVelocity = rb.velocity;
             angularVelocity = rb.angularVelocity;
-            // transfer to local frame
-            linearVelocity = tf.InverseTransformDirection(linearVelocity);
-            angularVelocity = tf.InverseTransformDirection(angularVelocity);
-
-            // position and orientation
-            position = rb.position;
-            rotation = rb.rotation;
-            eulerRotation = rotation.eulerAngles;
         }
         else
         {
-            // lienar and angular velocity
+            // lienar and angular velocity from transform
             linearVelocity = (tf.position - position) / deltaTime;
-            angularVelocity = (tf.rotation.eulerAngles - eulerRotation) / deltaTime;
-            // transfer to local frame
-            linearVelocity = tf.InverseTransformDirection(linearVelocity);
-            angularVelocity = tf.InverseTransformDirection(angularVelocity);
-
-            // position and orientation
-            position = tf.position;
-            rotation = tf.rotation;
-            eulerRotation = rotation.eulerAngles;
+            angularVelocity = (tf.rotation.eulerAngles - rotationEuler) / deltaTime;
         }
+        // transfer to local frame
+        linearVelocity = tf.InverseTransformDirection(linearVelocity);
+        angularVelocity = tf.InverseTransformDirection(angularVelocity);
+
+        // position and orientation
+        position = tf.position;
+        rotation = tf.rotation;
+        rotationEuler = rotation.eulerAngles;
         
         // Joint states
         for (int i = 0; i < jointStateLength; ++i)
         {   
-            positions[i] = jointChain[i].GetPosition();
-            velocities[i] = jointChain[i].GetVelocity();
-            forces[i] = jointChain[i].GetEffort();
+            jointPositions[i] = jointChain[i].GetPosition();
+            jointVelocities[i] = jointChain[i].GetVelocity();
+            jointForces[i] = jointChain[i].GetEffort();
         }
         
+        // Extra objects
+        for (int i = 0; i < extraObjects.Length; ++i)
+        {   
+            objectPositions[i] = extraObjects[i].transform.position;
+            objectRotations[i] = extraObjects[i].transform.rotation.eulerAngles;
+        } 
     }
 }

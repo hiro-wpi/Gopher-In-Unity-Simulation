@@ -5,31 +5,33 @@ using UnityEngine;
 
 /// <summary>
 ///     This script is used to control the robotic
-///     end-effector. This script is specifically used 
-///     for robotic 2F-85. But others can also be used
-///     with minor modification.
+///     end-effector. This script is originally used 
+///     for robotic 2F-85, with modification into prismatic gripper. 
+//      Others can also be used with minor modification.
 /// </summary>
 public class ArticulationGripperController : MonoBehaviour
 {
 
     // New class to hold the articulation body and close/open values
-
+    // Assume prismatic
     public ArticulationBody leftFinger;
     public ArticulationBody rightFinger;
 
     void Start()
     {
-        /*
-        leftFingerChain = leftFingerRoot.GetComponentsInChildren<ArticulationBody>();
-        leftFingerChain = leftFingerChain.Where(joint => joint.jointType 
-                                                    != ArticulationJointType.FixedJoint).ToArray();
-        rightFingerChain = rightFingerRoot.GetComponentsInChildren<ArticulationBody>();
-        rightFingerChain = rightFingerChain.Where(joint => joint.jointType 
-                                                    != ArticulationJointType.FixedJoint).ToArray();
-        */
     }
 
-    public void SetGrippers(float value)
+    public void CloseGripper()
+    {
+        SetGripper(1f);
+    }
+
+    public void OpenGripper()
+    {
+        SetGripper(0f);
+    }
+
+    public void SetGripper(float value)
     {
         float leftValue = Mathf.Lerp(leftFinger.xDrive.lowerLimit, leftFinger.xDrive.upperLimit, value);
         SetTarget(leftFinger, leftValue);

@@ -14,19 +14,19 @@ public class KinematicSolver : MonoBehaviour
     // params has length of numJoint+1
     // world -> joint 1 -> ... -> end effector
     public int numJoint = 7;
-    public float[] alpha = new float[] {3.1415927f, 1.5707963f, 1.5707963f, 1.5707963f,
-                                        1.5707963f, 1.5707963f, 1.5707963f, 3.1415927f};
-    public float[] a = new float[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+    public float[] alpha = new float[] {Mathf.PI, Mathf.PI/2f, Mathf.PI/2f, Mathf.PI/2f,
+                                        Mathf.PI/2f, Mathf.PI/2f, Mathf.PI/2f, Mathf.PI};
+    public float[] a = new float[] {0, 0, 0, 0, 0, 0, 0, 0};
     public float[] d = new float[] {0, -0.2848f, -0.0118f, -0.4208f,
                                     -0.0128f, -0.3143f, 0, -0.2874f};
-    public float[] thetaOffset = new float[] {0, 0, 3.1415927f, 3.1415927f, 3.1415927f,
-                3.1415927f, 3.1415927f, 3.1415927f};
+    public float[] thetaOffset = new float[] {0, 0, Mathf.PI, Mathf.PI, Mathf.PI,
+                                              Mathf.PI, Mathf.PI, Mathf.PI};
     public Transform baseTransform;
-    private float[] angles = new float[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+    private float[] angles = new float[] {0, 0, 0, 0, 0, 0, 0, 0};
 
     // Define joint limits
-    public float[] angleLowerLimits = new float[] { 0, 0, -2.41f, 0, -2.66f, 0, -2.23f, 0 };
-    public float[] angleUpperLimits = new float[] { 0, 0, 2.41f, 0, 2.66f, 0, 2.23f, 0 };
+    public float[] angleLowerLimits = new float[] {0, 0, -2.41f, 0, -2.66f, 0, -2.23f, 0};
+    public float[] angleUpperLimits = new float[] {0, 0, 2.41f, 0, 2.66f, 0, 2.23f, 0};
 
     // Homography Matrix
     private Matrix4x4[] T;
@@ -107,7 +107,12 @@ public class KinematicSolver : MonoBehaviour
         return Ts;
     }
 
-    // public Quaternion QuaternionFromMatrix(Matrix4x4 m) { return Quaternion.LookRotation(m.GetColumn(2), m.GetColumn(1)); }
+    /*
+    public Quaternion QuaternionFromMatrix(Matrix4x4 m) 
+    { 
+        return Quaternion.LookRotation(m.GetColumn(2), m.GetColumn(1)); 
+    }
+    */
 
     public void UpdateAllPose()
     {
@@ -150,7 +155,8 @@ public class KinematicSolver : MonoBehaviour
         }
     }
 
-    // Need conversion utilities between FLU (forward, left, up) and Unity's RUF (right, up, forward)
+    // Need conversion utilities between FLU (forward, left, up) and 
+    // Unity's RUF (right, up, forward)
 
     public Vector3 ToRUF(Vector3 v)
     {
@@ -172,17 +178,19 @@ public class KinematicSolver : MonoBehaviour
         return new Quaternion(-q.z, -q.x, q.y, q.w);
     }
 
-    // public Quaternion ToRUF(Quaternion q)
-    // {
-    //     q = new Quaternion(-q.y, q.z, q.x, -q.w);
-    //     return q * Quaternion.Euler(0, 90, 0);
-    // }
+    /*
+    public Quaternion ToRUF(Quaternion q)
+    {
+        q = new Quaternion(-q.y, q.z, q.x, -q.w);
+        return q * Quaternion.Euler(0, 90, 0);
+    }
 
-    // public Quaternion FromRUF(Quaternion q)
-    // {
-    //     q = q * Quaternion.Euler(0, -90, 0);
-    //     return new Quaternion(q.z, -q.x, q.y, -q.w);
-    // }
+    public Quaternion FromRUF(Quaternion q)
+    {
+        q = q * Quaternion.Euler(0, -90, 0);
+        return new Quaternion(q.z, -q.x, q.y, -q.w);
+    }
+    */
 
     public (Vector3, Quaternion) GetPose(int i)
     {

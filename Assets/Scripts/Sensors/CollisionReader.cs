@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+///     This script is used to assign ArticulationCollisionDetection to
+///     each articulation body in the game object,
+///     and read collision if happened.
+///     Collision is saved in two array of size 5:
+///     collisionSelfNames and collisionOtherNames.
+/// </summary>
 public class CollisionReader : MonoBehaviour
 {
     public GameObject robotRoot;
@@ -11,12 +18,12 @@ public class CollisionReader : MonoBehaviour
     public AudioClip collisionAudioClip;
     private AudioSource collisionAudio;
 
-    public int storageIndex;
-    public int storageLength;
+    public int storageIndex = 0;
+    public int storageLength = 5;
     public string[] collisionSelfNames;
     public string[] collisionOtherNames;
 
-    void Start()
+    void Awake()
     {
         // Audio effect
         collisionAudio = gameObject.AddComponent<AudioSource>();
@@ -41,8 +48,6 @@ public class CollisionReader : MonoBehaviour
         }
 
         // To store collision information
-        storageIndex = 0;
-        storageLength = 5;
         collisionSelfNames = new string[storageLength];
         collisionOtherNames = new string[storageLength];
     }
@@ -55,7 +60,7 @@ public class CollisionReader : MonoBehaviour
     {
         if (!collisionAudio.isPlaying)
         {
-            collisionAudio.volume = relativeSpeed*0.15f + 0.3f;
+            collisionAudio.volume = relativeSpeed*0.3f + 0.1f;
             collisionAudio.Play();
 
             // Temporary

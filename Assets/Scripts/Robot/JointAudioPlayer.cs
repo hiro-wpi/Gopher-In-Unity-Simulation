@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-///     This script attach audio file
+///     This script plays attach audio file
+///     given joint speed
 /// </summary>
 public class JointAudioPlayer : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class JointAudioPlayer : MonoBehaviour
     public float minimumPitch = 0.0f;
     public float maximumPitch = 1.0f;
     
-    void Start()
+    void Awake()
     {
         foreach (ArticulationBody jointRoot in jointRoots)
         {
