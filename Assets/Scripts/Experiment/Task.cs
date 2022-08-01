@@ -1,9 +1,226 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
+/// <summary>
+/// Abstract task class for defining task in different types
+/// </summary>
 public abstract class Task : MonoBehaviour 
 {
+    // Task-related properties
+    public string sceneName;
+    public string taskName;
+    public string taskDescription;
+    public GraphicalInterface gUI;
+    public ControlInterface cUI;
+
+    // Task status
+    // start
+    protected bool taskStarted;
+    protected float startTime;
+    // end
+    public SpawnInfo[] goalObjectSpawnArray;
+    protected GameObject[] goalObjects;
+    protected Goal[] goals = new Goal[0];
+    protected int goalIndex = 0;
+    
+    // Spawn objects
+    public SpawnInfo[] taskObjectSpawnArray;
+    public SpawnInfo[] staticObjectSpawnArray;
+    public SpawnInfo[] dynamicObjectSpawnArray;
+    public SpawnInfo[] robotSpawnArray;
+    protected GameObject[] taskObjects;
+    protected GameObject[] staticObjects;
+    protected GameObject[] dynamicObjects;
+    protected GameObject[] robots;
+    // current controlled robot
+    protected GameObject robot; 
+    protected Vector3 robotStartPosition;
+
+    // Data to record
+    protected string[] valueToRecordHeader;
+    protected string[] stringToRecordHeader;
+    protected float[] valueToRecord;
+    protected string[] stringToRecord;
+    protected int userInputRecordIndex = -1;
+    // user input
+    protected string[] userInputs;
+    protected int userInputIndex = -1;
+    protected int userInputLength = 3;
+
+    // Check if the current task is started
+    public virtual bool CheckTaskStart()
+    {
+        if (robot == null) 
+            return false;
+        // If robot moves more than 0.1m
+        if ((robot.transform.position - robotStartPosition).magnitude > 0.1)
+        {
+            startTime = Time.time;
+            taskStarted = true;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    // Get task running time
+    public virtual float GetTaskDuration()
+    {
+        if (!taskStarted)
+            return 0;
+        else
+            return Time.time - startTime;
+    }
+
+    // Check if the current task is done
+    // Differ from tasks
+    public abstract bool CheckTaskCompletion();
+
+
+    // Task status
+    // Will be displayed in the GUI
+    public abstract string GetTaskStatus();
+
+    // Reset task status - for reloading the task
+    public abstract void ResetTaskStatus();
+
+
+    // Check user input (needed for some of the tasks)
+    public virtual void CheckInput(string input)
+    {
+        if (userInputs == null)
+            userInputs = new string[userInputLength];
+        
+        // store user input
+        userInputIndex = (userInputIndex + 1) % userInputLength;
+        userInputs[userInputIndex] = input;
+    }
+
+    // The header of extra task data to record besides robot's
+    public virtual string[] GetTaskValueToRecordHeader()
+    {
+        valueToRecordHeader = new string[0];
+        return valueToRecordHeader;
+    }
+    public virtual string[] GetTaskStringToRecordHeader()
+    {
+        stringToRecordHeader = new string[2];
+        stringToRecordHeader[0] = "time";
+        stringToRecordHeader[1] = "user_inputs";
+        return stringToRecordHeader;
+    }
+
+    // Extra task data to record besides robot's
+    public virtual float[] GetTaskValueToRecord()
+    {
+        valueToRecord = new float[0];
+        return valueToRecord;
+    }
+    public virtual string[] GetTaskStringToRecord()
+    {
+        stringToRecord = new string[0];
+        if (userInputRecordIndex != userInputIndex)
+        {
+            stringToRecord = new string[2];
+            stringToRecord[0] = string.Format("{0:0.000}", Time.time);
+            stringToRecord[1] = userInputs[userInputRecordIndex];
+            userInputRecordIndex = (userInputRecordIndex + 1) % userInputLength;
+        }
+        return stringToRecord;
+    }
+
+    
+    // Generate static objects for this task
+    public virtual GameObject[] GenerateStaticObjects()
+    {
+        // Spawn static objects, task objects and goal objects
+        staticObjects = SpawnGameObjectArray(staticObjectSpawnArray);
+        taskObjects = SpawnGameObjectArray(taskObjectSpawnArray);
+        goalObjects = SpawnGameObjectArray(goalObjectSpawnArray);
+
+        // Keep only the first goal active
+        goals = new Goal[goalObjects.Length];
+        for (int i = 0; i < goalObjects.Length; ++i)
+        {
+            goals[i] = goalObjects[i].GetComponent<Goal>();
+            if (i != 0)
+                goalObjects[i].SetActive(false);
+        }
+
+        return staticObjects;
+    }
+
+    // Generate dynamic objects for this task
+    public virtual GameObject[] GenerateDynamicObjects()
+    {
+        // Spawn dynamic objects - Humans
+        dynamicObjects = SpawnGameObjectArray(dynamicObjectSpawnArray);
+        
+        // set trajectory for each human
+        for (int i=0; i<dynamicObjects.Length; i++)
+        {
+            CharacterNavigation charNav = dynamicObjects[i].GetComponent<CharacterNavigation>();
+            charNav.SetTrajectory(dynamicObjectSpawnArray[i].trajectory);
+            charNav.loop = true;
+        }
+
+        return dynamicObjects;
+    }
+
+    // Destroy all spawned objects
+    public virtual void DestroyObjects(bool deStatic = true, bool deTask = true,
+                                       bool deGoal = true, bool deDynamic = true)
+    {
+        if (deStatic)
+            DestoryGameObjects(staticObjects);
+        if (deTask)
+            DestoryGameObjects(taskObjects);
+        if (deGoal)
+            DestoryGameObjects(goalObjects);
+        if (deDynamic)
+            DestoryGameObjects(dynamicObjects);
+    }
+    private void DestoryGameObjects(GameObject[] gameObjects)
+    {
+        foreach (GameObject obj in gameObjects)
+            Destroy(obj);
+    }
+
+    // Generate robots for this task
+    public virtual GameObject[] GenerateRobots()
+    {
+        // Spawn robot
+        robots = SpawnGameObjectArray(robotSpawnArray);
+        robot = robots[0];
+        robotStartPosition = robot.transform.position;
+
+        // GUI set output
+        gUI.SetRobot(robot);
+        gUI.SetTask(this);
+
+        return robots;
+    }
+
+    // In the case that same existed robots are used
+    public virtual void SetRobots(GameObject[] existingRobots)
+    {
+        // Set existing robots
+        robots = existingRobots;
+        robot = robots[0];
+        robotStartPosition = robot.transform.position;
+
+        // GUI set output
+        gUI.SetRobot(robot);
+        gUI.SetTask(this);
+    }
+
+
+    // Define SpawnInfo for spawning objects
+    [System.Serializable]
     public struct SpawnInfo
     {
         public GameObject gameObject;
@@ -11,64 +228,24 @@ public abstract class Task : MonoBehaviour
         public Vector3 rotation;
         public Vector3[] trajectory; // for dynamic objects
     };
-    
-    // Task-related properties
-    protected UserInterface uI;
-    protected string taskName;
-    protected string sceneName;
-
-    // Get or set the GUI
-    public UserInterface UI{ get; set; }
-    // Get or set the name of this task
-    public string TaskName{ get; set; }
-    // Get or set the name of the scene
-    public string SceneName{ get; set; }
-
-    // Spawn objects
-    protected SpawnInfo[] objectSpawnArray;
-    public SpawnInfo[] robotSpawnArray;
-    protected GameObject[] objects;
-    protected GameObject[] robots;
-
-    // Set object spawn array
-    public virtual void SetObjectSpawnArray(SpawnInfo[] objectSpawnArray)
+    // Create a spawn info from given gameObject
+    public static Task.SpawnInfo ToSpawnInfo(GameObject gameObject, 
+                                             Vector3 position, Vector3 rotation, 
+                                             Vector3[] trajectory = null)
     {
-        this.objectSpawnArray = objectSpawnArray;
+        Task.SpawnInfo spawnInfo;
+        spawnInfo.gameObject = gameObject;
+        spawnInfo.position = position;
+        spawnInfo.rotation = rotation;
+        spawnInfo.trajectory = trajectory;
+        return spawnInfo;
     }
-    // Set robot spawn array
-    public virtual void SetRobotSpawnArray(SpawnInfo[] robotSpawnArray)
+    // Generate an array of game objects from an array of spawnInfo
+    public static GameObject[] SpawnGameObjectArray(SpawnInfo[] spawnInfos)
     {
-        this.robotSpawnArray = robotSpawnArray;
-    }
-
-    // Data to record
-    protected float[] valueToRecord;
-    protected string[] stringToRecord;
-
-    // Get value array for recording
-    public float[] ValueToRecord { get; }
-    // Get string array for recording
-    public string[] StringToRecord { get; }
-
-    // Check if the current task is done
-    // Use int but not bool in order to identify different ending situations
-    public abstract int CheckTaskCompletion();
-
-    // Generate objects for this task
-    public virtual void GenerateObjects()
-    {
-        objects = SpawnGameObjectArray(objectSpawnArray);
-    }
-
-    // Generate robots for this task
-    public virtual void GenerateRobots()
-    {
-        robots = SpawnGameObjectArray(robotSpawnArray);
-    }
-
-    // Utils, generate an array of game objects
-    protected GameObject[] SpawnGameObjectArray(SpawnInfo[] spawnInfos)
-    {
+        if (spawnInfos == null)
+            spawnInfos = new SpawnInfo[0];
+        
         GameObject[] gameObjects = new GameObject[spawnInfos.Length];
         for (int i=0; i < spawnInfos.Length; ++i)
         {
