@@ -83,10 +83,16 @@ public abstract class Task : MonoBehaviour
 
     // Task status
     // Will be displayed in the GUI
-    public abstract string GetTaskStatus();
+    public virtual string GetTaskStatus()
+    {
+        return "";
+    }
 
     // Reset task status - for reloading the task
-    public abstract void ResetTaskStatus();
+    public virtual void ResetTaskStatus()
+    {
+        taskStarted = false;
+    }
 
 
     // Check user input (needed for some of the tasks)

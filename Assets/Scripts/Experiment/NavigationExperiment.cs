@@ -26,7 +26,6 @@ public class NavigationExperiment : Experiment
     // human
     public GameObject nurse;
     private Vector3[] humanSpawnPositions;
-    private Vector3[] humanSpawnRotations;
     private Vector3[,] humanTrajectories;
     // Task
     private GameObject tasksParentObject;
