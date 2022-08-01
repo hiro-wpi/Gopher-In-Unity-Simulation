@@ -9,6 +9,7 @@ public class ExperimentManager : MonoBehaviour
 {   
     // Experiment
     public Experiment[] experiments;
+    public FreePlayTask freePlayTask;
     private int[] taskIndices;
     private bool experimentStarted;
     private bool taskStarted;
@@ -102,7 +103,16 @@ public class ExperimentManager : MonoBehaviour
             Directory.CreateDirectory(recordFolder);
     }
 
+    // Free play mode
+    public void FreePlay()
+    {   
+        currentTask = freePlayTask;
+        StartCoroutine(LoadTaskCoroutine(true));
+        experimentStarted = true;
+        taskStarted = false;
+    }
 
+    
     // Start or stop recording
     public void StartRecording()
     {
@@ -129,7 +139,8 @@ public class ExperimentManager : MonoBehaviour
     }
 
 
-    // Load the given task in the scene
+    // Task
+    // Load new task
     public bool LoadNewTask()
     {
         // Randomly get the next task from unfinished experiment
@@ -251,26 +262,6 @@ public class ExperimentManager : MonoBehaviour
         // TODO cUI = currentTask.CUI;
     }
 
-
-    // Load quit menus
-    public void LoadQuitMenus()
-    {
-        // Stop the time and save the mouse status
-        Time.timeScale = 0f;
-        previousCursorState = Cursor.lockState;
-        Cursor.lockState = CursorLockMode.Confined;
-        experimentMenus.LoadQuitMenus();
-    }
-
-    // Resume from quit menus
-    public void ResumeFromQuitMenus()
-    {
-        // Resume the time and mouse
-        Time.timeScale = 1f;
-        Cursor.lockState = previousCursorState;
-        experimentMenus.HideAll();
-    }
-
     // Reload current task
     public void ReloadTask()
     {
@@ -312,7 +303,28 @@ public class ExperimentManager : MonoBehaviour
         currentTask.SetRobots(spawnedRobots);
     }
 
-    // Go back to main menus
+
+    // Menus
+    // Load quit menus
+    public void LoadQuitMenus()
+    {
+        // Stop the time and save the mouse status
+        Time.timeScale = 0f;
+        previousCursorState = Cursor.lockState;
+        Cursor.lockState = CursorLockMode.Confined;
+        experimentMenus.LoadQuitMenus();
+    }
+
+    // Resume from quit menus
+    public void ResumeFromQuitMenus()
+    {
+        // Resume the time and mouse
+        Time.timeScale = 1f;
+        Cursor.lockState = previousCursorState;
+        experimentMenus.HideAll();
+    }
+
+    // Load main menus
     public void LoadMainMenus()
     {
         // Stop the time
@@ -321,6 +333,8 @@ public class ExperimentManager : MonoBehaviour
         experimentStarted = false;
     }
 
+
+    // System
     // Quit game
     public void Quit()
     {
