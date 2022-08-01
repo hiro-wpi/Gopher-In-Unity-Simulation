@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1548207391}
   - component: {fileID: 1548207390}
   - component: {fileID: 1548207389}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,6 +106,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 0
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
@@ -129,9 +130,9 @@ GameObject:
   - component: {fileID: 1684255215927694807}
   - component: {fileID: 1162812343}
   - component: {fileID: 1162812346}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Freight
-  m_TagString: robot
+  m_TagString: Robot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -165,7 +166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FilePath: 
-  choosenAxis: 1
+  chosenAxis: 0
   currentOrientation: 1
   collisionExceptions: []
 --- !u!114 &1684255215927694807
@@ -231,7 +232,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255215969398059}
   - component: {fileID: 1684255215969398058}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Collisions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -275,7 +276,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255215973435832}
   - component: {fileID: 1684255215973435835}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: unnamed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -320,7 +321,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255216058684019}
   - component: {fileID: 1684255216058684018}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -367,7 +368,7 @@ GameObject:
   - component: {fileID: 1684255216068715388}
   - component: {fileID: 1684255216068715389}
   - component: {fileID: 1684255216068715138}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: freight/base_camera_link
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -413,8 +414,9 @@ ArticulationBody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1684255216068715136}
   m_Enabled: 1
+  serializedVersion: 3
   m_Mass: 0.001
-  m_ParentAnchorPosition: {x: 0, y: 0.198, z: 0.26449966}
+  m_ParentAnchorPosition: {x: 0, y: 0.198, z: 0.2645}
   m_ParentAnchorRotation: {x: -0.061628412, y: 0.061628412, z: 0.70441604, w: 0.70441604}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0.70710677, w: 0.70710677}
@@ -500,7 +502,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255216098804472}
   - component: {fileID: 1684255216098804475}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Collisions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -543,7 +545,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255216117902916}
   - component: {fileID: 1684255216117902919}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: unnamed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -588,7 +590,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255216158557876}
   - component: {fileID: 1684255216158557879}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: unnamed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -633,7 +635,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255216175776848}
   - component: {fileID: 1684255216175776851}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -679,7 +681,7 @@ GameObject:
   - component: {fileID: 1684255216189460223}
   - component: {fileID: 1684255216189460220}
   - component: {fileID: 1684255216189460221}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: freight/r_wheel_link
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -723,8 +725,9 @@ ArticulationBody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1684255216189459971}
   m_Enabled: 1
+  serializedVersion: 3
   m_Mass: 4.3542
-  m_ParentAnchorPosition: {x: 0.18737984, y: 0.0605, z: 0.001291275}
+  m_ParentAnchorPosition: {x: 0.18738, y: 0.0605, z: 0.0012914}
   m_ParentAnchorRotation: {x: 0, y: 0, z: 3.0615e-17, w: 1}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -810,7 +813,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255216267956662}
   - component: {fileID: 1684255216267956657}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -853,7 +856,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255216292397417}
   - component: {fileID: 1684255216292397416}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -897,7 +900,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255216337851675}
   - component: {fileID: 1684255216337851674}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -941,7 +944,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255216394203969}
   - component: {fileID: 1684255216394203968}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Collisions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -985,7 +988,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255216450678691}
   - component: {fileID: 1684255216450678690}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: unnamed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1033,7 +1036,7 @@ GameObject:
   - component: {fileID: 1684255216477432261}
   - component: {fileID: 1684255216477432266}
   - component: {fileID: 1684255216477432267}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: freight/laser_link
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1077,8 +1080,9 @@ ArticulationBody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1684255216477432265}
   m_Enabled: 1
+  serializedVersion: 3
   m_Mass: 0.008336346
-  m_ParentAnchorPosition: {x: 0, y: 0.2878, z: 0.23499966}
+  m_ParentAnchorPosition: {x: 0, y: 0.2878, z: 0.235}
   m_ParentAnchorRotation: {x: 0, y: 0, z: -0.7071069, w: 0.70710677}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
@@ -1164,7 +1168,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255216482726149}
   - component: {fileID: 1684255216482726148}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Collisions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1208,7 +1212,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255216630115421}
   - component: {fileID: 1684255216630115420}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: unnamed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1253,7 +1257,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255216684598573}
   - component: {fileID: 1684255216684598572}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: unnamed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1298,7 +1302,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255216868782688}
   - component: {fileID: 1684255216868782691}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: unnamed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1348,7 +1352,7 @@ GameObject:
   - component: {fileID: 1692297039}
   - component: {fileID: 1692297040}
   - component: {fileID: 1692297041}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plugins
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1485,7 +1489,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255216928317390}
   - component: {fileID: 1684255216928317385}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: unnamed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1530,7 +1534,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255216953769832}
   - component: {fileID: 1684255216953769835}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1574,7 +1578,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255217090099277}
   - component: {fileID: 1684255217090099276}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: freight/base_link
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1624,7 +1628,7 @@ GameObject:
   - component: {fileID: 1684255217156368049}
   - component: {fileID: 1684255217156368054}
   - component: {fileID: 1684255217156368055}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: freight/chassis_link
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1673,6 +1677,7 @@ ArticulationBody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1684255217156368053}
   m_Enabled: 1
+  serializedVersion: 3
   m_Mass: 70.1294
   m_ParentAnchorPosition: {x: 0, y: 0, z: 0}
   m_ParentAnchorRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
@@ -1760,7 +1765,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255217212953063}
   - component: {fileID: 1684255217212953062}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1804,7 +1809,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255217245051216}
   - component: {fileID: 1684255217245051219}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Collisions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1850,7 +1855,7 @@ GameObject:
   - component: {fileID: 1684255217350422669}
   - component: {fileID: 1684255217350422674}
   - component: {fileID: 1684255217350422675}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: freight/estop_link
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1894,8 +1899,9 @@ ArticulationBody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1684255217350422673}
   m_Enabled: 1
+  serializedVersion: 3
   m_Mass: 0.0019613043
-  m_ParentAnchorPosition: {x: -0.23892021, y: 0.31127, z: -0.12465}
+  m_ParentAnchorPosition: {x: -0.23892, y: 0.31127, z: -0.12465}
   m_ParentAnchorRotation: {x: 0, y: 0, z: -0.0000018179417, w: 1.0000001}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
@@ -1981,7 +1987,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255217369912695}
   - component: {fileID: 1684255217369912694}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2025,7 +2031,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255217410674527}
   - component: {fileID: 1684255217410674526}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: unnamed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2070,7 +2076,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255217463949618}
   - component: {fileID: 1684255217463949613}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Collisions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2114,7 +2120,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255217496274017}
   - component: {fileID: 1684255217496274016}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: unnamed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2159,7 +2165,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255217543773845}
   - component: {fileID: 1684255217543773844}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Collisions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2203,7 +2209,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255217669751200}
   - component: {fileID: 1684255217669751203}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Collisions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2246,7 +2252,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255217779437699}
   - component: {fileID: 1684255217779437698}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2292,7 +2298,7 @@ GameObject:
   - component: {fileID: 1684255217869437059}
   - component: {fileID: 1684255217869437056}
   - component: {fileID: 1684255217869437057}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: freight/base_camera_optical_frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2336,8 +2342,9 @@ ArticulationBody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1684255217869437063}
   m_Enabled: 1
+  serializedVersion: 3
   m_Mass: 0.001
-  m_ParentAnchorPosition: {x: 0, y: 0.000000056926304, z: -0.00000032284515}
+  m_ParentAnchorPosition: {x: 0, y: 0, z: 0}
   m_ParentAnchorRotation: {x: 0.000000029802322, y: -0.7071067, z: -0.000000029802322, w: 0.7071067}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0.70710677, w: 0.70710677}
@@ -2423,7 +2430,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684255217902326354}
   - component: {fileID: 1684255217902326349}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2470,7 +2477,7 @@ GameObject:
   - component: {fileID: 1684255217955354683}
   - component: {fileID: 1684255217955354680}
   - component: {fileID: 1684255217955354681}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: freight/l_wheel_link
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2514,8 +2521,9 @@ ArticulationBody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1684255217955354687}
   m_Enabled: 1
+  serializedVersion: 3
   m_Mass: 4.3542
-  m_ParentAnchorPosition: {x: -0.18737984, y: 0.0605, z: 0.001291275}
+  m_ParentAnchorPosition: {x: -0.18738, y: 0.0605, z: 0.0012914}
   m_ParentAnchorRotation: {x: 0, y: 0, z: 3.0615e-17, w: 1}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -2591,48 +2599,6 @@ MonoBehaviour:
   jointName: freight/l_wheel_joint
   EffortLimit: 1000
   VelocityLimit: 1000
---- !u!64 &1684255217739002653
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4230215902936348575}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: ed93eb839b19065139b002e97f1918a8, type: 2}
---- !u!64 &1684255217962600897
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4721505612448382190}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 6e28e19a8dc88fe4692fdf999d8635a7, type: 2}
---- !u!64 &1684255216520672869
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8681397863417536524}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 052e69b3d7dcc58c98bbf670a51febbe, type: 2}
 --- !u!1001 &1684255216064636822
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2688,6 +2654,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: base_link
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 283da4a2d971e4c67ae73a210a69c85a, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2476952962555639312, guid: 283da4a2d971e4c67ae73a210a69c85a, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5461430048791275509, guid: 283da4a2d971e4c67ae73a210a69c85a, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7720897672290341269, guid: 283da4a2d971e4c67ae73a210a69c85a, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -2710,9 +2688,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: laser_link
       objectReference: {fileID: 0}
+    - target: {fileID: 3217663806972988930, guid: 3c6839c198b469ec9ad010a93a39bef1, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 4078537759038351225, guid: 3c6839c198b469ec9ad010a93a39bef1, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5828580950881329918, guid: 3c6839c198b469ec9ad010a93a39bef1, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6185958281426657699, guid: 3c6839c198b469ec9ad010a93a39bef1, type: 3}
       propertyPath: m_RootOrder
@@ -2776,6 +2762,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: estop_link_collision
       objectReference: {fileID: 0}
+    - target: {fileID: 7475430314484176440, guid: 10f4ddce4b32f0b4689f1d615dd88f6b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7817195388914238244, guid: 10f4ddce4b32f0b4689f1d615dd88f6b, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -2820,6 +2810,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8008851967290267236, guid: 10f4ddce4b32f0b4689f1d615dd88f6b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6085382674627877847, guid: 10f4ddce4b32f0b4689f1d615dd88f6b, type: 3}
     - {fileID: 4126768020607204764, guid: 10f4ddce4b32f0b4689f1d615dd88f6b, type: 3}
@@ -2834,6 +2828,20 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7817195388914238244, guid: 10f4ddce4b32f0b4689f1d615dd88f6b, type: 3}
   m_PrefabInstance: {fileID: 1684255216520672872}
   m_PrefabAsset: {fileID: 0}
+--- !u!64 &1684255216520672869
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8681397863417536524}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 052e69b3d7dcc58c98bbf670a51febbe, type: 2}
 --- !u!1001 &1684255217197099543
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2841,6 +2849,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1684255216684598573}
     m_Modifications:
+    - target: {fileID: 2420851567163106334, guid: 1b7b86da8d2bfbbec8e2ee6c57b1d285, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 2812203670266884577, guid: 1b7b86da8d2bfbbec8e2ee6c57b1d285, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -2848,6 +2860,10 @@ PrefabInstance:
     - target: {fileID: 3589051416659370217, guid: 1b7b86da8d2bfbbec8e2ee6c57b1d285, type: 3}
       propertyPath: m_Name
       value: r_wheel_link
+      objectReference: {fileID: 0}
+    - target: {fileID: 3589051416659370217, guid: 1b7b86da8d2bfbbec8e2ee6c57b1d285, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6829212862400465769, guid: 1b7b86da8d2bfbbec8e2ee6c57b1d285, type: 3}
       propertyPath: m_RootOrder
@@ -2959,6 +2975,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: l_wheel_link
       objectReference: {fileID: 0}
+    - target: {fileID: 5424442045685090418, guid: 807202cce04f11ab1af8a1beb79ef0ec, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8143454442913761697, guid: 807202cce04f11ab1af8a1beb79ef0ec, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 807202cce04f11ab1af8a1beb79ef0ec, type: 3}
 --- !u!4 &655052844446591638 stripped
@@ -2977,10 +3001,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: estop_link
       objectReference: {fileID: 0}
+    - target: {fileID: 1302334530095814695, guid: 0ee530d63faaa4c6d983618d39a29965, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 4578648343666445806, guid: 0ee530d63faaa4c6d983618d39a29965, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 1189b1aa39be2febb9a7ce8ac2f9b27b, type: 2}
+    - target: {fileID: 6429968596725213823, guid: 0ee530d63faaa4c6d983618d39a29965, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7632640897158434720, guid: 0ee530d63faaa4c6d983618d39a29965, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -3087,6 +3119,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: base_link_collision
       objectReference: {fileID: 0}
+    - target: {fileID: 2732182625445700886, guid: a7c86553bc2a59476a5b036f5efe3441, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3308760071249642687, guid: a7c86553bc2a59476a5b036f5efe3441, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1836616159871519293, guid: a7c86553bc2a59476a5b036f5efe3441, type: 3}
     - {fileID: 3999105407279527490, guid: a7c86553bc2a59476a5b036f5efe3441, type: 3}
@@ -3101,6 +3141,20 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3308760071249642687, guid: a7c86553bc2a59476a5b036f5efe3441, type: 3}
   m_PrefabInstance: {fileID: 1684255217739002656}
   m_PrefabAsset: {fileID: 0}
+--- !u!64 &1684255217739002653
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4230215902936348575}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: ed93eb839b19065139b002e97f1918a8, type: 2}
 --- !u!1001 &1684255217962600900
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3156,6 +3210,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: laser_link_collision
       objectReference: {fileID: 0}
+    - target: {fileID: 6186505834312647654, guid: c98dfddce84a0aa2596928a06a4a7c0a, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6258179824892638506, guid: c98dfddce84a0aa2596928a06a4a7c0a, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6442019449771096928, guid: c98dfddce84a0aa2596928a06a4a7c0a, type: 3}
     - {fileID: 8553325017196379280, guid: c98dfddce84a0aa2596928a06a4a7c0a, type: 3}
@@ -3170,3 +3232,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6258179824892638506, guid: c98dfddce84a0aa2596928a06a4a7c0a, type: 3}
   m_PrefabInstance: {fileID: 1684255217962600900}
   m_PrefabAsset: {fileID: 0}
+--- !u!64 &1684255217962600897
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4721505612448382190}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 6e28e19a8dc88fe4692fdf999d8635a7, type: 2}
