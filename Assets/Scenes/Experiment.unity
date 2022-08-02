@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.17276844, g: 0.21589246, b: 0.2978263, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1995,8 +1995,16 @@ MonoBehaviour:
   taskDescription: 
   gUI: {fileID: 0}
   cUI: {fileID: 0}
-  goalObjectSpawnArray: []
-  taskObjectSpawnArray: []
+  goalObjectSpawnArray:
+  - gameObject: {fileID: 2075622757900185994, guid: 845719786c1c896ac83165c019c2763e, type: 3}
+    position: {x: -2.5, y: 0, z: 1.5}
+    rotation: {x: 0, y: 0, z: 0}
+    trajectory: []
+  taskObjectSpawnArray:
+  - gameObject: {fileID: 4768030292868170154, guid: 74fb347f78948514ebdeedbb4de2e398, type: 3}
+    position: {x: -8.2, y: 0, z: 8.5}
+    rotation: {x: 0, y: 0, z: 0}
+    trajectory: []
   staticObjectSpawnArray: []
   dynamicObjectSpawnArray: []
   robotSpawnArray: []
@@ -4518,7 +4526,7 @@ MonoBehaviour:
   goalObjectSpawnArray: []
   taskObjectSpawnArray: []
   staticObjectSpawnArray:
-  - gameObject: {fileID: 676365421134526795, guid: 07618b36962fe764280e83c54b755ec6, type: 3}
+  - gameObject: {fileID: 676365421134526795, guid: 31907ed61a259744896ef68277a50822, type: 3}
     position: {x: 0, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0}
     trajectory: []
@@ -5288,8 +5296,16 @@ MonoBehaviour:
   taskDescription: 
   gUI: {fileID: 0}
   cUI: {fileID: 0}
-  goalObjectSpawnArray: []
-  taskObjectSpawnArray: []
+  goalObjectSpawnArray:
+  - gameObject: {fileID: 2075622757900185994, guid: 845719786c1c896ac83165c019c2763e, type: 3}
+    position: {x: -10, y: 0, z: -2}
+    rotation: {x: 0, y: 0, z: 0}
+    trajectory: []
+  taskObjectSpawnArray:
+  - gameObject: {fileID: 1173668152048465497, guid: 6b4c4cc8759d2da4b9d48596e0176b94, type: 3}
+    position: {x: -4, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    trajectory: []
   staticObjectSpawnArray: []
   dynamicObjectSpawnArray: []
   robotSpawnArray: []
@@ -6725,6 +6741,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1594298636}
   m_CullTransparentMesh: 1
+--- !u!1 &1604901281
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1604901282}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1604901282
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1604901281}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.7, y: 0.8, z: 10.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1622069250
 GameObject:
   m_ObjectHideFlags: 0
@@ -7053,8 +7099,16 @@ MonoBehaviour:
   taskDescription: 
   gUI: {fileID: 0}
   cUI: {fileID: 0}
-  goalObjectSpawnArray: []
-  taskObjectSpawnArray: []
+  goalObjectSpawnArray:
+  - gameObject: {fileID: 2416330375898432865, guid: e9d4276034b135f46981b1f974cbba19, type: 3}
+    position: {x: 10.4, y: 0.8, z: 10.5}
+    rotation: {x: 0, y: 0, z: 0}
+    trajectory: []
+  taskObjectSpawnArray:
+  - gameObject: {fileID: 5220166882937274750, guid: 374d75476b5ef51459c2f52d04dcad57, type: 3}
+    position: {x: 6.8, y: 0.9, z: 13.6}
+    rotation: {x: 0, y: 0, z: 0}
+    trajectory: []
   staticObjectSpawnArray: []
   dynamicObjectSpawnArray: []
   robotSpawnArray: []
@@ -7451,7 +7505,15 @@ MonoBehaviour:
     position: {x: 11, y: 0, z: 2}
     rotation: {x: 0, y: 0, z: 0}
     trajectory: []
-  taskObjectSpawnArray: []
+  taskObjectSpawnArray:
+  - gameObject: {fileID: 4768030292868170154, guid: 74fb347f78948514ebdeedbb4de2e398, type: 3}
+    position: {x: 3, y: 0, z: 7.5}
+    rotation: {x: 0, y: 160, z: 0}
+    trajectory: []
+  - gameObject: {fileID: 4768030292868170154, guid: 74fb347f78948514ebdeedbb4de2e398, type: 3}
+    position: {x: 3, y: 0, z: -1.6}
+    rotation: {x: 0, y: 160, z: 0}
+    trajectory: []
   staticObjectSpawnArray: []
   dynamicObjectSpawnArray: []
   robotSpawnArray: []
@@ -7658,7 +7720,11 @@ MonoBehaviour:
     position: {x: -7, y: 0, z: 10}
     rotation: {x: 0, y: 0, z: 0}
     trajectory: []
-  taskObjectSpawnArray: []
+  taskObjectSpawnArray:
+  - gameObject: {fileID: 1173668152048465497, guid: 6b4c4cc8759d2da4b9d48596e0176b94, type: 3}
+    position: {x: -2, y: 0, z: 7.8}
+    rotation: {x: 0, y: 0, z: 0}
+    trajectory: []
   staticObjectSpawnArray: []
   dynamicObjectSpawnArray: []
   robotSpawnArray: []
@@ -8115,8 +8181,16 @@ MonoBehaviour:
   taskDescription: 
   gUI: {fileID: 0}
   cUI: {fileID: 0}
-  goalObjectSpawnArray: []
-  taskObjectSpawnArray: []
+  goalObjectSpawnArray:
+  - gameObject: {fileID: 2416330375898432865, guid: e9d4276034b135f46981b1f974cbba19, type: 3}
+    position: {x: -5.7, y: 0.8, z: 10.5}
+    rotation: {x: 0, y: 0, z: 0}
+    trajectory: []
+  taskObjectSpawnArray:
+  - gameObject: {fileID: 919132149155446097, guid: 258053e02f31e57499ca439cc03c0284, type: 3}
+    position: {x: -8.95, y: 1.2, z: 13.5}
+    rotation: {x: 0, y: 90, z: 0}
+    trajectory: []
   staticObjectSpawnArray: []
   dynamicObjectSpawnArray: []
   robotSpawnArray: []

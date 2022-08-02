@@ -62,7 +62,7 @@ public class LocomotionExperiment : Experiment
         // levelNames = new string[] {"Level1", "Level2"};
 
         // TEMP testing
-        levelNames = new string[] {"Level2", "Level3"};
+        levelNames = new string[] {"Level2"};
         taskNames = new string[] {"Navigation1", "ScanGrasp",
                                   "Navigation2", "LocateGrasp", "Carrying1",
                                   "Carrying2", "Reading", 
@@ -71,7 +71,7 @@ public class LocomotionExperiment : Experiment
         // taskNames = new string[] {"GoHome", "Carrying", "Pushing", "LocalGrasping", "Navigation"};
         taskDescriptions = new string[] {"Please navigate to room S103.", 
                                          "Please scan the medicine in room S103 and find the medicine with code 0104530, " +
-                                         "grasp and put it on the medical cart outside.",
+                                         "grasp and put it on the tray on the table.",
                                          
                                          "Please navigate to the Pharmacy",
                                          "Please pick up one medicine with blue label in the medicine carbinet in the Pharmacy, " + 

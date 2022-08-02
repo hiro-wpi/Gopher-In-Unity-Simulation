@@ -182,13 +182,13 @@ public abstract class Task : MonoBehaviour
     public virtual void DestroyObjects(bool deStatic = true, bool deTask = true,
                                        bool deGoal = true, bool deDynamic = true)
     {
-        if (deStatic)
+        if (deStatic && staticObjects != null)
             DestoryGameObjects(staticObjects);
-        if (deTask)
+        if (deTask && taskObjects != null)
             DestoryGameObjects(taskObjects);
-        if (deGoal)
+        if (deGoal && goalObjects != null)
             DestoryGameObjects(goalObjects);
-        if (deDynamic)
+        if (deDynamic && dynamicObjects != null)
             DestoryGameObjects(dynamicObjects);
     }
     private void DestoryGameObjects(GameObject[] gameObjects)
