@@ -48,11 +48,6 @@ public class PaintingTask : Task
                paintable.GetCoverage();
     }
 
-    public override void ResetTaskStatus()
-    {
-        taskStarted = false;
-    }
-
 
     public override GameObject[] GenerateStaticObjects()
     {

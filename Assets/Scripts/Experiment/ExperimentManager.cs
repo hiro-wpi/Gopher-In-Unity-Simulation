@@ -106,8 +106,11 @@ public class ExperimentManager : MonoBehaviour
     // Free play mode
     public void FreePlay()
     {   
+        // Load free play task
         currentTask = freePlayTask;
+        experimentMenus.LoadLoading();
         StartCoroutine(LoadTaskCoroutine(true));
+        // Flag
         experimentStarted = true;
         taskStarted = false;
     }
@@ -155,7 +158,6 @@ public class ExperimentManager : MonoBehaviour
 
         // Ensure time is running and
         // load loading UI
-        Time.timeScale = 1f;
         if (!keepSameSceneAndRobot || !experimentStarted )
             experimentMenus.LoadLoading();
         
@@ -198,6 +200,7 @@ public class ExperimentManager : MonoBehaviour
     }
     private IEnumerator LoadTaskCoroutine(bool isFirstTask = false)
     {
+        Time.timeScale = 1f;
         // Reload scene, robot and objects for every task
         if (!keepSameSceneAndRobot)
         {
@@ -232,7 +235,6 @@ public class ExperimentManager : MonoBehaviour
                 // MainScene
                 SceneManager.LoadScene(currentTask.sceneName);
                 yield return new WaitForSeconds(0.5f);
-                
                 // Generate robots
                 spawnedRobots = currentTask.GenerateRobots();
                 yield return new WaitForSeconds(0.5f);

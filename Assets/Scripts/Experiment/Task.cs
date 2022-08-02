@@ -49,6 +49,7 @@ public abstract class Task : MonoBehaviour
     protected int userInputIndex = -1;
     protected int userInputLength = 3;
 
+
     // Check if the current task is started
     public virtual bool CheckTaskStart()
     {
@@ -192,8 +193,8 @@ public abstract class Task : MonoBehaviour
     }
     private void DestoryGameObjects(GameObject[] gameObjects)
     {
-        foreach (GameObject obj in gameObjects)
-            Destroy(obj);
+        for (int i = 0; i < gameObjects.Length; ++i)
+            Destroy(gameObjects[i]);
     }
 
     // Generate robots for this task

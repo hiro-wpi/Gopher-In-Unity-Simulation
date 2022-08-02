@@ -54,12 +54,7 @@ public class GraspingTask : Task
                 string.Format("{0:0.000}", distance) + " m" + "\n" +
                 "away from the goal.";
     }
-
-    public override void ResetTaskStatus()
-    {
-        // Reset task flag
-        taskStarted = false;
-    }
+    
 
     public override string[] GetTaskValueToRecordHeader()
     {

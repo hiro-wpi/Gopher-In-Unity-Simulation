@@ -24,6 +24,10 @@ public static class HospitalMapUtil
         {"Office", new float[] {-1.0f, 9.0f, 3.0f, 15f}},
         {"Room S103", new float[] {3.0f, 9.0f, 11f, 15f}}
     };
+    public static SortedDictionary<string, float[]> GetMapDictionary()
+    {
+        return map;
+    }
 
     public static string GetLocationName(Vector3 position)
     {

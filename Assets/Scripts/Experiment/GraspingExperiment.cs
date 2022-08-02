@@ -73,18 +73,21 @@ public class GraspingExperiment : Experiment
         // Human spawn position and trajectories
         humanSpawnPositions = new Vector3[]
                         {
-                            new Vector3(-6.5f, 0f, -11.0f), 
-                            new Vector3( 0.5f, 0f,  7.5f),
-                            new Vector3( 7.5f, 0f,  7.5f)
+                            new Vector3(-10.0f, 0f, -6.0f),
+                            new Vector3( 11.0f, 0f,  6.0f),
+                            new Vector3(  3.0f, 0f,  7.5f),
+                            new Vector3( -2.5f, 0f, -1.5f)
                         };
         humanTrajectories = new Vector3[,]
                         {
-                            {new Vector3(-7.0f, 0f, -1.5f), new Vector3(-7.0f, 0f,  7.5f), 
-                             new Vector3( 0.5f, 0f,  7.5f), new Vector3( 0.5f, 0f, -2.0f)},
-                            {new Vector3( 0.5f, 0f, -1.5f), new Vector3( 5.0f, 0f, -1.5f), 
-                             new Vector3( 3.0f, 0f,  7.5f), new Vector3( 0.5f, 0f,  7.5f)}, 
-                            {new Vector3( 7.5f, 0f, -1.5f), new Vector3(-6.5f, 0f, -1.5f), 
-                             new Vector3(-6.5f, 0f,  7.5f), new Vector3( 7.5f, 0f,  7.5f)}
+                            {new Vector3(-7.5f, 0f,  7.0f), new Vector3(  7.5f, 0f,  7.5f), 
+                             new Vector3( 7.5f, 0f, -2.0f), new Vector3(-10.0f, 0f, -6.0f)},
+                            {new Vector3( 7.5f, 0f, -2.0f), new Vector3( -7.0f, 0f, -2.0f), 
+                             new Vector3(-7.0f, 0f,  7.5f), new Vector3( 11.0f, 0f,  6.0f)},
+                            {new Vector3( 0.5f, 0f,  7.0f), new Vector3(  1.0f, 0f, -1.5f), 
+                             new Vector3( 5.0f, 0f, -1.5f), new Vector3(  3.0f, 0f,  7.5f)}, 
+                            {new Vector3(-4.0f, 0f,  7.5f), new Vector3(  0.5f, 0f,  6.5f), 
+                             new Vector3( 0.0f, 0f, -1.5f), new Vector3( -2.5f, 0f, -1.5f)}
                         };
 
         // Goals
