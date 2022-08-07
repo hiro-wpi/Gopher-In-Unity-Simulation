@@ -21,12 +21,15 @@ public class ArmControlManager : MonoBehaviour
     private static float IGNORE_VAL = -100f;
     // preset 1 is the default joint home position
     public float[] preset2 = {0.7f, -Mathf.PI/2, -Mathf.PI/2f, -1.2f, 
-                              0f, -1.0f, Mathf.PI};
+                              0f, -1.0f, Mathf.PI/2};
     // preset 3 and 4 only read the last joint
     public float[] preset3 = {IGNORE_VAL, IGNORE_VAL, IGNORE_VAL, IGNORE_VAL,
                               IGNORE_VAL, IGNORE_VAL, Mathf.PI};
     public float[] preset4 = {IGNORE_VAL, IGNORE_VAL, IGNORE_VAL, IGNORE_VAL, 
                               IGNORE_VAL, IGNORE_VAL, Mathf.PI/2};
+    // preset 5 is for seconday camera view
+    public float[] preset5 = {0.91f, -1.13f, -0.85f, -1.66f, 
+                              0.09f, -0.85f, 0.26f};
 
     // ENUM for mode CONTROL or TARGET
     private enum Mode
@@ -132,6 +135,9 @@ public class ArmControlManager : MonoBehaviour
                 break;
             case 4:
                 MoveToJointPosition(preset4);
+                break;
+            case 5:
+                MoveToJointPosition(preset5);
                 break;
             default:
                 break;

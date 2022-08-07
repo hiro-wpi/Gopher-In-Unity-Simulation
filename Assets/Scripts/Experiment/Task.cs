@@ -96,7 +96,7 @@ public abstract class Task : MonoBehaviour
     }
 
 
-    // Check user input (needed for some of the tasks)
+    // Check and store user input
     public virtual void CheckInput(string input)
     {
         if (userInputs == null)
@@ -134,8 +134,8 @@ public abstract class Task : MonoBehaviour
         {
             stringToRecord = new string[2];
             stringToRecord[0] = string.Format("{0:0.000}", Time.time);
-            stringToRecord[1] = userInputs[userInputRecordIndex];
             userInputRecordIndex = (userInputRecordIndex + 1) % userInputLength;
+            stringToRecord[1] = userInputs[userInputRecordIndex];
         }
         return stringToRecord;
     }

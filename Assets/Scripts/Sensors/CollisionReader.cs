@@ -18,10 +18,11 @@ public class CollisionReader : MonoBehaviour
     public AudioClip collisionAudioClip;
     private AudioSource collisionAudio;
 
-    public int storageIndex = 0;
-    public int storageLength = 5;
+    public int storageIndex = -1;
+    public int storageLength = 3;
     public string[] collisionSelfNames;
     public string[] collisionOtherNames;
+    public float[] collisionRelativeSpeed;
 
     void Awake()
     {
@@ -50,6 +51,7 @@ public class CollisionReader : MonoBehaviour
         // To store collision information
         collisionSelfNames = new string[storageLength];
         collisionOtherNames = new string[storageLength];
+        collisionRelativeSpeed = new float[storageLength];
     }
 
     void Update()
@@ -58,15 +60,17 @@ public class CollisionReader : MonoBehaviour
 
     public void OnCollision(string self, string other, float relativeSpeed)
     {
+        // Prevent too frequent collision detection
         if (!collisionAudio.isPlaying)
         {
             collisionAudio.volume = relativeSpeed*0.3f + 0.1f;
             collisionAudio.Play();
 
-            // Temporary
+            // Store collision self, other and relative speed
+            storageIndex = (storageIndex + 1) % storageLength;
             collisionSelfNames[storageIndex] = self;
             collisionOtherNames[storageIndex] = other;
-            storageIndex = (storageIndex + 1) % storageLength;
+            collisionRelativeSpeed[storageIndex] = relativeSpeed;
         }
     }
 }

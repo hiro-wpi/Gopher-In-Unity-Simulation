@@ -93,7 +93,6 @@ public class GopherControl : MonoBehaviour
             }
         }
     }
-
     public void OnArmPreset2(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -112,7 +111,6 @@ public class GopherControl : MonoBehaviour
             }
         }
     }
-
     public void OnArmPreset3(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -131,7 +129,6 @@ public class GopherControl : MonoBehaviour
             }
         }
     }
-
     public void OnArmPreset4(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -143,6 +140,24 @@ public class GopherControl : MonoBehaviour
                     break;
                 case ControlMode.RightArm:
                     rightArm.OnPreset4(context);
+                    break;
+                case ControlMode.Base:
+                default:
+                    break;
+            }
+        }
+    }
+    public void OnArmPreset5(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            switch (_mode)
+            {
+                case ControlMode.LeftArm:
+                    leftArm.OnPreset5(context);
+                    break;
+                case ControlMode.RightArm:
+                    rightArm.OnPreset5(context);
                     break;
                 case ControlMode.Base:
                 default:

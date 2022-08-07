@@ -70,6 +70,11 @@ public class GraphicalInterface : MonoBehaviour
     public GameObject leftCameraViewingDisplay;
     public GameObject rightCameraViewingDisplay;
     public GameObject backCameraViewingDisplay;
+    // ik
+    private GameObject leftEndEffectorRef; 
+    private GameObject rightEndEffectorRef;
+    private NewtonIK leftIKSolver; 
+    private NewtonIK rightIKSolver;
    
     // localization
     private GameObject map;
@@ -204,7 +209,7 @@ public class GraphicalInterface : MonoBehaviour
             ChangeBarCodeScanDisplay();
 
         // Switch camera control
-        if (Input.GetKeyDown(KeyCode.Keypad8)) 
+        if (Input.GetKeyDown(KeyCode.Keypad8))
             ChangeCameraView(!Input.GetKey(KeyCode.Keypad0), "Head");
         else if (Input.GetKeyDown(KeyCode.Keypad5))
             ChangeCameraView(!Input.GetKey(KeyCode.Keypad0), "Back");
@@ -212,8 +217,62 @@ public class GraphicalInterface : MonoBehaviour
             ChangeCameraView(!Input.GetKey(KeyCode.Keypad0), "Left");
         else if (Input.GetKeyDown(KeyCode.Keypad6))
             ChangeCameraView(!Input.GetKey(KeyCode.Keypad0), "Right");
-    }
 
+        MonitorKeyPressed();
+    }
+    // Record key pressed during the use of interface
+    // TODO though it works, 1) may not be the best script to put this code, and
+    // 2) may not be the most reasonable to put all key pressed under task string record
+    private void MonitorKeyPressed()
+    {
+        if (currentTask == null || robot == null)
+            return;
+        
+        // Control modes
+        if (Input.GetKeyDown(KeyCode.DownArrow)
+            && gopherControl.Mode != GopherControl.ControlMode.Base)
+            RecordKey("DownArrow");
+        else if (Input.GetKeyDown(KeyCode.LeftArrow)
+                 && gopherControl.Mode != GopherControl.ControlMode.LeftArm)
+            RecordKey("LeftArrow");
+        else if (Input.GetKeyDown(KeyCode.RightArrow)
+                 && gopherControl.Mode != GopherControl.ControlMode.RightArm)
+            RecordKey("RightArrow");
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
+            RecordKey((!gopherControl.cameraControlEnabled).ToString() + ",UpArrow");
+
+        // Joint presets
+        if (gopherControl.Mode != GopherControl.ControlMode.Base)
+            if (Input.GetKeyDown(KeyCode.F1))
+                RecordKey("F1");
+            else if (Input.GetKeyDown(KeyCode.F2))
+                RecordKey("F2");
+            else if (Input.GetKeyDown(KeyCode.F3))
+                RecordKey("F3");
+            else if (Input.GetKeyDown(KeyCode.F4))
+                RecordKey("F4");
+            else if (Input.GetKeyDown(KeyCode.F5))
+                RecordKey("F5");
+
+        // Automation
+        if (Input.GetKeyDown(KeyCode.T))
+            RecordKey("T");
+
+        // Camera Switch
+        if (Input.GetKeyDown(KeyCode.Keypad8))
+            RecordKey((!Input.GetKey(KeyCode.Keypad0)).ToString() + ",Keypad8");
+        else if (Input.GetKeyDown(KeyCode.Keypad5))
+            RecordKey((!Input.GetKey(KeyCode.Keypad0)).ToString() + ",Keypad5");
+        else if (Input.GetKeyDown(KeyCode.Keypad4))
+            RecordKey((!Input.GetKey(KeyCode.Keypad0)).ToString() + ",Keypad4");
+        else if (Input.GetKeyDown(KeyCode.Keypad6))
+            RecordKey((!Input.GetKey(KeyCode.Keypad0)).ToString() + ",Keypad6");
+    }
+    private void RecordKey(string key)
+    {
+        currentTask.CheckInput(key);
+    }
+    
 
     // UPDATE INFO
     private void UpdateTaskStatus()
@@ -401,6 +460,20 @@ public class GraphicalInterface : MonoBehaviour
         localization = robot.GetComponentInChildren<Localization>();
         stateReader = robot.GetComponentInChildren<StateReader>();
         gopherControl = robot.GetComponentInChildren<GopherControl>();
+        // Get IK and End effector reference transform for
+        // switching IK reference frame based on camera view
+        // TODO 1 left first and right next, no better way to tell each apart
+        NewtonIK[] iKSolvers = robot.GetComponentsInChildren<NewtonIK>();
+        leftIKSolver = iKSolvers[0];
+        rightIKSolver = iKSolvers[1];
+        Grasping[] graspings = robot.GetComponentsInChildren<Grasping>();
+        leftEndEffectorRef = new GameObject("gopher/left_arm_ik_reference");
+        rightEndEffectorRef = new GameObject("gopher/right_arm_ik_reference");
+        leftEndEffectorRef.transform.parent = graspings[0].endEffector.transform;
+        rightEndEffectorRef.transform.parent = graspings[1].endEffector.transform;
+        // TODO 2 The proper reference is different from the tool frame...
+        leftEndEffectorRef.transform.localRotation = Quaternion.Euler(new Vector3(-90f, 0f, 90f));
+        rightEndEffectorRef.transform.localRotation = Quaternion.Euler(new Vector3(-90f, 0f, 90f));
         
         // Cameras
         cameraSystem.enabled = true;
@@ -439,6 +512,8 @@ public class GraphicalInterface : MonoBehaviour
         fr.targetFrameRate = 5;
 
         // Map camera game object
+        if (mapCameraObject != null)
+            Destroy(mapCameraObject);
         mapCameraObject = new GameObject("Map Camera");
         mapCameraObject.transform.parent = this.transform;
         mapCameraObject.transform.position = new Vector3(0f, 5f, 0f);
@@ -522,16 +597,22 @@ public class GraphicalInterface : MonoBehaviour
         cameraSystem.EnableCamera(cameraIndex);
         cameraSystem.EnableCamera(secondaryCameraIndex);
 
-        // 
+        // Adjust IK local transform based on viewing camera
         if (cameraIndex == cameraSystem.GetIndex("Head") ||
             cameraIndex == cameraSystem.GetIndex("Back"))
         {
-            
+            leftIKSolver.localToWorldTransform = robot.transform;
+            rightIKSolver.localToWorldTransform = robot.transform;
         }
-        else if (cameraIndex == cameraSystem.GetIndex("Left") ||
-                 cameraIndex == cameraSystem.GetIndex("Right"))
+        else if (cameraIndex == cameraSystem.GetIndex("Left"))
         {
-
+            leftIKSolver.localToWorldTransform = leftEndEffectorRef.transform;
+            rightIKSolver.localToWorldTransform = robot.transform;
+        }
+        else if (cameraIndex == cameraSystem.GetIndex("Right"))
+        {
+            leftIKSolver.localToWorldTransform = robot.transform;
+            rightIKSolver.localToWorldTransform = rightEndEffectorRef.transform;
         }
     }
 

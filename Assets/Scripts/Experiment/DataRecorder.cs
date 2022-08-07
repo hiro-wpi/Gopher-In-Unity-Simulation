@@ -20,7 +20,7 @@ public class DataRecorder : MonoBehaviour
     private StateReader stateReader;
     private SurroundingDetection surroundingDetection;
     private CollisionReader collisionReader;
-    private int collisionStorageIndex;
+    private int collisionRecordIndex;
     // Task
     private Task task;
 
@@ -75,7 +75,7 @@ public class DataRecorder : MonoBehaviour
             "right_end_x", "right_end_y", "right_end_z", 
             "right_end_ax", "right_end_ay", "right_end_az"
         };
-        robotStringToRecordHeader = new string[] {"time", "self_name", "other_name"};
+        robotStringToRecordHeader = new string[] {"time", "self_name", "other_name", "relative_speed"};
     }
     
     // Start a new recording
@@ -97,7 +97,7 @@ public class DataRecorder : MonoBehaviour
         stateReader = robot.GetComponentInChildren<StateReader>();
         surroundingDetection = robot.GetComponentInChildren<SurroundingDetection>();
         collisionReader = robot.GetComponentInChildren<CollisionReader>();
-        collisionStorageIndex = 0;
+        collisionRecordIndex = -1;
         // from task
         this.task = task;
         taskValueToRecordHeader = task.GetTaskValueToRecordHeader();
@@ -254,15 +254,18 @@ public class DataRecorder : MonoBehaviour
 
         // Record collision
         robotStringToRecord = null; // don't record when there is no new collision
-        if (collisionStorageIndex != collisionReader.storageIndex)
+        if (collisionRecordIndex != collisionReader.storageIndex)
         {
-            robotStringToRecord = new string[3];
+            // update index
+            collisionRecordIndex = (collisionRecordIndex+1) % collisionReader.storageLength;
+
+            robotStringToRecord = new string[4];
             // collision
             robotStringToRecord[0] = string.Format("{0:0.000}", robotValueToRecord[0]);
-            robotStringToRecord[1] = collisionReader.collisionSelfNames[collisionStorageIndex];
-            robotStringToRecord[2] = collisionReader.collisionOtherNames[collisionStorageIndex];
-
-            collisionStorageIndex = (collisionStorageIndex+1) % collisionReader.storageLength;
+            robotStringToRecord[1] = collisionReader.collisionSelfNames[collisionRecordIndex];
+            robotStringToRecord[2] = collisionReader.collisionOtherNames[collisionRecordIndex];
+            robotStringToRecord[3] = string.Format("{0:0.000}", 
+                                        collisionReader.collisionRelativeSpeed[collisionRecordIndex]);
         }
     }
 

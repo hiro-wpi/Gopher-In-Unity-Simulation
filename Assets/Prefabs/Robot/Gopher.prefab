@@ -2552,6 +2552,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: c5c2eec3-a36d-4619-91dd-2f5ad74bd5b1
     m_ActionName: Gopher/Arm Prebuilt Pose 4[/Keyboard/f4]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6894777472494071552}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnArmPreset5
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 42224df5-2370-418e-a53a-cb9a67c88149
+    m_ActionName: Gopher/Arm Preset 5[/Keyboard/f5]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gopher
@@ -2765,7 +2781,7 @@ MonoBehaviour:
   - 2.2
   - 0
   - -1.2
-  - 3.1415927
+  - 1.570796
   articulationChain:
   - {fileID: 6789262394189040133}
   - {fileID: 6789262394782715167}
@@ -2912,7 +2928,7 @@ MonoBehaviour:
   - -1.2
   - 0
   - -1
-  - 3.1415927
+  - 1.570796
   preset3:
   - -100
   - -100
@@ -2929,6 +2945,14 @@ MonoBehaviour:
   - -100
   - -100
   - 1.5707964
+  preset5:
+  - 0.91
+  - -1.13
+  - -0.85
+  - -1.66
+  - 0.09
+  - -0.85
+  - 0.26
   deltaPosition: {x: 0, y: 0, z: 0}
   deltaRotation: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
@@ -3128,10 +3152,11 @@ MonoBehaviour:
   robotRoot: {fileID: 6789262394414307240}
   extraObjects: []
   collisionAudioClip: {fileID: 8300000, guid: 7399071ef6edeb3828649653248a892a, type: 3}
-  storageIndex: 0
-  storageLength: 5
+  storageIndex: -1
+  storageLength: 3
   collisionSelfNames: []
   collisionOtherNames: []
+  collisionRelativeSpeed: []
 --- !u!114 &2306191762265085887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3300,7 +3325,7 @@ MonoBehaviour:
   - -2.2
   - 0
   - 1.2
-  - 3.1415927
+  - -1.570796
   articulationChain:
   - {fileID: 6789262394658540539}
   - {fileID: 6789262393641117010}
@@ -3447,7 +3472,7 @@ MonoBehaviour:
   - 1.2
   - 0
   - 1
-  - 3.1415927
+  - -1.570796
   preset3:
   - -100
   - -100
@@ -3464,6 +3489,14 @@ MonoBehaviour:
   - -100
   - -100
   - -1.570796
+  preset5:
+  - -0.91
+  - 1.13
+  - 0.85
+  - 1.66
+  - -0.09
+  - 0.85
+  - -0.26
   deltaPosition: {x: 0, y: 0, z: 0}
   deltaRotation: {x: 0, y: 0, z: 0}
   target: {fileID: 0}

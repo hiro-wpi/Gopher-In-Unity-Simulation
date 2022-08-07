@@ -38,6 +38,11 @@ public class ArmControl : MonoBehaviour
         armControlManager.MoveToPreset(4);
     }
 
+    public void OnPreset5(InputAction.CallbackContext context)
+    {
+        armControlManager.MoveToPreset(5);
+    }
+
 
     // IK
     public void OnTranslate(InputAction.CallbackContext context)
