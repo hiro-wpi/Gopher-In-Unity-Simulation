@@ -35,7 +35,7 @@ public class LaserScanPublisher : MonoBehaviour
         float angleIncrement = (laser.angleMax - laser.angleMin)/(laser.samples-1);
         float scanTime = 1f / laser.updateRate;
         float timeIncrement = scanTime / laser.samples;
-        float[] intensities = new float[laser.ranges.Length];
+        float[] intensities = new float[laser.obstacleRanges.Length];
         laserScan = new LaserScanMsg
         {
             header = new HeaderMsg(Clock.GetCount(), 
@@ -47,7 +47,7 @@ public class LaserScanPublisher : MonoBehaviour
             scan_time       = scanTime,
             range_min       = laser.rangeMin,
             range_max       = laser.rangeMax,
-            ranges          = laser.ranges,      
+            ranges          = laser.obstacleRanges,      
             intensities     = intensities
         };
 
@@ -62,7 +62,7 @@ public class LaserScanPublisher : MonoBehaviour
     {   
         laserScan.header = new HeaderMsg(Clock.GetCount(), 
                                          new TimeStamp(Clock.time), laserLinkId);
-        laserScan.ranges = laser.GetCurrentScanRanges();
+        laserScan.ranges = laser.obstacleRanges;
 
         ros.Publish(laserTopicName, laserScan);
     }

@@ -3,81 +3,69 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-///     This script simulates a laser scanner to
-///     detect the surrounding obstacles
+///    This script simulates a laser scanner to
+///    detect the surrounding obstacles.
+///
+///    Inherited from SurroundingDetection
+///    Most methods are the same, but one more method 
+///    is written to instantiate numerous spheres to represent scan result
 /// </summary>
-public class Laser : MonoBehaviour
+public class Laser : SurroundingDetection
 {
-    public GameObject laserLink;
-    public bool alwaysOn = true;
-    public bool visualization = false;
+    private bool instantiateScanResult;
+    public GameObject scanResultPrefab;
+    private GameObject scanResultParent;
+    private GameObject[] scanResultObjects;
 
-    public int samples = 180;
-    public float angleMin = -1.5708f;
-    public float angleMax = 1.5708f;
-    private float angleIncrement;
-    public int updateRate = 10;
-    private float scanTime;
-    public float rangeMin = 0.1f;
-    public float rangeMax = 5.0f;
 
-    private RaycastHit[] raycastHits;
-    public float[] ranges;
-    public float[] directions;
-
-    void Start()
+    void OnDestroy() 
     {
-        raycastHits = new RaycastHit[samples];
-        ranges = new float[samples];
-        directions = new float[samples];
-
-        // Calculate resolution based on angle limit and number of samples
-        angleIncrement = (angleMax - angleMin)/(samples-1);
-
-        for (int i = 0; i < samples; ++i)
-            directions[i] = angleMin + i*angleIncrement;
-
-        scanTime = 1f/updateRate;
-        if (alwaysOn)
-            InvokeRepeating("Scan", 1f, scanTime);
+        SetScanResultInstantiationActive(false);
     }
 
-    void Update()
+    public void SetScanResultInstantiationActive(bool active)
     {
-    }
-
-    private void Scan()
-    {
-        ranges = new float[samples];
-
-        // Cast rays towards diffent directions to find colliders
-        for (int i = 0; i < samples; ++i)
+        if (instantiateScanResult == active)
+            return;
+        
+        instantiateScanResult = active;
+        if (active)
         {
-            Vector3 rotation = GetRayRotation(i) * laserLink.transform.forward;
-            // Check if hit colliders within distance
-            if (Physics.Raycast(laserLink.transform.position, rotation, 
-                                out raycastHits[i], rangeMax) && 
-               (raycastHits[i].distance >= rangeMin))
-            {
-                ranges[i] = raycastHits[i].distance;
-
-                // Debug
-                if (visualization)
-                    Debug.DrawRay(laserLink.transform.position, 
-                                  ranges[i] * rotation, 
-                                  Color.red, scanTime);
-            }
+            InstantiateScanResultObjects();
+            InvokeRepeating("UpdateScanResult", 1f, 1f / updateRate);
+        }
+        else
+        {
+            CancelInvoke("UpdateScanResult");
+            Destroy(scanResultParent);
         }
     }
 
-    private Quaternion GetRayRotation(int sampleInd) 
+    private void UpdateScanResult()
     {
-        float angle = (angleMin + (angleIncrement * sampleInd)) * Mathf.Rad2Deg;
-        return Quaternion.Euler(new Vector3(0f, angle, 0f));
+        // Cast rays towards diffent directions to find colliders
+        for (int i = 0; i < samples; ++i)
+        {
+            // Angle
+            Vector3 rotation = rayRotations[i] * rayStartForward;
+            scanResultObjects[i].transform.position = 
+                rayStartPosition + obstacleRanges[i] * rotation;
+        }
     }
 
-    public float[] GetCurrentScanRanges() 
+
+    private void InstantiateScanResultObjects()
     {
-        return ranges;
+        // Instantiate game objects for visualization  
+        scanResultParent = new GameObject("Scan Result Spheres");
+        scanResultObjects = new GameObject[samples];
+        for (int i = 0; i < samples; ++i)
+        {
+            scanResultObjects[i] = Instantiate(scanResultPrefab, 
+                                               Vector3.zero, 
+                                               Quaternion.identity);
+            scanResultObjects[i].layer = LayerMask.NameToLayer("Laser");
+            scanResultObjects[i].transform.parent = scanResultParent.transform;
+        }
     }
 }
