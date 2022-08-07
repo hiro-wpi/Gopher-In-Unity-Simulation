@@ -24,6 +24,7 @@ public class CameraSystem : MonoBehaviour
     {
     }
 
+
     // Set target frame rate
     public void SetTargetFrameRate(string name, int frameRate)
     {
@@ -43,6 +44,7 @@ public class CameraSystem : MonoBehaviour
     {
         cameras[index].targetTexture = renderTexture;
     }
+
 
     // Enable and Disable
     public void EnableCamera(string name)
@@ -69,6 +71,7 @@ public class CameraSystem : MonoBehaviour
         }
     }
 
+
     // Utils
     public int GetIndex(string name)
     {
@@ -79,5 +82,14 @@ public class CameraSystem : MonoBehaviour
         }
         Debug.Log("No camera named " + name);
         return -1;
+    }
+    
+    public string GetName(int i)
+    {
+        if (i < 0 || i >= cameraNames.Length)
+        {
+            return "";
+        }
+        return cameraNames[i];
     }
 }

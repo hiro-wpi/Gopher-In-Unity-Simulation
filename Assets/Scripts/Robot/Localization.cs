@@ -7,6 +7,8 @@ using UnityEngine;
 /// </summary>
 public class Localization : MonoBehaviour
 {
+    public float updateRate = 10f;
+
     public GameObject robot;
     public Vector3 position;
     public Vector3 rotation;
@@ -16,10 +18,11 @@ public class Localization : MonoBehaviour
     private System.Random rand = new System.Random();
     public float positionErrorStd = 0.2f;
     public float rotationErrorStd = 0.2f;
-
-    public float updateRate = 5f;
-    private float updatePositionDiff = 1.5f;
-    private float updateRotationDiff = 1f;
+    private Vector3 positionError;
+    private Vector3 rotationError;
+    
+    public float updatePositionDiff = 1.0f;
+    public float updateRotationDiff = 30f;
 
     void Start()
     {
@@ -27,15 +30,11 @@ public class Localization : MonoBehaviour
         rotation = robot.transform.rotation.eulerAngles;
         prevPosition = robot.transform.position;
         prevRotation = robot.transform.rotation.eulerAngles;
-        InvokeRepeating("CheckIfUpdateLocalization", 0f, 1f / updateRate);
     }
 
-    void Update()
+    void FixedUpdate()
     {
-    }
-
-    private void CheckIfUpdateLocalization()
-    {
+        // Update error if needed
         if (((robot.transform.position - prevPosition).magnitude 
              > updatePositionDiff) ||
             ((robot.transform.rotation.eulerAngles - prevRotation).magnitude 
@@ -44,20 +43,20 @@ public class Localization : MonoBehaviour
         {
             prevPosition = robot.transform.position;
             prevRotation = robot.transform.rotation.eulerAngles;
-            UpdateLocalization();
+            UpdateLocalizationError();
         }
+
+        position = robot.transform.position + positionError;
+        rotation = robot.transform.rotation.eulerAngles + rotationError;
     }
 
-    private void UpdateLocalization()
+    private void UpdateLocalizationError()
     {
         // Update position
-        Vector3 positionError = new Vector3(GenerateGaussian(0f, positionErrorStd), 
-                                            0f, GenerateGaussian(0f, positionErrorStd));
-        position = robot.transform.position + positionError;
+        positionError = new Vector3(GenerateGaussian(0f, positionErrorStd), 
+                                    0f, GenerateGaussian(0f, positionErrorStd));
         // Update rotation
-        Vector3 rotationError = new Vector3(0f, GenerateGaussian(0f, rotationErrorStd), 
-                                            0f);
-        rotation = robot.transform.rotation.eulerAngles + rotationError;
+        rotationError = new Vector3(0f, GenerateGaussian(0f, rotationErrorStd), 0f);
     }
 
 

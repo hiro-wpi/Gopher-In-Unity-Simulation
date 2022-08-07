@@ -87,6 +87,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Arm Preset 5",
+                    "type": "Button",
+                    "id": "42224df5-2370-418e-a53a-cb9a67c88149",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Arm Translate",
                     "type": "Value",
                     "id": "e13bfe8f-deb2-432f-b08e-063f7fc0bad7",
@@ -376,7 +385,7 @@
                 {
                     "name": "up",
                     "id": "5fc291de-514c-4a92-b49f-b6b077b4df5d",
-                    "path": "<Keyboard>/numpad4",
+                    "path": "<Keyboard>/j",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
@@ -387,7 +396,7 @@
                 {
                     "name": "down",
                     "id": "8d9cf18f-18fb-4fd9-bd1c-12e357d7418e",
-                    "path": "<Keyboard>/numpad6",
+                    "path": "<Keyboard>/l",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
@@ -398,7 +407,7 @@
                 {
                     "name": "left",
                     "id": "52d294d6-65b4-4f80-bf55-f11c726c4831",
-                    "path": "<Keyboard>/numpad8",
+                    "path": "<Keyboard>/i",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
@@ -409,7 +418,7 @@
                 {
                     "name": "right",
                     "id": "57d0109c-0c54-499e-877e-760ab5d06b81",
-                    "path": "<Keyboard>/numpad5",
+                    "path": "<Keyboard>/k",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
@@ -420,7 +429,7 @@
                 {
                     "name": "forward",
                     "id": "bfaf7a8e-3934-40ba-9d8f-3a9ed18cf04d",
-                    "path": "<Keyboard>/numpad7",
+                    "path": "<Keyboard>/u",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
@@ -431,7 +440,7 @@
                 {
                     "name": "backward",
                     "id": "fcb50f1f-be2a-4c9d-b3b8-6f84bd1a58d6",
-                    "path": "<Keyboard>/numpad9",
+                    "path": "<Keyboard>/o",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
@@ -909,6 +918,50 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Arm Preset 3",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "eaa682ce-3117-4ddc-aa27-2a848d95f543",
+                    "path": "<Keyboard>/f5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Arm Preset 5",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "One Modifier",
+                    "id": "b5148b36-5fe7-4522-a2f3-522dbb94f727",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Arm Preset 5",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "235d8858-540e-4a80-b2d5-7ec0a82fb81a",
+                    "path": "<Gamepad>/leftStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Arm Preset 5",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "e66aff2c-628e-4e34-be5e-39397cc9e8f3",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Arm Preset 5",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }

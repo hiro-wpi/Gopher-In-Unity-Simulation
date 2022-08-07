@@ -20,7 +20,7 @@ public class GopherControl : MonoBehaviour
     [SerializeField]
     private ControlMode _mode = ControlMode.Base;
     public ControlMode Mode { get{return _mode;} set{ _mode = value;} }
-    private bool cameraControlEnabled = false;
+    public bool cameraControlEnabled = false;
 
     void Start()
     {}
