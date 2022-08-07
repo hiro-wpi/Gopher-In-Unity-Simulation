@@ -419,7 +419,7 @@ public class GraphicalInterface : MonoBehaviour
             case GopherControl.ControlMode.LeftArm:
             case GopherControl.ControlMode.RightArm:
                 helpDisplayText.text += "Joint Position Control\n" + "  WA/SD/QE\n"
-                                      + "Jointeeee Rotation Control\n" + "  IK/JL/UO\n"
+                                      + "Joint Rotation Control\n" + "  IK/JL/UO\n"
                                       + "Preset\n" + "  F1 F2 F3 F4 F5\n"
                                       + "Gripper Close/Open\n" + "  Space\n";
                 break;

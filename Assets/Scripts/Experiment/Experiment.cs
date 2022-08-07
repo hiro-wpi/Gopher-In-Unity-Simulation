@@ -43,8 +43,7 @@ public abstract class Experiment : MonoBehaviour
 
     
     // Generate task
-    protected virtual T GenerateTask<T>(int levelIndex, int taskIndex, 
-                                        GameObject parent = null) 
+    protected virtual T GenerateTask<T>(int levelIndex, int taskIndex, GameObject parent) 
                 where T : Task 
     {
         // Instantiate task

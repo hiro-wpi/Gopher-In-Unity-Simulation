@@ -77,7 +77,7 @@ public class ComprehensiveExperiment : Experiment
                             };
 
         // Create a gameobject container
-        GameObject tasksObject = new GameObject("Locomotion Tasks");
+        GameObject tasksObject = new GameObject("Comprehensive Tasks");
         tasksObject.transform.SetParent(this.transform);
 
         // TEMP Tasks
@@ -89,7 +89,7 @@ public class ComprehensiveExperiment : Experiment
         {
             for (int j=0; j<taskNames.Length; ++j)
             {
-                tasks[count] = GenerateTask<Task>(i, j);
+                tasks[count] = GenerateTask<Task>(i, j, tasksObject);
                 count++;
             }
         }
@@ -112,8 +112,8 @@ public class ComprehensiveExperiment : Experiment
         // robot
         Task.SpawnInfo[] robotSpawnArray = new Task.SpawnInfo[1];
         robotSpawnArray[0] = Task.ToSpawnInfo(robotPrefabs[0], 
-                                              robotSpawnPositions[taskIndex], 
-                                              robotSpawnRotations[taskIndex], 
+                                              robotSpawnPositions[0], // temp
+                                              robotSpawnRotations[0], 
                                               null);
         // static object
         Task.SpawnInfo[] staticObjectSpawnArray = new Task.SpawnInfo[1];

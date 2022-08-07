@@ -63,7 +63,7 @@ public class CollisionReader : MonoBehaviour
         // Prevent too frequent collision detection
         if (!collisionAudio.isPlaying)
         {
-            collisionAudio.volume = relativeSpeed*0.3f + 0.1f;
+            collisionAudio.volume = relativeSpeed*0.3f;
             collisionAudio.Play();
 
             // Store collision self, other and relative speed

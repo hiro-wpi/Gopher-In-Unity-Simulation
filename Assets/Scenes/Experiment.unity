@@ -493,12 +493,12 @@ GameObject:
   - component: {fileID: 183514186}
   - component: {fileID: 183514187}
   m_Layer: 0
-  m_Name: Locomotion Experiment
+  m_Name: Test Experiment
   m_TagString: Experiment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &183514186
 Transform:
   m_ObjectHideFlags: 0
@@ -542,12 +542,16 @@ MonoBehaviour:
   - {fileID: 1393987427}
   - {fileID: 1034108450}
   - {fileID: 1724416492}
-  robotPrefabs: []
-  staticObjects: []
-  dynamicObjects: []
+  robotPrefabs:
+  - {fileID: 6789262394414307240, guid: d389cac5588eb6f4da30dee89aa90d4d, type: 3}
+  staticObjects:
+  - {fileID: 958842358881422846, guid: 249680c53e1ab1d40b7c0bfd3438224c, type: 3}
+  dynamicObjects:
+  - {fileID: 4794976405199776384, guid: 99c60dd584c9e02af870a2c618acc03c, type: 3}
   taskObjects: []
   goalObjects: []
-  graphicalInterfaces: []
+  graphicalInterfaces:
+  - {fileID: 955308863}
   controlInterfaces: []
 --- !u!1 &187909146
 GameObject:
@@ -4653,7 +4657,7 @@ MonoBehaviour:
   cUI: {fileID: 0}
   robotSpawnArray:
   - gameObject: {fileID: 6789262394414307240, guid: d389cac5588eb6f4da30dee89aa90d4d, type: 3}
-    position: {x: 8, y: 0, z: -1}
+    position: {x: 11, y: 0, z: 2}
     rotation: {x: 0, y: -90, z: 0}
     trajectory: []
   staticObjectSpawnArray:
@@ -5161,7 +5165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   experiments:
-  - {fileID: 1901884920}
+  - {fileID: 183514187}
   freePlayTask: {fileID: 1161083585}
   keepSameSceneAndRobot: 1
   experimentMenus: {fileID: 1008630542}
@@ -8343,7 +8347,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1901884919
 Transform:
   m_ObjectHideFlags: 0
