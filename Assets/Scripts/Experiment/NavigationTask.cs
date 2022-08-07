@@ -61,4 +61,17 @@ public class NavigationTask : Task
         for (int i = 1; i < goalObjects.Length; ++i)
             goals[i].DisableGoalVisualEffect(); 
     }
+
+
+    public override (GameObject[], GameObject[], GameObject[]) GenerateStaticObjects()
+    {
+        base.GenerateStaticObjects();
+
+        // Keep only the first goal active
+        goals[0].EnableGoalVisualEffect();
+        for (int i = 1; i < goalObjects.Length; ++i)
+            goals[i].DisableGoalVisualEffect();
+
+        return (staticObjects, taskObjects, goalObjects);
+    }
 }

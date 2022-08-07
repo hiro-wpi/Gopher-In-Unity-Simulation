@@ -37,6 +37,8 @@ public class GraphicalInterface : MonoBehaviour
     private int numCameras;
     private int cameraIndex;
     private int secondaryCameraIndex;
+    // laser
+    private Laser laser;
 
     // Minimap
     public GameObject minimapDisplay;
@@ -58,10 +60,16 @@ public class GraphicalInterface : MonoBehaviour
     private Slider batterySlider;
 
     // control mode
+    public GameObject controlModeCameraDisplay;
     public GameObject controlModeLeftDisplay;
     public GameObject controlModeRightDisplay;
     public GameObject controlModeBaseDisplay;
-    private GopherControl gopherController;
+    private GopherControl gopherControl;
+    // camera control selection
+    public GameObject headCameraViewingDisplay;
+    public GameObject leftCameraViewingDisplay;
+    public GameObject rightCameraViewingDisplay;
+    public GameObject backCameraViewingDisplay;
    
     // localization
     private GameObject map;
@@ -132,7 +140,7 @@ public class GraphicalInterface : MonoBehaviour
         // Location
         locationText = locationInfo.GetComponentInChildren<TextMeshProUGUI>();
         // minimap
-        minimapSizes = new float[] {5f, 8f, 12f};
+        minimapSizes = new float[] {3f, 6f, 9f};
         minimapSizeIndex = 0;
 
         // task status UI
@@ -155,37 +163,6 @@ public class GraphicalInterface : MonoBehaviour
     }
 
 
-    void Update()
-    {
-        // FPS
-        FPSCount += 1;
-        FPSSum += 1.0f / Time.deltaTime;
-
-        if (robot == null)
-            SetUIActive(false);
-        // UI not activated
-        if (!active)
-            return;
-        
-        // Hotkeys
-        if (Input.GetKeyDown(KeyCode.H)) 
-            ChangeHelpDisplay();
-        else if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Tab))
-            SwitchCameraView();
-        else if (Input.GetKeyDown(KeyCode.Tab))
-            ChangeCameraView();
-        else if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.M))
-            ChangeMinimapView();
-        else if (Input.GetKeyDown(KeyCode.M))
-            ZoomMap();
-        else if (Input.GetKeyDown(KeyCode.B))
-            ChangeBarCodeScanDisplay();
-
-        // Update UI
-        UpdateRobotStatus();
-        UpdateTaskStatus();
-    }
-
     public void SetUIActive(bool active)
     {
         this.active = active;
@@ -194,7 +171,49 @@ public class GraphicalInterface : MonoBehaviour
             component.SetActive(active);
         }
     }
-    
+
+    void Update()
+    {
+        // FPS
+        FPSCount += 1;
+        FPSSum += 1.0f / Time.deltaTime;
+
+        // Active
+        if (robot == null)
+            SetUIActive(false);
+        // UI not activated
+        if (!active)
+            return;
+
+        // Update UI
+        UpdateRobotStatus();
+        UpdateTaskStatus();
+
+        // UI
+        // help panel
+        if (Input.GetKeyDown(KeyCode.H)) 
+            ChangeHelpDisplay();
+        // minimap
+        if(Input.GetKeyDown(KeyCode.M))
+            if (Input.GetKey(KeyCode.LeftShift))
+                ChangeMinimapView();
+            else
+                ZoomMap();
+        // barcode
+        if (Input.GetKeyDown(KeyCode.B))
+            ChangeBarCodeScanDisplay();
+
+        // Switch camera control
+        if (Input.GetKeyDown(KeyCode.Keypad8)) 
+            ChangeCameraView(!Input.GetKey(KeyCode.Keypad0), "Head");
+        else if (Input.GetKeyDown(KeyCode.Keypad5))
+            ChangeCameraView(!Input.GetKey(KeyCode.Keypad0), "Back");
+        else if (Input.GetKeyDown(KeyCode.Keypad4))
+            ChangeCameraView(!Input.GetKey(KeyCode.Keypad0), "Left");
+        else if (Input.GetKeyDown(KeyCode.Keypad6))
+            ChangeCameraView(!Input.GetKey(KeyCode.Keypad0), "Right");
+    }
+
 
     // UPDATE INFO
     private void UpdateTaskStatus()
@@ -219,9 +238,9 @@ public class GraphicalInterface : MonoBehaviour
         // battery 
         UpdateBattery(stateReader.durationTime);
         // control mode
-        UpdateControlMode(gopherController.Mode);
+        UpdateControlMode(gopherControl.cameraControlEnabled, gopherControl.Mode);
+        UpdateCameraViewing(cameraIndex);
         // location
-
         UpdateLocalization(localization.position, localization.rotation);
     }
 
@@ -242,12 +261,17 @@ public class GraphicalInterface : MonoBehaviour
         steeringWheel.transform.rotation = Quaternion.Euler(0, 0, angularSpeed);
     }
 
-    private void UpdateControlMode(GopherControl.ControlMode controlMode)
+    private void UpdateControlMode(bool cameraControlEnabled, 
+                                   GopherControl.ControlMode controlMode)
     {
+        // Camera
+        controlModeCameraDisplay.SetActive(cameraControlEnabled);
+        
         // Control mode display
         controlModeLeftDisplay.SetActive(false);
         controlModeRightDisplay.SetActive(false);
         controlModeBaseDisplay.SetActive(false);
+
         switch (controlMode)
         {
             case GopherControl.ControlMode.LeftArm:
@@ -267,39 +291,76 @@ public class GraphicalInterface : MonoBehaviour
         UpdateHelpDisplay(controlMode);
     }
 
-    private void UpdateLocalization(Vector3 position, Vector3 rotation)
+    private void UpdateCameraViewing(int cameraIndex)
     {
-        // location name
-        string location = HospitalMapUtil.GetLocationName(position);
-        locationText.text = "Current - " + location;
-        // update map in minimap display
-        map.transform.position = position - robot.transform.position + new Vector3(0f, -3f, 0f);
-        // map.transform.rotation = Quaternion.Euler(rotation - robot.transform.rotation.eulerAngles); 
-    }
+        headCameraViewingDisplay.SetActive(false);
+        leftCameraViewingDisplay.SetActive(false);
+        rightCameraViewingDisplay.SetActive(false);
+        backCameraViewingDisplay.SetActive(false);
 
-    private void UpdateBattery(float duration)
-    {
-        // Convert duration time to battery
-        // (0, 100)min -> (1.0, 0.0)
-        float value = (100 - duration / 60f) / 100f;
-        batterySlider.value = Mathf.Clamp(value, 0f, 1f);
+        string secondaryCameraName = cameraSystem.GetName(secondaryCameraIndex).ToUpper();
+        switch (secondaryCameraName)
+        {
+            case "HEAD":
+                headCameraViewingDisplay.SetActive(true);
+                headCameraViewingDisplay.GetComponent<RectTransform>().localScale = 
+                    new Vector3(0.6f, 0.6f, 0f);
+                break;
+            case "LEFT":
+                leftCameraViewingDisplay.SetActive(true);
+                leftCameraViewingDisplay.GetComponent<RectTransform>().localScale = 
+                    new Vector3(0.6f, 0.6f, 0f);
+                break;
+            case "RIGHT":
+                rightCameraViewingDisplay.SetActive(true);
+                rightCameraViewingDisplay.GetComponent<RectTransform>().localScale = 
+                    new Vector3(0.6f, 0.6f, 0f);
+                break;
+            case "BACK":
+                backCameraViewingDisplay.SetActive(true);
+                backCameraViewingDisplay.GetComponent<RectTransform>().localScale = 
+                    new Vector3(0.6f, 0.6f, 0f);
+                break;
+            default:
+                break;
+        }
+
+        string cameraName = cameraSystem.GetName(cameraIndex).ToUpper();
+        switch (cameraName)
+        {
+            case "HEAD":
+                headCameraViewingDisplay.SetActive(true);
+                headCameraViewingDisplay.GetComponent<RectTransform>().localScale = Vector3.one;
+                break;
+            case "LEFT":
+                leftCameraViewingDisplay.SetActive(true);
+                leftCameraViewingDisplay.GetComponent<RectTransform>().localScale = Vector3.one;
+                break;
+            case "RIGHT":
+                rightCameraViewingDisplay.SetActive(true);
+                rightCameraViewingDisplay.GetComponent<RectTransform>().localScale = Vector3.one;
+                break;
+            case "BACK":
+                backCameraViewingDisplay.SetActive(true);
+                backCameraViewingDisplay.GetComponent<RectTransform>().localScale = Vector3.one;
+                break;
+            default:
+                break;
+        }
     }
 
     private void UpdateHelpDisplay(GopherControl.ControlMode controlMode)
     {
-        helpDisplayText.text = "Switch Control\n" + "  Arrow ← ↓ →\n"
-                             + "Camera Control\n" + "  Arrow ↑\n";
+        helpDisplayText.text = "Switch Control\n" + "  Key ← ↓ →\n"
+                             + "Switch Camera\n" + "  Num (0+) 8 4 5 6\n"
+                             + "Camera Control\n" + "  Enabling: ↑, Mouse\n"
+                             + "Camera Centering\n" + "  Mouse middle button\n";
         switch (controlMode)
         {
             case GopherControl.ControlMode.LeftArm:
-                helpDisplayText.text += "Joint Position Control\n" + "  WA/SD/QE\n"
-                                      + "Joint Rotation Control\n" + "  85/46/79\n"
-                                      + "Preset\n" + "  F1 F2 F3 F4 F5\n"
-                                      + "Gripper Close/Open\n" + "  Space\n";
-                break;
             case GopherControl.ControlMode.RightArm:
                 helpDisplayText.text += "Joint Position Control\n" + "  WA/SD/QE\n"
-                                      + "Joint Rotation Control\n" + "  85/46/79\n"
+                                      + "Jointeeee Rotation Control\n" + "  IK/JL/UO\n"
                                       + "Preset\n" + "  F1 F2 F3 F4 F5\n"
                                       + "Gripper Close/Open\n" + "  Space\n";
                 break;
@@ -311,6 +372,24 @@ public class GraphicalInterface : MonoBehaviour
         }
     }
 
+    private void UpdateLocalization(Vector3 position, Vector3 rotation)
+    {
+        // location name
+        string location = HospitalMapUtil.GetLocationName(position);
+        locationText.text = "Current - " + location;
+        // update map in minimap display
+        map.transform.position = position - robot.transform.position + new Vector3(0f, -3f, 0f);
+        map.transform.rotation = Quaternion.Euler(rotation - robot.transform.rotation.eulerAngles); 
+    }
+
+    private void UpdateBattery(float duration)
+    {
+        // Convert duration time to battery
+        // (0, 100)min -> (1.0, 0.0)
+        float value = (100 - duration / 60f) / 100f;
+        batterySlider.value = Mathf.Clamp(value, 0f, 1f);
+    }
+
     
     // Setup ROBOT AND TASK
     public void SetRobot(GameObject robot)
@@ -318,21 +397,27 @@ public class GraphicalInterface : MonoBehaviour
         // Robot
         this.robot = robot;
         cameraSystem = robot.GetComponentInChildren<CameraSystem>();
+        laser = robot.GetComponentInChildren<Laser>();
         localization = robot.GetComponentInChildren<Localization>();
         stateReader = robot.GetComponentInChildren<StateReader>();
-        gopherController = robot.GetComponentInChildren<GopherControl>();
+        gopherControl = robot.GetComponentInChildren<GopherControl>();
         
         // Cameras
         cameraSystem.enabled = true;
         numCameras = cameraSystem.cameras.Length;
         cameraSystem.DisableAllCameras();
         // turn on main camera and secondary camera
-        cameraIndex = cameraSystem.GetIndex("Main");
+        cameraIndex = cameraSystem.GetIndex("Head");
         secondaryCameraIndex = cameraSystem.GetIndex("Right");
         cameraSystem.SetTargetRenderTexture(cameraIndex, cameraRendertexture);
         cameraSystem.EnableCamera(cameraIndex);
         cameraSystem.SetTargetRenderTexture(secondaryCameraIndex, secondayCameraRendertexture);
         cameraSystem.EnableCamera(secondaryCameraIndex);
+
+        // Laser
+        laser.SetScanResultInstantiationActive(true);
+        foreach (Camera cam in cameraSystem.cameras)
+            cam.cullingMask = cam.cullingMask & ~(1 << LayerMask.NameToLayer("Laser"));
         
         // Map
         map = GameObject.FindGameObjectWithTag("Map");
@@ -346,7 +431,7 @@ public class GraphicalInterface : MonoBehaviour
         minimapCamera = minimapCameraObject.AddComponent<Camera>();
         minimapCamera.orthographic = true;
         minimapCamera.orthographicSize = minimapSizes[minimapSizeIndex];
-        minimapCamera.cullingMask = LayerMask.GetMask("Robot", "Map");
+        minimapCamera.cullingMask = LayerMask.GetMask("Robot", "Laser", "Map");
         // minimap framerate
         minimapCamera.targetTexture = minimapRendertexture;
         CameraFrameRate fr = minimapCameraObject.AddComponent<CameraFrameRate>();
@@ -393,37 +478,61 @@ public class GraphicalInterface : MonoBehaviour
 
 
     // GUI FUNCTIONS
-    public void ChangeCameraView()
+    public void ChangeCameraView(bool mainCamera, string cameraName)
     {
-        // If same as secondary view
-        if ( ((cameraIndex + 1) % numCameras) == secondaryCameraIndex )
+        ChangeCameraView(mainCamera, cameraSystem.GetIndex(cameraName));
+    }
+    public void ChangeCameraView(bool mainCamera, int index)
+    {
+        if (index < 0 || index >= cameraSystem.cameras.Length)
+            return;
+        
+        // Change main camera view
+        if (mainCamera)
         {
-            SwitchCameraView();
+            if (index != secondaryCameraIndex)
+            {
+                cameraSystem.DisableCamera(cameraIndex);
+                cameraIndex = index;
+            }
+            // Swap if same as secondary
+            else
+            {
+                secondaryCameraIndex = cameraIndex;
+                cameraIndex = index;
+            }
         }
+        // Change secondary camera view
         else
         {
-            // Disable current camera
-            cameraSystem.DisableCamera(cameraIndex);
-            // Enable next camera
-            cameraIndex = (cameraIndex + 1) % numCameras;
-            cameraSystem.EnableCamera(cameraIndex);
-            cameraSystem.SetTargetRenderTexture(cameraIndex, cameraRendertexture);
+            if (index != cameraIndex)
+            {
+                cameraSystem.DisableCamera(secondaryCameraIndex);
+                secondaryCameraIndex = index;
+            }
+            // Swap if same as main
+            else
+            {
+                cameraIndex = secondaryCameraIndex;
+                secondaryCameraIndex = index;
+            }
         }
-    }
-
-    public void SwitchCameraView()
-    {
-        cameraSystem.DisableAllCameras();
-        // Switch main index and secondary index
-        int temp = secondaryCameraIndex;
-        secondaryCameraIndex = cameraIndex;
-        cameraIndex = temp;
-        // update main view
         cameraSystem.SetTargetRenderTexture(cameraIndex, cameraRendertexture);
-        cameraSystem.EnableCamera(cameraIndex);
-        // update secondary camera
         cameraSystem.SetTargetRenderTexture(secondaryCameraIndex, secondayCameraRendertexture);
+        cameraSystem.EnableCamera(cameraIndex);
         cameraSystem.EnableCamera(secondaryCameraIndex);
+
+        // 
+        if (cameraIndex == cameraSystem.GetIndex("Head") ||
+            cameraIndex == cameraSystem.GetIndex("Back"))
+        {
+            
+        }
+        else if (cameraIndex == cameraSystem.GetIndex("Left") ||
+                 cameraIndex == cameraSystem.GetIndex("Right"))
+        {
+
+        }
     }
 
     public void ChangeMinimapView()

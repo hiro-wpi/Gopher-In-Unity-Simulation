@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,16 +11,21 @@ public class ExperimentManager : MonoBehaviour
     // Experiment
     public Experiment[] experiments;
     public FreePlayTask freePlayTask;
-    private int[] taskIndices;
+    private int totalTaskIndex;
+    private int experimentIndex;
+    private int taskIndex;
+    // randomization
+    private int totalNumTask;
+    private int[] cumulativeSumNumTask;
+    private System.Random randomInt = new System.Random();
+    private int[] randomizedIndices;
+    // Task
     private bool experimentStarted;
     private bool taskStarted;
-    private System.Random randomInt = new System.Random();
     private Task currentTask;
     // whether using the same scene and robot during the whole experiment
     public bool keepSameSceneAndRobot;
     private GameObject[] spawnedRobots;
-    private GameObject[] spawnedStaticObjects;
-    private GameObject[] spawnedDynamicObjects;
 
     // UIs
     public ExperimentMenus experimentMenus;
@@ -34,12 +40,15 @@ public class ExperimentManager : MonoBehaviour
     // Nav Mesh Agent for dynamic 
     public NavMeshSurface navMeshSurface;
 
+
     void Start()
     {
         // Start the main menus
         LoadMainMenus();
         // experiments
-        taskIndices = new int[experiments.Length];
+        totalTaskIndex = 0;
+        totalNumTask = 0;
+        cumulativeSumNumTask = new int[experiments.Length];
     }
 
     void Update()
@@ -78,15 +87,25 @@ public class ExperimentManager : MonoBehaviour
     }
 
 
+    // EXPERIMENT OR FREEPLAY //
     // Start the experiment
     public void StartExperiment()
     {
+        // Randomize task orders
+        // count total task number
         for (int i=0; i<experiments.Length; ++i)
         {
             Experiment experiment = experiments[i];
-            experiment.RandomizeTasks();
-            taskIndices[i] = experiment.GetNumTasks() - 1;
+            // experiment.RandomizeTasks(); // handled in this script now
+            totalNumTask += experiment.GetNumTasks();
+
+            cumulativeSumNumTask[i] = experiment.GetNumTasks();
+            if (i != 0)
+                cumulativeSumNumTask[i] += cumulativeSumNumTask[i-1];
         }
+        // randomize index
+        randomizedIndices = Enumerable.Range(0, totalNumTask).ToArray();
+        randomizedIndices = randomizedIndices.OrderBy(x => randomInt.Next()).ToArray();
 
         // Load the first task to starts
         bool success = LoadNewTask();
@@ -109,13 +128,14 @@ public class ExperimentManager : MonoBehaviour
         // Load free play task
         currentTask = freePlayTask;
         experimentMenus.LoadLoading();
-        StartCoroutine(LoadTaskCoroutine(true));
+        StartCoroutine(LoadTaskCoroutine());
         // Flag
         experimentStarted = true;
         taskStarted = false;
     }
 
     
+    // RECORDER //
     // Start or stop recording
     public void StartRecording()
     {
@@ -142,63 +162,51 @@ public class ExperimentManager : MonoBehaviour
     }
 
 
-    // Task
+    // TASK //
     // Load new task
     public bool LoadNewTask()
     {
-        // Randomly get the next task from unfinished experiment
-        int experimentIndex = GetNextExperimentIndex();
-        if (experimentIndex == -1)
-            return false; // all experiments are done
+        if (totalTaskIndex == totalNumTask)
+            return false;
+        
+        // Randomly get the next task index
+        int randomizedIndex = randomizedIndices[totalTaskIndex];
+        totalTaskIndex++;
+        // Compute experiment index and task index
+        for (int i = 0; i < cumulativeSumNumTask.Length; ++i)
+        {
+            if (randomizedIndex < cumulativeSumNumTask[i])
+            {
+                experimentIndex = i;
+                taskIndex = randomizedIndex;
+                if (i != 0)
+                    taskIndex = randomizedIndex - cumulativeSumNumTask[i-1];
+            }
+        }
 
-        // Update the task index and
-        // get update task index of selected experiment
-        int taskInedex = taskIndices[experimentIndex];
-        taskIndices[experimentIndex] -= 1;
-
-        // Ensure time is running and
-        // load loading UI
+        // Load loading UI
         if (!keepSameSceneAndRobot || !experimentStarted )
             experimentMenus.LoadLoading();
         
-        // Destroy previous task and get a new task
-        Destroy(currentTask);
-        currentTask = experiments[experimentIndex].GetTask(taskInedex);
-        if (currentTask == null)
-            return false;
+        // Destroy previous task
+        if (currentTask != null)
+        {
+            currentTask.DestroyObjects(deTask: false);
+            Destroy(currentTask);
+        }
+        // Get a new task
+        currentTask = experiments[experimentIndex].GetTask(taskIndex);
         
-        // Temp
-        Debug.Log("Task " + currentTask.taskName + " is loading.");
-        // Load scene and 
+        // Load new scene and 
         // other game objects (objects, humans, robots, etc.)
-        StartCoroutine(LoadTaskCoroutine(experimentStarted==false));
+        Debug.Log("Task " + currentTask.taskName + " is loading.");
+        StartCoroutine(LoadTaskCoroutine());
         
-        // Task
+        // Task flag
         taskStarted = false;
         return true;
     }
-    private int GetNextExperimentIndex()
-    {
-        // Check if all experiments are done
-        int sum = 0;
-        foreach (int i in taskIndices)
-            sum += i;
-        if (sum == -1 * taskIndices.Length)
-            return -1;
-
-        // If not, randomly select the next experiment
-        int taskIndex = -1;
-        int experimentIndex = 0;
-        while (taskIndex == -1)
-        {
-            // Select
-            experimentIndex = randomInt.Next(0, experiments.Length);
-            // As long as the task in this experiment is not done
-            taskIndex = taskIndices[experimentIndex];
-        }
-        return experimentIndex;
-    }
-    private IEnumerator LoadTaskCoroutine(bool isFirstTask = false)
+    private IEnumerator LoadTaskCoroutine()
     {
         Time.timeScale = 1f;
         // Reload scene, robot and objects for every task
@@ -215,20 +223,20 @@ public class ExperimentManager : MonoBehaviour
             yield return new WaitForSeconds(0.5f); 
 
             // Generate static objects
-            spawnedStaticObjects = currentTask.GenerateStaticObjects();
+            currentTask.GenerateStaticObjects();
             yield return new WaitForSeconds(0.2f);
             // Remake nav mesh for dynamic objects;
             navMeshSurface.BuildNavMesh();
             yield return new WaitForSeconds(0.8f);
 
             // Generate dynamic objects
-            spawnedDynamicObjects = currentTask.GenerateDynamicObjects();
+            currentTask.GenerateDynamicObjects();
         }
         //Or Keep the same scene and robot for every task
         else
         {
             // First generation
-            if (isFirstTask)
+            if (!experimentStarted)
             {
                 DontDestroyOnLoad(this.gameObject);
 
@@ -248,14 +256,14 @@ public class ExperimentManager : MonoBehaviour
             }
 
             // Generate static objects
-            spawnedStaticObjects = currentTask.GenerateStaticObjects();
+            currentTask.GenerateStaticObjects();
             yield return new WaitForSeconds(0.2f);
             // Rebake nav mesh for dynamic objects;
             navMeshSurface.BuildNavMesh();
             yield return new WaitForSeconds(0.8f);
 
             // Generate dynamic objects
-            spawnedDynamicObjects = currentTask.GenerateDynamicObjects();
+            currentTask.GenerateDynamicObjects();
         }
 
         // UI
@@ -289,6 +297,8 @@ public class ExperimentManager : MonoBehaviour
     // Respawn robot
     public void RespawnRobot()
     {
+        ResumeFromQuitMenus();
+        experimentMenus.LoadLoading(2f);
         StartCoroutine(RespawnRobotCoroutine());
     }
     private IEnumerator RespawnRobotCoroutine()
@@ -296,7 +306,6 @@ public class ExperimentManager : MonoBehaviour
         // Destory existing robot
         foreach(GameObject robot in spawnedRobots)
             Destroy(robot);
-
         yield return new WaitForSeconds(0.5f);
         
         // Generate robots
@@ -306,7 +315,7 @@ public class ExperimentManager : MonoBehaviour
     }
 
 
-    // Menus
+    // MENUS //
     // Load quit menus
     public void LoadQuitMenus()
     {
@@ -336,7 +345,7 @@ public class ExperimentManager : MonoBehaviour
     }
 
 
-    // System
+    // SYSTEM //
     // Quit game
     public void Quit()
     {

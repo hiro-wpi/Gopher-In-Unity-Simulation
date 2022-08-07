@@ -18,7 +18,7 @@ public class DataRecorder : MonoBehaviour
     // Robot
     private GameObject robot;
     private StateReader stateReader;
-    private LaserSocial laser;
+    private SurroundingDetection surroundingDetection;
     private CollisionReader collisionReader;
     private int collisionStorageIndex;
     // Task
@@ -95,7 +95,7 @@ public class DataRecorder : MonoBehaviour
         // from robot
         this.robot = robots[0];
         stateReader = robot.GetComponentInChildren<StateReader>();
-        laser = robot.GetComponentInChildren<LaserSocial>();
+        surroundingDetection = robot.GetComponentInChildren<SurroundingDetection>();
         collisionReader = robot.GetComponentInChildren<CollisionReader>();
         collisionStorageIndex = 0;
         // from task
@@ -177,34 +177,34 @@ public class DataRecorder : MonoBehaviour
         robotValueToRecord[5] = ToFLUEuler(stateReader.angularVelocity[1]);
         
         // obs dis
-        robotValueToRecord[6] = laser.obstacleRanges[89];
-        robotValueToRecord[7] = laser.obstacleRanges[71];
-        robotValueToRecord[8] = laser.obstacleRanges[53];
-        robotValueToRecord[9] = laser.obstacleRanges[35];
-        robotValueToRecord[10] = laser.obstacleRanges[17];
-        robotValueToRecord[11] = laser.obstacleRanges[179];
-        robotValueToRecord[12] = laser.obstacleRanges[161];
-        robotValueToRecord[13] = laser.obstacleRanges[143];
-        robotValueToRecord[14] = laser.obstacleRanges[125];
-        robotValueToRecord[15] = laser.obstacleRanges[107];
-        int obsMinI = Utils.ArgMinArray(laser.obstacleRanges);
-        robotValueToRecord[16] = laser.obstacleRanges[obsMinI];
-        robotValueToRecord[17] = ToFLUEuler(laser.directions[obsMinI]);
+        robotValueToRecord[6] = surroundingDetection.obstacleRanges[89];
+        robotValueToRecord[7] = surroundingDetection.obstacleRanges[71];
+        robotValueToRecord[8] = surroundingDetection.obstacleRanges[53];
+        robotValueToRecord[9] = surroundingDetection.obstacleRanges[35];
+        robotValueToRecord[10] = surroundingDetection.obstacleRanges[17];
+        robotValueToRecord[11] = surroundingDetection.obstacleRanges[179];
+        robotValueToRecord[12] = surroundingDetection.obstacleRanges[161];
+        robotValueToRecord[13] = surroundingDetection.obstacleRanges[143];
+        robotValueToRecord[14] = surroundingDetection.obstacleRanges[125];
+        robotValueToRecord[15] = surroundingDetection.obstacleRanges[107];
+        int obsMinI = Utils.ArgMinArray(surroundingDetection.obstacleRanges);
+        robotValueToRecord[16] = surroundingDetection.obstacleRanges[obsMinI];
+        robotValueToRecord[17] = ToFLUEuler(surroundingDetection.directions[obsMinI]);
 
         // human dis
-        robotValueToRecord[18] = laser.humanRanges[89];
-        robotValueToRecord[19] = laser.humanRanges[71];
-        robotValueToRecord[20] = laser.humanRanges[53];
-        robotValueToRecord[21] = laser.humanRanges[35];
-        robotValueToRecord[22] = laser.humanRanges[17];
-        robotValueToRecord[23] = laser.humanRanges[179];
-        robotValueToRecord[24] = laser.humanRanges[161];
-        robotValueToRecord[25] = laser.humanRanges[143];
-        robotValueToRecord[26] = laser.humanRanges[125];
-        robotValueToRecord[27] = laser.humanRanges[107];
-        int humMinI = Utils.ArgMinArray(laser.humanRanges);
-        robotValueToRecord[28] = laser.humanRanges[humMinI];
-        robotValueToRecord[29] = ToFLUEuler(laser.directions[humMinI]);
+        robotValueToRecord[18] = surroundingDetection.humanRanges[89];
+        robotValueToRecord[19] = surroundingDetection.humanRanges[71];
+        robotValueToRecord[20] = surroundingDetection.humanRanges[53];
+        robotValueToRecord[21] = surroundingDetection.humanRanges[35];
+        robotValueToRecord[22] = surroundingDetection.humanRanges[17];
+        robotValueToRecord[23] = surroundingDetection.humanRanges[179];
+        robotValueToRecord[24] = surroundingDetection.humanRanges[161];
+        robotValueToRecord[25] = surroundingDetection.humanRanges[143];
+        robotValueToRecord[26] = surroundingDetection.humanRanges[125];
+        robotValueToRecord[27] = surroundingDetection.humanRanges[107];
+        int humMinI = Utils.ArgMinArray(surroundingDetection.humanRanges);
+        robotValueToRecord[28] = surroundingDetection.humanRanges[humMinI];
+        robotValueToRecord[29] = ToFLUEuler(surroundingDetection.directions[humMinI]);
 
         // main camera joint
         robotValueToRecord[30] = ToFLUEuler(stateReader.jointPositions[2]);

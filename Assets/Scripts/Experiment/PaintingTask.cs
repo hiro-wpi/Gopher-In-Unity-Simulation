@@ -49,7 +49,7 @@ public class PaintingTask : Task
     }
 
 
-    public override GameObject[] GenerateStaticObjects()
+    public override (GameObject[], GameObject[], GameObject[]) GenerateStaticObjects()
     {
         base.GenerateStaticObjects();
 
@@ -61,6 +61,6 @@ public class PaintingTask : Task
         // Paintable
         paintable = taskObjects[1].GetComponentInChildren<Paintable>();
 
-        return staticObjects;
+        return (staticObjects, taskObjects, goalObjects);
     }
 }

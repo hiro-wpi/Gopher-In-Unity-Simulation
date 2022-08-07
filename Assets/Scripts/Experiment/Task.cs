@@ -20,20 +20,20 @@ public abstract class Task : MonoBehaviour
     protected bool taskStarted;
     protected float startTime;
     // end
-    public SpawnInfo[] goalObjectSpawnArray;
-    protected GameObject[] goalObjects;
     protected Goal[] goals = new Goal[0];
-    protected int goalIndex = 0;
+    protected int goalIndex;
     
     // Spawn objects
-    public SpawnInfo[] taskObjectSpawnArray;
+    public SpawnInfo[] robotSpawnArray;
     public SpawnInfo[] staticObjectSpawnArray;
     public SpawnInfo[] dynamicObjectSpawnArray;
-    public SpawnInfo[] robotSpawnArray;
-    protected GameObject[] taskObjects;
+    public SpawnInfo[] taskObjectSpawnArray;
+    public SpawnInfo[] goalObjectSpawnArray;
+    protected GameObject[] robots;
     protected GameObject[] staticObjects;
     protected GameObject[] dynamicObjects;
-    protected GameObject[] robots;
+    protected GameObject[] taskObjects;
+    protected GameObject[] goalObjects;
     // current controlled robot
     protected GameObject robot; 
     protected Vector3 robotStartPosition;
@@ -142,23 +142,19 @@ public abstract class Task : MonoBehaviour
 
     
     // Generate static objects for this task
-    public virtual GameObject[] GenerateStaticObjects()
+    public virtual (GameObject[], GameObject[], GameObject[]) GenerateStaticObjects()
     {
         // Spawn static objects, task objects and goal objects
         staticObjects = SpawnGameObjectArray(staticObjectSpawnArray);
         taskObjects = SpawnGameObjectArray(taskObjectSpawnArray);
         goalObjects = SpawnGameObjectArray(goalObjectSpawnArray);
 
-        // Keep only the first goal active
+        // goals
         goals = new Goal[goalObjects.Length];
         for (int i = 0; i < goalObjects.Length; ++i)
-        {
             goals[i] = goalObjects[i].GetComponent<Goal>();
-            if (i != 0)
-                goalObjects[i].SetActive(false);
-        }
 
-        return staticObjects;
+        return (staticObjects, taskObjects, goalObjects);
     }
 
     // Generate dynamic objects for this task
@@ -182,19 +178,21 @@ public abstract class Task : MonoBehaviour
     public virtual void DestroyObjects(bool deStatic = true, bool deTask = true,
                                        bool deGoal = true, bool deDynamic = true)
     {
-        if (deStatic && staticObjects != null)
+        if (deStatic)
             DestoryGameObjects(staticObjects);
-        if (deTask && taskObjects != null)
+        if (deTask)
             DestoryGameObjects(taskObjects);
-        if (deGoal && goalObjects != null)
+        if (deGoal)
             DestoryGameObjects(goalObjects);
-        if (deDynamic && dynamicObjects != null)
+        if (deDynamic)
             DestoryGameObjects(dynamicObjects);
     }
     private void DestoryGameObjects(GameObject[] gameObjects)
     {
-        for (int i = 0; i < gameObjects.Length; ++i)
-            Destroy(gameObjects[i]);
+        if (gameObjects == null)
+            return;
+        foreach (GameObject obj in gameObjects)
+            Destroy(obj);
     }
 
     // Generate robots for this task
