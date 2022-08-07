@@ -31,10 +31,12 @@ public class ReadingTask : Task
     }
 
 
-    public override void CheckInput(string input)
+    public override void CheckInput(string input, bool onlyToRecord)
     {
         // Record input
         base.CheckInput(input);
+        if (onlyToRecord)
+            return;
         
         // Check result
         if (input == result)

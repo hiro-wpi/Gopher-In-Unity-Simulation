@@ -46,10 +46,20 @@ public class Laser : SurroundingDetection
         // Cast rays towards diffent directions to find colliders
         for (int i = 0; i < samples; ++i)
         {
-            // Angle
-            Vector3 rotation = rayRotations[i] * rayStartForward;
-            scanResultObjects[i].transform.position = 
-                rayStartPosition + obstacleRanges[i] * rotation;
+            // Not detected
+            if (obstacleRanges[i] == 0f)
+            {
+                scanResultObjects[i].SetActive(false);
+            }   
+            // Detected
+            else
+            {
+                scanResultObjects[i].SetActive(true);
+                // Angle
+                Vector3 rotation = rayRotations[i] * rayStartForward;
+                scanResultObjects[i].transform.position = 
+                    rayStartPosition + obstacleRanges[i] * rotation;
+            }
         }
     }
 

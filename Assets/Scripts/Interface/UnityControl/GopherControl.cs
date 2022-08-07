@@ -31,6 +31,8 @@ public class GopherControl : MonoBehaviour
     {
         if (context.performed)
         {
+            baseControl.StopBase();
+            rightArm.StopArm();
             _mode = ControlMode.LeftArm;
         }
     }
@@ -39,6 +41,8 @@ public class GopherControl : MonoBehaviour
     {
         if (context.performed)
         {
+            baseControl.StopBase();
+            leftArm.StopArm();
             _mode = ControlMode.RightArm;
         }
     }
@@ -47,6 +51,8 @@ public class GopherControl : MonoBehaviour
     {
         if (context.performed)
         {
+            leftArm.StopArm();
+            rightArm.StopArm();
             _mode = ControlMode.Base;
         }
     }

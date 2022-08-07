@@ -58,6 +58,10 @@ public class CharacterNavigation : MonoBehaviour
 
     public void CheckDestination()
     {
+        // agent may get destroyed before this script
+        if (agent == null)
+            return;
+        
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
             // Next target

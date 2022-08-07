@@ -13,10 +13,12 @@ public class BaseControl : MonoBehaviour
     public void OnDrive(InputAction.CallbackContext context)
     {
         _driveDir = context.ReadValue<Vector2>();
+        wheelController.SetRobotVelocity(_driveDir.y * linearSpeed, _driveDir.x * -angularSpeed);
     }
 
-    void FixedUpdate()
+    public void StopBase()
     {
-        wheelController.SetRobotVelocity(_driveDir.y * linearSpeed, _driveDir.x * -angularSpeed);
+        _driveDir = Vector2.zero;
+        wheelController.SetRobotVelocity(0f, 0f);
     }
 }

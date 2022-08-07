@@ -194,7 +194,9 @@ public class GraphicalInterface : MonoBehaviour
         UpdateRobotStatus();
         UpdateTaskStatus();
 
-        // UI
+        // UI Keys
+        if (input.isFocused)
+            return;
         // help panel
         if (Input.GetKeyDown(KeyCode.H)) 
             ChangeHelpDisplay();
@@ -270,7 +272,8 @@ public class GraphicalInterface : MonoBehaviour
     }
     private void RecordKey(string key)
     {
-        currentTask.CheckInput(key);
+        // Record keys but not for checking result
+        currentTask.CheckInput(key, true);
     }
     
 
@@ -660,9 +663,9 @@ public class GraphicalInterface : MonoBehaviour
 
     public void CheckInput()
     {
-        // Let task handle the input
+        // Record input and let task handle it
         if (currentTask != null)
-            currentTask.CheckInput(input.text);
+            currentTask.CheckInput(input.text, false);
         // Clear input
         input.text = "";
     }

@@ -73,4 +73,11 @@ public class ArmControl : MonoBehaviour
                                            false, false);
         }
     }
+
+
+    public void StopArm()
+    {
+        armControlManager.deltaPosition = Vector3.zero;
+        armControlManager.deltaRotation = Vector3.zero;
+    }
 }

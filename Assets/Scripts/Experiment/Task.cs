@@ -97,7 +97,7 @@ public abstract class Task : MonoBehaviour
 
 
     // Check and store user input
-    public virtual void CheckInput(string input)
+    public virtual void CheckInput(string input, bool onlyToRecord = true)
     {
         if (userInputs == null)
             userInputs = new string[userInputLength];
@@ -176,23 +176,24 @@ public abstract class Task : MonoBehaviour
 
     // Destroy all spawned objects
     public virtual void DestroyObjects(bool deStatic = true, bool deTask = true,
-                                       bool deGoal = true, bool deDynamic = true)
+                                       bool deGoal = true, bool deDynamic = true, 
+                                       float delayTime = 0f)
     {
         if (deStatic)
-            DestoryGameObjects(staticObjects);
+            DestoryGameObjects(staticObjects, delayTime);
         if (deTask)
-            DestoryGameObjects(taskObjects);
+            DestoryGameObjects(taskObjects, delayTime);
         if (deGoal)
-            DestoryGameObjects(goalObjects);
+            DestoryGameObjects(goalObjects, delayTime);
         if (deDynamic)
-            DestoryGameObjects(dynamicObjects);
+            DestoryGameObjects(dynamicObjects, delayTime);
     }
-    private void DestoryGameObjects(GameObject[] gameObjects)
+    private void DestoryGameObjects(GameObject[] gameObjects, float delayTime)
     {
         if (gameObjects == null)
             return;
         foreach (GameObject obj in gameObjects)
-            Destroy(obj);
+            Destroy(obj, delayTime);
     }
 
     // Generate robots for this task

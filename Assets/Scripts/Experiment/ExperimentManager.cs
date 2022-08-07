@@ -192,7 +192,8 @@ public class ExperimentManager : MonoBehaviour
         // Destroy previous task
         if (currentTask != null)
         {
-            currentTask.DestroyObjects(deTask: false);
+            currentTask.DestroyObjects(true, false, false, true, 0f);
+            currentTask.DestroyObjects(false, true, true, false, 5f);
             Destroy(currentTask);
         }
         // Get a new task

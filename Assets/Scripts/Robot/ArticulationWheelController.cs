@@ -21,6 +21,8 @@ public class ArticulationWheelController : MonoBehaviour
     public float wheelTrackLength;
     public float wheelRadius;
 
+    private float targetLinearSpeed;
+    private float targetAngularSpeed;
     private float velLeft;
     private float velRight;
     
@@ -28,11 +30,18 @@ public class ArticulationWheelController : MonoBehaviour
     {
     }
 
-    void Update()
+    void FixedUpdate()
     {
+        SetRobotVelocityStep(targetLinearSpeed, targetAngularSpeed);
     }
 
     public void SetRobotVelocity(float targetLinearSpeed, float targetAngularSpeed)
+    {
+        this.targetLinearSpeed = targetLinearSpeed;
+        this.targetAngularSpeed = targetAngularSpeed;
+    }
+
+    private void SetRobotVelocityStep(float targetLinearSpeed, float targetAngularSpeed)
     {
         if (targetLinearSpeed != 0 || targetAngularSpeed != 0)
         {
@@ -49,14 +58,6 @@ public class ArticulationWheelController : MonoBehaviour
         }
     }
     
-    // Deprecated
-    private void SetWheelVelocity(ArticulationBody wheel, float jointSpeed)
-    {
-        // setting articulatio body velocity
-        ArticulationDrive drive = wheel.xDrive;
-        drive.targetVelocity = jointSpeed;
-        wheel.xDrive = drive;
-    }
 
     private void SetWheelVelocityStep(ArticulationBody wheel, float jointSpeed)
     {
