@@ -15,6 +15,7 @@ public class ExperimentManager : MonoBehaviour
     private int experimentIndex;
     private int taskIndex;
     // randomization
+    public bool randomizeTasks;
     private int totalNumTask;
     private int[] cumulativeSumNumTask;
     private System.Random randomInt = new System.Random();
@@ -105,8 +106,8 @@ public class ExperimentManager : MonoBehaviour
         }
         // randomize index
         randomizedIndices = Enumerable.Range(0, totalNumTask).ToArray();
-        // temp disable random
-        // randomizedIndices = randomizedIndices.OrderBy(x => randomInt.Next()).ToArray();
+        if (randomizeTasks)
+            randomizedIndices = randomizedIndices.OrderBy(x => randomInt.Next()).ToArray();
 
         // Load the first task to starts
         bool success = LoadNewTask();

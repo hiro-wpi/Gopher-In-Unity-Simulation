@@ -3,58 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Class for defining loco-motion and loco-manipulation experiment.
-///
-/// There are two types of tasks defined
-/// Type 1 - Facilitate navigation tasks by moving manipulater
-///     Task 1.1 Navigation
-///     Task 1.2 Object Carrying
-///     Task 1.3 Cart Pushing
-///     Task 1.4 Blocked Path Passing
-/// Type 2 - Facilitate end-effector control tasks by moving the base
-///     Task 2.1 Read Vital Sign
-///     Task 2.2 Bar Code Scanning
-///     Task 2.3 Pick And Place 
-///     Task 2.4 Furniture Disinfecting
-/// 
-/// Tasks are given as a task set, which is the combination of one Type 1
-/// task, and one to two Type 2 tasks. The detailed content of each task
-/// is randomized. A secondary task, checking trash and dirty laundry containers, 
-/// is also assigned for each task set.
-///
+/// Class for quick prototyping some tasks and experiment.
 /// </summary>
-public class ComprehensiveExperiment : Experiment 
+public class TestExperiment : Experiment 
 {
     void Start()
     {
         // General
         useSameScene = true;  // use the same scene for all tasks
         sceneNames = new string[] {"Hospital"};
-        // levelNames = new string[] {"Level1", "Level2"};
         levelNames = new string[] {"Level2"};
-        taskNames = new string[] {"Navigation1", "ScanGrasp",
-                                  "Navigation2", "LocateGrasp", "Carrying1",
-                                  "Carrying2", "Reading", 
-                                  "Navigation3"
+        taskNames = new string[] {
+                                  "Navigation", "Reading",
+                                  "Carrying", "Scanning", 
+                                  "Pushing", "Grasping", 
+                                  "NavObs", "Disinfection"
                                  };
         // taskNames = new string[] {"GoHome", "Carrying", "Pushing", "LocalGrasping", "Navigation"};
         taskDescriptions = new string[] {"Please navigate to room S103.", 
-                                         "Please scan the medicine in room S103 and find the medicine with code 0104530, " +
-                                         "grasp and put it on the tray on the table.",
+                                         "Please read the vital value of Bed 2 in Room S103.",
+
+                                         "Please carry the IV pole to Room P104.",
+                                         "Please scan the medicine on the table and enter the bar code number.",
                                          
-                                         "Please navigate to the Pharmacy",
-                                         "Please pick up one medicine with blue label in the medicine cabinet in the Pharmacy, " + 
-                                         "and put it on the table.",
-                                         "Please push the medical cart outside to treatment room 1.",
+                                         "Please push the medical cart to the Pharmacy.",
+                                         "Please pick up the medicine with blue label in the medicine cabinet, " + 
+                                         "and put it on the tray on the table.",
                                          
-                                         "Please carry the IV pole outside to Room L101.",
-                                         "Please read the vital value of Bed 3 in Room L101.", 
-                                         "Please navigate back to the nurse station."
+                                         "Please navigate to Room P101.",
+                                         "Please disinfect the table.",
                                         };
         
         // Robot spawn pose and goal
         robotSpawnPositions = new Vector3[] {new Vector3(11.0f, 0.0f, 2.0f)};
-        robotSpawnRotations = new Vector3[] {new Vector3(0f, 0f, 0f)};
+        robotSpawnRotations = new Vector3[] {new Vector3(0f, 180f, 0f)};
                         
         // Human spawn position and trajectories
         dynamicObjectSpawnPositions = new Vector3[]
@@ -80,18 +62,12 @@ public class ComprehensiveExperiment : Experiment
         GameObject tasksObject = new GameObject("Comprehensive Tasks");
         tasksObject.transform.SetParent(this.transform);
 
-        // TEMP Tasks
-        //tasks = new NavigationTask[taskNames.Length * levelNames.Length];
-
         // Set up tasks
         int count = 0;
-        for (int i=0; i<levelNames.Length; ++i)
+        for (int j=0; j<tasks.Length; ++j)
         {
-            for (int j=0; j<taskNames.Length; ++j)
-            {
-                tasks[count] = GenerateTask<Task>(i, j, tasksObject);
-                count++;
-            }
+            tasks[count] = GenerateTask<Task>(0, j, tasksObject);
+            count++;
         }
     }
 
@@ -105,8 +81,8 @@ public class ComprehensiveExperiment : Experiment
         
         // General
         task.sceneName = sceneNames[0];
-        task.taskName = levelNames[levelIndex] + "-" + taskNames[taskIndex];
-        task.taskDescription = taskDescriptions[taskIndex];
+        // task.taskName = levelNames[levelIndex] + "-" + taskNames[taskIndex];
+        // task.taskDescription = taskDescriptions[taskIndex];
 
         // Detailed spawning info
         // robot

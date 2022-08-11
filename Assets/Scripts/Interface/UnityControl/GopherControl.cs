@@ -190,6 +190,8 @@ public class GopherControl : MonoBehaviour
         }
     }
 
+    // TODO Input key positions don't really match "up down left right forward backward"
+    // Something may be wrong with the coordinate in NewtonIK?
     public void OnArmRotate(InputAction.CallbackContext context)
     {
         switch (_mode)

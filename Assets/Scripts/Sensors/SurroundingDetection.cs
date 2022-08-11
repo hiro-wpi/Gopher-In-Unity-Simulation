@@ -66,9 +66,9 @@ public class SurroundingDetection : MonoBehaviour
             // Ray angle
             Vector3 rotation = rayRotations[i] * rayStartForward;
             // Check if hit colliders within distance
-            if (Physics.Raycast(rayStartPosition, rotation, 
-                                out raycastHits[i], rangeMax) && 
-                (raycastHits[i].distance >= rangeMin))
+            if (Physics.Raycast(rayStartPosition, rotation, out raycastHits[i], rangeMax) 
+                && (raycastHits[i].distance >= rangeMin)
+                && (!raycastHits[i].collider.isTrigger) )
             {
                 // Human detection seperated
                 if (seperateHumanDetection &&

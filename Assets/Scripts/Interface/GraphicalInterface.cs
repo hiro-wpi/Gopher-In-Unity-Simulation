@@ -636,6 +636,7 @@ public class GraphicalInterface : MonoBehaviour
             cameraSystem.EnableCamera(cameraIndex);
             mapCamera.enabled = false;
             cameraDisplay.GetComponent<RawImage>().texture = cameraRendertexture;
+            Time.timeScale = 1f;
         }
         else
         {
@@ -645,6 +646,7 @@ public class GraphicalInterface : MonoBehaviour
             cameraSystem.DisableCamera(cameraIndex);
             mapCamera.enabled = true;
             cameraDisplay.GetComponent<RawImage>().texture = mapRendertexture;
+            Time.timeScale = 0f;
         }
         displayMapInMain = !displayMapInMain;
     }

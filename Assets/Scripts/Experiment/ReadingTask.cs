@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,7 @@ using UnityEngine;
 public class ReadingTask : Task 
 {
     public string result;
+    private string userResult = "";
     private bool isCorrect = false;
     // Bar code scanner for some tasks
     private BarCodeScanner barCodeScanner;
@@ -25,8 +27,11 @@ public class ReadingTask : Task
         if (Input.GetKeyDown(KeyCode.N))
         {
             barCodeScanner.cam = gUI.GetCurrentMainCamera();
-            string res = barCodeScanner.Scan();
-            gUI.ShowPopUpMessage("Scan result: " + res, 1.0f);
+            string result = barCodeScanner.Scan(1/2f);
+            if (result != "N/A")
+                // remove guard pattern for shortening
+                result = result.Substring(1, result.Length-2);
+            gUI.ShowPopUpMessage("Scan result: " + result, 2.0f);
         }
     }
 
@@ -39,7 +44,8 @@ public class ReadingTask : Task
             return;
         
         // Check result
-        if (input == result)
+        userResult = input;
+        if (userResult == result)
             isCorrect = true;
         else
             gUI.ShowPopUpMessage("Wrong answer.");
@@ -56,9 +62,7 @@ public class ReadingTask : Task
     // Get current task status
     public override string GetTaskStatus()
     { 
-        string status = "Your input was: ";
-        if (userInputs != null)
-            status += userInputs[userInputIndex];
+        string status = "Your input was: \n" + userResult;
         return status;
     }
 

@@ -511,13 +511,13 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 315971913}
-  - {fileID: 1634814529}
-  - {fileID: 1876540828}
-  - {fileID: 2022596939}
-  - {fileID: 544914281}
-  - {fileID: 1393987426}
   - {fileID: 1034108449}
-  - {fileID: 1724416491}
+  - {fileID: 1393987426}
+  - {fileID: 1634814529}
+  - {fileID: 544914281}
+  - {fileID: 2022596939}
+  - {fileID: 1876540828}
+  - {fileID: 1633586862}
   m_Father: {fileID: 985979146}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -535,13 +535,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tasks:
   - {fileID: 315971914}
-  - {fileID: 0}
-  - {fileID: 1876540829}
-  - {fileID: 2022596940}
-  - {fileID: 544914282}
-  - {fileID: 1393987427}
   - {fileID: 1034108450}
-  - {fileID: 1724416492}
+  - {fileID: 1393987427}
+  - {fileID: 1634814530}
+  - {fileID: 544914282}
+  - {fileID: 2022596940}
+  - {fileID: 1876540829}
+  - {fileID: 1633586863}
   robotPrefabs:
   - {fileID: 6789262394414307240, guid: d389cac5588eb6f4da30dee89aa90d4d, type: 3}
   staticObjects:
@@ -908,7 +908,7 @@ GameObject:
   - component: {fileID: 315971913}
   - component: {fileID: 315971914}
   m_Layer: 0
-  m_Name: nav1
+  m_Name: 1.1 nav
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -941,8 +941,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: 
-  taskName: 
-  taskDescription: 
+  taskName: Navigation
+  taskDescription: Please navigate to room S103.
   gUI: {fileID: 0}
   cUI: {fileID: 0}
   robotSpawnArray: []
@@ -1962,7 +1962,7 @@ GameObject:
   - component: {fileID: 544914281}
   - component: {fileID: 544914282}
   m_Layer: 0
-  m_Name: push grasp
+  m_Name: 1.3 push
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1995,8 +1995,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: 
-  taskName: 
-  taskDescription: 
+  taskName: Pushing
+  taskDescription: Please push the medical cart to the Pharmacy.
   gUI: {fileID: 0}
   cUI: {fileID: 0}
   robotSpawnArray: []
@@ -2004,12 +2004,12 @@ MonoBehaviour:
   dynamicObjectSpawnArray: []
   taskObjectSpawnArray:
   - gameObject: {fileID: 4768030292868170154, guid: 74fb347f78948514ebdeedbb4de2e398, type: 3}
-    position: {x: -8.2, y: 0, z: 8.5}
+    position: {x: 11, y: 0, z: -7}
     rotation: {x: 0, y: 0, z: 0}
     trajectory: []
   goalObjectSpawnArray:
   - gameObject: {fileID: 2075622757900185994, guid: 845719786c1c896ac83165c019c2763e, type: 3}
-    position: {x: -2.5, y: 0, z: 1.5}
+    position: {x: -6.5, y: 0, z: 11}
     rotation: {x: 0, y: 0, z: 0}
     trajectory: []
 --- !u!1 &567145595
@@ -4074,7 +4074,7 @@ GameObject:
   - component: {fileID: 1034108449}
   - component: {fileID: 1034108450}
   m_Layer: 0
-  m_Name: read
+  m_Name: 2.1 read
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4092,7 +4092,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 183514186}
-  m_RootOrder: 6
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1034108450
 MonoBehaviour:
@@ -4107,8 +4107,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: 
-  taskName: 
-  taskDescription: 
+  taskName: Reading
+  taskDescription: Please read the vital value of Bed 2 in Room S103.
   gUI: {fileID: 0}
   cUI: {fileID: 0}
   robotSpawnArray: []
@@ -4657,8 +4657,8 @@ MonoBehaviour:
   cUI: {fileID: 0}
   robotSpawnArray:
   - gameObject: {fileID: 6789262394414307240, guid: d389cac5588eb6f4da30dee89aa90d4d, type: 3}
-    position: {x: 11, y: 0, z: 2}
-    rotation: {x: 0, y: -90, z: 0}
+    position: {x: 0.5, y: 0, z: 7.5}
+    rotation: {x: 0, y: 180, z: 0}
     trajectory: []
   staticObjectSpawnArray:
   - gameObject: {fileID: 676365421134526795, guid: 31907ed61a259744896ef68277a50822, type: 3}
@@ -5167,6 +5167,7 @@ MonoBehaviour:
   experiments:
   - {fileID: 183514187}
   freePlayTask: {fileID: 1161083585}
+  randomizeTasks: 0
   keepSameSceneAndRobot: 1
   experimentMenus: {fileID: 1008630542}
   dataRecorder: {fileID: 951117111}
@@ -5206,7 +5207,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 320, y: 180}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1310218119
 MonoBehaviour:
@@ -5466,7 +5467,7 @@ GameObject:
   - component: {fileID: 1393987426}
   - component: {fileID: 1393987427}
   m_Layer: 0
-  m_Name: carry grasp
+  m_Name: 1.2 carry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5484,7 +5485,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 183514186}
-  m_RootOrder: 5
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1393987427
 MonoBehaviour:
@@ -5499,8 +5500,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: 
-  taskName: 
-  taskDescription: 
+  taskName: Carrying
+  taskDescription: Please carry the IV pole to Room P104.
   gUI: {fileID: 0}
   cUI: {fileID: 0}
   robotSpawnArray: []
@@ -5508,12 +5509,12 @@ MonoBehaviour:
   dynamicObjectSpawnArray: []
   taskObjectSpawnArray:
   - gameObject: {fileID: 1173668152048465497, guid: 6b4c4cc8759d2da4b9d48596e0176b94, type: 3}
-    position: {x: -4, y: 0, z: 0}
+    position: {x: 6, y: 0, z: 10}
     rotation: {x: 0, y: 0, z: 0}
     trajectory: []
   goalObjectSpawnArray:
   - gameObject: {fileID: 2075622757900185994, guid: 845719786c1c896ac83165c019c2763e, type: 3}
-    position: {x: -10, y: 0, z: -2}
+    position: {x: 11, y: 0, z: -7}
     rotation: {x: 0, y: 0, z: 0}
     trajectory: []
 --- !u!1 &1400726315
@@ -7303,6 +7304,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1627878742}
   m_CullTransparentMesh: 1
+--- !u!1 &1633586861
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1633586862}
+  - component: {fileID: 1633586863}
+  m_Layer: 0
+  m_Name: 2.4 paint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1633586862
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1633586861}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 183514186}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1633586863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1633586861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 596fa808fbe0c784b9c5c9c0fa15ed80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneName: 
+  taskName: Disinfection
+  taskDescription: Please disinfect the table.
+  gUI: {fileID: 0}
+  cUI: {fileID: 0}
+  robotSpawnArray: []
+  staticObjectSpawnArray: []
+  dynamicObjectSpawnArray: []
+  taskObjectSpawnArray:
+  - gameObject: {fileID: 990171063125143859, guid: 98530f57484453f40b00a77ab2dc7c49, type: 3}
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    trajectory: []
+  goalObjectSpawnArray:
+  - gameObject: {fileID: 5014360984962098047, guid: 4d8a0cc0771639740a406f3844cc4906, type: 3}
+    position: {x: -10, y: 0, z: -6.5}
+    rotation: {x: 0, y: 0, z: 0}
+    trajectory: []
 --- !u!1 &1634814528
 GameObject:
   m_ObjectHideFlags: 0
@@ -7314,7 +7376,7 @@ GameObject:
   - component: {fileID: 1634814529}
   - component: {fileID: 1634814530}
   m_Layer: 0
-  m_Name: scan grasp
+  m_Name: 2.2 scan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7332,7 +7394,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 183514186}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1634814530
 MonoBehaviour:
@@ -7347,24 +7409,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: 
-  taskName: 
-  taskDescription: 
+  taskName: Scanning
+  taskDescription: Please scan the medicine on the cart, and enter the bar code number."
   gUI: {fileID: 0}
   cUI: {fileID: 0}
   robotSpawnArray: []
   staticObjectSpawnArray: []
   dynamicObjectSpawnArray: []
   taskObjectSpawnArray:
-  - gameObject: {fileID: 8495972465087636767, guid: 84fa1bee68d88fd4f8f3da43a25b6caf, type: 3}
-    position: {x: -8.95, y: 1.2, z: 13.5}
+  - gameObject: {fileID: 5220166882937274750, guid: 374d75476b5ef51459c2f52d04dcad57, type: 3}
+    position: {x: 12.4, y: 0.8, z: -4.7}
     rotation: {x: 0, y: 90, z: 0}
     trajectory: []
-  goalObjectSpawnArray:
-  - gameObject: {fileID: 2416330375898432865, guid: e9d4276034b135f46981b1f974cbba19, type: 3}
-    position: {x: -5.7, y: 0.9, z: 10.5}
-    rotation: {x: 0, y: 0, z: 0}
-    trajectory: []
-  result: 
+  goalObjectSpawnArray: []
+  result: 104530
 --- !u!1 &1656331356
 GameObject:
   m_ObjectHideFlags: 0
@@ -7787,71 +7845,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1693095172}
   m_CullTransparentMesh: 1
---- !u!1 &1724416490
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1724416491}
-  - component: {fileID: 1724416492}
-  m_Layer: 0
-  m_Name: nav3
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1724416491
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1724416490}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 183514186}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1724416492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1724416490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 377f58e1dce0ab6438426cfee7160901, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneName: 
-  taskName: 
-  taskDescription: 
-  gUI: {fileID: 0}
-  cUI: {fileID: 0}
-  robotSpawnArray: []
-  staticObjectSpawnArray: []
-  dynamicObjectSpawnArray: []
-  taskObjectSpawnArray:
-  - gameObject: {fileID: 4768030292868170154, guid: 74fb347f78948514ebdeedbb4de2e398, type: 3}
-    position: {x: 3, y: 0, z: 7.5}
-    rotation: {x: 0, y: 160, z: 0}
-    trajectory: []
-  - gameObject: {fileID: 4768030292868170154, guid: 74fb347f78948514ebdeedbb4de2e398, type: 3}
-    position: {x: 3, y: 0, z: -1.6}
-    rotation: {x: 0, y: 160, z: 0}
-    trajectory: []
-  goalObjectSpawnArray:
-  - gameObject: {fileID: 2075622757900185994, guid: 845719786c1c896ac83165c019c2763e, type: 3}
-    position: {x: 11, y: 0, z: 2}
-    rotation: {x: 0, y: 0, z: 0}
-    trajectory: []
 --- !u!1 &1759228906
 GameObject:
   m_ObjectHideFlags: 0
@@ -8163,7 +8156,7 @@ GameObject:
   - component: {fileID: 1876540828}
   - component: {fileID: 1876540829}
   m_Layer: 0
-  m_Name: nav2
+  m_Name: 1.4 nav obs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8181,7 +8174,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 183514186}
-  m_RootOrder: 2
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1876540829
 MonoBehaviour:
@@ -8196,8 +8189,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: 
-  taskName: 
-  taskDescription: 
+  taskName: NavObs
+  taskDescription: Please navigate to Room P101.
   gUI: {fileID: 0}
   cUI: {fileID: 0}
   robotSpawnArray: []
@@ -8205,12 +8198,12 @@ MonoBehaviour:
   dynamicObjectSpawnArray: []
   taskObjectSpawnArray:
   - gameObject: {fileID: 1173668152048465497, guid: 6b4c4cc8759d2da4b9d48596e0176b94, type: 3}
-    position: {x: -2, y: 0, z: 7.8}
+    position: {x: -7.5, y: 0, z: -5}
     rotation: {x: 0, y: 0, z: 0}
     trajectory: []
   goalObjectSpawnArray:
   - gameObject: {fileID: 2075622757900185994, guid: 845719786c1c896ac83165c019c2763e, type: 3}
-    position: {x: -7, y: 0, z: 10}
+    position: {x: -10, y: 0, z: -5.8}
     rotation: {x: 0, y: 0, z: 0}
     trajectory: []
 --- !u!1 &1877623327
@@ -8633,7 +8626,7 @@ GameObject:
   - component: {fileID: 2022596939}
   - component: {fileID: 2022596940}
   m_Layer: 0
-  m_Name: color grasp
+  m_Name: 2.3 grasp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8651,7 +8644,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 183514186}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2022596940
 MonoBehaviour:
@@ -8666,8 +8659,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: 
-  taskName: 
-  taskDescription: 
+  taskName: Grasping
+  taskDescription: Please pick up the medicine with blue label in the medicine cabinet,
+    and put it on the tray on the table.
   gUI: {fileID: 0}
   cUI: {fileID: 0}
   robotSpawnArray: []
@@ -8675,12 +8669,12 @@ MonoBehaviour:
   dynamicObjectSpawnArray: []
   taskObjectSpawnArray:
   - gameObject: {fileID: 8495972465087636767, guid: 84fa1bee68d88fd4f8f3da43a25b6caf, type: 3}
-    position: {x: -8.95, y: 1.2, z: 13.5}
+    position: {x: -8.9, y: 1.2, z: 13.5}
     rotation: {x: 0, y: 90, z: 0}
     trajectory: []
   goalObjectSpawnArray:
   - gameObject: {fileID: 2416330375898432865, guid: e9d4276034b135f46981b1f974cbba19, type: 3}
-    position: {x: -5.7, y: 0.9, z: 10.5}
+    position: {x: -5.7, y: 0.9, z: 11}
     rotation: {x: 0, y: 0, z: 0}
     trajectory: []
 --- !u!1 &2044484964

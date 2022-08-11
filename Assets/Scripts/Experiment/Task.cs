@@ -149,6 +149,11 @@ public abstract class Task : MonoBehaviour
         taskObjects = SpawnGameObjectArray(taskObjectSpawnArray);
         goalObjects = SpawnGameObjectArray(goalObjectSpawnArray);
 
+        // task objects
+        for (int i = 0; i < taskObjects.Length; ++i)
+        {
+            HighlightUtils.HighlightObject(taskObjects[i], Color.cyan);
+        }
         // goals
         goals = new Goal[goalObjects.Length];
         for (int i = 0; i < goalObjects.Length; ++i)
@@ -188,7 +193,7 @@ public abstract class Task : MonoBehaviour
         if (deDynamic)
             DestoryGameObjects(dynamicObjects, delayTime);
     }
-    private void DestoryGameObjects(GameObject[] gameObjects, float delayTime)
+    protected void DestoryGameObjects(GameObject[] gameObjects, float delayTime)
     {
         if (gameObjects == null)
             return;

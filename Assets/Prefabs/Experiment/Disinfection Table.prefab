@@ -9,8 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5014360984962098046}
+  - component: {fileID: 6796653993658238536}
+  - component: {fileID: 64136560982544952}
   m_Layer: 0
-  m_Name: DisinfectionTable
+  m_Name: Disinfection Table
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,6 +34,38 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &6796653993658238536
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5014360984962098047}
+  serializedVersion: 2
+  m_Mass: 5
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!208 &64136560982544952
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5014360984962098047}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.3, y: 0.4, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0.3, y: 0.4, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &5014360986355067470
 GameObject:
   m_ObjectHideFlags: 0
@@ -46,7 +80,7 @@ GameObject:
   - component: {fileID: 5014360986355067467}
   - component: {fileID: 5707742355891685180}
   m_Layer: 0
-  m_Name: Plane
+  m_Name: Table
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -151,9 +185,41 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5014360984962098046}
     m_Modifications:
+    - target: {fileID: 918069956331607250, guid: 4db9074697b21c44a877098f86412333, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1180435872687764509, guid: 4db9074697b21c44a877098f86412333, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2593785472693747202, guid: 4db9074697b21c44a877098f86412333, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3370737491001024200, guid: 4db9074697b21c44a877098f86412333, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3529256393169534270, guid: 4db9074697b21c44a877098f86412333, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5781541685743310971, guid: 4db9074697b21c44a877098f86412333, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6449131171921294625, guid: 4db9074697b21c44a877098f86412333, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6700582574307441836, guid: 4db9074697b21c44a877098f86412333, type: 3}
       propertyPath: m_Name
       value: Table Regular
+      objectReference: {fileID: 0}
+    - target: {fileID: 6700582574307441836, guid: 4db9074697b21c44a877098f86412333, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6700582574307441838, guid: 4db9074697b21c44a877098f86412333, type: 3}
       propertyPath: m_RootOrder
@@ -199,7 +265,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8702030239270853496, guid: 4db9074697b21c44a877098f86412333, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9007613294810960643, guid: 4db9074697b21c44a877098f86412333, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 6700582574307441837, guid: 4db9074697b21c44a877098f86412333, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 4db9074697b21c44a877098f86412333, type: 3}
 --- !u!4 &1831793957560196965 stripped
 Transform:
