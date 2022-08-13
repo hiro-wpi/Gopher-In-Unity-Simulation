@@ -5,7 +5,6 @@ using UnityEngine;
 public abstract class Experiment : MonoBehaviour 
 {
     // General
-    // temp // protected Task[] tasks;
     public Task[] tasks;
     protected bool useSameScene;
     protected string[] sceneNames;

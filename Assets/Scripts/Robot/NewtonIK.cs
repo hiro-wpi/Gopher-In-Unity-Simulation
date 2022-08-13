@@ -87,23 +87,25 @@ public class NewtonIK : MonoBehaviour
 
     public (bool, float[]) SolveIK(float[] jointAngles, Vector3 targetPosition, Quaternion targetRotation)
     {
-        float[] endEffectorAngles = jointAngles.Clone() as float[];
+        float[] newJointAngles = jointAngles.Clone() as float[];
 
+        // TODO ??
         targetRotation.x *= -1;
         targetRotation.y *= -1;
         targetRotation.z *= -1;
 
+        // Containers
         Vector3 endEffectorPosition;
         Quaternion endEffectorRotation;
 
+        // Solve IK iteratively
         int EPOCHS = 30;
         for (int e = 0; e < EPOCHS; e++)
         {
             // calculate error between our current end effector position and the target position
-            kinematicSolver.UpdateAngles(endEffectorAngles);
+            kinematicSolver.UpdateAngles(newJointAngles);
             kinematicSolver.CalculateAllT();
             kinematicSolver.UpdateAllPose();
-
             (endEffectorPosition, endEffectorRotation) = kinematicSolver.GetPose(kinematicSolver.numJoint);
 
             Vector3 positionError = endEffectorPosition - targetPosition;
@@ -115,7 +117,7 @@ public class NewtonIK : MonoBehaviour
             Vector3 rotationAxis;
             float rotationAngle;
             rotationError.ToAngleAxis(out rotationAngle, out rotationAxis);
-
+            
             // Function returns angle in degrees, so convert to radians
             rotationAngle = Mathf.Deg2Rad * rotationAngle;
             // Now scale the rotation axis by the angle
@@ -123,22 +125,16 @@ public class NewtonIK : MonoBehaviour
 
             // decay lambda over time
             float lambda = (1 - e / EPOCHS) * 0.5f;
-
             rotationAxis *= lambda;
             positionError *= lambda;
 
             var errorAngles = CalculateError(positionError, rotationAxis);
-
-            // TODO: This is bad, change to smarter way of getting indices
-            for (int i = 0; i < endEffectorAngles.Length; i++)
-            {
-                // TODO: this crashed unity lol
-                endEffectorAngles[i] += errorAngles[i];
-            }
+            for (int i = 0; i < newJointAngles.Length; i++)
+                newJointAngles[i] += errorAngles[i];
         }
 
         // check convergence
-        kinematicSolver.UpdateAngles(endEffectorAngles);
+        kinematicSolver.UpdateAngles(newJointAngles);
         kinematicSolver.CalculateAllT();
         kinematicSolver.UpdateAllPose();
 
@@ -146,15 +142,15 @@ public class NewtonIK : MonoBehaviour
         bool converged = (endEffectorPosition - targetPosition).magnitude < 0.1f;
 
         // Set the new joint angles
-        return (converged, endEffectorAngles);
+        return (converged, newJointAngles);
     }
 
     public float[] SolveVelocityIK(float[] jointAngles, Vector3 positionError, Quaternion rotationError)
     {
-        float[] endEffectorAngles = jointAngles.Clone() as float[];
+        float[] newJointAngles = jointAngles.Clone() as float[];
 
         // calculate error between our current end effector position and the target position
-        kinematicSolver.UpdateAngles(endEffectorAngles);
+        kinematicSolver.UpdateAngles(newJointAngles);
         kinematicSolver.CalculateAllT();
         kinematicSolver.UpdateAllPose();
 
@@ -177,12 +173,12 @@ public class NewtonIK : MonoBehaviour
         var errorAngles = CalculateError(positionError, rotationAxis);
 
         // TODO: This is bad, change to smarter way of getting indices
-        for (int i = 0; i < endEffectorAngles.Length; i++)
+        for (int i = 0; i < newJointAngles.Length; i++)
         {
             // TODO: this crashed unity lol
-            endEffectorAngles[i] += errorAngles[i];
+            newJointAngles[i] += errorAngles[i];
         }
 
-        return endEffectorAngles;
+        return newJointAngles;
     }
 }

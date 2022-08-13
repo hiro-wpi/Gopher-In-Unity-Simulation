@@ -58,7 +58,7 @@ public class NavigationExperiment : Experiment
                                 {new Vector3(-4.0f, 0f,  7.5f), new Vector3(  0.5f, 0f,  6.5f), 
                                  new Vector3( 0.0f, 0f, -1.5f), new Vector3( -2.5f, 0f, -1.5f)}
                             };      
-       // Goals
+        // Goals
         goalSpawnPositions = new Vector3[]
                             {
                                 new Vector3(-7.0f,  0.0f, -3.0f), 

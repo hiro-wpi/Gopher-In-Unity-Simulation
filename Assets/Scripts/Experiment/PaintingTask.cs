@@ -81,6 +81,9 @@ public class PaintingTask : Task
         paintables = new Paintable[goalObjects.Length];
         for (int i = 0; i < goalObjects.Length; ++i)
             paintables[i] = goalObjects[i].GetComponentInChildren<Paintable>();
+        // highlight
+        for (int i = 0; i < goalObjects.Length; ++i)
+            HighlightUtils.HighlightObject(goalObjects[i], Color.cyan);
 
         return (staticObjects, taskObjects, goalObjects);
     }

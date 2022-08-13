@@ -28,10 +28,21 @@ public static class HighlightUtils
             outline.enabled = false;
     }
 
+    // Resume a previously disabled highlight
     public static void ResumeObjectHighlight(GameObject gameObject)
     {
         Outline outline = gameObject.GetComponent<Outline>();
         if (outline != null)
             outline.enabled = true;
+    }
+
+    // Get the highlighted color. Return Color.clear if not highlighted
+    public static Color GetHighlightColor(GameObject gameObject)
+    {
+        Outline outline = gameObject.GetComponent<Outline>();
+        if (outline == null)
+            return (Color.black);
+        else
+            return (outline.OutlineColor);
     }
 }

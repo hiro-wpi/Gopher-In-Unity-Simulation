@@ -158,22 +158,22 @@ public class KinematicSolver : MonoBehaviour
     // Need conversion utilities between FLU (forward, left, up) and 
     // Unity's RUF (right, up, forward)
 
-    public Vector3 ToRUF(Vector3 v)
+    public static Vector3 ToRUF(Vector3 v)
     {
         return new Vector3(v.y, -v.z, v.x);
     }
 
-    public Vector3 FromRUF(Vector3 v)
+    public static Vector3 FromRUF(Vector3 v)
     {
         return new Vector3(v.z, v.x, -v.y);
     }
 
-    public Quaternion ToRUF(Quaternion q)
+    public static Quaternion ToRUF(Quaternion q)
     {
         return new Quaternion(q.y, -q.z, q.x, q.w);
     }
 
-    public Quaternion FromRUF(Quaternion q)
+    public static Quaternion FromRUF(Quaternion q)
     {
         return new Quaternion(-q.z, -q.x, q.y, q.w);
     }

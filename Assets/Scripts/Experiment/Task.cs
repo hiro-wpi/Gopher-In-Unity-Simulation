@@ -34,6 +34,8 @@ public abstract class Task : MonoBehaviour
     protected GameObject[] dynamicObjects;
     protected GameObject[] taskObjects;
     protected GameObject[] goalObjects;
+    protected bool highlightTaskObjects = true;
+    protected bool highlightGoalObjects = true;
     // current controlled robot
     protected GameObject robot; 
     protected Vector3 robotStartPosition;
@@ -150,14 +152,18 @@ public abstract class Task : MonoBehaviour
         goalObjects = SpawnGameObjectArray(goalObjectSpawnArray);
 
         // task objects
-        for (int i = 0; i < taskObjects.Length; ++i)
-        {
-            HighlightUtils.HighlightObject(taskObjects[i], Color.cyan);
-        }
+        if (highlightTaskObjects)
+            for (int i = 0; i < taskObjects.Length; ++i)
+                HighlightUtils.HighlightObject(taskObjects[i], Color.cyan);
+        
         // goals
         goals = new Goal[goalObjects.Length];
         for (int i = 0; i < goalObjects.Length; ++i)
             goals[i] = goalObjects[i].GetComponent<Goal>();
+        // goals are hightlighted by default
+        if (!highlightGoalObjects)
+            foreach(Goal goal in goals)
+                goal.DisableGoalVisualEffect();
 
         return (staticObjects, taskObjects, goalObjects);
     }

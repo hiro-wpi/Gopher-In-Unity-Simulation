@@ -9,6 +9,9 @@ using UnityEngine;
 /// </summary>
 public class GraspingExperiment : Experiment 
 {
+    public GameObject[] pickAndPlaceTaskObjects;
+    private Vector3[] pickAndPlaceSpawnPositions;
+
     // Define task details
     void Start()
     {
@@ -16,28 +19,28 @@ public class GraspingExperiment : Experiment
         useSameScene = true;  // use the same scene for all tasks
         sceneNames = new string[] {"Hospital"};
         levelNames = new string[] {"Level1", "Level2", "Level3"};
-        taskNames = new string[] {"ScanAndGrasp", "FindAndGrasp", "Carry", "Push"};
-        taskDescriptions = new string[] {"Please scan and find the object with bar code 0104530 in Room S103, " + 
-                                            "and put it on the medical tray in Room S103.", 
-                                         "Please find the object with blue label in the Pharmacy, " +
+        taskNames = new string[] {"FindAndGrasp", "Carrying", "Pushing", "PickAndPlace"};
+        taskDescriptions = new string[] {"Please find the object with blue label in the Pharmacy, " +
                                             "and put it on the medical tray in the Pharmacy.", 
                                          "Please carry the IV pole to the Treatment Room 1.", 
-                                         "Please push the medical cart to the Office."};
+                                         "Please push the medical cart to the Office.",
+                                         "Please pick up all medicines on the cart in Room S103, " + 
+                                            "and put them on the medical tray."};
         
         // Robot spawn pose and goal
         robotSpawnPositions = new Vector3[]
                             {
-                                new Vector3( 7.0f, 0.0f, 10.5f),
                                 new Vector3(-7.0f, 0.0f, 10.5f),
                                 new Vector3( 7.5f, 0.0f, -1.0f),
-                                new Vector3(-7.0f, 0.0f, -1.0f)
+                                new Vector3(-7.0f, 0.0f, -1.0f),
+                                new Vector3( 7.0f, 0.0f, 10.5f)
                             };
         robotSpawnRotations = new Vector3[]
                             {
                                 new Vector3(0f,   0f, 0f), 
-                                new Vector3(0f,   0f, 0f), 
                                 new Vector3(0f, -90f, 0f), 
-                                new Vector3(0f,  90f, 0f)
+                                new Vector3(0f,  90f, 0f),
+                                new Vector3(0f,   0f, 0f)
                             };
         // Human spawn position and trajectories
         dynamicObjectSpawnPositions = new Vector3[]
@@ -62,26 +65,30 @@ public class GraspingExperiment : Experiment
         // Goals
         goalSpawnPositions = new Vector3[]
                             {
-                                new Vector3(10.3f,  0.8f, 10.5f), 
                                 new Vector3(-5.8f,  0.9f, 11.2f), 
                                 new Vector3(-3.0f,  0.0f,  1.0f),
-                                new Vector3( 0.0f,  0.0f, 11.0f)
+                                new Vector3( 0.0f,  0.0f, 11.0f),
+                                new Vector3( 6.8f,  0.8f, 13.9f)
                             };
         
         // Task
         taskObjectSpawnPositions = new Vector3[]
                             {
-                                new Vector3(6.85f, 0.8f, 13.7f),
                                 new Vector3(-8.9f, 1.2f, 13.5f),
                                 new Vector3( 6.5f, 0.0f, -1.6f),
                                 new Vector3(-6.5f, 0.0f, -1.0f)
                             };
         taskObjectSpawnRotations = new Vector3[]
                             {
-                                new Vector3(0f, -90f, 0f), 
-                                new Vector3(0f,   0f, 0f), 
-                                new Vector3(0f,   0f, 0f), 
-                                new Vector3(0f,  90f, 0f)
+                                new Vector3(0f,  0f, 0f), 
+                                new Vector3(0f,  0f, 0f), 
+                                new Vector3(0f, 90f, 0f)
+                            };
+        pickAndPlaceSpawnPositions = new Vector3[]
+                            {
+                                new Vector3(6.6f, 0.8f, 13.7f),
+                                new Vector3(6.8f, 0.8f, 13.7f),
+                                new Vector3(6.8f, 0.8f, 13.6f),
                             };
 
         // Create a gameobject container
@@ -147,12 +154,29 @@ public class GraspingExperiment : Experiment
                                                       Utils.GetRow(dynamicObjectTrajectories, i));
             }
         }
+
         // task object
-        Task.SpawnInfo[] taskObjectSpawnArray = new Task.SpawnInfo[1];
-        taskObjectSpawnArray[0] = Task.ToSpawnInfo(taskObjects[taskIndex], 
-                                                   taskObjectSpawnPositions[taskIndex], 
-                                                   taskObjectSpawnRotations[taskIndex], 
-                                                   null);
+        Task.SpawnInfo[] taskObjectSpawnArray;
+        if (taskNames[taskIndex] != "PickAndPlace")
+        {
+            taskObjectSpawnArray = new Task.SpawnInfo[1];
+            taskObjectSpawnArray[0] = Task.ToSpawnInfo(taskObjects[taskIndex], 
+                                                       taskObjectSpawnPositions[taskIndex], 
+                                                       taskObjectSpawnRotations[taskIndex], 
+                                                       null);
+        }
+        else
+        {
+            taskObjectSpawnArray = new Task.SpawnInfo[pickAndPlaceTaskObjects.Length];
+            for (int i = 0; i < taskObjectSpawnArray.Length; ++i)
+            {
+                taskObjectSpawnArray[i] = Task.ToSpawnInfo(pickAndPlaceTaskObjects[i], 
+                                                           pickAndPlaceSpawnPositions[i], 
+                                                           new Vector3(), 
+                                                           null);
+            }
+        }
+        
         // goals
         Vector3 goal = goalSpawnPositions[taskIndex];
         Task.SpawnInfo[] goalSpawnArray = new Task.SpawnInfo[1];

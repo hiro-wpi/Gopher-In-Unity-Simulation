@@ -11,6 +11,7 @@ public class AutoGrasping : MonoBehaviour
 {
     public ArmControlManager armControlManager;
     private GameObject targetObject;
+    private Color prevColor;
 
     void Start()
     {
@@ -27,29 +28,44 @@ public class AutoGrasping : MonoBehaviour
         {
             // If a new target is found but still in the old target graspable zone
             if (targetObject != null && targetObject != other.attachedRigidbody.gameObject)
-                HighlightUtils.UnhighlightObject(targetObject);
+                CancelCurrentTargetObject();
             
             // Graspbable object sturcture
             // Target object with Rigidbody -> Model with collider
             //                       |->  gameObject with Graspable related scripts
             targetObject = other.attachedRigidbody.gameObject;
-            armControlManager.target = targetObject.GetComponentInChildren<Graspable>();
-
-            HighlightUtils.HighlightObject(targetObject);
+            SelectCurrentObject(targetObject);
         }
     }
-    // TODO
-    // When released, the previously highlighted (before grasping) objects will be 
-    // unhighligted. need to find a way to solve this.
+    
     private void OnTriggerExit(Collider other) 
     {
         if (other.attachedRigidbody != null && 
             other.attachedRigidbody.gameObject.tag == "GraspableObject" &&
             other.attachedRigidbody.gameObject == targetObject)
         {
-            HighlightUtils.UnhighlightObject(targetObject);
-            targetObject = null;
-            armControlManager.target = null;
+            CancelCurrentTargetObject();
         }
+    }
+
+    private void SelectCurrentObject(GameObject targetObject)
+    {
+        // Highlight
+        prevColor = HighlightUtils.GetHighlightColor(targetObject);
+        HighlightUtils.HighlightObject(targetObject);
+        // Select
+        armControlManager.target = targetObject.GetComponentInChildren<AutoGraspable>();
+    }
+
+    private void CancelCurrentTargetObject()
+    {
+        HighlightUtils.UnhighlightObject(targetObject);
+        if (prevColor != Color.clear)
+        {
+            HighlightUtils.HighlightObject(targetObject, prevColor);
+            prevColor = Color.clear;
+        }
+        targetObject = null;
+        armControlManager.target = null;
     }
 }

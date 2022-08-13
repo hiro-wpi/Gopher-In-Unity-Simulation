@@ -45,7 +45,7 @@ public class ArmControlManager : MonoBehaviour
     public Vector3 deltaRotation = Vector3.zero;
     // Automatic grasping with IK solver
     private Coroutine currentCoroutine;
-    public Graspable target;
+    public AutoGraspable target;
 
     void Start()
     {
@@ -159,7 +159,7 @@ public class ArmControlManager : MonoBehaviour
 
 
     // Automatic grasping
-    public void MoveToTarget(Graspable target = null, float automationSpeed = 0.05f,
+    public void MoveToTarget(AutoGraspable target = null, float automationSpeed = 0.05f,
                              bool closeGripper = true, 
                              bool backToHoverPoint = true)
     {
@@ -181,20 +181,39 @@ public class ArmControlManager : MonoBehaviour
         currentCoroutine = StartCoroutine(
             MoveToTargetCoroutine(automationSpeed, closeGripper, backToHoverPoint));
     }
-
     private IEnumerator MoveToTargetCoroutine(float automationSpeed = 0.05f,
                                               bool closeGripper = true, 
                                               bool backToHoverPoint = true)
     {
         // Lock manual control
         mode = Mode.Target;
+        // containers
+        Transform targetHoverPoint;
+        Transform targetGrabPoint;
         Vector3 targetPosition;
         Quaternion targetRotation;
         float completionTime;
 
+        // Get target
+        // TODO this weird part needs to be modified with NewtonIK in the future...
+        // The coordinate is off
+        jointAngles = jointController.GetCurrentJointTargets();
+        KinematicSolver kinematicSolver = newtonIK.kinematicSolver;
+        kinematicSolver.UpdateAngles(jointAngles);
+        kinematicSolver.CalculateAllT();
+        kinematicSolver.UpdateAllPose();
+        var (endEffectorPosition, endEffectorRotation) = kinematicSolver.GetPose(kinematicSolver.numJoint);
+        (targetHoverPoint, targetGrabPoint) = 
+            target.GetHoverAndGrapPoint(endEffectorPosition, endEffectorRotation);
+        /*
+        (targetHoverPoint, targetGrabPoint) = 
+            target.GetHoverAndGrapPoint(grasping.endEffector.transform.position,
+                                        grasping.endEffector.transform.rotation);
+        */
+
         // 1, Move to hover point
-        targetPosition = target.hoverPoint.position;
-        targetRotation = target.hoverPoint.rotation;
+        targetPosition = targetHoverPoint.position;
+        targetRotation = targetHoverPoint.rotation;
 
         jointAngles = jointController.GetCurrentJointTargets();
         var (converged, targetJointAngles) =
@@ -212,8 +231,8 @@ public class ArmControlManager : MonoBehaviour
         yield return LerpJoints(jointAngles, targetJointAngles, completionTime);
 
         // 2, Move to graspable target
-        targetPosition = target.grabPoint.position;
-        targetRotation = target.grabPoint.rotation;
+        targetPosition = targetGrabPoint.position;
+        targetRotation = targetGrabPoint.rotation;
 
         // Assume we got to the target
         jointAngles = targetJointAngles;
@@ -239,8 +258,8 @@ public class ArmControlManager : MonoBehaviour
         // 4, Move back to hover point
         if (closeGripper && backToHoverPoint)
         {
-            targetPosition = target.hoverPoint.position;
-            targetRotation = target.hoverPoint.rotation;
+            targetPosition = targetHoverPoint.position;
+            targetRotation = targetHoverPoint.rotation;
 
             // Assume we got to the target
             jointAngles = targetJointAngles;
