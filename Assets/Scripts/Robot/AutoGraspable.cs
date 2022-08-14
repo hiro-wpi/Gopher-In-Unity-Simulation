@@ -37,6 +37,9 @@ public class AutoGraspable : MonoBehaviour
         PlaneForwardZ
     }
 
+    void Start()
+    {}
+
     
     // Core
     // Get hover point for grasping based on Hover Direction and Orientation

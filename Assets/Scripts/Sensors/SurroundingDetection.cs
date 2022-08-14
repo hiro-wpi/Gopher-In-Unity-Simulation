@@ -33,7 +33,6 @@ public class SurroundingDetection : MonoBehaviour
     protected void Start()
     {
         // Containers
-        raycastHits = new RaycastHit[samples];
         rayRotations = new Quaternion[samples];
         directions = new float[samples];
         obstacleRanges = new float[samples];
@@ -66,6 +65,7 @@ public class SurroundingDetection : MonoBehaviour
             // Ray angle
             Vector3 rotation = rayRotations[i] * rayStartForward;
             // Check if hit colliders within distance
+            raycastHits = new RaycastHit[samples];
             if (Physics.Raycast(rayStartPosition, rotation, out raycastHits[i], rangeMax) 
                 && (raycastHits[i].distance >= rangeMin)
                 && (!raycastHits[i].collider.isTrigger) )

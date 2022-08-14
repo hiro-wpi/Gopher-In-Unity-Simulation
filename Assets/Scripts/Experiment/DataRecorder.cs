@@ -220,9 +220,9 @@ public class DataRecorder : MonoBehaviour
         robotValueToRecord[38] = ToFLUEuler(stateReader.jointPositions[10]);
         robotValueToRecord[39] = stateReader.jointPositions[11]; // gripper
         // left end effector
-        Vector3 leftPosition = Utils.ToFlu(stateReader.objectPositions[0]);
+        Vector3 leftPosition = Utils.ToFLU(stateReader.objectPositions[0]);
         Vector3 leftRotation = Mathf.Deg2Rad * 
-                               Utils.ToFlu(Quaternion.Euler(
+                               Utils.ToFLU(Quaternion.Euler(
                                            stateReader.objectRotations[0])).eulerAngles;
         robotValueToRecord[40] = leftPosition.x;
         robotValueToRecord[41] = leftPosition.y;
@@ -241,9 +241,9 @@ public class DataRecorder : MonoBehaviour
         robotValueToRecord[52] = ToFLUEuler(stateReader.jointPositions[19]);
         robotValueToRecord[53] = stateReader.jointPositions[20]; // gripper
         // right end effector
-        Vector3 rightPosition = Utils.ToFlu(stateReader.objectPositions[1]);
+        Vector3 rightPosition = Utils.ToFLU(stateReader.objectPositions[1]);
         Vector3 rightRotation = Mathf.Deg2Rad * 
-                                Utils.ToFlu(Quaternion.Euler(
+                                Utils.ToFLU(Quaternion.Euler(
                                             stateReader.objectRotations[1])).eulerAngles;
         robotValueToRecord[54] = rightPosition.x;
         robotValueToRecord[55] = rightPosition.y;

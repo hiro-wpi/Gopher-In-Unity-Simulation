@@ -195,21 +195,9 @@ public class ArmControlManager : MonoBehaviour
         float completionTime;
 
         // Get target
-        // TODO this weird part needs to be modified with NewtonIK in the future...
-        // The coordinate is off
-        jointAngles = jointController.GetCurrentJointTargets();
-        KinematicSolver kinematicSolver = newtonIK.kinematicSolver;
-        kinematicSolver.UpdateAngles(jointAngles);
-        kinematicSolver.CalculateAllT();
-        kinematicSolver.UpdateAllPose();
-        var (endEffectorPosition, endEffectorRotation) = kinematicSolver.GetPose(kinematicSolver.numJoint);
-        (targetHoverPoint, targetGrabPoint) = 
-            target.GetHoverAndGrapPoint(endEffectorPosition, endEffectorRotation);
-        /*
         (targetHoverPoint, targetGrabPoint) = 
             target.GetHoverAndGrapPoint(grasping.endEffector.transform.position,
                                         grasping.endEffector.transform.rotation);
-        */
 
         // 1, Move to hover point
         targetPosition = targetHoverPoint.position;

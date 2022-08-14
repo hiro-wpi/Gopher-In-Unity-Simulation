@@ -37,20 +37,20 @@ public static class Utils
 
     // Transform
     // from RUF (Unity) to FLU (regular)
-    public static Vector3 ToFlu(Vector3 v)
+    public static Vector3 ToFLU(Vector3 v)
     {
         return new Vector3(v.z, -v.x, v.y);
     }
-    public static Quaternion ToFlu(Quaternion q)
+    public static Quaternion ToFLU(Quaternion q)
     {
         return new Quaternion(q.z, -q.x, q.y, -q.w);
     }
     // from FLU (regular) to RUF (Unity)
-    public static Vector3 FromFlu(Vector3 v)
+    public static Vector3 FromFLU(Vector3 v)
     {
         return new Vector3(-v.y, v.z, v.x);
     }
-    public static Quaternion FromFlu(Quaternion q)
+    public static Quaternion FromFLU(Quaternion q)
     {
         return new Quaternion(-q.y, q.z, q.x, -q.w);
     }

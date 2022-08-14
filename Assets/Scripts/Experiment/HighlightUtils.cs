@@ -16,6 +16,7 @@ public static class HighlightUtils
             outline = gameObject.AddComponent<Outline>();
 
         // Highlight setting
+        outline.enabled = true;
         outline.OutlineMode = Outline.Mode.OutlineVisible;
         outline.OutlineWidth = 10;
         outline.OutlineColor = color ?? Color.blue;
@@ -40,8 +41,8 @@ public static class HighlightUtils
     public static Color GetHighlightColor(GameObject gameObject)
     {
         Outline outline = gameObject.GetComponent<Outline>();
-        if (outline == null)
-            return (Color.black);
+        if (outline == null || outline.enabled == false)
+            return (Color.clear);
         else
             return (outline.OutlineColor);
     }

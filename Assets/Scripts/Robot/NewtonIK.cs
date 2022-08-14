@@ -31,6 +31,7 @@ public class NewtonIK : MonoBehaviour
     // We have to initialize it, or Unity CRASHES (gosh I love Unity, this definitely didn't take an hour to figure out)
     private ArticulationJacobian jacobian = new ArticulationJacobian(1, 1);
 
+
     private float WrapToPi(float angle)
     {
         // Wrap angle to [-pi, pi]
@@ -47,18 +48,17 @@ public class NewtonIK : MonoBehaviour
         return angles;
     }
 
+
     private List<float> CalculateError(Vector3 positionError, Vector3 rotationAxis)
     {
-        jacobian = kinematicSolver.ComputeJacobian();
-
         List<float> errorTarget = new List<float>
         {
             positionError.x, positionError.y, positionError.z,
             rotationAxis.x, rotationAxis.y, rotationAxis.z,
         };
 
-
         // Switch case for different IK types
+        jacobian = kinematicSolver.GetJacobian();
         ArticulationJacobian invJ = new ArticulationJacobian(1, 1);
         switch (inverseMethod)
         {
@@ -85,14 +85,17 @@ public class NewtonIK : MonoBehaviour
         return errorAngles;
     }
 
+
     public (bool, float[]) SolveIK(float[] jointAngles, Vector3 targetPosition, Quaternion targetRotation)
     {
         float[] newJointAngles = jointAngles.Clone() as float[];
 
+        /*
         // TODO ??
         targetRotation.x *= -1;
         targetRotation.y *= -1;
         targetRotation.z *= -1;
+        */
 
         // Containers
         Vector3 endEffectorPosition;
@@ -103,13 +106,12 @@ public class NewtonIK : MonoBehaviour
         for (int e = 0; e < EPOCHS; e++)
         {
             // calculate error between our current end effector position and the target position
-            kinematicSolver.UpdateAngles(newJointAngles);
-            kinematicSolver.CalculateAllT();
-            kinematicSolver.UpdateAllPose();
+            kinematicSolver.SolveFK(newJointAngles);
             (endEffectorPosition, endEffectorRotation) = kinematicSolver.GetPose(kinematicSolver.numJoint);
 
             Vector3 positionError = endEffectorPosition - targetPosition;
-            Quaternion rotationError = Quaternion.Inverse(endEffectorRotation) * targetRotation;
+            // Quaternion rotationError = Quaternion.Inverse(endEffectorRotation) * targetRotation;
+            Quaternion rotationError = endEffectorRotation * Quaternion.Inverse(targetRotation);
 
             // Orientation is stored in the jacobian as a scaled rotation axis
             // Where the axis of rotation is the vector, and the angle is the length of the vector (in radians)
@@ -125,8 +127,8 @@ public class NewtonIK : MonoBehaviour
 
             // decay lambda over time
             float lambda = (1 - e / EPOCHS) * 0.5f;
-            rotationAxis *= lambda;
             positionError *= lambda;
+            rotationAxis *= lambda;
 
             var errorAngles = CalculateError(positionError, rotationAxis);
             for (int i = 0; i < newJointAngles.Length; i++)
@@ -135,24 +137,23 @@ public class NewtonIK : MonoBehaviour
 
         // check convergence
         kinematicSolver.UpdateAngles(newJointAngles);
-        kinematicSolver.CalculateAllT();
+        kinematicSolver.UpdateAllTs();
         kinematicSolver.UpdateAllPose();
-
         (endEffectorPosition, endEffectorRotation) = kinematicSolver.GetPose(kinematicSolver.numJoint);
+        
         bool converged = (endEffectorPosition - targetPosition).magnitude < 0.1f;
 
         // Set the new joint angles
         return (converged, newJointAngles);
     }
 
+
     public float[] SolveVelocityIK(float[] jointAngles, Vector3 positionError, Quaternion rotationError)
     {
         float[] newJointAngles = jointAngles.Clone() as float[];
 
         // calculate error between our current end effector position and the target position
-        kinematicSolver.UpdateAngles(newJointAngles);
-        kinematicSolver.CalculateAllT();
-        kinematicSolver.UpdateAllPose();
+        kinematicSolver.SolveFK(newJointAngles);
 
         // Orientation is stored in the jacobian as a scaled rotation axis
         // Where the axis of rotation is the vector, and the angle is the length of the vector (in radians)

@@ -2,11 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static JacobianTools;
 
 /// <summary>
 ///     Provide util functions to compute forward kinematics
 ///     for Kinova Gen3 7-DOF robotic arm
+///     Usage: Call SolveFK(jointAngles) first, 
+///     then use Getters GetPose(), GetAllPose(), GetJacobian()
 /// </summary>
 public class KinematicSolver : MonoBehaviour
 {
@@ -21,12 +22,12 @@ public class KinematicSolver : MonoBehaviour
                                     -0.0128f, -0.3143f, 0, -0.2874f};
     public float[] thetaOffset = new float[] {0, 0, Mathf.PI, Mathf.PI, Mathf.PI,
                                               Mathf.PI, Mathf.PI, Mathf.PI};
-    public Transform baseTransform;
     private float[] angles = new float[] {0, 0, 0, 0, 0, 0, 0, 0};
-
     // Define joint limits
     public float[] angleLowerLimits = new float[] {0, 0, -2.41f, 0, -2.66f, 0, -2.23f, 0};
-    public float[] angleUpperLimits = new float[] {0, 0, 2.41f, 0, 2.66f, 0, 2.23f, 0};
+    public float[] angleUpperLimits = new float[] {0, 0,  2.41f, 0,  2.66f, 0,  2.23f, 0};
+    
+    public Transform baseTransform;
 
     // Homography Matrix
     private Matrix4x4[] T;
@@ -36,6 +37,9 @@ public class KinematicSolver : MonoBehaviour
     private Quaternion[] rotations;
     private Vector3[] axis;
 
+    // Joint Jacobian
+    private ArticulationJacobian jacobian;
+
     void Start()
     {
         // Initialize joint positions and rotations
@@ -44,25 +48,18 @@ public class KinematicSolver : MonoBehaviour
         axis = new Vector3[numJoint + 1];
 
         T = new Matrix4x4[numJoint + 1];
+        jacobian = new ArticulationJacobian(6, numJoint);
     }
 
-    public Matrix4x4 CalculateT(int i)
+
+    public void SolveFK(float[] newAngles)
     {
-        float ca = Mathf.Cos(alpha[i]);
-        float sa = Mathf.Sin(alpha[i]);
-
-        float ct = Mathf.Cos(angles[i] + thetaOffset[i]);
-        float st = Mathf.Sin(angles[i] + thetaOffset[i]);
-
-        Matrix4x4 T = Matrix4x4.zero;
-
-        T.SetRow(0, new Vector4(ct, -ca * st, sa * st, a[i] * ct));
-        T.SetRow(1, new Vector4(st, ca * ct, -sa * ct, a[i] * st));
-        T.SetRow(2, new Vector4(0, sa, ca, d[i]));
-        T.SetRow(3, new Vector4(0, 0, 0, 1));
-
-        return T;
+        UpdateAngles(newAngles);
+        UpdateAllTs();
+        UpdateAllPose();
+        UpdateJacobian();
     }
+
 
     public void UpdateAngles(float[] newAngles)
     {
@@ -81,51 +78,43 @@ public class KinematicSolver : MonoBehaviour
         }
     }
 
-    public void CalculateAllT()
+
+    public void UpdateAllTs()
     {
         for (int i = 0; i < numJoint + 1; i++)
         {
             T[i] = CalculateT(i);
         }
     }
-
-    public Matrix4x4[] GetMultTs()
+    private Matrix4x4 CalculateT(int i)
     {
-        Matrix4x4[] Ts = new Matrix4x4[numJoint + 1];
-        // first T is equal to baseTransform
-        Vector3 pos = FromRUF(baseTransform.position);
-        Quaternion rot = FromRUF(baseTransform.rotation);
-        Matrix4x4 TTotal = Matrix4x4.TRS(pos, rot, Vector3.one);
-        for (int i = 0; i < numJoint + 1; i++)
-        {
-            if (i > 0)
-            {
-                TTotal *= T[i];
-            }
-            Ts[i] = TTotal;
-        }
-        return Ts;
+        float ca = Mathf.Cos(alpha[i]);
+        float sa = Mathf.Sin(alpha[i]);
+        float ct = Mathf.Cos(angles[i] + thetaOffset[i]);
+        float st = Mathf.Sin(angles[i] + thetaOffset[i]);
+
+        Matrix4x4 T = Matrix4x4.zero;
+        T.SetRow(0, new Vector4(ct, -ca * st,  sa * st, a[i] * ct));
+        T.SetRow(1, new Vector4(st,  ca * ct, -sa * ct, a[i] * st));
+        T.SetRow(2, new Vector4(0,   sa,       ca,      d[i]     ));
+        T.SetRow(3, new Vector4(0,    0,        0,      1        ));
+        
+        return T;
     }
 
-    /*
-    public Quaternion QuaternionFromMatrix(Matrix4x4 m) 
-    { 
-        return Quaternion.LookRotation(m.GetColumn(2), m.GetColumn(1)); 
-    }
-    */
-
+    
     public void UpdateAllPose()
     {
-        // Compute H from base to end effector
-        Matrix4x4[] Ts = GetMultTs();
+        // Compute cumulative Ts from base to end effector
+        Matrix4x4[] cumulativeTs = GetCumulativeTsFromBase();
         for (int i = 0; i < numJoint + 1; i++)
         {
-            Matrix4x4 T = Ts[i];
-            axis[i] = ToRUF(T.GetColumn(2));
-            positions[i] = ToRUF(T.GetColumn(3));
+            Matrix4x4 T = cumulativeTs[i];
+            axis[i] = Utils.FromFLU(T.GetColumn(2));
+            positions[i] = Utils.FromFLU(T.GetColumn(3));
             try
             {
-                rotations[i] = ToRUF(T.rotation);
+                rotations[i] = Utils.FromFLU(T.rotation);
             }
             catch (Exception e)
             {
@@ -133,6 +122,64 @@ public class KinematicSolver : MonoBehaviour
             }
         }
     }
+    private Matrix4x4[] GetCumulativeTsFromBase()
+    {
+        Matrix4x4[] Ts = new Matrix4x4[numJoint + 1];
+        Matrix4x4 TTotal = Matrix4x4.identity;
+        if (baseTransform != null)
+        {
+            // first T starts from baseTransform
+            Vector3 pos = Utils.ToFLU(baseTransform.position);
+            Quaternion rot = Utils.ToFLU(baseTransform.rotation);
+            TTotal = Matrix4x4.TRS(pos, rot, Vector3.one);
+        }
+        
+        // Matrix4x4 TTotal = Matrix4x4.identity;
+        for (int i = 0; i < numJoint + 1; i++)
+        {
+            TTotal = TTotal * T[i];
+            Ts[i] = TTotal;
+        }
+        return Ts;
+    }
+
+
+    public void UpdateJacobian()
+    {
+        // Create a new ArticulationJacobian
+        // px, py, pz, rx, ry, rz
+        jacobian = new ArticulationJacobian(6, numJoint);
+
+        Vector3[] zs = axis;
+        Vector3[] ts = positions;
+
+        for (int i = 0; i < numJoint; i++)
+        {
+            Vector3 zT = Vector3.Cross(zs[i], ts[numJoint] - ts[i]);
+
+            // zB will be the scaled rotation representation of the joint
+            // So it's just the axis, with default length 1 (meaning a rotation of 1 radian around that axis)
+            Vector3 zB = zs[i];
+            JacobianTools.Set(jacobian, i, zT, zB);
+        }
+    }
+
+
+    public (Vector3, Quaternion) GetPose(int i)
+    {
+        return (positions[i], rotations[i]);
+    }
+
+    public (Vector3[], Quaternion[]) GetAllPose()
+    {
+        return (positions, rotations);
+    }
+
+    public ArticulationJacobian GetJacobian()
+    {
+        return jacobian;
+    }
+
 
     public void OnDrawGizmos()
     {
@@ -153,75 +200,5 @@ public class KinematicSolver : MonoBehaviour
                 Gizmos.DrawLine(positions[i], positions[i - 1]);
             }
         }
-    }
-
-    // Need conversion utilities between FLU (forward, left, up) and 
-    // Unity's RUF (right, up, forward)
-
-    public static Vector3 ToRUF(Vector3 v)
-    {
-        return new Vector3(v.y, -v.z, v.x);
-    }
-
-    public static Vector3 FromRUF(Vector3 v)
-    {
-        return new Vector3(v.z, v.x, -v.y);
-    }
-
-    public static Quaternion ToRUF(Quaternion q)
-    {
-        return new Quaternion(q.y, -q.z, q.x, q.w);
-    }
-
-    public static Quaternion FromRUF(Quaternion q)
-    {
-        return new Quaternion(-q.z, -q.x, q.y, q.w);
-    }
-
-    /*
-    public Quaternion ToRUF(Quaternion q)
-    {
-        q = new Quaternion(-q.y, q.z, q.x, -q.w);
-        return q * Quaternion.Euler(0, 90, 0);
-    }
-
-    public Quaternion FromRUF(Quaternion q)
-    {
-        q = q * Quaternion.Euler(0, -90, 0);
-        return new Quaternion(q.z, -q.x, q.y, -q.w);
-    }
-    */
-
-    public (Vector3, Quaternion) GetPose(int i)
-    {
-        return (positions[i], rotations[i]);
-    }
-
-    public (Vector3[], Quaternion[]) GetAllPose()
-    {
-        return (positions, rotations);
-    }
-
-    public ArticulationJacobian ComputeJacobian()
-    {
-        // Create a new ArticulationJacobian
-        // px, py, pz, rx, ry, rz
-        ArticulationJacobian jacobian = new ArticulationJacobian(6, numJoint);
-
-        Vector3[] zs = axis;
-        Vector3[] ts = positions;
-
-        for (int i = 0; i < numJoint; i++)
-        {
-            Vector3 zT = Vector3.Cross(zs[i], ts[numJoint] - ts[i]);
-
-            // zB will be the scaled rotation representation of the joint
-            // So it's just the axis, with default length 1 (meaning a rotation of 1 radian around that axis)
-            Vector3 zB = zs[i];
-
-            JacobianTools.Set(jacobian, i, zT, zB);
-        }
-
-        return jacobian;
     }
 }

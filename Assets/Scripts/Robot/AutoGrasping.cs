@@ -51,6 +51,7 @@ public class AutoGrasping : MonoBehaviour
     private void SelectCurrentObject(GameObject targetObject)
     {
         // Highlight
+        // if this object was alredy highlighted
         prevColor = HighlightUtils.GetHighlightColor(targetObject);
         HighlightUtils.HighlightObject(targetObject);
         // Select

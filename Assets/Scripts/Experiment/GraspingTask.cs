@@ -63,9 +63,9 @@ public class GraspingTask : Task
         valueToRecord = new float[6 * taskObjects.Length];
         for (int i = 0; i < taskObjects.Length; ++i)
         {
-            Vector3 position = Utils.ToFlu(taskObjects[0].transform.position);
+            Vector3 position = Utils.ToFLU(taskObjects[0].transform.position);
             Vector3 rotation = Mathf.Deg2Rad * 
-                            Utils.ToFlu(taskObjects[0].transform.rotation).eulerAngles;
+                               Utils.ToFLU(taskObjects[0].transform.rotation).eulerAngles;
             valueToRecord[6*i+0] = position.x;
             valueToRecord[6*i+1] = position.y;
             valueToRecord[6*i+2] = position.z;
