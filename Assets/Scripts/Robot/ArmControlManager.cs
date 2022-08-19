@@ -30,6 +30,8 @@ public class ArmControlManager : MonoBehaviour
     // preset 5 is for seconday camera view
     public float[] preset5 = {0.91f, -1.13f, -0.85f, -1.66f, 
                               0.09f, -0.85f, 0.26f};
+    // preset 8 is for narrow pose
+    public float[] preset8 = {-2f, -1.8f, -1.8f, 2f, -0.3f, -1f, -Mathf.PI/2};
 
     // ENUM for mode CONTROL or TARGET
     private enum Mode
@@ -138,6 +140,9 @@ public class ArmControlManager : MonoBehaviour
                 break;
             case 5:
                 MoveToJointPosition(preset5);
+                break;
+            case 8:
+                MoveToJointPosition(preset8);
                 break;
             default:
                 break;

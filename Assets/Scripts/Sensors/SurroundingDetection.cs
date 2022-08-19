@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-///     Detect the surrounding objects (obstacles & human).
+///     Detect the surrounding objects 
+///     Obstacle can be splited into obstacles & human.
 /// </summary>
 public class SurroundingDetection : MonoBehaviour
 {
@@ -94,5 +95,23 @@ public class SurroundingDetection : MonoBehaviour
                 }
             }
         }
+    }
+
+    public Vector3[] GetScanResultPositions(int minIndex = 0, int maxIndex = int.MaxValue, 
+                                            bool getHuman = false)
+    {
+        if (maxIndex == int.MaxValue)
+            maxIndex = samples;
+
+        List<Vector3> positions = new List<Vector3>();
+        for (int i = minIndex; i < maxIndex; ++i)
+        {
+            Vector3 rotation = rayRotations[i] * rayStartForward;
+            if (!getHuman)
+                positions.Add(rayStartPosition + obstacleRanges[i] * rotation);
+            else
+                positions.Add(rayStartPosition + humanRanges[i] * rotation);
+        }
+        return positions.ToArray();
     }
 }

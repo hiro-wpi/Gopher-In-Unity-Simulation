@@ -32,7 +32,8 @@ public class ComprehensiveExperiment : Experiment
         sceneNames = new string[] {"Hospital"};
         // levelNames = new string[] {"Level1", "Level2"};
         levelNames = new string[] {"Level2"};
-        taskNames = new string[] {"Navigation1", "ScanGrasp",
+        taskNames = new string[] {
+                                  "Navigation1", "ScanGrasp",
                                   "Navigation2", "LocateGrasp", "Carrying1",
                                   "Carrying2", "Reading", 
                                   "Navigation3"

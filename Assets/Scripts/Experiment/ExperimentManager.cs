@@ -39,7 +39,8 @@ public class ExperimentManager : MonoBehaviour
     private string recordFolder;
 
     // Nav Mesh Agent for dynamic 
-    public NavMeshSurface navMeshSurface;
+    public NavMeshSurface navMeshSurfaceHuman;
+    public NavMeshSurface navMeshSurfaceRobot;
 
 
     void Start()
@@ -229,7 +230,8 @@ public class ExperimentManager : MonoBehaviour
             currentTask.GenerateStaticObjects();
             yield return new WaitForSeconds(0.2f);
             // Remake nav mesh for dynamic objects;
-            navMeshSurface.BuildNavMesh();
+            navMeshSurfaceHuman.BuildNavMesh();
+            navMeshSurfaceRobot.BuildNavMesh();
             yield return new WaitForSeconds(0.8f);
 
             // Generate dynamic objects
@@ -262,7 +264,8 @@ public class ExperimentManager : MonoBehaviour
             currentTask.GenerateStaticObjects();
             yield return new WaitForSeconds(0.2f);
             // Rebake nav mesh for dynamic objects;
-            navMeshSurface.BuildNavMesh();
+            navMeshSurfaceHuman.BuildNavMesh();
+            navMeshSurfaceRobot.BuildNavMesh();
             yield return new WaitForSeconds(0.8f);
 
             // Generate dynamic objects

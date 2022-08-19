@@ -475,8 +475,8 @@ public class GraphicalInterface : MonoBehaviour
         leftEndEffectorRef.transform.parent = graspings[0].endEffector.transform;
         rightEndEffectorRef.transform.parent = graspings[1].endEffector.transform;
         // TODO 2 The proper reference is different from the tool frame...
-        leftEndEffectorRef.transform.localRotation = Quaternion.Euler(new Vector3(-90f, 0f, 90f));
-        rightEndEffectorRef.transform.localRotation = Quaternion.Euler(new Vector3(-90f, 0f, 90f));
+        leftEndEffectorRef.transform.localRotation = Quaternion.Euler(new Vector3(0f, -90f, 180f));
+        rightEndEffectorRef.transform.localRotation = Quaternion.Euler(new Vector3(0f, -90f, 180f));
         
         // Cameras
         cameraSystem.enabled = true;
