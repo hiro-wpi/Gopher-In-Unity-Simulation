@@ -12,7 +12,7 @@ public class TestExperiment : Experiment
         // General
         useSameScene = true;  // use the same scene for all tasks
         sceneNames = new string[] {"Hospital"};
-        levelNames = new string[] {"Level2"};
+        levelNames = new string[] {"Level1"};
         taskNames = new string[] {
                                   "Navigation", "Reading",
                                   "Carrying", "Scanning", 

@@ -1,3 +1,4 @@
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,11 +18,11 @@ public class BarCodeGenerator : MonoBehaviour
 
     void Start()
     {
+        GenerateUPCECode(displayObject, "0100200");
     }
 
     void Update()
-    {
-    }
+    {}
 
     private Color32[] Encode(string text, ZXing.BarcodeFormat format,
                              int width, int height)
@@ -59,6 +60,14 @@ public class BarCodeGenerator : MonoBehaviour
         storedEncodedPACETexture = new Texture2D(TEXTURE_SIZE, TEXTURE_SIZE);
         storedEncodedPACETexture.SetPixels32(convertPixelToTexture);
         storedEncodedPACETexture.Apply();
+
+        // Save locally
+        byte[] bytes = storedEncodedPACETexture.EncodeToPNG();
+        var dirPath = Application.dataPath + "/../Images/";
+        if(!Directory.Exists(dirPath)) {
+            Directory.CreateDirectory(dirPath);
+        }
+        File.WriteAllBytes(dirPath + "barcode" + ".png", bytes);
 
         Material material = displayObject.GetComponent<Renderer>().material;
         material.mainTexture = storedEncodedPACETexture;
