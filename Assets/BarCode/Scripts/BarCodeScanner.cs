@@ -13,7 +13,7 @@ public class BarCodeScanner : MonoBehaviour
     public Camera cam;
     private Texture2D cameraTexture;
     private RenderTexture renderTexture;
-    public int textureSize = 1440;
+    public int textureSize = 1080;
 
     void Start()
     {

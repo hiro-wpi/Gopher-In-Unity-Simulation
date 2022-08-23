@@ -142,7 +142,6 @@ public class AutoGraspable : MonoBehaviour
         {
             Quaternion hoverRot = grabRot * Quaternion.Euler(dir * angles[i]);
             float angleDifference = GetAngleDifference(EndEffectorRotation, hoverRot);
-            Debug.Log(angleDifference);
             if (angleDifference < minAngleDifference)
             {
                 minHoverRot = hoverRot;
@@ -153,10 +152,13 @@ public class AutoGraspable : MonoBehaviour
     }
     private float GetAngleDifference(Quaternion r1, Quaternion r2)
     {
+        // Angle difference
         Quaternion rotationError = r1 * Quaternion.Inverse(r2);
         Vector3 rotationAxis;
         float rotationAngle;
         rotationError.ToAngleAxis(out rotationAngle, out rotationAxis);
+        // Wrap and get magnitude
+        rotationAngle = Mathf.Abs(Mathf.DeltaAngle(rotationAngle, 0f));
         return rotationAngle;
     }
 
@@ -187,6 +189,12 @@ public class AutoGraspable : MonoBehaviour
     // Editor Visualization
     public void OnDrawGizmos()
     {
+        if (grabPoint == null)
+        {
+            Debug.LogWarning("No Grab Point is given.");
+            return;
+        }
+
         // Draw grab point
         DrawSphere(grabPoint.position, 0.04f);
         DrawAxes(grabPoint.position, grabPoint.rotation);

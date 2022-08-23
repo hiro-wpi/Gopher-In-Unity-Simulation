@@ -25,7 +25,7 @@ public class FreePlayTask : Task
         if (Input.GetKeyDown(KeyCode.N))
         {
             barCodeScanner.cam = gUI.GetCurrentMainCamera();
-            string result = barCodeScanner.Scan();
+            string result = barCodeScanner.Scan(1/2f);
             if (result != "N/A")
                 // remove guard pattern for shortening
                 result = result.Substring(1, result.Length-2);

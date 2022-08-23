@@ -41,7 +41,7 @@ public class ArticulationWheelController : MonoBehaviour
         this.targetAngularSpeed = targetAngularSpeed;
     }
 
-    public void SetRobotVelocityStep(float targetLinearSpeed, float targetAngularSpeed)
+    private void SetRobotVelocityStep(float targetLinearSpeed, float targetAngularSpeed)
     {
         if (targetLinearSpeed != 0 || targetAngularSpeed != 0)
         {

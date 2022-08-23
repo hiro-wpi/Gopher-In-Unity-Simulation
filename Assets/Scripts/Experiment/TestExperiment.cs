@@ -12,7 +12,7 @@ public class TestExperiment : Experiment
         // General
         useSameScene = true;  // use the same scene for all tasks
         sceneNames = new string[] {"Hospital"};
-        levelNames = new string[] {"Level1"};
+        levelNames = new string[] {"Level3"};
         taskNames = new string[] {
                                   "Navigation", "Reading",
                                   "Carrying", "Scanning", 
@@ -41,21 +41,21 @@ public class TestExperiment : Experiment
         // Human spawn position and trajectories
         dynamicObjectSpawnPositions = new Vector3[]
                             {
-                                new Vector3(-10.0f, 0f, -6.0f),
-                                new Vector3( 11.0f, 0f,  6.0f),
-                                new Vector3(  3.0f, 0f,  7.5f),
-                                new Vector3( -2.5f, 0f, -1.5f)
+                                new Vector3(-6.7f, 0f, -8.0f),
+                                new Vector3( 8.0f, 0f,  5.0f),
+                                new Vector3( 3.0f, 0f,  7.5f),
+                                new Vector3(-2.5f, 0f, -1.5f)
                             };
         dynamicObjectTrajectories = new Vector3[,]
                             {
-                                {new Vector3(-7.5f, 0f,  7.0f), new Vector3(  7.5f, 0f,  7.5f), 
-                                 new Vector3( 7.5f, 0f, -2.0f), new Vector3(-10.0f, 0f, -6.0f)},
-                                {new Vector3( 7.5f, 0f, -2.0f), new Vector3( -7.0f, 0f, -2.0f), 
-                                 new Vector3(-7.0f, 0f,  7.5f), new Vector3( 11.0f, 0f,  6.0f)},
-                                {new Vector3( 0.5f, 0f,  7.0f), new Vector3(  1.0f, 0f, -1.5f), 
-                                 new Vector3( 5.0f, 0f, -1.5f), new Vector3(  3.0f, 0f,  7.5f)}, 
-                                {new Vector3(-4.0f, 0f,  7.5f), new Vector3(  0.5f, 0f,  6.5f), 
-                                 new Vector3( 0.0f, 0f, -1.5f), new Vector3( -2.5f, 0f, -1.5f)}
+                                {new Vector3(-7.5f, 0f,  7.0f), new Vector3( 7.5f, 0f,  7.5f), 
+                                 new Vector3( 7.5f, 0f, -2.0f), new Vector3(-6.7f, 0f, -8.0f)},
+                                {new Vector3( 7.5f, 0f, -2.0f), new Vector3(-7.0f, 0f, -2.0f), 
+                                 new Vector3(-7.0f, 0f,  7.5f), new Vector3( 8.0f, 0f,  5.0f)},
+                                {new Vector3( 0.5f, 0f,  7.0f), new Vector3( 1.0f, 0f, -1.5f), 
+                                 new Vector3( 5.0f, 0f, -1.5f), new Vector3( 3.0f, 0f,  7.5f)}, 
+                                {new Vector3(-4.0f, 0f,  7.5f), new Vector3( 0.5f, 0f,  6.5f), 
+                                 new Vector3( 0.0f, 0f, -1.5f), new Vector3(-2.5f, 0f, -1.5f)}
                             };
 
         // Create a gameobject container
