@@ -498,7 +498,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &183514186
 Transform:
   m_ObjectHideFlags: 0
@@ -519,7 +519,7 @@ Transform:
   - {fileID: 1876540828}
   - {fileID: 1633586862}
   m_Father: {fileID: 985979146}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &183514187
 MonoBehaviour:
@@ -2709,6 +2709,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 621880112}
   m_CullTransparentMesh: 1
+--- !u!1 &637322409
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 637322411}
+  - component: {fileID: 637322410}
+  m_Layer: 0
+  m_Name: Comprehensive Experiment
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &637322410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 637322409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 846ee49b9df299949bb2e03293807f5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tasks: []
+  robotPrefabs:
+  - {fileID: 6789262394414307240, guid: d389cac5588eb6f4da30dee89aa90d4d, type: 3}
+  staticObjects:
+  - {fileID: 676365421134526795, guid: 07618b36962fe764280e83c54b755ec6, type: 3}
+  - {fileID: 958842358881422846, guid: 249680c53e1ab1d40b7c0bfd3438224c, type: 3}
+  - {fileID: 5065148455642708273, guid: f7d553fc186d6924e9e07aede0278146, type: 3}
+  dynamicObjects:
+  - {fileID: 4794976405199776384, guid: 99c60dd584c9e02af870a2c618acc03c, type: 3}
+  taskObjects:
+  - {fileID: 1173668152048465497, guid: 6b4c4cc8759d2da4b9d48596e0176b94, type: 3}
+  - {fileID: 4768030292868170154, guid: 74fb347f78948514ebdeedbb4de2e398, type: 3}
+  goalObjects:
+  - {fileID: 2075622757900185994, guid: 845719786c1c896ac83165c019c2763e, type: 3}
+  - {fileID: 2416330375898432865, guid: e9d4276034b135f46981b1f974cbba19, type: 3}
+  graphicalInterfaces:
+  - {fileID: 955308863}
+  controlInterfaces: []
+--- !u!4 &637322411
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 637322409}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 985979146}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &641450117
 GameObject:
   m_ObjectHideFlags: 0
@@ -3619,6 +3680,7 @@ Transform:
   m_Children:
   - {fileID: 1656331358}
   - {fileID: 1901884919}
+  - {fileID: 637322411}
   - {fileID: 183514186}
   m_Father: {fileID: 1286643474}
   m_RootOrder: 0
@@ -5227,7 +5289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   experiments:
-  - {fileID: 183514187}
+  - {fileID: 637322410}
   freePlayTask: {fileID: 1161083585}
   randomizeTasks: 0
   keepSameSceneAndRobot: 1

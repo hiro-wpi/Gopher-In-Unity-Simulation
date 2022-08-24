@@ -29,10 +29,35 @@ public static class Utils
     {
         // Create a new container and copy all values in the row
         T[] row = new T[Array2D.GetLength(1)];
-        for (int i = 0; i < row.Length; ++i)
-            row[i] = Array2D[index, i];
+        for (int j = 0; j < row.Length; ++j)
+            row[j] = Array2D[index, j];
         return row;
     }
+
+    public static T[] Shuffle<T> (System.Random random, T[] array)
+    {
+        int n = array.Length;
+        while (n > 1) 
+        {
+            int k = random.Next(n--);
+            (array[n], array[k]) = (array[k], array[n]);
+        }
+        return array;
+    }
+
+    public static T[,] RandomizeRow<T>(System.Random random, T[,] Array2D)
+    {
+        for (int i = 0; i < Array2D.GetLength(0); ++i)
+        {
+            T[] temp = Shuffle(random, GetRow(Array2D, i));
+            for (int j = 0; j < Array2D.GetLength(1); ++j)
+            {
+                Array2D[i, j] = temp[j];
+            }
+        }
+        return Array2D;
+    }
+
 
 
     // Transform

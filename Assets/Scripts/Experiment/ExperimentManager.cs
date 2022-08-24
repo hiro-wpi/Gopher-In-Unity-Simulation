@@ -108,7 +108,7 @@ public class ExperimentManager : MonoBehaviour
         // randomize index
         randomizedIndices = Enumerable.Range(0, totalNumTask).ToArray();
         if (randomizeTasks)
-            randomizedIndices = randomizedIndices.OrderBy(x => randomInt.Next()).ToArray();
+            randomizedIndices = Utils.Shuffle(randomInt, randomizedIndices);
 
         // Load the first task to starts
         bool success = LoadNewTask();

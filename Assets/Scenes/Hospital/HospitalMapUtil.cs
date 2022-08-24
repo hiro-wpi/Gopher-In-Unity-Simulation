@@ -418,7 +418,7 @@ public static class HospitalMapUtil
     public static (Vector3[], Vector3[]) GetRoomPassage(string name)
     {
         Vector3[] ps;
-        monitorMap.TryGetValue(name, out ps);
+        passageMap.TryGetValue(name, out ps);
         Vector3[] positions = new Vector3[ps.Length / 2];
         Vector3[] rotations = new Vector3[ps.Length / 2];
         for (int i = 0; i < ps.Length / 2; ++i)
