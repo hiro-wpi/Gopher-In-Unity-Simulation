@@ -18,7 +18,8 @@ public class BarCodeGenerator : MonoBehaviour
 
     void Start()
     {
-        GenerateUPCECode(displayObject, "0100200");
+        // Example
+        // GenerateUPCECode(displayObject, "0100200");
     }
 
     void Update()
@@ -61,6 +62,7 @@ public class BarCodeGenerator : MonoBehaviour
         storedEncodedPACETexture.SetPixels32(convertPixelToTexture);
         storedEncodedPACETexture.Apply();
 
+        /*
         // Save locally
         byte[] bytes = storedEncodedPACETexture.EncodeToPNG();
         var dirPath = Application.dataPath + "/../Images/";
@@ -68,7 +70,8 @@ public class BarCodeGenerator : MonoBehaviour
             Directory.CreateDirectory(dirPath);
         }
         File.WriteAllBytes(dirPath + "barcode" + ".png", bytes);
-
+        */
+        
         Material material = displayObject.GetComponent<Renderer>().material;
         material.mainTexture = storedEncodedPACETexture;
     }
