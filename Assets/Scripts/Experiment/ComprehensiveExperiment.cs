@@ -12,51 +12,79 @@ using UnityEngine;
 ///     Task 1.3 Cart Pushing
 ///     Task 1.4 Blocked Path Passing
 /// Type 2 - Facilitate end-effector control tasks by moving the base
-///     Task 2.1 Read Vital Sign
+///     Task 2.1 Vital Sign Reading
 ///     Task 2.2 Bar Code Scanning
-///     Task 2.3 Pick And Place 
+///     Task 2.3 Picking And Placing 
 ///     Task 2.4 Furniture Disinfecting
 /// 
 /// Tasks are given as a task set, which is the combination of one Type 1
-/// task, and one to two Type 2 tasks. The detailed content of each task
-/// is randomized. A secondary task, checking trash and dirty laundry containers, 
+/// task, and one Type 2 task. The detailed content of each task
+/// is randomized. 
+/// A secondary task, checking trash and dirty laundry containers, 
 /// is also assigned for each task set.
 ///
 /// </summary>
 public class ComprehensiveExperiment : Experiment 
 {
+    // Tasks of a specific task sets (right, up, left, down)
+    // Defined as (type.task-level)
+
+    // pilot study
+    private int numType = 2;
+    private string[] rightType1 = new string[] {"1.4-2", "1.2-3", "1.3-3"};
+    private string[] rightType2 = new string[] {"2.1-1", "2.3-1", "2.2-3"};
+    private string[] upType1 = new string[] {"1.2-1", "1.1-1", "1.3-2"};
+    private string[] upType2 = new string[] {"2.4-3", "2.3-2", "2.4-1"};
+    private string[] leftType1 = new string[] {"1.4-1", "1.3-1", "1.1-2"};
+    private string[] leftType2 = new string[] {"2.2-2", "2.3-3", "2.1-3"};
+    private string[] downType1 = new string[] {"1.2-2", "1.1-3", "1.4-3"};
+    private string[] downType2 = new string[] {"2.2-1", "2.4-3", "2.1-2"};
+
+    // official study
+    // TODO
+
+    // Task Objects
+
+
     void Start()
     {
+        // Verify task parameter is completed
+        VerifyCompleteness(1, 4, 3);
+        VerifyCompleteness(2, 4, 3);
+
         // General
         useSameScene = true;  // use the same scene for all tasks
         sceneNames = new string[] {"Hospital"};
-        // levelNames = new string[] {"Level1", "Level2"};
-        levelNames = new string[] {"Level2"};
+        levelNames = new string[] {"Level1", "Level2", "Level3"};
         taskNames = new string[] {
-                                  "Navigation1", "ScanGrasp",
-                                  "Navigation2", "LocateGrasp", "Carrying1",
-                                  "Carrying2", "Reading", 
-                                  "Navigation3"
+                                    "Navigation", "ObjectCarrying", 
+                                    "CartPushing", "BlockedPathPassing",
+
+                                    "VitalReading", "CodeScanning", 
+                                    "PickingAndPlacing", "FurnitureDisinfection"
                                  };
-        // taskNames = new string[] {"GoHome", "Carrying", "Pushing", "LocalGrasping", "Navigation"};
-        taskDescriptions = new string[] {"Please navigate to room S103.", 
-                                         "Please scan the medicine in room S103 and find the medicine with code 0104530, " +
-                                         "grasp and put it on the tray on the table.",
-                                         
-                                         "Please navigate to the Pharmacy",
-                                         "Please pick up one medicine with blue label in the medicine cabinet in the Pharmacy, " + 
-                                         "and put it on the table.",
-                                         "Please push the medical cart outside to treatment room 1.",
-                                         
-                                         "Please carry the IV pole outside to Room L101.",
-                                         "Please read the vital value of Bed 3 in Room L101.", 
-                                         "Please navigate back to the nurse station."
+        taskDescriptions = new string[] {
+                                        "Please navigate to", 
+                                        "Please carry the IV pole to",
+                                        "Please push the medical cart to",
+                                        "Please navigate to",
+
+                                        "Please read the vital value of",
+                                        "Please scan the bar code of the medicine box",
+                                        "Please pick up the medicine box and put it on the tray", 
+                                        "Please disinfect the furniture."
                                         };
         
-        // Robot spawn pose and goal
-        robotSpawnPositions = new Vector3[] {new Vector3(11.0f, 0.0f, 2.0f)};
-        robotSpawnRotations = new Vector3[] {new Vector3(0f, 0f, 0f)};
-                        
+        // Robot spawn poses (select 1 from 4)
+        robotSpawnPositions = new Vector3[] {new Vector3( -6.7f, 0.0f, -10.0f),
+                                             new Vector3(  7.8f, 0.0f, -10.0f),
+                                             new Vector3(  7.0f, 0.0f,  10.0f),
+                                             new Vector3(-10.0f, 0.0f,   6.0f)};
+        robotSpawnRotations = new Vector3[] {new Vector3(0f,  0f, 0f),
+                                             new Vector3(0f,  0f, 0f),
+                                             new Vector3(0f, -90f, 0f),
+                                             new Vector3(0f,  90f, 0f)};
+        
         // Human spawn position and trajectories
         dynamicObjectSpawnPositions = new Vector3[]
                             {
@@ -80,24 +108,23 @@ public class ComprehensiveExperiment : Experiment
         // Create a gameobject container
         GameObject tasksObject = new GameObject("Comprehensive Tasks");
         tasksObject.transform.SetParent(this.transform);
-
-        // TEMP Tasks
-        //tasks = new NavigationTask[taskNames.Length * levelNames.Length];
+        tasks = new Task[taskNames.Length * levelNames.Length];
 
         // Set up tasks
         int count = 0;
-        for (int i=0; i<levelNames.Length; ++i)
+        for (int i = 0; i < levelNames.Length; ++i)
         {
-            for (int j=0; j<taskNames.Length; ++j)
+            for (int j = 0; j < taskNames.Length; ++j)
             {
-                tasks[count] = GenerateTask<Task>(i, j, tasksObject);
+                // TODO
+                tasks[count] = GenerateComprehensiveTask(i, j, tasksObject);
                 count++;
             }
         }
     }
 
-    protected override T GenerateTask<T>(int levelIndex, int taskIndex, 
-                                         GameObject parent = null)
+    private Task GenerateComprehensiveTask(int levelIndex, int taskIndex, 
+                                           GameObject parent = null)
     {
         // TEMP // General Info
         GameObject taskObject = tasks[taskIndex].gameObject;
@@ -116,12 +143,14 @@ public class ComprehensiveExperiment : Experiment
                                               robotSpawnPositions[0], // temp
                                               robotSpawnRotations[0], 
                                               null);
+
         // static object
         Task.SpawnInfo[] staticObjectSpawnArray = new Task.SpawnInfo[1];
         staticObjectSpawnArray[0] = Task.ToSpawnInfo(staticObjects[levelIndex], 
                                                      new Vector3(), 
                                                      new Vector3(), 
                                                      null);
+
         // dynamic object - human
         Task.SpawnInfo[] humanSpawnArray = new Task.SpawnInfo[0];
         if (levelNames[levelIndex] == "Level2")
@@ -157,6 +186,48 @@ public class ComprehensiveExperiment : Experiment
         task.gUI = graphicalInterfaces[0];
         // TODO task.CUI = controlInterfaces[0];
 
-        return (T)task;
+        return task;
+    }
+
+
+    // Utils
+    private void VerifyCompleteness(int type, int numTask, int numLevel)
+    {
+        // Combine tasks from each part
+        string [] combination = new string[0];
+        int [,] counter = new int[numTask, numLevel];
+        if (type == 1)
+        {
+            combination = Utils.ConcatenateArray<string>(rightType1,
+                          Utils.ConcatenateArray<string>(upType1,
+                          Utils.ConcatenateArray<string>(leftType1, downType1)));
+        }
+        else if (type == 2)
+        {
+            combination = Utils.ConcatenateArray<string>(rightType2,
+                          Utils.ConcatenateArray<string>(upType2,
+                          Utils.ConcatenateArray<string>(leftType2, downType2)));
+        }   
+
+        // Verify completeness
+        foreach (string task in combination)
+        {
+            string[] temp1 = task.Split(char.Parse(","));
+            string[] temp2 = temp1[1].Split(char.Parse("-"));
+            int taskType = int.Parse(temp1[0]);
+            int taskIndex = int.Parse(temp2[0]);
+            int level = int.Parse(temp2[1]);
+
+            counter[taskIndex-1, level-1]++;
+            if (taskType != type)
+                Debug.LogWarning("Wrong type of task defined: " + 
+                                 taskType+"."+taskIndex+"-"+level);
+        }
+        
+        for (int i = 0; i < numTask; ++i)
+            for (int j = 0; j < numLevel; ++j)
+                if (counter[i, j] == 0)
+                    Debug.LogWarning("Task is missing: " + 
+                                     type+"."+(i+1)+"-"+(j+1));
     }
 }
