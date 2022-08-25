@@ -31,16 +31,23 @@ public class BarCodeScanner : MonoBehaviour
             Debug.Log("Camera not set up.");
             return "N/A";
         }
-            
+        
         cameraTexture = GetCameraTexture(cropRatio);
         // Scan the camera texture
         IBarcodeReader barcodeReader = new BarcodeReader();
         Result result = barcodeReader.Decode(cameraTexture.GetPixels32(), 
                                              cameraTexture.width, cameraTexture.height);
         if (result == null)
-            return "N/A";
-        else
-            return result.Text;
+        {
+            // Rotate and try again
+            cameraTexture = RotateTexture90(cameraTexture);
+            result = barcodeReader.Decode(cameraTexture.GetPixels32(), 
+                                          cameraTexture.width, cameraTexture.height);
+            if (result == null)
+                return "N/A";
+        }
+
+        return result.Text;
     }
 
     private Texture2D GetCameraTexture(float cropRatio = 1.0f)
@@ -70,5 +77,29 @@ public class BarCodeScanner : MonoBehaviour
         RenderTexture.active = current;
         cam.targetTexture = camCurrent;
         return cameraTexture;
+    }
+
+    private Texture2D RotateTexture90(Texture2D originalTexture, bool clockwise = true)
+    {
+        Color32[] original = originalTexture.GetPixels32();
+        Color32[] rotated = new Color32[original.Length];
+        int w = originalTexture.width;
+        int h = originalTexture.height;
+
+        int iRotated, iOriginal;
+        for (int j = 0; j < h; ++j)
+        {
+            for (int i = 0; i < w; ++i)
+            {
+                iRotated = (i + 1) * h - j - 1;
+                iOriginal = clockwise ? original.Length - 1 - (j * w + i) : j * w + i;
+                rotated[iRotated] = original[iOriginal];
+            }
+        }
+
+        Texture2D rotatedTexture = new Texture2D(h, w);
+        rotatedTexture.SetPixels32(rotated);
+        rotatedTexture.Apply();
+        return rotatedTexture;
     }
 }

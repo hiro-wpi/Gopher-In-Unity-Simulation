@@ -20,6 +20,7 @@ public abstract class Task : MonoBehaviour
     protected bool taskStarted;
     protected float startTime;
     // end
+    public string result;
     protected Goal[] goals = new Goal[0];
     protected int goalIndex;
     

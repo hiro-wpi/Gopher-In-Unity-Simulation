@@ -8,7 +8,6 @@ using UnityEngine;
 /// </summary>
 public class ReadingTask : Task 
 {
-    public string result;
     private string userResult = "";
     private bool isCorrect = false;
     // Bar code scanner for some tasks

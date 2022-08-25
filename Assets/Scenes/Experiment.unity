@@ -519,7 +519,7 @@ Transform:
   - {fileID: 1876540828}
   - {fileID: 1633586862}
   m_Father: {fileID: 985979146}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &183514187
 MonoBehaviour:
@@ -975,6 +975,7 @@ MonoBehaviour:
   taskDescription: Please navigate to room S103.
   gUI: {fileID: 0}
   cUI: {fileID: 0}
+  result: 
   robotSpawnArray: []
   staticObjectSpawnArray: []
   dynamicObjectSpawnArray: []
@@ -2029,6 +2030,7 @@ MonoBehaviour:
   taskDescription: Please push the medical cart to the Pharmacy.
   gUI: {fileID: 0}
   cUI: {fileID: 0}
+  result: 
   robotSpawnArray: []
   staticObjectSpawnArray: []
   dynamicObjectSpawnArray: []
@@ -2747,15 +2749,59 @@ MonoBehaviour:
   - {fileID: 5065148455642708273, guid: f7d553fc186d6924e9e07aede0278146, type: 3}
   dynamicObjects:
   - {fileID: 4794976405199776384, guid: 99c60dd584c9e02af870a2c618acc03c, type: 3}
-  taskObjects:
-  - {fileID: 1173668152048465497, guid: 6b4c4cc8759d2da4b9d48596e0176b94, type: 3}
-  - {fileID: 4768030292868170154, guid: 74fb347f78948514ebdeedbb4de2e398, type: 3}
+  taskObjects: []
   goalObjects:
   - {fileID: 2075622757900185994, guid: 845719786c1c896ac83165c019c2763e, type: 3}
   - {fileID: 2416330375898432865, guid: e9d4276034b135f46981b1f974cbba19, type: 3}
   graphicalInterfaces:
   - {fileID: 955308863}
   controlInterfaces: []
+  movableObjects:
+  - {fileID: 1173668152048465497, guid: 6b4c4cc8759d2da4b9d48596e0176b94, type: 3}
+  - {fileID: 4768030292868170154, guid: 74fb347f78948514ebdeedbb4de2e398, type: 3}
+  monitorScreens:
+  - {fileID: 2814045052656866459, guid: 3eb0956f6bad2d342b457cc8ee22e0db, type: 3}
+  - {fileID: 7240363762283134303, guid: a63572f84c07a6744bd5711b8b3b92fa, type: 3}
+  - {fileID: 5469834429341343998, guid: 9caae5bc6cb56444e96b1a5598277152, type: 3}
+  - {fileID: 8322022693230354565, guid: 158ad2093696ede47be7db015a88ac35, type: 3}
+  - {fileID: 2620903555875023583, guid: 9aec7071ca3520f4cbd8ede849a3c26b, type: 3}
+  monitorValues:
+  - 58
+  - 60
+  - 63
+  - 67
+  - 72
+  barcodeMedicines:
+  - {fileID: 5220166882937274750, guid: 374d75476b5ef51459c2f52d04dcad57, type: 3}
+  - {fileID: 5220166882937274750, guid: 91c2185776e463148a25899efc07ae39, type: 3}
+  - {fileID: 5220166882937274750, guid: 10576a104b128e340bf68f600b3c1cd8, type: 3}
+  - {fileID: 5220166882937274750, guid: 5fc97af8438be4e4d862ece3ecf12371, type: 3}
+  - {fileID: 5220166882937274750, guid: c6485076eaa2f6545b3c2f379543119a, type: 3}
+  barcodeResults:
+  - 100200
+  - 101010
+  - 102030
+  - 112233
+  - 123456
+  barcodeMedicinesSpecial:
+  - {fileID: 5220166882937274750, guid: 039d64eb7545c1942bb66a1e1ee19595, type: 3}
+  - {fileID: 5220166882937274750, guid: 5ded0c275e33c0e42be76d213d0906a9, type: 3}
+  barcodeResultsSpecial:
+  - 123456
+  - 102030
+  medicines:
+  - {fileID: 6680054615752861261, guid: 193766420f6e0da47a4415e6862ed4c5, type: 3}
+  - {fileID: 8495972465087636767, guid: 879214110bdc7b449912662c06231407, type: 3}
+  - {fileID: 3888125811682849995, guid: 0315ba177e4ed694884628ad55d89fc3, type: 3}
+  medicinesHorizontal:
+  - {fileID: 6680054615752861261, guid: b30d9883860cdf54f9e26975188cca96, type: 3}
+  - {fileID: 8495972465087636767, guid: 84fa1bee68d88fd4f8f3da43a25b6caf, type: 3}
+  - {fileID: 8495972465087636767, guid: 488d19504bafe1640bfa2542088f7a40, type: 3}
+  disinfectionPack: {fileID: 990171063125143859, guid: 98530f57484453f40b00a77ab2dc7c49, type: 3}
+  disinfectionFurnitures:
+  - {fileID: 5014360984962098047, guid: 4d8a0cc0771639740a406f3844cc4906, type: 3}
+  - {fileID: 5014360984962098047, guid: 4d8a0cc0771639740a406f3844cc4906, type: 3}
+  - {fileID: 5014360984962098047, guid: 4d8a0cc0771639740a406f3844cc4906, type: 3}
 --- !u!4 &637322411
 Transform:
   m_ObjectHideFlags: 0
@@ -2768,7 +2814,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 985979146}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &641450117
 GameObject:
@@ -3678,10 +3724,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 183514186}
   - {fileID: 1656331358}
   - {fileID: 1901884919}
   - {fileID: 637322411}
-  - {fileID: 183514186}
   m_Father: {fileID: 1286643474}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4235,12 +4281,12 @@ MonoBehaviour:
   taskDescription: Please read the vital value of Bed 2 in Room S103.
   gUI: {fileID: 0}
   cUI: {fileID: 0}
+  result: 60
   robotSpawnArray: []
   staticObjectSpawnArray: []
   dynamicObjectSpawnArray: []
   taskObjectSpawnArray: []
   goalObjectSpawnArray: []
-  result: 60
 --- !u!1 &1037779812
 GameObject:
   m_ObjectHideFlags: 0
@@ -4779,6 +4825,7 @@ MonoBehaviour:
   taskDescription: Free play mode. No task is assigned.
   gUI: {fileID: 955308863}
   cUI: {fileID: 0}
+  result: 
   robotSpawnArray:
   - gameObject: {fileID: 6789262394414307240, guid: d389cac5588eb6f4da30dee89aa90d4d, type: 3}
     position: {x: 0.5, y: 0, z: 7.5}
@@ -5629,6 +5676,7 @@ MonoBehaviour:
   taskDescription: Please carry the IV pole to Room P104.
   gUI: {fileID: 0}
   cUI: {fileID: 0}
+  result: 
   robotSpawnArray: []
   staticObjectSpawnArray: []
   dynamicObjectSpawnArray: []
@@ -7567,6 +7615,7 @@ MonoBehaviour:
   taskDescription: Please disinfect the table.
   gUI: {fileID: 0}
   cUI: {fileID: 0}
+  result: 
   robotSpawnArray: []
   staticObjectSpawnArray: []
   dynamicObjectSpawnArray: []
@@ -7628,6 +7677,7 @@ MonoBehaviour:
   taskDescription: Please scan the medicine on the cart, and enter the bar code number."
   gUI: {fileID: 0}
   cUI: {fileID: 0}
+  result: 104530
   robotSpawnArray: []
   staticObjectSpawnArray: []
   dynamicObjectSpawnArray: []
@@ -7637,7 +7687,6 @@ MonoBehaviour:
     rotation: {x: 0, y: 90, z: 0}
     trajectory: []
   goalObjectSpawnArray: []
-  result: 104530
 --- !u!1 &1656331356
 GameObject:
   m_ObjectHideFlags: 0
@@ -7694,7 +7743,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 985979146}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1667318221
 GameObject:
@@ -8408,6 +8457,7 @@ MonoBehaviour:
   taskDescription: Please navigate to Room P101.
   gUI: {fileID: 0}
   cUI: {fileID: 0}
+  result: 
   robotSpawnArray: []
   staticObjectSpawnArray: []
   dynamicObjectSpawnArray: []
@@ -8569,7 +8619,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 985979146}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1901884920
 MonoBehaviour:
@@ -8882,6 +8932,7 @@ MonoBehaviour:
     and put it on the tray on the table.
   gUI: {fileID: 0}
   cUI: {fileID: 0}
+  result: 
   robotSpawnArray: []
   staticObjectSpawnArray: []
   dynamicObjectSpawnArray: []

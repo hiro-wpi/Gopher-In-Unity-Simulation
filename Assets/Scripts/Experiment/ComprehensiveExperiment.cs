@@ -27,6 +27,31 @@ using UnityEngine;
 /// </summary>
 public class ComprehensiveExperiment : Experiment 
 {
+    // robot
+    private string[] robotSpawnRooms;
+
+    // more task objects
+    // 1
+    public GameObject[] movableObjects;
+    // 2.1
+    public GameObject[] monitorScreens;
+    public string[] monitorValues;
+    // 2.2
+    public GameObject[] barcodeMedicines;
+    public string[] barcodeResults;
+    public GameObject[] barcodeMedicinesSpecial;
+    public string[] barcodeResultsSpecial;
+    // 2.3
+    public GameObject[] medicines;
+    public GameObject[] medicinesHorizontal;
+    // 2.4
+    public GameObject disinfectionPack;
+    public GameObject[] disinfectionFurnitures;
+    // secondary
+    public GameObject[] trashCan;
+    public GameObject[] laundryBasket;
+
+
     // Tasks of a specific task type, defined as (type.task-level)
     // (right, up, left, down)
     //  ←——
@@ -68,22 +93,21 @@ public class ComprehensiveExperiment : Experiment
     private string[,] tasksType2 = new string[,] {
                                                     {"2.1-1", "2.3-1", "2.2-3"},
                                                     {"2.4-2", "2.3-2", "2.4-1"},
-                                                    {"2.2-2", "2.3-3", "2.1-3"},
-                                                    {"2.2-1", "2.4-3", "2.1-2"}
+                                                    {"2.2-2", "2.3-3", "2.1-2"},
+                                                    {"2.2-1", "2.4-3", "2.1-3"}
                                                  };
     // randomization
     private System.Random random = new System.Random(0);
+    private int startIndex;
     private int[,] indexArrayType1 = new int[4, 3];
     private int[,] indexArrayType2 = new int[4, 3];
-
-    // Task Objects
 
 
     void Start()
     {
         // Verify task parameters completeness
         VerifyCompleteness();
-        // Randomize index array
+        // Init index array (task order)
         int[] temp = new int[] {0, 1, 2};
         for (int i = 0; i < indexArrayType1.GetLength(0); ++i)
             for (int j = 0; j < indexArrayType1.GetLength(1); ++j)
@@ -91,11 +115,8 @@ public class ComprehensiveExperiment : Experiment
                 indexArrayType1[i, j] = temp[j];
                 indexArrayType2[i, j] = temp[j];
             }
-        indexArrayType1 = Utils.RandomizeRow<int>(random, indexArrayType1);
-        indexArrayType2 = Utils.RandomizeRow<int>(random, indexArrayType2);
-        // get final task order
-        int startIndex = Utils.Shuffle<int>(random, new int[] {0, 1, 2, 3})[0];
-        string[] randomizedTasks = GetTaskOrder(startIndex);
+        // get randomized task order
+        string[] randomizedTasks = GetRandomizedTaskOrder();
 
         // General
         useSameScene = true;  // use the same scene for all tasks
@@ -121,14 +142,7 @@ public class ComprehensiveExperiment : Experiment
                                         };
         
         // Robot spawn poses (select 1 from 4)
-        robotSpawnPositions = new Vector3[] {new Vector3( -6.7f, 0.0f, -11.0f),
-                                             new Vector3(  7.8f, 0.0f, -11.0f),
-                                             new Vector3(  7.0f, 0.0f,  11.0f),
-                                             new Vector3(-11.0f, 0.0f,   6.0f)};
-        robotSpawnRotations = new Vector3[] {new Vector3(0f,  0f, 0f),
-                                             new Vector3(0f,  0f, 0f),
-                                             new Vector3(0f, -90f, 0f),
-                                             new Vector3(0f,  90f, 0f)};
+        string[] robotSpawnRooms = new string[] {"Room S101", "Room S102", "Room P105", "Room L101"};
         
         // Human spawn position and trajectories
         dynamicObjectSpawnPositions = new Vector3[]
@@ -156,78 +170,32 @@ public class ComprehensiveExperiment : Experiment
         tasks = new Task[randomizedTasks.Length];
 
         // Set up tasks
-        string currentRoomName = HospitalMapUtil.GetLocationName(robotSpawnPositions[startIndex]);
-        string nextRoonName = "";
-        for (int i = 0; i < randomizedTasks.Length; ++i)
+        string currRoomName = robotSpawnRooms[startIndex];
+        for (int i = 0; i < randomizedTasks.Length; i+=2)
         {
-            // Get task info
-            string[] temp1 = randomizedTasks[i].Split(char.Parse("."));
-            string[] temp2 = temp1[1].Split(char.Parse("-"));
-            int taskType = int.Parse(temp1[0]);
-            int taskIndex = int.Parse(temp2[0]) - 1;
-            int levelIndex = int.Parse(temp2[1]) - 1;
-            
-            // Get next room name
             int stepIndex = (i + startIndex) % numStep;
-            if (taskType == 1) // going to antoher room
-            {
-                int nextTaskIndex = int.Parse( randomizedTasks[i+1].Split(
-                                               char.Parse("."))[1].Split(
-                                               char.Parse("-"))[0] ) - 1;
-                nextRoonName = GetNextRoom(stepIndex, nextTaskIndex);
-            }
-            else if (taskType == 2) // stay in the same room
-                nextRoonName = currentRoomName;
-            // Generate task
-            tasks[i] = GenerateComprehensiveTask(taskType, taskIndex, levelIndex, stepIndex,
-                                                 currentRoomName, nextRoonName, 
-                                                 tasksObject);
-            currentRoomName = nextRoonName;
+            // Generate task set
+            (tasks[i], tasks[i+1], currRoomName) = GenerateTaskSet(randomizedTasks[i], randomizedTasks[i+1],
+                                                                   currRoomName, stepIndex, tasksObject);
         }
-    }
-    private string GetNextRoom(int stepIndex, int type2TaskIndex)
-    {
-        string[] roomNames = new string[0];
-        if (stepIndex == 0) 
-        {
-            roomNames = new string[] {"Room P103", "Room P104", "Room S102"};
-            if (type2TaskIndex == 0) 
-            {
-                
-            }
-            else if (type2TaskIndex == 1)
-            {
-                
-            }
-            else if (type2TaskIndex == 2)
-            {
-                
-            }
-            else if (type2TaskIndex == 3)
-            {
-                
-            }
-        }
-        else if (stepIndex == 1)
-        {
-            roomNames = new string[] {"Pharmacy", "Room L101"};
-        }
-        else if (stepIndex == 2)
-        {
-            roomNames = new string[] {"Room P105", "Room S103"};
-        }
-        else if (stepIndex == 3)
-        {
-            roomNames = new string[] {"Room P101", "Room P102", "Room S101"};
-        }
-        // randomly select one
-        string roomName = Utils.Shuffle<string>(random, roomNames)[0];
-        return roomName;
     }
 
+    private (Task, Task, string) GenerateTaskSet(string task1Name, string task2Name, string currRoomName, int stepIndex,
+                                                 GameObject parent = null)
+    {
+        // Get task info
+        var(taskType1, taskIndex1, levelIndex1) = GetIndicesFromName(task1Name);
+        var(taskType2, taskIndex2, levelIndex2) = GetIndicesFromName(task2Name);    
+        string nextRoomName = GetNextRoom(stepIndex, taskIndex2, levelIndex2);
+        // Generate task set
+        Task task1 = GenerateComprehensiveTask(taskType1, taskIndex1, levelIndex1, 
+                                               currRoomName, nextRoomName, parent);
+        Task task2 = GenerateComprehensiveTask(taskType2, taskIndex2, levelIndex2, 
+                                               currRoomName, nextRoomName, parent);
+        return (task1, task2, nextRoomName);
+    }
     private Task GenerateComprehensiveTask(int taskType, int taskIndex, int levelIndex, 
-                                           int stepIndex,
-                                           string currentRoomName, string nextRoonName, 
+                                           string currRoomName, string nextRoomName, 
                                            GameObject parent = null)
     {
         // Instantiate task object
@@ -262,16 +230,17 @@ public class ComprehensiveExperiment : Experiment
         task.sceneName = sceneNames[0];
         task.taskName = taskType+"."+(taskIndex+1)+"-"+(levelIndex+1);
         if (taskType == 1)
-            task.taskDescription = taskDescriptions[(taskType-1)*4 + taskIndex] + nextRoonName;
+            task.taskDescription = taskDescriptions[(taskType-1)*4 + taskIndex] + nextRoomName;
         else if (taskType == 2)
-            task.taskDescription = taskDescriptions[(taskType-1)*4 + taskIndex] + currentRoomName;
+            task.taskDescription = taskDescriptions[(taskType-1)*4 + taskIndex];
 
         // Detailed spawning info
         // robot
         Task.SpawnInfo[] robotSpawnArray = new Task.SpawnInfo[1];
+        var (entrancePos, entraceRot) = HospitalMapUtil.GetRoomEntrance(currRoomName);
         robotSpawnArray[0] = Task.ToSpawnInfo(robotPrefabs[0], 
-                                              robotSpawnPositions[stepIndex],
-                                              robotSpawnRotations[stepIndex], 
+                                              entrancePos + Quaternion.Euler(entraceRot) * Vector3.forward,
+                                              entraceRot + new Vector3(0f, 180f, 0f), 
                                               null);
 
         // static object
@@ -306,74 +275,157 @@ public class ComprehensiveExperiment : Experiment
             }
         }
 
-        // Task specific
-        // task object 
-        // goal object
+        // Task specific // task object and goal object
         Task.SpawnInfo[] taskObjectSpawnArray = new Task.SpawnInfo[0];
         Task.SpawnInfo[] goalObjectSpawnArray = new Task.SpawnInfo[0];
         if (taskType == 1)
         {
             // Get entrance and passage from room names for type 1 tasks
-            var(currEntrace, currEntraceDir) = HospitalMapUtil.GetRoomEntrance(currentRoomName);
-            var(nextEntrace, nextEntraceDir) = HospitalMapUtil.GetRoomEntrance(nextRoonName);
+            var(currEntrace, currEntraceDir) = HospitalMapUtil.GetRoomEntrance(currRoomName);
+            var(nextEntrace, nextEntraceDir) = HospitalMapUtil.GetRoomEntrance(nextRoomName);
             goalObjectSpawnArray = new Task.SpawnInfo[1];
-
+            // 1.1 Navigation
             if (taskIndex == 0)
             {
                 goalObjectSpawnArray[0] = Task.ToSpawnInfo(goalObjects[0], nextEntrace, 
                                                            new Vector3(), null);
             }
+            // 1.2 Object Carrying
             else if (taskIndex == 1)
             {
                 taskObjectSpawnArray = new Task.SpawnInfo[1];
-                taskObjectSpawnArray[0] = Task.ToSpawnInfo(taskObjects[0], currEntrace,
+                taskObjectSpawnArray[0] = Task.ToSpawnInfo(movableObjects[0], currEntrace,
                                                            currEntraceDir + new Vector3(0f, 180f, 0f), 
                                                            null);
                 goalObjectSpawnArray[0] = Task.ToSpawnInfo(goalObjects[0], nextEntrace,
                                                            new Vector3(), null);
             }
+            // 1.3 Cart Pushing
             else if (taskIndex == 2)
             {
                 taskObjectSpawnArray = new Task.SpawnInfo[1];
-                taskObjectSpawnArray[0] = Task.ToSpawnInfo(taskObjects[1], currEntrace,
+                taskObjectSpawnArray[0] = Task.ToSpawnInfo(movableObjects[1], currEntrace,
                                                            currEntraceDir + new Vector3(0f, 180f, 0f), 
                                                            null);
                 goalObjectSpawnArray[0] = Task.ToSpawnInfo(goalObjects[0], nextEntrace,
                                                            new Vector3(), null);
             }
-            else //else if (taskIndex == 3)
+            // 1.4 Blocked Path Passing
+            else if (taskIndex == 3)
             {
-                var(blockedPoss, blockedRots) = HospitalMapUtil.GetRoomPassage(nextRoonName);
+                var(blockedPoss, blockedRots) = HospitalMapUtil.GetRoomPassage(nextRoomName);
                 taskObjectSpawnArray = new Task.SpawnInfo[blockedPoss.Length];
                 for (int i = 0; i < blockedPoss.Length; ++i)
-                    taskObjectSpawnArray[i] = Task.ToSpawnInfo(taskObjects[1], blockedPoss[i],
+                    taskObjectSpawnArray[i] = Task.ToSpawnInfo(movableObjects[1], blockedPoss[i],
                                                                blockedRots[i], null);
                 goalObjectSpawnArray[0] = Task.ToSpawnInfo(goalObjects[0], nextEntrace,
                                                            new Vector3(), null);
             }
         }
-        else //else if (taskType == 2)
+        else if (taskType == 2)
         {
+            // 2.1 Vital Reading
             if (taskIndex == 0)
             {
-                
-                task = taskObject.AddComponent<ReadingTask>();
+                // select a monitor value
+                int valueInd = random.Next(monitorScreens.Length);
+                task.result = monitorValues[valueInd];
+                // get avaliable locations
+                var (monitorPoss, monitorRots) = HospitalMapUtil.GetMonitorPose(nextRoomName);
+                // select a monitor - manually set
+                int monitorInd = Mathf.Clamp(monitorPoss.Length-2, 0, monitorPoss.Length-1);
+                // spawn info
+                taskObjectSpawnArray = new Task.SpawnInfo[1];
+                taskObjectSpawnArray[0] = Task.ToSpawnInfo(monitorScreens[valueInd], 
+                                                           monitorPoss[monitorInd], monitorRots[monitorInd], 
+                                                           null);
+                task.taskDescription += " (Bed " + (monitorInd+1) + ")";
             }
+            // 2.2 Medicine Scanning
             else if (taskIndex == 1)
             {
+                // selection pool based on level
+                GameObject[] medicines = barcodeMedicines;
+                string[] results = barcodeResults;
+                if (levelIndex == 2)
+                {
+                    medicines = barcodeMedicinesSpecial;
+                    results = barcodeResultsSpecial;
+                }
 
-                task = taskObject.AddComponent<ReadingTask>();
+                // select a monitor value   
+                int valueInd = random.Next(results.Length);
+                task.result = results[valueInd];
+                // get avaliable locations
+                Vector3[] tablePoss = HospitalMapUtil.GetFreeTableSpace(nextRoomName);
+                // select a table - manually set
+                int tableInd = tablePoss.Length - 1;
+                // spawn info
+                taskObjectSpawnArray = new Task.SpawnInfo[1];
+                taskObjectSpawnArray[0] = Task.ToSpawnInfo(medicines[valueInd], 
+                                                           tablePoss[tableInd], Vector3.zero, 
+                                                           null);
             }
+            // 2.3 Picking and Placing
             else if (taskIndex == 2)
             {
+                // selection pool based on level
+                GameObject[] meds = medicines;
+                if (levelIndex == 2)
+                    meds = medicinesHorizontal;
 
-                task = taskObject.AddComponent<GraspingTask>();
+                // get avaliable locations
+                Vector3[] tablePoss = HospitalMapUtil.GetFreeTableSpace(nextRoomName);
+                // select a table - manually set
+                int pickInd = tablePoss.Length - 2;
+                int placeInd = tablePoss.Length - 1;
+                // select a medicine value
+                int ind = random.Next(meds.Length);
+                // spawn info
+                taskObjectSpawnArray = new Task.SpawnInfo[1];
+                goalObjectSpawnArray = new Task.SpawnInfo[1];
+                taskObjectSpawnArray[0] = Task.ToSpawnInfo(meds[ind], tablePoss[pickInd],
+                                                           new Vector3(), null);
+                goalObjectSpawnArray[0] = Task.ToSpawnInfo(goalObjects[1], tablePoss[placeInd],
+                                                           new Vector3(), null);
             }
-            else //else if (taskIndex == 3)
+            // 2.4 Disinfection
+            else if (taskIndex == 3)
             {
+                // selection pool based on level
+                GameObject furniture = disinfectionFurnitures[levelIndex];
                 
-                task = taskObject.AddComponent<PaintingTask>();
+                // get avaliable locations
+                Vector3[] groudPoss = HospitalMapUtil.GetFreeGroundSpace(nextRoomName);
+                // select a ground - manually set
+                int ind = 0;
+                // spawn info
+                taskObjectSpawnArray = new Task.SpawnInfo[1];
+                goalObjectSpawnArray = new Task.SpawnInfo[1];
+                taskObjectSpawnArray[0] = Task.ToSpawnInfo(disinfectionPack, Vector3.zero,
+                                                           Vector3.zero, null);
+                goalObjectSpawnArray[0] = Task.ToSpawnInfo(furniture, groudPoss[ind],
+                                                           new Vector3(), null);
             }
+
+            // Secondary task
+            // get avaliable locations
+            Vector3[] freeGroudPoss = HospitalMapUtil.GetFreeGroundSpace(nextRoomName);
+            // select a object
+            int ind1 = random.Next(trashCan.Length);
+            int ind2 = random.Next(laundryBasket.Length);
+            // select a ground - manually set
+            int ground1 = freeGroudPoss.Length-1;
+            int ground2 = freeGroudPoss.Length-2;
+            // spawn info
+            Task.SpawnInfo[] secondaryObjectSpawnArray = new Task.SpawnInfo[2];
+            secondaryObjectSpawnArray[0] = Task.ToSpawnInfo(trashCan[ind1], freeGroudPoss[ground1],
+                                                            Vector3.zero, null);
+            secondaryObjectSpawnArray[1] = Task.ToSpawnInfo(laundryBasket[ind2], freeGroudPoss[ground2],
+                                                            new Vector3(), null);
+            staticObjectSpawnArray = Utils.ConcatenateArray(staticObjectSpawnArray, 
+                                                            secondaryObjectSpawnArray);
+            task.CheckInput("TrashCan " + ind1 + "," + "Laundry " + ind2);
         }
 
         // robot, object, and human spawn array
@@ -390,8 +442,117 @@ public class ComprehensiveExperiment : Experiment
         return task;
     }
 
+    
+    private string[] GetRandomizedTaskOrder()
+    {
+        // Randomize order
+        startIndex = Utils.Shuffle<int>(random, Enumerable.Range(0, numStep).ToArray())[0];
+        indexArrayType1 = Utils.RandomizeRow<int>(random, indexArrayType1);
+        indexArrayType2 = Utils.RandomizeRow<int>(random, indexArrayType2);
+        string[] randomizedTasks = new string[numCircle * numStep * numType];
+
+        // Based on the startStep, numStep of a circle and numCircle,
+        // return the final randomized taks list
+        int count = 0;
+        for (int i = 0; i < numCircle; ++i)
+        {
+            for (int j = 0; j < numStep; ++j)
+            {
+                // change start step
+                int newJ = (j + startIndex) % numStep; 
+                // get the type 1 and type 2 tasks
+                for (int k = 0; k < numType; ++k)
+                {
+                    if (k == 0)
+                        randomizedTasks[count] = 
+                            tasksType1[newJ, indexArrayType1[newJ, i]];
+                    else if (k == 1)
+                        randomizedTasks[count] = 
+                            tasksType2[newJ, indexArrayType2[newJ, i]];
+                    count ++;
+                }
+            }
+        }
+        return randomizedTasks;
+    }
+
+    private string GetNextRoom(int stepIndex, int type2TaskIndex, int type2LevelIndex)
+    {
+        string[] stepRoomNames = new string[0];
+        string[] taskRoomNames = new string[0];
+
+        // Avaliable rooms based on current step
+        if (stepIndex == 0) 
+            stepRoomNames = new string[] {"Room P103", "Room P104", "Room S102"};
+        else if (stepIndex == 1)
+            stepRoomNames = new string[] {"Pharmacy", "Room L101"};
+        else if (stepIndex == 2)
+            stepRoomNames = new string[] {"Room P105", "Room S103"};
+        else if (stepIndex == 3)
+            stepRoomNames = new string[] {"Room P101", "Room P102", "Room S101"};
+        
+        // Avaliable rooms based on current task and difficulty
+        // Room L101 only for 2.1-2 and 2.4-3
+        // Pharmacy only for 2.2-2 and 2.3-3
+        if (type2TaskIndex == 0) 
+        {
+            if (type2LevelIndex == 0)
+                taskRoomNames = new string[] {"Room P101", "Room P103", "Room P105"};
+            else if (type2LevelIndex == 1)
+                taskRoomNames = new string[] {"Room L101"};
+            else if (type2LevelIndex == 2)
+                taskRoomNames = new string[] {"Room S101", "Room S102", "Room S103"};
+        }
+        else if (type2TaskIndex == 1)
+        {   
+            if (type2LevelIndex == 0)
+                taskRoomNames = new string[] {"Room P102", "Room P104", "Room P105"};
+            else if (type2LevelIndex == 1)
+                taskRoomNames = new string[] {"Pharmacy"};
+            else if (type2LevelIndex == 2)
+                taskRoomNames = new string[] {"Room S101", "Room S102", "Room S103"};
+        }
+        else if (type2TaskIndex == 2)
+        {
+            if (type2LevelIndex == 0)
+                taskRoomNames = new string[] {"Room P101", "Room P103", "Room P105"};
+            else if (type2LevelIndex == 1)
+                taskRoomNames = new string[] {"Room S101", "Room S102", "Room S103"};
+            else if (type2LevelIndex == 2)
+                taskRoomNames = new string[] {"Pharmacy"};
+        }
+        else if (type2TaskIndex == 3)
+        {
+            if (type2LevelIndex == 0)
+                taskRoomNames = new string[] {"Room P102", "Room P104", "Room P105"};
+            else if (type2LevelIndex == 1)
+                taskRoomNames = new string[] {"Room P101", "Room P103", "Room P105"};
+            else if (type2LevelIndex == 2)
+                taskRoomNames = new string[] {"Room S101", "Room S102", "Room S103", "Room L101"};
+        }
+
+        // Find room that satisfies both conditions
+        string[] roomNames = stepRoomNames.Intersect(taskRoomNames).ToArray();
+        if (roomNames.Length == 0)
+            Debug.LogWarning("Task definition error, no proper room found for" + 
+                             "2." + type2TaskIndex + "-"  + type2LevelIndex);
+        // randomly select one
+        return Utils.Shuffle<string>(random, roomNames)[0];
+    }
+
 
     // Utils
+    private (int, int, int) GetIndicesFromName(string task)
+    {
+        string[] temp1 = task.Split(char.Parse("."));
+        string[] temp2 = temp1[1].Split(char.Parse("-"));
+        int taskType = int.Parse(temp1[0]);
+        int taskIndex = int.Parse(temp2[0]) - 1;
+        int levelIndex = int.Parse(temp2[1]) - 1;
+
+        return (taskType, taskIndex, levelIndex);
+    }
+
     private void VerifyCompleteness()
     {
         // Combine tasks from each part
@@ -417,12 +578,7 @@ public class ComprehensiveExperiment : Experiment
         int [,] counter = new int[numTask, numLevel];
         foreach (string task in tasks)
         {
-            string[] temp1 = task.Split(char.Parse("."));
-            string[] temp2 = temp1[1].Split(char.Parse("-"));
-            int taskType = int.Parse(temp1[0]);
-            int taskIndex = int.Parse(temp2[0]) - 1;
-            int levelIndex = int.Parse(temp2[1]) - 1;
-
+            var (taskType, taskIndex, levelIndex) = GetIndicesFromName(task);
             counter[taskIndex, levelIndex]++;
             if (taskType != type)
                 Debug.LogWarning("Wrong type of task defined: " + 
@@ -434,32 +590,5 @@ public class ComprehensiveExperiment : Experiment
                 if (counter[i, j] == 0)
                     Debug.LogWarning("Task is missing: " + 
                                      type+"."+(i+1)+"-"+(j+1));
-    }
-
-    private string[] GetTaskOrder(int startIndex)
-    {
-        string[] randomizedTasks = new string[numCircle * numStep * numType];
-
-        int count = 0;
-        for (int i = 0; i < numCircle; ++i)
-        {
-            for (int j = 0; j < numStep; ++j)
-            {
-                // change start step
-                int newJ = (j + startIndex) % numStep; 
-                // get the type 1 and type 2 tasks
-                for (int k = 0; k < numType; ++k)
-                {
-                    if (k == 0)
-                        randomizedTasks[count] = 
-                            tasksType1[newJ, indexArrayType1[newJ, i]];
-                    else if(k == 1)
-                        randomizedTasks[count] = 
-                            tasksType2[newJ, indexArrayType2[newJ, i]];
-                    count ++;
-                }
-            }
-        }
-        return randomizedTasks;
     }
 }

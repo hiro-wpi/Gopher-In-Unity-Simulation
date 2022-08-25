@@ -76,9 +76,9 @@ public static class HospitalMapUtil
                         new Vector3 (10.3f, 0.0f, -13.3f)
         }},
         {"Room P101", new Vector3[] {
+                        new Vector3 (-11.5f, 0.0f, -7.2f),
                         new Vector3 (-9.8f,  0.0f, -6.8f),
-                        new Vector3 (-11.3f, 0.0f, -8.1f),
-                        new Vector3 (-11.5f, 0.0f, -7.2f)
+                        new Vector3 (-11.3f, 0.0f, -8.1f)
         }},
         {"Room P102", new Vector3[] {
                         new Vector3 (-4.3f, 0.0f, -7.1f),
@@ -86,9 +86,10 @@ public static class HospitalMapUtil
                         new Vector3 (-2.3f, 0.0f, -5.7f)
         }},
         {"Room P103", new Vector3[] {
+                        new Vector3 (3.0f, 0.0f, -7.2f),
                         new Vector3 (4.7f, 0.0f, -6.8f),
-                        new Vector3 (3.2f, 0.0f, -8.1f),
-                        new Vector3 (3.0f, 0.0f, -7.2f)
+                        new Vector3 (3.2f, 0.0f, -8.1f)
+                        
         }},
         {"Room P104", new Vector3[] {
                         new Vector3 (10.2f, 0.0f, -7.1f),
@@ -96,9 +97,9 @@ public static class HospitalMapUtil
                         new Vector3 (12.2f, 0.0f, -5.7f)
         }},
         {"Room L101", new Vector3[] {
-                        new Vector3 (-9.8f, 0.0f,  1.0f),
-                        new Vector3 (-9.8f, 0.0f, -0.2f),
-                        new Vector3 (-9.8f, 0.0f, -1.5f)
+                        new Vector3 (-11.4f, 0.0f,  3.5f),
+                        new Vector3 ( -9.8f, 0.0f,  0.0f),
+                        new Vector3 ( -9.8f, 0.0f, -1.5f)
         }},
         {"Treatment Room 1", new Vector3[] {
                         new Vector3 (-3.6f, 0.0f, 1.5f),
@@ -114,9 +115,9 @@ public static class HospitalMapUtil
                         new Vector3 (12.4f, 0.0f, 0.5f)
         }},
         {"Pharmacy", new Vector3[] {
+                        new Vector3 (-8.1f, 0.0f, 14.2f),
                         new Vector3 (-6.6f, 0.0f, 13.4f),
-                        new Vector3 (-6.6f, 0.0f, 12.4f),
-                        new Vector3 (-7.4f, 0.0f, 14.2f)
+                        new Vector3 (-6.6f, 0.0f, 12.4f)
         }},
         {"Staff Lounge", new Vector3[] {
                         new Vector3 (-2.6f, 0.0f, 14.0f),
@@ -132,8 +133,8 @@ public static class HospitalMapUtil
                         new Vector3 (4.2f, 0.0f, 13.1f)
         }},
         {"Room P105", new Vector3[] {
+                        new Vector3 (10.3f, 0.0f, 6.0f),
                         new Vector3 (10.4f, 0.0f, 7.0f),
-                        new Vector3 (10.4f, 0.0f, 6.0f),
                         new Vector3 (11.8f, 0.0f, 6.9f)
         }}
     };
@@ -174,8 +175,8 @@ public static class HospitalMapUtil
         }},
         {"Room L101", new Vector3[] {
                         new Vector3 (-11.1f, 0.8f,  0.4f),
-                        new Vector3 ( -9.7f, 0.8f,  2.7f),
-                        new Vector3 ( -9.7f, 0.8f, -2.5f)
+                        new Vector3 ( -9.7f, 0.8f, -2.5f),
+                        new Vector3 ( -9.7f, 0.9f,  2.7f)
         }},
         {"Treatment Room 1", new Vector3[] {
                         new Vector3 (-1.5f, 0.8f, 1.3f),
@@ -208,8 +209,8 @@ public static class HospitalMapUtil
                         new Vector3 (-0.2f, 0.9f, 14.0f)
         }},
         {"Room S103", new Vector3[] {
-                        new Vector3 ( 3.6f, 0.8f, 9.8f),
                         new Vector3 (10.4f, 0.8f, 10.5f),
+                        new Vector3 ( 3.6f, 0.8f, 9.8f),
                         new Vector3 ( 6.8f, 0.8f, 13.7f)
         }},
         {"Room P105", new Vector3[] {
@@ -224,16 +225,16 @@ public static class HospitalMapUtil
     {
         // Room Name -> (position1, rotation1, position2, rotation2 ...)
         {"Room S101", new Vector3[] {
-                        new Vector3 ( -3.2f, 1.1f, -12.2f),
-                        new Vector3 (90.0f, -90.0f, 0.0f),
                         new Vector3 (-10.2f, 1.1f, -12.4f),
-                        new Vector3 (90.0f,  90.0f, 0.0f)
+                        new Vector3 (90.0f,  90.0f, 0.0f),
+                        new Vector3 ( -3.2f, 1.1f, -12.2f),
+                        new Vector3 (90.0f, -90.0f, 0.0f)
         }},
         {"Room S102", new Vector3[] {
-                        new Vector3 ( 11.3f, 1.1f, -12.2f),
-                        new Vector3 (90.0f, -90.0f, 0.0f),
                         new Vector3 (  4.3f, 1.1f, -12.4f),
-                        new Vector3 (90.0f,  90.0f, 0.0f)
+                        new Vector3 (90.0f,  90.0f, 0.0f),
+                        new Vector3 ( 11.3f, 1.1f, -12.2f),
+                        new Vector3 (90.0f, -90.0f, 0.0f)
         }},
         {"Room P101", new Vector3[] {
                         new Vector3 (-13.6f, 1.1f, -6.6f),
@@ -268,10 +269,10 @@ public static class HospitalMapUtil
         {"Staff Lounge", new Vector3[0]},
         {"Office", new Vector3[0]},
         {"Room S103", new Vector3[] {
-                        new Vector3 (3.5f,   1.1f, 12.2f),
-                        new Vector3 (90.0f,  90.0f, 0.0f),
                         new Vector3 (10.5f,  1.1f, 12.5f),
-                        new Vector3 (90.0f, -90.0f, 0.0f)
+                        new Vector3 (90.0f, -90.0f, 0.0f),
+                        new Vector3 (3.5f,   1.1f, 12.2f),
+                        new Vector3 (90.0f,  90.0f, 0.0f)
         }},
         {"Room P105", new Vector3[] {
                         new Vector3 (14.6f,  1.1f, 6.6f),

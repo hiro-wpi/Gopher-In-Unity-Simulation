@@ -241,7 +241,7 @@ public class GraphicalInterface : MonoBehaviour
                  && gopherControl.Mode != GopherControl.ControlMode.RightArm)
             RecordKey("RightArrow");
         else if (Input.GetKeyDown(KeyCode.UpArrow))
-            RecordKey((!gopherControl.cameraControlEnabled).ToString() + ",UpArrow");
+            RecordKey("UpArrow");
 
         // Joint presets
         if (gopherControl.Mode != GopherControl.ControlMode.Base)
@@ -255,10 +255,14 @@ public class GraphicalInterface : MonoBehaviour
                 RecordKey("F4");
             else if (Input.GetKeyDown(KeyCode.F5))
                 RecordKey("F5");
+            else if (Input.GetKeyDown(KeyCode.F8))
+                RecordKey("F8");
 
         // Automation
         if (Input.GetKeyDown(KeyCode.T))
             RecordKey("T");
+        if (Input.GetKeyDown(KeyCode.T))
+            RecordKey("G");
 
         // Camera Switch
         if (Input.GetKeyDown(KeyCode.Keypad8))

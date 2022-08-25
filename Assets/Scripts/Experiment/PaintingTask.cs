@@ -9,9 +9,13 @@ public class PaintingTask : Task
 {
     private PaintShooting paintShooting;
     private Paintable[] paintables;
+    private float coverageThreshold;
 
     void Start()
     {
+        // success coverage
+        result = "0.99";
+        coverageThreshold = float.Parse(result);
     }
 
     void Update() 
@@ -36,7 +40,7 @@ public class PaintingTask : Task
         
         // Check if all paintable objects done painting
         for (int i = 0; i < paintables.Length; ++i)
-            if (paintables[i].GetCoverage() < 0.99)
+            if (paintables[i].GetCoverage() < coverageThreshold)
             {
                 return false;
             }
@@ -78,9 +82,15 @@ public class PaintingTask : Task
         taskObjects[0].transform.localRotation = Quaternion.identity;
         
         // Paintable
-        paintables = new Paintable[goalObjects.Length];
+        List<Paintable> paintablesList = new List<Paintable>();
         for (int i = 0; i < goalObjects.Length; ++i)
-            paintables[i] = goalObjects[i].GetComponentInChildren<Paintable>();
+        {
+            Paintable[] paintables = goalObjects[i].GetComponentsInChildren<Paintable>();
+            foreach (Paintable paintable in paintables)
+                paintablesList.Add(paintable);
+        }
+        paintables = paintablesList.ToArray();
+        
         // highlight
         for (int i = 0; i < goalObjects.Length; ++i)
             HighlightUtils.HighlightObject(goalObjects[i], Color.cyan);
