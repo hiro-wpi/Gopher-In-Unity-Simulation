@@ -24,9 +24,7 @@ public class TestAutoNavigation : MonoBehaviour
             autoNavigation.drawPathEnabled = true;
             goal = target.transform.position;
 
-            bool isValid = autoNavigation.SetGoal(goal);
-            if (isValid)
-                autoNavigation.NavigateToGoal();
+            autoNavigation.SetGoal(goal);
         }
         
         if (Input.GetKeyDown(KeyCode.S))

@@ -11,35 +11,49 @@ using UnityEngine.AI;
 /// </summary>
 public class AutoNavigation : MonoBehaviour
 {
-    // robot
+    public bool active;
+
+    // Robot
     public GameObject robot;
     public ArticulationWheelController wheelController;
     public ArmControlManager leftArmControlManager;
     public ArmControlManager rightArmControlManager;
-    // nav mesh agent - use the parameters there,
-    // but not the agent itself
+    // nav mesh agent
+    // this is not actually used, only served as the parameter container
+    // for speed, angularSpeed, stoppingDistance, areMask, etc.
     public NavMeshAgent agent;
-    public NavMeshObstacle[] navMeshObstacles;
-    // motion planning
-    public NavMeshSurface navMeshSurface;
-    public Vector3 goal;
+    // nav mesh obstacles
+    // during auto navigation, only the base one is enabled
+    public NavMeshObstacle[] baseNavMeshObstacles;
+    public NavMeshObstacle[] armNavMeshObstacles;
+    private Coroutine planningCoroutine;
+
+    // Motion planning
     public float replanTime = 5f;
     private float elapsed;
+    private Vector3 goal = new Vector3(0f, -100f, 0f);
     private NavMeshPath path;
     private Vector3[] waypoints = new Vector3[0];
     private int waypointIndex = 0;
     private bool rotationNeeded = true;
-    // visualization
+    /*
+    // temp - could be removed after controller is implemented
+    private float prevDis = 0f;
+    private float errorCheckTime;
+    private float errorCheckFreq = 1.0f;
+    */
+    
+    // Visualization
+    public GameObject goalPrefab;
+    private GameObject goalObject;
     public LineRenderer lineRenderer;
-    public bool drawPathEnabled;
+    public bool drawPathEnabled = true;
 
 
     void Start()
     {
-        if (agent == null)
-            agent = gameObject.GetComponent<NavMeshAgent>();
-        if (navMeshObstacles == null)
-            navMeshObstacles = robot.GetComponentsInChildren<NavMeshObstacle>();
+        // never enabled
+        agent.enabled = false;
     }
 
     void Update()
@@ -48,21 +62,39 @@ public class AutoNavigation : MonoBehaviour
         if (!drawPathEnabled || waypoints.Length == 0)
         {
             lineRenderer.positionCount = 0;
+            if (goalObject != null)
+                Destroy(goalObject);
             return;
         }
-        // current point + waypoints
+        // Draw current point + waypoints
         lineRenderer.positionCount = (1 + waypoints.Length - waypointIndex);
-        lineRenderer.SetPosition(0, agent.transform.position);
+        lineRenderer.SetPosition(0, transform.position);
         for (int i = 0; i < waypoints.Length - waypointIndex; ++i)
         {
-            // draw higher for better visualization
+            // higher for better visualization
             lineRenderer.SetPosition(1 + i, waypoints[i + waypointIndex] + 
                                             new Vector3(0f, 0.2f, 0f) ); 
+        }
+        // Draw goal
+        if (goalObject != null && 
+            goalObject.transform.position != waypoints[waypoints.Length-1])
+        {
+            Destroy(goalObject);
+        }
+        if (goalObject == null)
+        {
+            goalObject = Instantiate(goalPrefab,
+                                     waypoints[waypoints.Length-1], 
+                                     Quaternion.identity);
+            Utils.SetGameObjectLayer(goalObject, "Robot", true);
         }
     }
 
     void FixedUpdate()
     {
+        // Autonomy disabled
+        if (!active)
+            return;
         // Check goals
         if (waypoints.Length == 0)
             return;
@@ -72,16 +104,37 @@ public class AutoNavigation : MonoBehaviour
         if (elapsed > replanTime)
         {
             // replan
-            NavigateToGoal();
+            elapsed = 0f;
+            SetGoal(this.goal);
         }
 
-        // Check distance to waypoints and update motion
-        float tolerance = 0.05f;
+        // Check goal
+        // select tolerance
+        float tolerance = 0.1f;
         if (waypointIndex == waypoints.Length - 1)
             tolerance = agent.stoppingDistance;
         // move to current waypoint
-        if ((agent.transform.position - waypoints[waypointIndex]).magnitude 
-            > tolerance)
+        float currentDis = (transform.position - waypoints[waypointIndex]).magnitude;
+        
+        /*
+        // temp - Check if the robot is approaching the waypoint
+        if (prevDis == 0)
+            prevDis = currentDis;
+        errorCheckTime += Time.fixedDeltaTime;
+        if (errorCheckTime > errorCheckFreq)
+        {
+            errorCheckTime = 0;
+            if ((currentDis - prevDis) > agent.speed*errorCheckFreq/2f)
+            {
+                SetGoal(this.goal);
+                prevDis = 0;
+            }
+            prevDis = currentDis;
+        }
+        */
+
+        // Check distance to waypoints and update motion
+        if (currentDis > tolerance)
         {
             NavigateToWaypoint(waypoints[waypointIndex]);
         }
@@ -89,13 +142,13 @@ public class AutoNavigation : MonoBehaviour
         else
         {
             waypointIndex ++;
+            // prevDis = 0; // temp
             rotationNeeded = true;
             // Fianl goal is reached
             if (waypointIndex == waypoints.Length)
             {
                 wheelController.SetRobotVelocity(0f, 0f);
-                ClearGoal();
-                ClearPath();
+                DisableAutonomy();
             }
         }
     }
@@ -106,10 +159,10 @@ public class AutoNavigation : MonoBehaviour
         // P controller, Kp = 2
         float Kp = 2;
         // Errors
-        float distance = (waypoint - agent.transform.position).magnitude;
-        Quaternion targetRotation = Quaternion.LookRotation(waypoint - agent.transform.position);
+        float distance = (waypoint - transform.position).magnitude;
+        Quaternion targetRotation = Quaternion.LookRotation(waypoint - transform.position);
         float angleDifference = Mathf.DeltaAngle(targetRotation.eulerAngles[1], 
-                                                 agent.transform.rotation.eulerAngles[1]);
+                                                 transform.rotation.eulerAngles[1]);
 
         // Adjust rotation angle first
         if (Mathf.Abs(angleDifference) > 1 && rotationNeeded) // 1° tolorance
@@ -131,25 +184,21 @@ public class AutoNavigation : MonoBehaviour
     }
     
 
-    public void EnableAutonomy()
+    public void EnableAutonomy(bool changeArmPose = true)
     {
-        // Change nav mesh usage
-        foreach(NavMeshObstacle navMeshObstacle in navMeshObstacles)
-            navMeshObstacle.enabled = false;
-        agent.enabled = true;
+        // Must have valid goal and plan first
+        if (goal[1] == -100f)
+        {
+            Debug.Log("No valid goal is set");
+            return;
+        }
+
+        // Change nav mesh obsatcle usage
+        SetObstacleActive(true, false);
         // Change arm pose
-        ChangeArmPose(8);
-    }
-    public void DisableAutonomy()
-    {
-        // Change nav mesh usage
-        agent.enabled = false;
-        foreach(NavMeshObstacle navMeshObstacle in navMeshObstacles)
-            navMeshObstacle.enabled = true;
-        ClearGoal();
-        ClearPath();
-        // Change arm pose
-        // ChangeArmPose(0);
+        if (changeArmPose)
+            ChangeArmPose(8);
+        active = true;
     }
     private void ChangeArmPose(int presetIndex)
     {
@@ -160,67 +209,93 @@ public class AutoNavigation : MonoBehaviour
         }
     }
 
-
-    public bool SetGoal(Vector3 goal)
+    public void DisableAutonomy()
     {
-        if (!agent.enabled)
-            return false;
+        // Resume nav obsatcle
+        SetObstacleActive(true, true);
+        // Init parameters
+        goal = new Vector3(0f, -100f, 0f);
+        path = new NavMeshPath();
+        waypoints = new Vector3[0];
+        SetTrajectory(path);
+        active = false;
+    }
 
+    private void SetObstacleActive(bool baseActive, bool armActive)
+    {
+        foreach(NavMeshObstacle navMeshObstacle in baseNavMeshObstacles)
+            navMeshObstacle.carving = baseActive;
+        foreach(NavMeshObstacle navMeshObstacle in armNavMeshObstacles)
+            navMeshObstacle.carving = armActive;
+    }
+
+    
+    public void SetGoal(Vector3 goal)
+    {
         // Get closest point in the nav mesh
         NavMeshHit hit;
         if (NavMesh.SamplePosition(goal, out hit, 1f, agent.areaMask))
         {
-            this.goal = hit.position;
-            return true;
+            goal = hit.position;
+            // prevent nav mesh obstacles blocking path
+            if (planningCoroutine != null)
+                StopCoroutine(planningCoroutine);
+            planningCoroutine = StartCoroutine(PathPlanningCoroutine(0.5f, goal));
+            // path planning
         }
         else
         {
-            Debug.Log("The given goal is invalid");
-            return false;
+            Debug.Log("The given goal is invalid.");
         }
     }
-
-    public void NavigateToGoal()
+    private IEnumerator PathPlanningCoroutine(float time, Vector3 goal)
     {
-        if (goal[1] == float.NegativeInfinity)
-            return;
-        
+        SetObstacleActive(false, false);
+        yield return new WaitForSeconds(0.1f);
+        bool pathFound = FindGlobalPath(goal);
+        // path found or not
+        if (pathFound)
+        {
+            this.goal = goal;
+        }
+        else
+        {
+            Debug.Log("No path found to given goal.");
+        }
+        yield return new WaitForSeconds(time);
+        SetObstacleActive(true, true);
+    }
+    private bool FindGlobalPath(Vector3 goal)
+    {
+        if (goal[1] == -100f)
+            return false;
+
         // Global Path finding - A*
         path = new NavMeshPath();
-        NavMesh.CalculatePath(agent.transform.position, 
+        NavMesh.CalculatePath(transform.position, 
                               goal, agent.areaMask, path);
+        if (path.corners.Length == 0)
+            return false;
         // Set trajectories
         SetTrajectory(path);
         waypointIndex = 0;
         rotationNeeded = true;
-
-        // For replanning
-        elapsed = 0;
+        return true;
     }
     private void SetTrajectory(NavMeshPath path)
     {
         // Convert path into waypoints
         waypoints = new Vector3[path.corners.Length];
-        for (int i = 0; i < path.corners.Length; ++i)
-        {
-            waypoints[i] = path.corners[i];
-        }
         // Invalid Trajectory -> stop sign
         if (path.corners.Length == 0)
         {
             wheelController.SetRobotVelocity(0f, 0f);
+            return;
         }
-    }
-
-
-    public void ClearGoal()
-    {
-        goal = new Vector3(0f, float.NegativeInfinity, 0f);
-    }
-    public void ClearPath()
-    {
-        path = new NavMeshPath();
-        waypoints = new Vector3[0];
-        SetTrajectory(path);
+        // Valid -> Set up waypoints and goal
+        for (int i = 0; i < path.corners.Length; ++i)
+        {
+            waypoints[i] = path.corners[i];
+        }
     }
 }

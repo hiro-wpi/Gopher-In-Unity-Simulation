@@ -59,6 +59,20 @@ public static class Utils
     }
 
 
+    // GameObject
+    public static void SetGameObjectLayer(GameObject obj, string name, 
+                                          bool applyToChild=true)
+    {
+        int layer = LayerMask.NameToLayer(name);
+        obj.layer = layer;
+        if (applyToChild)
+        {
+            for (int i = 0; i < obj.transform.childCount; ++i)
+            {
+                obj.transform.GetChild(i).gameObject.layer = layer;
+            }
+        }
+    }
 
     // Transform
     // from RUF (Unity) to FLU (regular)

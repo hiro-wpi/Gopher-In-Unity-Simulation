@@ -23,6 +23,7 @@ public class GraphicalInterface : MonoBehaviour
     private GameObject robot;
     private Localization localization;
     private StateReader stateReader;
+    private AutoNavigation autoNavigation;
     // main camera
     public GameObject cameraDisplay;
     private Vector2 cameraResolution;
@@ -102,6 +103,9 @@ public class GraphicalInterface : MonoBehaviour
     // Help
     private TextMeshProUGUI helpDisplayText;
     
+    // Timer
+    public GameObject timerPanel;
+    private TextMeshProUGUI timerPanelText;
     // FPS
     private int FPS;
     private float FPSSum;
@@ -161,6 +165,8 @@ public class GraphicalInterface : MonoBehaviour
         // Help display
         helpDisplayText = helpDisplay.GetComponentInChildren<TextMeshProUGUI>();
 
+        // Timer
+        timerPanelText = timerPanel.GetComponentInChildren<TextMeshProUGUI>();
         // FPS
         FPSCount = 0;
         FPSSum = 0;
@@ -179,6 +185,8 @@ public class GraphicalInterface : MonoBehaviour
 
     void Update()
     {
+        // Timer
+        timerPanelText.text = Time.unscaledTime.ToString("0.00");
         // FPS
         FPSCount += 1;
         FPSSum += 1.0f / Time.deltaTime;
@@ -206,6 +214,17 @@ public class GraphicalInterface : MonoBehaviour
                 ChangeMinimapView();
             else
                 ZoomMap();
+        // map navigation
+        if (displayMapInMain && autoNavigation != null)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                RaycastHit hit;
+                Ray ray = mapCamera.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out hit))
+                    autoNavigation.SetGoal(hit.point);
+            }
+        }
         // barcode
         if (Input.GetKeyDown(KeyCode.B))
             ChangeBarCodeScanDisplay();
@@ -261,7 +280,7 @@ public class GraphicalInterface : MonoBehaviour
         // Automation
         if (Input.GetKeyDown(KeyCode.T))
             RecordKey("T");
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.G))
             RecordKey("G");
 
         // Camera Switch
@@ -467,6 +486,7 @@ public class GraphicalInterface : MonoBehaviour
         localization = robot.GetComponentInChildren<Localization>();
         stateReader = robot.GetComponentInChildren<StateReader>();
         gopherControl = robot.GetComponentInChildren<GopherControl>();
+        autoNavigation = robot.GetComponentInChildren<AutoNavigation>();
         // Get IK and End effector reference transform for
         // switching IK reference frame based on camera view
         // TODO 1 left first and right next, no better way to tell each apart
@@ -477,7 +497,9 @@ public class GraphicalInterface : MonoBehaviour
         leftEndEffectorRef = new GameObject("gopher/left_arm_ik_reference");
         rightEndEffectorRef = new GameObject("gopher/right_arm_ik_reference");
         leftEndEffectorRef.transform.parent = graspings[0].endEffector.transform;
+        leftEndEffectorRef.transform.localPosition = Vector3.zero;
         rightEndEffectorRef.transform.parent = graspings[1].endEffector.transform;
+        rightEndEffectorRef.transform.localPosition = Vector3.zero;
         // TODO 2 The proper reference is different from the tool frame...
         leftEndEffectorRef.transform.localRotation = Quaternion.Euler(new Vector3(0f, -90f, 180f));
         rightEndEffectorRef.transform.localRotation = Quaternion.Euler(new Vector3(0f, -90f, 180f));
@@ -650,7 +672,7 @@ public class GraphicalInterface : MonoBehaviour
             cameraSystem.DisableCamera(cameraIndex);
             mapCamera.enabled = true;
             cameraDisplay.GetComponent<RawImage>().texture = mapRendertexture;
-            Time.timeScale = 0f;
+            Time.timeScale = 0f; //slow down
         }
         displayMapInMain = !displayMapInMain;
     }

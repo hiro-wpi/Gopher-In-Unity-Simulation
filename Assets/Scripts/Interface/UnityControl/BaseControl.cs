@@ -6,6 +6,7 @@ using UnityEngine;
 public class BaseControl : MonoBehaviour
 {
     public ArticulationWheelController wheelController;
+    public AutoNavigation autoNavigation;
     public float linearSpeed = 1.5f;
     public float angularSpeed = 1.5f;
     private Vector2 _driveDir = Vector2.zero;
@@ -14,6 +15,21 @@ public class BaseControl : MonoBehaviour
     {
         _driveDir = context.ReadValue<Vector2>();
         wheelController.SetRobotVelocity(_driveDir.y * linearSpeed, _driveDir.x * -angularSpeed);
+    }
+
+    public void OnTarget(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (!autoNavigation.active)
+            {
+                autoNavigation.EnableAutonomy();
+            }
+            else
+            {
+                autoNavigation.DisableAutonomy();
+            }
+        }
     }
 
     public void StopBase()
