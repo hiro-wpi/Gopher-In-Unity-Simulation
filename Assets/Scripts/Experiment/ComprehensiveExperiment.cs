@@ -59,29 +59,26 @@ public class ComprehensiveExperiment : Experiment
     //  ——→
     private int numType = 2;
     private int numTask = 4;
+    private int numLevel = 3;
     
     // pilot study
-    /*
-    private int numLevel = 3;
     private int numStep = 4; // step per circle
-    private int numCircle = 3;
+    private int numCircle = 1;
     // TODO
     private string[,] tasksType1 = new string[,] {
-                                                    {"1.4-2", "1.2-3", "1.3-3"},
-                                                    {"1.2-1", "1.1-1", "1.3-2"},
-                                                    {"1.4-1", "1.3-1", "1.1-2"},
-                                                    {"1.2-2", "1.1-3", "1.4-3"}
+                                                    {"1.1-2"},
+                                                    {"1.4-2"},
+                                                    {"1.2-2"},
+                                                    {"1.3-2"}
                                                  };
     private string[,] tasksType2 = new string[,] {
-                                                    {"2.1-1", "2.3-1", "2.2-3"},
-                                                    {"2.4-3", "2.3-2", "2.4-1"},
-                                                    {"2.2-2", "2.3-3", "2.1-3"},
-                                                    {"2.2-1", "2.4-3", "2.1-2"}
+                                                    {"2.4-2"},
+                                                    {"2.2-2"},
+                                                    {"2.1-2"},
+                                                    {"2.3-2"}
                                                  };
-    */
-
+    /*
     // official study
-    private int numLevel = 3;
     private int numStep = 4; // step per circle
     private int numCircle = 3;
     private string[,] tasksType1 = new string[,] {
@@ -96,11 +93,12 @@ public class ComprehensiveExperiment : Experiment
                                                     {"2.2-2", "2.3-3", "2.1-2"},
                                                     {"2.2-1", "2.4-3", "2.1-3"}
                                                  };
+    */
     // randomization
     private System.Random random = new System.Random(0);
     private int startIndex;
-    private int[,] indexArrayType1 = new int[4, 3];
-    private int[,] indexArrayType2 = new int[4, 3];
+    private int[,] indexArrayType1;
+    private int[,] indexArrayType2;
 
 
     void Start()
@@ -108,7 +106,9 @@ public class ComprehensiveExperiment : Experiment
         // Verify task parameters completeness
         VerifyCompleteness();
         // Init index array (task order)
-        int[] temp = new int[] {0, 1, 2};
+        int[] temp = Enumerable.Range(0, numCircle).ToArray();
+        indexArrayType1 = new int[numStep, numCircle];
+        indexArrayType2 = new int[numStep, numCircle];
         for (int i = 0; i < indexArrayType1.GetLength(0); ++i)
             for (int j = 0; j < indexArrayType1.GetLength(1); ++j)
             {
@@ -149,7 +149,7 @@ public class ComprehensiveExperiment : Experiment
                             {
                                 new Vector3(-6.7f, 0f, -8.0f),
                                 new Vector3( 8.0f, 0f,  5.0f),
-                                new Vector3( 3.0f, 0f,  7.5f),
+                                new Vector3( 0.5f, 0f,  7.0f),
                                 new Vector3(-2.5f, 0f, -1.5f)
                             };
         dynamicObjectTrajectories = new Vector3[,]
@@ -158,8 +158,8 @@ public class ComprehensiveExperiment : Experiment
                                  new Vector3( 7.5f, 0f, -2.0f), new Vector3(-6.7f, 0f, -8.0f)},
                                 {new Vector3( 7.5f, 0f, -2.0f), new Vector3(-7.0f, 0f, -2.0f), 
                                  new Vector3(-7.0f, 0f,  7.5f), new Vector3( 8.0f, 0f,  5.0f)},
-                                {new Vector3( 0.5f, 0f,  7.0f), new Vector3( 1.0f, 0f, -1.5f), 
-                                 new Vector3( 5.0f, 0f, -1.5f), new Vector3( 3.0f, 0f,  7.5f)}, 
+                                {new Vector3( 1.0f, 0f, -1.5f), new Vector3( 5.0f, 0f, -1.5f), 
+                                 new Vector3( 3.0f, 0f,  7.5f), new Vector3( 0.5f, 0f,  7.0f)}, 
                                 {new Vector3(-4.0f, 0f,  7.5f), new Vector3( 0.5f, 0f,  6.5f), 
                                  new Vector3( 0.0f, 0f, -1.5f), new Vector3(-2.5f, 0f, -1.5f)}
                             };
@@ -173,15 +173,15 @@ public class ComprehensiveExperiment : Experiment
         string currRoomName = robotSpawnRooms[startIndex];
         for (int i = 0; i < randomizedTasks.Length; i+=2)
         {
-            int stepIndex = (i + startIndex) % numStep;
+            int stepIndex = (i/2 + startIndex) % numStep;
             // Generate task set
             (tasks[i], tasks[i+1], currRoomName) = GenerateTaskSet(randomizedTasks[i], randomizedTasks[i+1],
                                                                    currRoomName, stepIndex, tasksObject);
         }
     }
 
-    private (Task, Task, string) GenerateTaskSet(string task1Name, string task2Name, string currRoomName, int stepIndex,
-                                                 GameObject parent = null)
+    private (Task, Task, string) GenerateTaskSet(string task1Name, string task2Name, string currRoomName, 
+                                                 int stepIndex, GameObject parent = null)
     {
         // Get task info
         var(taskType1, taskIndex1, levelIndex1) = GetIndicesFromName(task1Name);
@@ -230,7 +230,8 @@ public class ComprehensiveExperiment : Experiment
         task.sceneName = sceneNames[0];
         task.taskName = taskType+"."+(taskIndex+1)+"-"+(levelIndex+1);
         if (taskType == 1)
-            task.taskDescription = taskDescriptions[(taskType-1)*4 + taskIndex] + nextRoomName;
+            task.taskDescription = taskDescriptions[(taskType-1)*4 + taskIndex] 
+                                   + " " + nextRoomName;
         else if (taskType == 2)
             task.taskDescription = taskDescriptions[(taskType-1)*4 + taskIndex];
 
@@ -297,7 +298,8 @@ public class ComprehensiveExperiment : Experiment
                 taskObjectSpawnArray[0] = Task.ToSpawnInfo(movableObjects[0], currEntrace,
                                                            currEntraceDir + new Vector3(0f, 180f, 0f), 
                                                            null);
-                goalObjectSpawnArray[0] = Task.ToSpawnInfo(goalObjects[0], nextEntrace,
+                goalObjectSpawnArray[0] = Task.ToSpawnInfo(goalObjects[0], nextEntrace + 
+                                                           Quaternion.Euler(nextEntraceDir) * Vector3.forward,
                                                            new Vector3(), null);
             }
             // 1.3 Cart Pushing
@@ -307,7 +309,8 @@ public class ComprehensiveExperiment : Experiment
                 taskObjectSpawnArray[0] = Task.ToSpawnInfo(movableObjects[1], currEntrace,
                                                            currEntraceDir + new Vector3(0f, 180f, 0f), 
                                                            null);
-                goalObjectSpawnArray[0] = Task.ToSpawnInfo(goalObjects[0], nextEntrace,
+                goalObjectSpawnArray[0] = Task.ToSpawnInfo(goalObjects[0], nextEntrace + 
+                                                           Quaternion.Euler(nextEntraceDir) * Vector3.forward,
                                                            new Vector3(), null);
             }
             // 1.4 Blocked Path Passing
@@ -485,15 +488,15 @@ public class ComprehensiveExperiment : Experiment
         if (stepIndex == 0) 
             stepRoomNames = new string[] {"Room P103", "Room P104", "Room S102"};
         else if (stepIndex == 1)
-            stepRoomNames = new string[] {"Pharmacy", "Room L101"};
-        else if (stepIndex == 2)
             stepRoomNames = new string[] {"Room P105", "Room S103"};
+        else if (stepIndex == 2)
+            stepRoomNames = new string[] {"Pharmacy", "Room L101"};
         else if (stepIndex == 3)
             stepRoomNames = new string[] {"Room P101", "Room P102", "Room S101"};
         
         // Avaliable rooms based on current task and difficulty
         // Room L101 only for 2.1-2 and 2.4-3
-        // Pharmacy only for 2.2-2 and 2.3-3
+        // Pharmacy only for 2.2-3 and 2.3-3
         if (type2TaskIndex == 0) 
         {
             if (type2LevelIndex == 0)
@@ -508,9 +511,9 @@ public class ComprehensiveExperiment : Experiment
             if (type2LevelIndex == 0)
                 taskRoomNames = new string[] {"Room P102", "Room P104", "Room P105"};
             else if (type2LevelIndex == 1)
-                taskRoomNames = new string[] {"Pharmacy"};
-            else if (type2LevelIndex == 2)
                 taskRoomNames = new string[] {"Room S101", "Room S102", "Room S103"};
+            else if (type2LevelIndex == 2)
+                taskRoomNames = new string[] {"Pharmacy"};
         }
         else if (type2TaskIndex == 2)
         {
@@ -524,9 +527,9 @@ public class ComprehensiveExperiment : Experiment
         else if (type2TaskIndex == 3)
         {
             if (type2LevelIndex == 0)
-                taskRoomNames = new string[] {"Room P102", "Room P104", "Room P105"};
+                taskRoomNames = new string[] {"Room P102", "Room P104", "Room P105", "Room L101"};
             else if (type2LevelIndex == 1)
-                taskRoomNames = new string[] {"Room P101", "Room P103", "Room P105"};
+                taskRoomNames = new string[] {"Room P101", "Room P103", "Room P105", "Room L101"};
             else if (type2LevelIndex == 2)
                 taskRoomNames = new string[] {"Room S101", "Room S102", "Room S103", "Room L101"};
         }
@@ -534,8 +537,9 @@ public class ComprehensiveExperiment : Experiment
         // Find room that satisfies both conditions
         string[] roomNames = stepRoomNames.Intersect(taskRoomNames).ToArray();
         if (roomNames.Length == 0)
-            Debug.LogWarning("Task definition error, no proper room found for" + 
-                             "2." + type2TaskIndex + "-"  + type2LevelIndex);
+            Debug.LogWarning("Task definition error, no proper room found for " + 
+                             "2." + (type2TaskIndex+1) + "-"  + (type2LevelIndex+1) + 
+                             "at step " + stepIndex);
         // randomly select one
         return Utils.Shuffle<string>(random, roomNames)[0];
     }

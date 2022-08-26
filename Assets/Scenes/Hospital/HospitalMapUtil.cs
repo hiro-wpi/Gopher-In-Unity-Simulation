@@ -192,12 +192,12 @@ public static class HospitalMapUtil
                         new Vector3 (13.1f, 1.0f, -0.3f)
         }},
         {"Pharmacy", new Vector3[] {
-                        new Vector3 (-9.0f, 1.4f,  9.9f),
-                        new Vector3 (-9.0f, 1.1f,  9.9F),
-                        new Vector3 (-9.0f, 1.4f, 11.6f),
-                        new Vector3 (-9.0f, 1.1f, 11.6f),
-                        new Vector3 (-9.0f, 1.4f, 13.3f),
-                        new Vector3 (-9.0f, 1.1f, 13.3f),
+                        new Vector3 (-8.9f, 1.4f,  9.9f),
+                        new Vector3 (-8.9f, 1.1f,  9.9F),
+                        new Vector3 (-8.9f, 1.4f, 11.6f),
+                        new Vector3 (-8.9f, 1.1f, 11.6f),
+                        new Vector3 (-8.9f, 1.4f, 13.3f),
+                        new Vector3 (-8.9f, 1.1f, 13.3f),
                         new Vector3 (-5.8f, 0.9f, 11.6f)
         }},
         {"Staff Lounge", new Vector3[] {

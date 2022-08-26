@@ -259,6 +259,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wheelController: {fileID: 4478812758085542332}
+  autoNavigation: {fileID: 7581683282309468264}
   linearSpeed: 1
   angularSpeed: 1
 --- !u!1 &1649893571589253475
@@ -2567,6 +2568,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 42224df5-2370-418e-a53a-cb9a67c88149
     m_ActionName: Gopher/Arm Preset 5[/Keyboard/f5]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6894777472494071552}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnBaseTarget
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 3573c083-a682-4619-838d-99505fd70411
+    m_ActionName: Gopher/Base Move[/Keyboard/g]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gopher
@@ -3195,7 +3212,7 @@ GameObject:
   - component: {fileID: 4478812758085542334}
   - component: {fileID: 4478812758085542333}
   - component: {fileID: 4478812758085542332}
-  - component: {fileID: 7599907200212368509}
+  - component: {fileID: 4914549699303064443}
   m_Layer: 15
   m_Name: Base
   m_TagString: Untagged
@@ -3251,7 +3268,7 @@ MonoBehaviour:
   rightWheel: {fileID: 6789262393631268745}
   wheelTrackLength: 0.37476
   wheelRadius: 0.0605
---- !u!114 &7599907200212368509
+--- !u!114 &4914549699303064443
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3260,7 +3277,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4478812758085542329}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b47b81d82351e0488a680f52450e6c7b, type: 3}
+  m_Script: {fileID: 11500000, guid: f6a840d529c8e02b2827424acb20b4d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   centerObject: {fileID: 6789262394125508014}
@@ -4198,8 +4215,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.05
-  m_Height: 0.2
+  m_Radius: 0.07
+  m_Height: 0.25
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1818360608 &7091432812501708147
@@ -4266,7 +4283,7 @@ NavMeshObstacle:
   m_Extents: {x: 0.05, y: 0.2, z: 0.05}
   m_MoveThreshold: 0.1
   m_Carve: 1
-  m_CarveOnlyStationary: 1
+  m_CarveOnlyStationary: 0
   m_Center: {x: 0, y: -0.2, z: 0}
   m_TimeToStationary: 0.5
 --- !u!1 &6047899651716188926
@@ -5017,8 +5034,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.05
-  m_Height: 0.2
+  m_Radius: 0.07
+  m_Height: 0.25
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1818360608 &1536124554730850188
@@ -5085,7 +5102,7 @@ NavMeshObstacle:
   m_Extents: {x: 0.05, y: 0.2, z: 0.05}
   m_MoveThreshold: 0.1
   m_Carve: 1
-  m_CarveOnlyStationary: 1
+  m_CarveOnlyStationary: 0
   m_Center: {x: 0, y: -0.2, z: 0}
   m_TimeToStationary: 0.5
 --- !u!1 &6789262393447520498
@@ -25454,8 +25471,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1357446046727079078}
+  - component: {fileID: 3639390875846661778}
   - component: {fileID: 4985414768090538490}
-  - component: {fileID: 2717246343243401384}
   - component: {fileID: 7581683282309468264}
   - component: {fileID: 109961253}
   m_Layer: 15
@@ -25479,6 +25496,28 @@ Transform:
   m_Father: {fileID: 7697855266985922839}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!195 &3639390875846661778
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8407961339888312796}
+  m_Enabled: 0
+  m_AgentTypeID: -1372625422
+  m_Radius: 0.38
+  m_Speed: 1
+  m_Acceleration: 1
+  avoidancePriority: 50
+  m_AngularSpeed: 60
+  m_StoppingDistance: 0.2
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1
+  m_BaseOffset: 0
+  m_WalkableMask: 8
+  m_ObstacleAvoidanceType: 4
 --- !u!208 &4985414768090538490
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -25489,34 +25528,12 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 0
-  m_Extents: {x: 0.3, y: 0.65, z: 0.3}
+  m_Extents: {x: 0.38, y: 0.75, z: 0.38}
   m_MoveThreshold: 0.1
   m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0.65, z: 0}
+  m_CarveOnlyStationary: 0
+  m_Center: {x: 0, y: 0.75, z: 0}
   m_TimeToStationary: 0.5
---- !u!195 &2717246343243401384
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8407961339888312796}
-  m_Enabled: 0
-  m_AgentTypeID: 0
-  m_Radius: 0.38
-  m_Speed: 1
-  m_Acceleration: 1
-  avoidancePriority: 50
-  m_AngularSpeed: 60
-  m_StoppingDistance: 0.2
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 1.5
-  m_BaseOffset: 0
-  m_WalkableMask: 8
-  m_ObstacleAvoidanceType: 4
 --- !u!114 &7581683282309468264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25529,20 +25546,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bf926ce23329dd44b586927440c9c84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  active: 0
   robot: {fileID: 6789262394414307240}
   wheelController: {fileID: 4478812758085542332}
   leftArmControlManager: {fileID: 4478812757678789714}
   rightArmControlManager: {fileID: 4478812758972552420}
-  agent: {fileID: 2717246343243401384}
-  navMeshObstacles:
+  agent: {fileID: 3639390875846661778}
+  baseNavMeshObstacles:
   - {fileID: 4985414768090538490}
+  armNavMeshObstacles:
   - {fileID: 6435862083187171180}
   - {fileID: 6840081287852123468}
-  navMeshSurface: {fileID: 0}
-  goal: {x: 0, y: 0, z: 0}
   replanTime: 5
+  goalPrefab: {fileID: 2075622757900185994, guid: 8a7b41268e0286d47ae6853ee8ab563e, type: 3}
   lineRenderer: {fileID: 109961253}
-  drawPathEnabled: 0
+  drawPathEnabled: 1
 --- !u!120 &109961253
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -25583,9 +25601,7 @@ LineRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Positions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 1}
+  m_Positions: []
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1

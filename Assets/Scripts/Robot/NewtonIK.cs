@@ -90,13 +90,6 @@ public class NewtonIK : MonoBehaviour
     {
         float[] newJointAngles = jointAngles.Clone() as float[];
 
-        /*
-        // TODO ??
-        targetRotation.x *= -1;
-        targetRotation.y *= -1;
-        targetRotation.z *= -1;
-        */
-
         // Containers
         Vector3 endEffectorPosition;
         Quaternion endEffectorRotation;
@@ -110,8 +103,20 @@ public class NewtonIK : MonoBehaviour
             (endEffectorPosition, endEffectorRotation) = kinematicSolver.GetPose(kinematicSolver.numJoint);
 
             Vector3 positionError = endEffectorPosition - targetPosition;
-            // Quaternion rotationError = Quaternion.Inverse(endEffectorRotation) * targetRotation;
             Quaternion rotationError = endEffectorRotation * Quaternion.Inverse(targetRotation);
+            /*
+            Vector3 rotationErrorEuler = new Vector3(Mathf.DeltaAngle(endEffectorRotation.eulerAngles[0], 
+                                                                           targetRotation.eulerAngles[0]),
+                                                     Mathf.DeltaAngle(endEffectorRotation.eulerAngles[1], 
+                                                                           targetRotation.eulerAngles[1]),
+                                                     Mathf.DeltaAngle(endEffectorRotation.eulerAngles[2], 
+                                                                           targetRotation.eulerAngles[2]));
+            Quaternion rotationError = Quaternion.Euler(rotationErrorEuler);
+            // rotationError = Quaternion.identity;
+            // Debug.Log(endEffectorRotation.eulerAngles);
+            // Debug.Log(targetRotation.eulerAngles);
+            // Debug.Log(targetPosition);
+            */
 
             // Orientation is stored in the jacobian as a scaled rotation axis
             // Where the axis of rotation is the vector, and the angle is the length of the vector (in radians)
@@ -119,9 +124,11 @@ public class NewtonIK : MonoBehaviour
             Vector3 rotationAxis;
             float rotationAngle;
             rotationError.ToAngleAxis(out rotationAngle, out rotationAxis);
+            // rotationAngle = Mathf.DeltaAngle(rotationAngle, 0f);
+            // Debug.Log(rotationAngle);
             
             // Function returns angle in degrees, so convert to radians
-            rotationAngle = Mathf.Deg2Rad * rotationAngle;
+            rotationAngle = rotationAngle * Mathf.Deg2Rad;
             // Now scale the rotation axis by the angle
             rotationAxis *= rotationAngle; // Prioritize the position
 
@@ -172,13 +179,8 @@ public class NewtonIK : MonoBehaviour
         rotationAxis = localToWorldTransform.TransformVector(rotationAxis);
 
         var errorAngles = CalculateError(positionError, rotationAxis);
-
-        // TODO: This is bad, change to smarter way of getting indices
         for (int i = 0; i < newJointAngles.Length; i++)
-        {
-            // TODO: this crashed unity lol
             newJointAngles[i] += errorAngles[i];
-        }
 
         return newJointAngles;
     }

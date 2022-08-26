@@ -30,15 +30,15 @@ public class DataRecorder : MonoBehaviour
     private TextWriter taskValueTextWriter;
     private TextWriter taskStringTextWriter;
     // container - robot
-    private string[] robotValueToRecordHeader;
-    private string[] robotStringToRecordHeader;
-    private float[] robotValueToRecord;
-    private string[] robotStringToRecord;
+    private string[] robotValueToRecordHeader = new string[0];
+    private string[] robotStringToRecordHeader = new string[0];
+    private float[] robotValueToRecord = new float[0];
+    private string[] robotStringToRecord = new string[0];
     // container - task
-    private string[] taskValueToRecordHeader;
-    private string[] taskStringToRecordHeader;
-    private float[] taskValueToRecord;
-    private string[] taskStringToRecord;
+    private string[] taskValueToRecordHeader = new string[0];
+    private string[] taskStringToRecordHeader = new string[0];
+    private float[] taskValueToRecord = new float[0];
+    private string[] taskStringToRecord = new string[0];
     
 
     void Start()
@@ -50,7 +50,7 @@ public class DataRecorder : MonoBehaviour
         // 6 + 12 * 2 + 2 + 14 * 2
         robotValueToRecordHeader = new string[] 
         {
-            "time", 
+            "game_time", "true_time",
             "x", "y", "az", "vx", "vaz", 
 
             "dis_to_obs_0", "dis_to_obs_36", "dis_to_obs_72", "dis_to_obs_108", 
@@ -168,89 +168,90 @@ public class DataRecorder : MonoBehaviour
         // Record state
         // t
         robotValueToRecord[0] = Time.time;
+        robotValueToRecord[1] = Time.unscaledTime;
         // pose
-        robotValueToRecord[1] = stateReader.position[2];
-        robotValueToRecord[2] = -stateReader.position[0];
-        robotValueToRecord[3] = ToFLUEuler(stateReader.rotationEuler[1] * Mathf.Deg2Rad);
+        robotValueToRecord[2] = stateReader.position[2];
+        robotValueToRecord[3] = -stateReader.position[0];
+        robotValueToRecord[4] = ToFLUEuler(stateReader.rotationEuler[1] * Mathf.Deg2Rad);
         // vel
-        robotValueToRecord[4] = stateReader.linearVelocity[2];
-        robotValueToRecord[5] = ToFLUEuler(stateReader.angularVelocity[1]);
+        robotValueToRecord[5] = stateReader.linearVelocity[2];
+        robotValueToRecord[6] = ToFLUEuler(stateReader.angularVelocity[1]);
         
         // obs dis
-        robotValueToRecord[6] = surroundingDetection.obstacleRanges[89];
-        robotValueToRecord[7] = surroundingDetection.obstacleRanges[71];
-        robotValueToRecord[8] = surroundingDetection.obstacleRanges[53];
-        robotValueToRecord[9] = surroundingDetection.obstacleRanges[35];
-        robotValueToRecord[10] = surroundingDetection.obstacleRanges[17];
-        robotValueToRecord[11] = surroundingDetection.obstacleRanges[179];
-        robotValueToRecord[12] = surroundingDetection.obstacleRanges[161];
-        robotValueToRecord[13] = surroundingDetection.obstacleRanges[143];
-        robotValueToRecord[14] = surroundingDetection.obstacleRanges[125];
-        robotValueToRecord[15] = surroundingDetection.obstacleRanges[107];
+        robotValueToRecord[7] = surroundingDetection.obstacleRanges[89];
+        robotValueToRecord[8] = surroundingDetection.obstacleRanges[71];
+        robotValueToRecord[9] = surroundingDetection.obstacleRanges[53];
+        robotValueToRecord[10] = surroundingDetection.obstacleRanges[35];
+        robotValueToRecord[11] = surroundingDetection.obstacleRanges[17];
+        robotValueToRecord[12] = surroundingDetection.obstacleRanges[179];
+        robotValueToRecord[13] = surroundingDetection.obstacleRanges[161];
+        robotValueToRecord[14] = surroundingDetection.obstacleRanges[143];
+        robotValueToRecord[15] = surroundingDetection.obstacleRanges[125];
+        robotValueToRecord[16] = surroundingDetection.obstacleRanges[107];
         int obsMinI = Utils.ArgMinArray(surroundingDetection.obstacleRanges);
-        robotValueToRecord[16] = surroundingDetection.obstacleRanges[obsMinI];
-        robotValueToRecord[17] = ToFLUEuler(surroundingDetection.directions[obsMinI]);
+        robotValueToRecord[17] = surroundingDetection.obstacleRanges[obsMinI];
+        robotValueToRecord[18] = ToFLUEuler(surroundingDetection.directions[obsMinI]);
 
         // human dis
-        robotValueToRecord[18] = surroundingDetection.humanRanges[89];
-        robotValueToRecord[19] = surroundingDetection.humanRanges[71];
-        robotValueToRecord[20] = surroundingDetection.humanRanges[53];
-        robotValueToRecord[21] = surroundingDetection.humanRanges[35];
-        robotValueToRecord[22] = surroundingDetection.humanRanges[17];
-        robotValueToRecord[23] = surroundingDetection.humanRanges[179];
-        robotValueToRecord[24] = surroundingDetection.humanRanges[161];
-        robotValueToRecord[25] = surroundingDetection.humanRanges[143];
-        robotValueToRecord[26] = surroundingDetection.humanRanges[125];
-        robotValueToRecord[27] = surroundingDetection.humanRanges[107];
+        robotValueToRecord[19] = surroundingDetection.humanRanges[89];
+        robotValueToRecord[20] = surroundingDetection.humanRanges[71];
+        robotValueToRecord[21] = surroundingDetection.humanRanges[53];
+        robotValueToRecord[22] = surroundingDetection.humanRanges[35];
+        robotValueToRecord[23] = surroundingDetection.humanRanges[17];
+        robotValueToRecord[24] = surroundingDetection.humanRanges[179];
+        robotValueToRecord[25] = surroundingDetection.humanRanges[161];
+        robotValueToRecord[26] = surroundingDetection.humanRanges[143];
+        robotValueToRecord[27] = surroundingDetection.humanRanges[125];
+        robotValueToRecord[28] = surroundingDetection.humanRanges[107];
         int humMinI = Utils.ArgMinArray(surroundingDetection.humanRanges);
-        robotValueToRecord[28] = surroundingDetection.humanRanges[humMinI];
-        robotValueToRecord[29] = ToFLUEuler(surroundingDetection.directions[humMinI]);
+        robotValueToRecord[29] = surroundingDetection.humanRanges[humMinI];
+        robotValueToRecord[30] = ToFLUEuler(surroundingDetection.directions[humMinI]);
 
         // main camera joint
-        robotValueToRecord[30] = ToFLUEuler(stateReader.jointPositions[2]);
-        robotValueToRecord[31] = ToFLUEuler(stateReader.jointPositions[3]);
+        robotValueToRecord[31] = ToFLUEuler(stateReader.jointPositions[2]);
+        robotValueToRecord[32] = ToFLUEuler(stateReader.jointPositions[3]);
 
         // left joints
-        robotValueToRecord[32] = ToFLUEuler(stateReader.jointPositions[4]);
-        robotValueToRecord[33] = ToFLUEuler(stateReader.jointPositions[5]);
-        robotValueToRecord[34] = ToFLUEuler(stateReader.jointPositions[6]);
-        robotValueToRecord[35] = ToFLUEuler(stateReader.jointPositions[7]);
-        robotValueToRecord[36] = ToFLUEuler(stateReader.jointPositions[8]);
-        robotValueToRecord[37] = ToFLUEuler(stateReader.jointPositions[9]);
-        robotValueToRecord[38] = ToFLUEuler(stateReader.jointPositions[10]);
-        robotValueToRecord[39] = stateReader.jointPositions[11]; // gripper
+        robotValueToRecord[33] = ToFLUEuler(stateReader.jointPositions[4]);
+        robotValueToRecord[34] = ToFLUEuler(stateReader.jointPositions[5]);
+        robotValueToRecord[35] = ToFLUEuler(stateReader.jointPositions[6]);
+        robotValueToRecord[36] = ToFLUEuler(stateReader.jointPositions[7]);
+        robotValueToRecord[37] = ToFLUEuler(stateReader.jointPositions[8]);
+        robotValueToRecord[38] = ToFLUEuler(stateReader.jointPositions[9]);
+        robotValueToRecord[39] = ToFLUEuler(stateReader.jointPositions[10]);
+        robotValueToRecord[40] = stateReader.jointPositions[11]; // gripper
         // left end effector
         Vector3 leftPosition = Utils.ToFLU(stateReader.objectPositions[0]);
         Vector3 leftRotation = Mathf.Deg2Rad * 
                                Utils.ToFLU(Quaternion.Euler(
                                            stateReader.objectRotations[0])).eulerAngles;
-        robotValueToRecord[40] = leftPosition.x;
-        robotValueToRecord[41] = leftPosition.y;
-        robotValueToRecord[42] = leftPosition.z;
-        robotValueToRecord[43] = leftRotation.x;
-        robotValueToRecord[44] = leftRotation.y;
-        robotValueToRecord[45] = leftRotation.z;
+        robotValueToRecord[41] = leftPosition.x;
+        robotValueToRecord[42] = leftPosition.y;
+        robotValueToRecord[43] = leftPosition.z;
+        robotValueToRecord[44] = leftRotation.x;
+        robotValueToRecord[45] = leftRotation.y;
+        robotValueToRecord[46] = leftRotation.z;
 
         // right joints
-        robotValueToRecord[46] = ToFLUEuler(stateReader.jointPositions[13]);
-        robotValueToRecord[47] = ToFLUEuler(stateReader.jointPositions[14]);
-        robotValueToRecord[48] = ToFLUEuler(stateReader.jointPositions[15]);
-        robotValueToRecord[49] = ToFLUEuler(stateReader.jointPositions[16]);
-        robotValueToRecord[50] = ToFLUEuler(stateReader.jointPositions[17]);
-        robotValueToRecord[51] = ToFLUEuler(stateReader.jointPositions[18]);
-        robotValueToRecord[52] = ToFLUEuler(stateReader.jointPositions[19]);
-        robotValueToRecord[53] = stateReader.jointPositions[20]; // gripper
+        robotValueToRecord[47] = ToFLUEuler(stateReader.jointPositions[13]);
+        robotValueToRecord[48] = ToFLUEuler(stateReader.jointPositions[14]);
+        robotValueToRecord[49] = ToFLUEuler(stateReader.jointPositions[15]);
+        robotValueToRecord[50] = ToFLUEuler(stateReader.jointPositions[16]);
+        robotValueToRecord[51] = ToFLUEuler(stateReader.jointPositions[17]);
+        robotValueToRecord[52] = ToFLUEuler(stateReader.jointPositions[18]);
+        robotValueToRecord[53] = ToFLUEuler(stateReader.jointPositions[19]);
+        robotValueToRecord[54] = stateReader.jointPositions[20]; // gripper
         // right end effector
         Vector3 rightPosition = Utils.ToFLU(stateReader.objectPositions[1]);
         Vector3 rightRotation = Mathf.Deg2Rad * 
                                 Utils.ToFLU(Quaternion.Euler(
                                             stateReader.objectRotations[1])).eulerAngles;
-        robotValueToRecord[54] = rightPosition.x;
-        robotValueToRecord[55] = rightPosition.y;
-        robotValueToRecord[56] = rightPosition.z;
-        robotValueToRecord[57] = rightRotation.x;
-        robotValueToRecord[58] = rightRotation.y;
-        robotValueToRecord[59] = rightRotation.z;
+        robotValueToRecord[55] = rightPosition.x;
+        robotValueToRecord[56] = rightPosition.y;
+        robotValueToRecord[57] = rightPosition.z;
+        robotValueToRecord[58] = rightRotation.x;
+        robotValueToRecord[59] = rightRotation.y;
+        robotValueToRecord[60] = rightRotation.z;
 
         // Record collision
         robotStringToRecord = null; // don't record when there is no new collision
