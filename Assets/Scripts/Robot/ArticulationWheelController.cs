@@ -47,7 +47,7 @@ public class ArticulationWheelController : MonoBehaviour
         // Set target
         this.targetLinearSpeed = targetLinearSpeed;
         this.targetAngularSpeed = targetAngularSpeed;
-        // Speed limit
+        // Speed limit (needs to be not less than 0)
         if (linearSpeedLimit >= 0)
             this.targetLinearSpeed = 
                 Mathf.Clamp(this.targetLinearSpeed, -linearSpeedLimit, linearSpeedLimit);
@@ -95,11 +95,13 @@ public class ArticulationWheelController : MonoBehaviour
     {
         if (identifier == "")
             identifier = speedLimitsMap.Count.ToString();
-        if (speedLimitsMap.ContainsKey(identifier)) 
-            speedLimitsMap.Remove(identifier);
         
         // set speed limits
-        speedLimitsMap.Add(identifier, new float[] {linearSpeedLimit, angularSpeedLimit});
+        if (speedLimitsMap.ContainsKey(identifier))
+            speedLimitsMap[identifier] = new float[] {linearSpeedLimit, angularSpeedLimit};
+        else
+            speedLimitsMap.Add(identifier, new float[] {linearSpeedLimit, angularSpeedLimit});
+        
         UpdateSpeedLimits();
         return identifier;
     }
@@ -130,13 +132,13 @@ public class ArticulationWheelController : MonoBehaviour
             angularSpeedLimit = float.PositiveInfinity;
             foreach(KeyValuePair<string, float[]> entry in speedLimitsMap)
             {
-                if (entry.Value[0] < linearSpeedLimit)
+                // Value smaller than 0 will be ignored 
+                // considered as no limit
+                if (entry.Value[0] >= 0 && entry.Value[0] < linearSpeedLimit)
                     linearSpeedLimit = entry.Value[0];
-                if (entry.Value[1] < angularSpeedLimit)
+                if (entry.Value[1] >= 0 && entry.Value[1] < linearSpeedLimit)
                     angularSpeedLimit = entry.Value[1];
             }
-            linearSpeedLimit = Mathf.Clamp(linearSpeedLimit, 0, float.PositiveInfinity);
-            angularSpeedLimit = Mathf.Clamp(angularSpeedLimit, 0, float.PositiveInfinity);
-        }
+        } 
     }
 }
