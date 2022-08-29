@@ -67,11 +67,9 @@ public class PaintingTask : Task
     }
 
 
-    public override (GameObject[], GameObject[], GameObject[]) GenerateStaticObjects()
+    public override GameObject[] GenerateTaskObjects()
     {
-        staticObjects = SpawnGameObjectArray(staticObjectSpawnArray);
         taskObjects = SpawnGameObjectArray(taskObjectSpawnArray);
-        goalObjects = SpawnGameObjectArray(goalObjectSpawnArray);
 
         // Painter
         paintShooting = taskObjects[0].GetComponentInChildren<PaintShooting>();
@@ -80,7 +78,14 @@ public class PaintingTask : Task
         taskObjects[0].transform.parent = rightEndEffector.transform;
         taskObjects[0].transform.localPosition = Vector3.zero;
         taskObjects[0].transform.localRotation = Quaternion.identity;
-        
+
+        return taskObjects;
+    }
+
+    public override GameObject[] GenerateGoalObjects()
+    {
+        goalObjects = SpawnGameObjectArray(goalObjectSpawnArray);
+
         // Paintable
         List<Paintable> paintablesList = new List<Paintable>();
         for (int i = 0; i < goalObjects.Length; ++i)
@@ -95,7 +100,7 @@ public class PaintingTask : Task
         for (int i = 0; i < goalObjects.Length; ++i)
             HighlightUtils.HighlightObject(goalObjects[i], Color.cyan);
 
-        return (staticObjects, taskObjects, goalObjects);
+        return goalObjects;
     }
 
     public override void DestroyObjects(bool deStatic = true, bool deTask = true,

@@ -39,8 +39,8 @@ public class ExperimentManager : MonoBehaviour
     private string recordFolder;
 
     // Nav Mesh Agent for dynamic 
-    public NavMeshSurface[] navMeshSurfaces;
-
+    public NavMeshSurface navMeshHuman;
+    public NavMeshSurface navMeshRobot;  
 
     void Start()
     {
@@ -219,19 +219,26 @@ public class ExperimentManager : MonoBehaviour
 
             // MainScene
             SceneManager.LoadScene(currentTask.sceneName);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.3f);
 
             // Generate robots
             currentTask.GenerateRobots();
-            yield return new WaitForSeconds(0.5f); 
+            yield return new WaitForSeconds(0.3f); 
 
             // Generate static objects
             currentTask.GenerateStaticObjects();
-            yield return new WaitForSeconds(0.2f);
-            // Remake nav mesh for dynamic objects;
-            foreach (NavMeshSurface surface in navMeshSurfaces)
-                surface.BuildNavMesh();
-            yield return new WaitForSeconds(0.8f);
+            yield return new WaitForSeconds(0.1f);
+            // Remake nav mesh
+            navMeshRobot.BuildNavMesh();
+            yield return new WaitForSeconds(0.4f);
+
+            // Generate task and goal objects
+            currentTask.GenerateTaskObjects();
+            currentTask.GenerateGoalObjects();
+            yield return new WaitForSeconds(0.1f);
+            // Remake nav mesh
+            navMeshHuman.BuildNavMesh();
+            yield return new WaitForSeconds(0.4f);
 
             // Generate dynamic objects
             currentTask.GenerateDynamicObjects();
@@ -246,10 +253,10 @@ public class ExperimentManager : MonoBehaviour
 
                 // MainScene
                 SceneManager.LoadScene(currentTask.sceneName);
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.3f);
                 // Generate robots
                 spawnedRobots = currentTask.GenerateRobots();
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.3f);
             }
             // Other than the first time
             else
@@ -261,11 +268,18 @@ public class ExperimentManager : MonoBehaviour
 
             // Generate static objects
             currentTask.GenerateStaticObjects();
-            yield return new WaitForSeconds(0.2f);
-            // Rebake nav mesh for dynamic objects;
-            foreach (NavMeshSurface surface in navMeshSurfaces)
-                surface.BuildNavMesh();
-            yield return new WaitForSeconds(0.8f);
+            yield return new WaitForSeconds(0.1f);
+            // Remake nav mesh
+            navMeshRobot.BuildNavMesh();
+            yield return new WaitForSeconds(0.4f);
+
+            // Generate task and goal objects
+            currentTask.GenerateTaskObjects();
+            currentTask.GenerateGoalObjects();
+            yield return new WaitForSeconds(0.1f);
+            // Remake nav mesh
+            navMeshHuman.BuildNavMesh();
+            yield return new WaitForSeconds(0.4f);
 
             // Generate dynamic objects
             currentTask.GenerateDynamicObjects();

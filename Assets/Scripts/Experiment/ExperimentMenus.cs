@@ -19,7 +19,7 @@ public class ExperimentMenus : MonoBehaviour
     }
 
     // Load loading scene
-    public void LoadLoading(float delayTime = 5f)
+    public void LoadLoading(float delayTime = 4f)
     {
         // Show loading scene
         HideAll();

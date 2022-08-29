@@ -63,15 +63,15 @@ public class NavigationTask : Task
     }
 
 
-    public override (GameObject[], GameObject[], GameObject[]) GenerateStaticObjects()
+    public override GameObject[] GenerateGoalObjects()
     {
-        base.GenerateStaticObjects();
+        base.GenerateGoalObjects();
 
         // Keep only the first goal active
         goals[0].EnableGoalVisualEffect();
         for (int i = 1; i < goalObjects.Length; ++i)
             goals[i].DisableGoalVisualEffect();
 
-        return (staticObjects, taskObjects, goalObjects);
+        return goalObjects;
     }
 }

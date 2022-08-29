@@ -145,28 +145,11 @@ public abstract class Task : MonoBehaviour
 
     
     // Generate static objects for this task
-    public virtual (GameObject[], GameObject[], GameObject[]) GenerateStaticObjects()
+    public virtual GameObject[] GenerateStaticObjects()
     {
-        // Spawn static objects, task objects and goal objects
+        // Spawn static objects
         staticObjects = SpawnGameObjectArray(staticObjectSpawnArray);
-        taskObjects = SpawnGameObjectArray(taskObjectSpawnArray);
-        goalObjects = SpawnGameObjectArray(goalObjectSpawnArray);
-
-        // task objects
-        if (highlightTaskObjects)
-            for (int i = 0; i < taskObjects.Length; ++i)
-                HighlightUtils.HighlightObject(taskObjects[i], Color.cyan);
-        
-        // goals
-        goals = new Goal[goalObjects.Length];
-        for (int i = 0; i < goalObjects.Length; ++i)
-            goals[i] = goalObjects[i].GetComponent<Goal>();
-        // goals are hightlighted by default
-        if (!highlightGoalObjects)
-            foreach(Goal goal in goals)
-                goal.DisableGoalVisualEffect();
-
-        return (staticObjects, taskObjects, goalObjects);
+        return staticObjects;
     }
 
     // Generate dynamic objects for this task
@@ -184,6 +167,38 @@ public abstract class Task : MonoBehaviour
         }
 
         return dynamicObjects;
+    }
+
+    // Generate task objects for this task
+    public virtual GameObject[] GenerateTaskObjects()
+    {
+        // Spawn task objects
+        taskObjects = SpawnGameObjectArray(taskObjectSpawnArray);
+
+        // task objects
+        if (highlightTaskObjects)
+            for (int i = 0; i < taskObjects.Length; ++i)
+                HighlightUtils.HighlightObject(taskObjects[i], Color.cyan);
+       
+        return taskObjects;
+    }
+
+    // Generate goal objects for this task
+    public virtual GameObject[] GenerateGoalObjects()
+    {
+        // Spawn goal objects
+        goalObjects = SpawnGameObjectArray(goalObjectSpawnArray);
+
+        // Goals
+        goals = new Goal[goalObjects.Length];
+        for (int i = 0; i < goalObjects.Length; ++i)
+            goals[i] = goalObjects[i].GetComponent<Goal>();
+        // goals are hightlighted by default
+        if (!highlightGoalObjects)
+            foreach(Goal goal in goals)
+                goal.DisableGoalVisualEffect();
+
+        return goalObjects;
     }
 
     // Destroy all spawned objects

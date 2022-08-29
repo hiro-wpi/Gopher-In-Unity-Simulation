@@ -128,16 +128,16 @@ public class ArticulationWheelController : MonoBehaviour
         // Find the minimal limits
         else
         {
-            linearSpeedLimit = float.PositiveInfinity;
-            angularSpeedLimit = float.PositiveInfinity;
+            linearSpeedLimit = 100f;
+            angularSpeedLimit = 100f;
             foreach(KeyValuePair<string, float[]> entry in speedLimitsMap)
             {
-                // Value smaller than 0 will be ignored 
-                // considered as no limit
-                if (entry.Value[0] >= 0 && entry.Value[0] < linearSpeedLimit)
+                if (entry.Value[0] < linearSpeedLimit)
                     linearSpeedLimit = entry.Value[0];
-                if (entry.Value[1] >= 0 && entry.Value[1] < linearSpeedLimit)
+                if (entry.Value[1] < linearSpeedLimit)
                     angularSpeedLimit = entry.Value[1];
+                linearSpeedLimit = Mathf.Clamp(linearSpeedLimit, 0f, linearSpeedLimit);
+                angularSpeedLimit = Mathf.Clamp(angularSpeedLimit, 0f, angularSpeedLimit);
             }
         } 
     }
