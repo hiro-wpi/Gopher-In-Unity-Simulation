@@ -101,7 +101,6 @@ public class AutoGraspable : MonoBehaviour
             grabTransform.rotation = rot;
         }
 
-
         // TYPE 2 //
         // Plane - multiple hover points on a single plane
         else

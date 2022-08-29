@@ -89,6 +89,24 @@ public class GopherControl : MonoBehaviour
 
 
     // ARM PRESET
+    public void OnArmHome(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            switch (_mode)
+            {
+                case ControlMode.LeftArm:
+                    leftArm.OnHome(context);
+                    break;
+                case ControlMode.RightArm:
+                    rightArm.OnHome(context);
+                    break;
+                case ControlMode.Base:
+                default:
+                    break;
+            }
+        }
+    }
     public void OnArmPreset1(InputAction.CallbackContext context)
     {
         if (context.performed)

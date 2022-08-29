@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-///     This script is used to fix the Unity physic for
+///     This script is used to fix the Unity physic
 ///     for complicated grasping.
 ///     The graspable objects will be attached to the endeffector
 ///     once they get in touch with the two pads of it.
@@ -71,5 +71,10 @@ public class Grasping : MonoBehaviour
 
         graspableObject = null;
         isGrasping = false;
+    }
+
+    public float GetGraspedObjectMass()
+    {
+        return objectRigidbodyMass;
     }
 }

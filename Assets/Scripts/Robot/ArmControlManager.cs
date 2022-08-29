@@ -12,26 +12,37 @@ public class ArmControlManager : MonoBehaviour
     public ArticulationGripperController gripperController;
     public NewtonIK newtonIK;
 
+    // Articulation Bodies Presets
+    private static float IGNORE_VAL = -100f;
+    // presets
+    public bool flipPresetAngles;
+    public JointAngles[] presets = 
+    {
+        // preset 1 is the default joint home position
+        // preset 2 vertical grasping pose
+        new JointAngles(new float[] {0.7f, -Mathf.PI/2, -Mathf.PI/2f, 
+                                    -1.2f, 0f, -1.0f, Mathf.PI/2}),
+        // preset 3 and 4 only read the last joint
+        new JointAngles(new float[] {IGNORE_VAL, IGNORE_VAL, IGNORE_VAL, 
+                                     IGNORE_VAL,IGNORE_VAL, IGNORE_VAL, Mathf.PI}),
+        new JointAngles(new float[] {IGNORE_VAL, IGNORE_VAL, IGNORE_VAL, 
+                                     IGNORE_VAL,IGNORE_VAL, IGNORE_VAL, Mathf.PI/2}),
+        // preset 5 is for seconday camera view
+        new JointAngles(new float[] {0.91f, -1.13f, -0.85f,
+                                    -1.66f, 0.09f, -0.85f, 0.26f}),
+        // preset 6 is for narrow pose
+        new JointAngles(new float[] {-2f, -1.8f, -1.8f, 
+                                      2f, -0.3f, -1f, Mathf.PI/2})
+    };
+
+    // Grasping
     public Grasping grasping;
     private ArticulationCollisionDetection leftCollision;
     private ArticulationCollisionDetection rightCollision;
     public bool gripperClosed = false;
-
-    // Articulation Bodies Presets
-    private static float IGNORE_VAL = -100f;
-    // preset 1 is the default joint home position
-    public float[] preset2 = {0.7f, -Mathf.PI/2, -Mathf.PI/2f, -1.2f, 
-                              0f, -1.0f, Mathf.PI/2};
-    // preset 3 and 4 only read the last joint
-    public float[] preset3 = {IGNORE_VAL, IGNORE_VAL, IGNORE_VAL, IGNORE_VAL,
-                              IGNORE_VAL, IGNORE_VAL, Mathf.PI};
-    public float[] preset4 = {IGNORE_VAL, IGNORE_VAL, IGNORE_VAL, IGNORE_VAL, 
-                              IGNORE_VAL, IGNORE_VAL, Mathf.PI/2};
-    // preset 5 is for seconday camera view
-    public float[] preset5 = {0.91f, -1.13f, -0.85f, -1.66f, 
-                              0.09f, -0.85f, 0.26f};
-    // preset 8 is for narrow pose
-    public float[] preset8 = {-2f, -1.8f, -1.8f, 2f, -0.3f, -1f, -Mathf.PI/2};
+    // grasping affects wheel velocity (if wheel attached)
+    public ArticulationWheelController wheelController;
+    public string wheelSpeedLimitID = "grasping limit";
 
     // ENUM for mode CONTROL or TARGET
     private enum Mode
@@ -77,7 +88,7 @@ public class ArmControlManager : MonoBehaviour
     }
     private void UpdateManualControl()
     {
-        // graspable object detection
+        // Graspable object detection
         if ((gripperClosed) && (!grasping.isGrasping))
         {
             // If both fingers are touching the same graspable object
@@ -87,9 +98,19 @@ public class ArmControlManager : MonoBehaviour
                 (leftCollision.collidingObject.tag == "GraspableObject") )
 
                 grasping.Attach(leftCollision.collidingObject);
+                // slow down wheel based on the object mass
+                if (wheelController != null)
+                {
+                    float speedLimitPercentage = 
+                        0.1f * (10f - grasping.GetGraspedObjectMass());
+                    speedLimitPercentage = Mathf.Clamp(speedLimitPercentage, 0f, 1f);
+                    wheelSpeedLimitID = wheelController.AddSpeedLimit(1.0f * speedLimitPercentage, 
+                                                                 1.0f * speedLimitPercentage, 
+                                                                 wheelSpeedLimitID);
+                }
         }
         
-        // end effector pose
+        // End effector position control
         if (deltaPosition != Vector3.zero || deltaRotation != Vector3.zero)
         {
             Quaternion deltaRotationQuaternion = Quaternion.Euler(deltaRotation);
@@ -118,35 +139,33 @@ public class ArmControlManager : MonoBehaviour
         gripperController.OpenGripper();
         gripperClosed = false;
         grasping.Detach();
+        // resume speed
+        if (wheelController != null)
+            wheelController.RemoveSpeedLimit(wheelSpeedLimitID);
     }
 
 
     // Move to Preset
     public void MoveToPreset(int presetIndex)
     {
-        switch(presetIndex)
-        {
-            case 1:
-                MoveToJointPosition(jointController.homePosition);
-                break;
-            case 2:
-                MoveToJointPosition(preset2);
-                break;
-            case 3:
-                MoveToJointPosition(preset3);
-                break;
-            case 4:
-                MoveToJointPosition(preset4);
-                break;
-            case 5:
-                MoveToJointPosition(preset5);
-                break;
-            case 8:
-                MoveToJointPosition(preset8);
-                break;
-            default:
-                break;
-        }
+        // Home Position
+        if (presetIndex == 0)
+            MoveToJointPosition(jointController.homePosition);
+        else
+            if (flipPresetAngles)
+            {
+                float[] angles = new float[presets[presetIndex-1].jointAngles.Length];
+                for (int i = 0; i < angles.Length; ++i)
+                {
+                    int multiplier = -1;
+                    if (presets[presetIndex-1].jointAngles[i] == IGNORE_VAL)
+                        multiplier = 1;
+                    angles[i] = multiplier * presets[presetIndex-1].jointAngles[i];
+                }
+                MoveToJointPosition(angles);
+            }
+            else
+                MoveToJointPosition(presets[presetIndex-1].jointAngles);
     }
     private void MoveToJointPosition(float[] jointAngles)
     {

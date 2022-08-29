@@ -2332,6 +2332,22 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6894777472494071552}
         m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnBaseTarget
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 3573c083-a682-4619-838d-99505fd70411
+    m_ActionName: Gopher/Base Move[/Keyboard/g]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6894777472494071552}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
         m_MethodName: OnArmTranslate
         m_Mode: 0
         m_Arguments:
@@ -2428,6 +2444,22 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6894777472494071552}
         m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnMainCamera
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 2c840e34-f16b-4b8b-a090-b28e43c1bdce
+    m_ActionName: Gopher/Main Camera Control[/Keyboard/upArrow]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6894777472494071552}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
         m_MethodName: OnArmTarget
         m_Mode: 0
         m_Arguments:
@@ -2476,23 +2508,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6894777472494071552}
         m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
-        m_MethodName: OnMainCamera
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 2c840e34-f16b-4b8b-a090-b28e43c1bdce
-    m_ActionName: Gopher/Main Camera Control[/Keyboard/upArrow]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6894777472494071552}
-        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
-        m_MethodName: OnArmPreset1
+        m_MethodName: OnArmHome
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2508,7 +2524,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6894777472494071552}
         m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
-        m_MethodName: OnArmPreset2
+        m_MethodName: OnArmPreset1
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2524,7 +2540,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6894777472494071552}
         m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
-        m_MethodName: OnArmPreset3
+        m_MethodName: OnArmPreset2
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2540,7 +2556,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6894777472494071552}
         m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
-        m_MethodName: OnArmPreset4
+        m_MethodName: OnArmPreset3
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2556,7 +2572,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6894777472494071552}
         m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
-        m_MethodName: OnArmPreset5
+        m_MethodName: OnArmPreset4
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2572,7 +2588,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6894777472494071552}
         m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
-        m_MethodName: OnBaseTarget
+        m_MethodName: OnArmPreset5
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2582,8 +2598,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: 3573c083-a682-4619-838d-99505fd70411
-    m_ActionName: Gopher/Base Move[/Keyboard/g]
+    m_ActionId: 50289da6-5707-4d1d-b002-1bb62907b9b7
+    m_ActionName: Gopher/Arm Preset 6[/Keyboard/f6]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gopher
@@ -2935,48 +2951,52 @@ MonoBehaviour:
   jointController: {fileID: 4478812757678789719}
   gripperController: {fileID: 4167990686377277266}
   newtonIK: {fileID: 4167990686377277265}
+  flipPresetAngles: 0
+  presets:
+  - jointAngles:
+    - 0.7
+    - -1.5707964
+    - -1.5707964
+    - -1.2
+    - 0
+    - -1
+    - 1.5707964
+  - jointAngles:
+    - -100
+    - -100
+    - -100
+    - -100
+    - -100
+    - -100
+    - 3.1415927
+  - jointAngles:
+    - -100
+    - -100
+    - -100
+    - -100
+    - -100
+    - -100
+    - 1.5707964
+  - jointAngles:
+    - 0.91
+    - -1.13
+    - -0.85
+    - -1.66
+    - 0.09
+    - -0.85
+    - 0.26
+  - jointAngles:
+    - -2
+    - -1.8
+    - -1.8
+    - 2
+    - -0.3
+    - -1
+    - 1.570796
   grasping: {fileID: 7935201018965584942}
   gripperClosed: 0
-  preset2:
-  - 0.7
-  - -1.5707964
-  - -1.5707964
-  - -1.2
-  - 0
-  - -1
-  - 1.570796
-  preset3:
-  - -100
-  - -100
-  - -100
-  - -100
-  - -100
-  - -100
-  - 3.1415927
-  preset4:
-  - -100
-  - -100
-  - -100
-  - -100
-  - -100
-  - -100
-  - 1.5707964
-  preset5:
-  - 0.91
-  - -1.13
-  - -0.85
-  - -1.66
-  - 0.09
-  - -0.85
-  - 0.26
-  preset8:
-  - -2
-  - -1.8
-  - -1.8
-  - 2
-  - -0.3
-  - -1
-  - -1.570796
+  wheelController: {fileID: 4478812758085542332}
+  wheelSpeedLimitID: left grasping limit
   deltaPosition: {x: 0, y: 0, z: 0}
   deltaRotation: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
@@ -3268,6 +3288,10 @@ MonoBehaviour:
   rightWheel: {fileID: 6789262393631268745}
   wheelTrackLength: 0.37476
   wheelRadius: 0.0605
+  linearSpeedLimit: -1
+  angularSpeedLimit: -1
+  targetLinearSpeed: 0
+  targetAngularSpeed: 0
 --- !u!114 &4914549699303064443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3487,48 +3511,52 @@ MonoBehaviour:
   jointController: {fileID: 4478812758972552441}
   gripperController: {fileID: 4478812758972552422}
   newtonIK: {fileID: 4478812758972552423}
+  flipPresetAngles: 1
+  presets:
+  - jointAngles:
+    - 0.7
+    - -1.5707964
+    - -1.5707964
+    - -1.2
+    - 0
+    - -1
+    - 1.5707964
+  - jointAngles:
+    - -100
+    - -100
+    - -100
+    - -100
+    - -100
+    - -100
+    - 3.1415927
+  - jointAngles:
+    - -100
+    - -100
+    - -100
+    - -100
+    - -100
+    - -100
+    - 1.5707964
+  - jointAngles:
+    - 0.91
+    - -1.13
+    - -0.85
+    - -1.66
+    - 0.09
+    - -0.85
+    - 0.26
+  - jointAngles:
+    - -2
+    - -1.8
+    - -1.8
+    - 2
+    - -0.3
+    - -1
+    - 1.570796
   grasping: {fileID: 3613705014766526864}
   gripperClosed: 0
-  preset2:
-  - -0.7
-  - 1.570796
-  - 1.570796
-  - 1.2
-  - 0
-  - 1
-  - -1.570796
-  preset3:
-  - -100
-  - -100
-  - -100
-  - -100
-  - -100
-  - -100
-  - 3.1415927
-  preset4:
-  - -100
-  - -100
-  - -100
-  - -100
-  - -100
-  - -100
-  - -1.570796
-  preset5:
-  - -0.91
-  - 1.13
-  - 0.85
-  - 1.66
-  - -0.09
-  - 0.85
-  - -0.26
-  preset8:
-  - 2
-  - 1.8
-  - 1.8
-  - -2
-  - 0.3
-  - 1
-  - 1.570796
+  wheelController: {fileID: 4478812758085542332}
+  wheelSpeedLimitID: right grasping limit
   deltaPosition: {x: 0, y: 0, z: 0}
   deltaRotation: {x: 0, y: 0, z: 0}
   target: {fileID: 0}

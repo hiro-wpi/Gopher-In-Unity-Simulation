@@ -50,12 +50,34 @@ public class AutoGrasping : MonoBehaviour
 
     private void SelectCurrentObject(GameObject targetObject)
     {
+        AutoGraspable[] autoGraspables = 
+            targetObject.GetComponentsInChildren<AutoGraspable>();
+        // Auto grasping not avaliable
+        if (autoGraspables.Length == 0)
+        {
+            Debug.LogWarning("The object is not automatically graspable.");
+            return;
+        }
+
         // Highlight
         // if this object was alredy highlighted
         prevColor = HighlightUtils.GetHighlightColor(targetObject);
         HighlightUtils.HighlightObject(targetObject);
-        // Select
-        armControlManager.target = targetObject.GetComponentInChildren<AutoGraspable>();
+
+        // Select the one with min distance
+        float minDistance = 1000;
+        int selectedIndex = 0;
+        for (int i = 0; i < autoGraspables.Length; ++i)
+        {
+            float distance = 
+                (autoGraspables[i].grabPoint.position - transform.position).magnitude;
+            if (minDistance > distance)
+            {
+                minDistance = distance;
+                selectedIndex = i;
+            }
+        }
+        armControlManager.target = autoGraspables[selectedIndex];
     }
 
     private void CancelCurrentTargetObject()

@@ -58,7 +58,6 @@ public static class Utils
         return Array2D;
     }
 
-
     // GameObject
     public static void SetGameObjectLayer(GameObject obj, string name, 
                                           bool applyToChild=true)

@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-///     This script converts linear velocity and 
-///     angular velocity to joint velocities for
-///     differential drive robot. Velocity can be 
-///     set with SetRobotVelocity().
+///     This script converts linear velocity and angular velocity 
+///     to joint velocities for differential drive robot.
+///     Velocity can be set with SetRobotVelocity().
 /// </summary>
 /// <remarks>
 ///     As directly setting articulatio body velocity is still unstable,
@@ -16,18 +15,26 @@ using UnityEngine;
 /// </remarks>
 public class ArticulationWheelController : MonoBehaviour
 {
+    // robot
     public ArticulationBody leftWheel;
     public ArticulationBody rightWheel;
     public float wheelTrackLength;
     public float wheelRadius;
 
-    private float targetLinearSpeed;
-    private float targetAngularSpeed;
+    // hard speed limit
+    public float linearSpeedLimit = -1f;
+    public float angularSpeedLimit = -1f;
+    private Dictionary<string, float[]> speedLimitsMap;
+
+    // convertion
+    public float targetLinearSpeed;
+    public float targetAngularSpeed;
     private float velLeft;
     private float velRight;
     
     void Start()
     {
+        speedLimitsMap = new Dictionary<string, float[]>();
     }
 
     void FixedUpdate()
@@ -37,8 +44,16 @@ public class ArticulationWheelController : MonoBehaviour
 
     public void SetRobotVelocity(float targetLinearSpeed, float targetAngularSpeed)
     {
+        // Set target
         this.targetLinearSpeed = targetLinearSpeed;
         this.targetAngularSpeed = targetAngularSpeed;
+        // Speed limit
+        if (linearSpeedLimit >= 0)
+            this.targetLinearSpeed = 
+                Mathf.Clamp(this.targetLinearSpeed, -linearSpeedLimit, linearSpeedLimit);
+        if (linearSpeedLimit >= 0)
+            this.targetAngularSpeed =
+                Mathf.Clamp(this.targetAngularSpeed, -angularSpeedLimit, angularSpeedLimit);
     }
 
     private void SetRobotVelocityStep(float targetLinearSpeed, float targetAngularSpeed)
@@ -72,5 +87,56 @@ public class ArticulationWheelController : MonoBehaviour
         ArticulationDrive drive = wheel.xDrive;
         drive.target = wheel.jointPosition[0] * Mathf.Rad2Deg;
         wheel.xDrive = drive;
+    }
+
+
+    public string AddSpeedLimit(float linearSpeedLimit, float angularSpeedLimit, 
+                                string identifier = "")
+    {
+        if (identifier == "")
+            identifier = speedLimitsMap.Count.ToString();
+        if (speedLimitsMap.ContainsKey(identifier)) 
+            speedLimitsMap.Remove(identifier);
+        
+        // set speed limits
+        speedLimitsMap.Add(identifier, new float[] {linearSpeedLimit, angularSpeedLimit});
+        UpdateSpeedLimits();
+        return identifier;
+    }
+    public bool RemoveSpeedLimit(string identifier)
+    {
+        // remove speed limits
+        if (speedLimitsMap.ContainsKey(identifier)) 
+        {
+            speedLimitsMap.Remove(identifier);
+            UpdateSpeedLimits();
+            return true;
+        }
+        else
+            return false;
+    }
+    private void UpdateSpeedLimits()
+    {
+        // No speed limits
+        if (speedLimitsMap.Count == 0)
+        {
+            linearSpeedLimit = -1f;
+            angularSpeedLimit = -1f;
+        }
+        // Find the minimal limits
+        else
+        {
+            linearSpeedLimit = float.PositiveInfinity;
+            angularSpeedLimit = float.PositiveInfinity;
+            foreach(KeyValuePair<string, float[]> entry in speedLimitsMap)
+            {
+                if (entry.Value[0] < linearSpeedLimit)
+                    linearSpeedLimit = entry.Value[0];
+                if (entry.Value[1] < angularSpeedLimit)
+                    angularSpeedLimit = entry.Value[1];
+            }
+            linearSpeedLimit = Mathf.Clamp(linearSpeedLimit, 0, float.PositiveInfinity);
+            angularSpeedLimit = Mathf.Clamp(angularSpeedLimit, 0, float.PositiveInfinity);
+        }
     }
 }

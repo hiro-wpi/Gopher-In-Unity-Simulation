@@ -197,7 +197,7 @@ public class AutoNavigation : MonoBehaviour
         SetObstacleActive(true, false);
         // Change arm pose
         if (changeArmPose)
-            ChangeArmPose(8);
+            ChangeArmPose(6);
         active = true;
     }
     private void ChangeArmPose(int presetIndex)

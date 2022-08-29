@@ -124,8 +124,11 @@ public class NewtonIK : MonoBehaviour
             Vector3 rotationAxis;
             float rotationAngle;
             rotationError.ToAngleAxis(out rotationAngle, out rotationAxis);
-            // rotationAngle = Mathf.DeltaAngle(rotationAngle, 0f);
-            // Debug.Log(rotationAngle);
+            
+            // Not sure why, but this convertion is needed
+            if (rotationAngle > 0)
+                rotationAxis = new Vector3(-rotationAxis.x, -rotationAxis.y, -rotationAxis.z);
+            rotationAngle = Mathf.DeltaAngle(rotationAngle, 0f);
             
             // Function returns angle in degrees, so convert to radians
             rotationAngle = rotationAngle * Mathf.Deg2Rad;
