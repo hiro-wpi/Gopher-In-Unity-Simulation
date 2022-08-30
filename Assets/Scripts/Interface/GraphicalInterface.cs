@@ -186,7 +186,7 @@ public class GraphicalInterface : MonoBehaviour
     void Update()
     {
         // Timer
-        timerPanelText.text = Time.unscaledTime.ToString("0.00");
+        timerPanelText.text = Time.unscaledTime.ToString("0.0");
         // FPS
         FPSCount += 1;
         FPSSum += 1.0f / Time.deltaTime;

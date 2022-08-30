@@ -24,7 +24,8 @@ public class ArticulationWheelController : MonoBehaviour
     // hard speed limit
     public float linearSpeedLimit = -1f;
     public float angularSpeedLimit = -1f;
-    private Dictionary<string, float[]> speedLimitsMap;
+    private Dictionary<string, float[]> speedLimitsMap = 
+        new Dictionary<string, float[]>();
 
     // convertion
     public float targetLinearSpeed;
@@ -33,9 +34,7 @@ public class ArticulationWheelController : MonoBehaviour
     private float velRight;
     
     void Start()
-    {
-        speedLimitsMap = new Dictionary<string, float[]>();
-    }
+    {}
 
     void FixedUpdate()
     {

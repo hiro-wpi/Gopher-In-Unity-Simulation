@@ -81,9 +81,12 @@ public class GopherControl : MonoBehaviour
 
     public void OnBaseTarget(InputAction.CallbackContext context)
     {
-        if (_mode == ControlMode.Base)
+        if (context.performed)
         {
-            baseControl.OnTarget(context);
+            if (_mode == ControlMode.Base)
+            {
+                baseControl.OnTarget(context);
+            }
         }
     }
 
@@ -287,5 +290,12 @@ public class GopherControl : MonoBehaviour
             if (cameraControlEnabled)
                 mainCameraControl.OnCenter(context);
         }
+    }
+
+
+    // Debug only
+    public void Test(InputAction.CallbackContext context)
+    {
+        Debug.Log("Test");
     }
 }
