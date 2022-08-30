@@ -847,7 +847,6 @@ GameObject:
   m_Component:
   - component: {fileID: 308073207}
   - component: {fileID: 308073208}
-  - component: {fileID: 308073209}
   m_Layer: 0
   m_Name: Nav Mesh Human
   m_TagString: Untagged
@@ -896,35 +895,6 @@ MonoBehaviour:
   m_TileSize: 256
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.093333334
-  m_BuildHeightMesh: 0
-  m_NavMeshData: {fileID: 0}
---- !u!114 &308073209
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 308073206}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AgentTypeID: -1372625422
-  m_CollectObjects: 0
-  m_Size: {x: 10, y: 10, z: 10}
-  m_Center: {x: 0, y: 2, z: 0}
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 831
-  m_UseGeometry: 1
-  m_DefaultArea: 3
-  m_IgnoreNavMeshAgent: 1
-  m_IgnoreNavMeshObstacle: 1
-  m_OverrideTileSize: 0
-  m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.12666667
   m_BuildHeightMesh: 0
   m_NavMeshData: {fileID: 0}
 --- !u!1 &315971912
@@ -5559,9 +5529,8 @@ MonoBehaviour:
   keepSameSceneAndRobot: 1
   experimentMenus: {fileID: 1008630542}
   dataRecorder: {fileID: 951117111}
-  navMeshSurfaces:
-  - {fileID: 308073208}
-  - {fileID: 1397627988}
+  navMeshHuman: {fileID: 308073208}
+  navMeshRobot: {fileID: 1397627988}
 --- !u!1 &1310218117
 GameObject:
   m_ObjectHideFlags: 0
