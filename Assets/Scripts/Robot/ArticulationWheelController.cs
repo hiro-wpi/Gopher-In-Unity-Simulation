@@ -22,8 +22,11 @@ public class ArticulationWheelController : MonoBehaviour
     public float wheelRadius;
 
     // hard speed limit
-    public float linearSpeedLimit = -1f;
-    public float angularSpeedLimit = -1f;
+    private float linearSpeedLimitForward = 100f;
+    private float linearSpeedLimitBackward = 100f;
+    private float angularSpeedLimitLeft = 100f;
+    private float angularSpeedLimitRight = 100f;
+    // ID, [linear_forward, linear_backward, angular_left, angular_right]
     private Dictionary<string, float[]> speedLimitsMap = 
         new Dictionary<string, float[]>();
 
@@ -33,6 +36,7 @@ public class ArticulationWheelController : MonoBehaviour
     private float velLeft;
     private float velRight;
     
+
     void Start()
     {}
 
@@ -41,18 +45,25 @@ public class ArticulationWheelController : MonoBehaviour
         SetRobotVelocityStep(targetLinearSpeed, targetAngularSpeed);
     }
 
+
     public void SetRobotVelocity(float targetLinearSpeed, float targetAngularSpeed)
     {
         // Set target
         this.targetLinearSpeed = targetLinearSpeed;
         this.targetAngularSpeed = targetAngularSpeed;
         // Speed limit (needs to be not less than 0)
-        if (linearSpeedLimit >= 0)
+        if (linearSpeedLimitForward >= 0)
             this.targetLinearSpeed = 
-                Mathf.Clamp(this.targetLinearSpeed, -linearSpeedLimit, linearSpeedLimit);
-        if (linearSpeedLimit >= 0)
+                Mathf.Clamp(this.targetLinearSpeed, -100, linearSpeedLimitForward);
+        if (linearSpeedLimitBackward >= 0)
+            this.targetLinearSpeed = 
+                Mathf.Clamp(this.targetLinearSpeed, -linearSpeedLimitBackward, 100);
+        if (angularSpeedLimitLeft >= 0)
             this.targetAngularSpeed =
-                Mathf.Clamp(this.targetAngularSpeed, -angularSpeedLimit, angularSpeedLimit);
+                Mathf.Clamp(this.targetAngularSpeed, -100, angularSpeedLimitLeft);
+        if (angularSpeedLimitRight >= 0)
+            this.targetAngularSpeed =
+                Mathf.Clamp(this.targetAngularSpeed, -angularSpeedLimitRight, 100);
     }
 
     private void SetRobotVelocityStep(float targetLinearSpeed, float targetAngularSpeed)
@@ -89,17 +100,21 @@ public class ArticulationWheelController : MonoBehaviour
     }
 
 
-    public string AddSpeedLimit(float linearSpeedLimit, float angularSpeedLimit, 
-                                string identifier = "")
+    public string AddSpeedLimit(float[] speedLimits, string identifier = "")
     {
         if (identifier == "")
             identifier = speedLimitsMap.Count.ToString();
         
         // set speed limits
         if (speedLimitsMap.ContainsKey(identifier))
-            speedLimitsMap[identifier] = new float[] {linearSpeedLimit, angularSpeedLimit};
+        {
+            if (speedLimitsMap[identifier] == speedLimits)
+                return identifier;
+            else
+                speedLimitsMap[identifier] = speedLimits;
+        }
         else
-            speedLimitsMap.Add(identifier, new float[] {linearSpeedLimit, angularSpeedLimit});
+            speedLimitsMap.Add(identifier, speedLimits);
         
         UpdateSpeedLimits();
         return identifier;
@@ -121,22 +136,34 @@ public class ArticulationWheelController : MonoBehaviour
         // No speed limits
         if (speedLimitsMap.Count == 0)
         {
-            linearSpeedLimit = -1f;
-            angularSpeedLimit = -1f;
+            linearSpeedLimitForward = 100f;
+            linearSpeedLimitBackward = 100f;
+            angularSpeedLimitLeft = 100f;
+            angularSpeedLimitRight = 100f;
         }
         // Find the minimal limits
         else
         {
-            linearSpeedLimit = 100f;
-            angularSpeedLimit = 100f;
+            linearSpeedLimitForward = 100f;
+            linearSpeedLimitBackward = 100f;
+            angularSpeedLimitLeft = 100f;
+            angularSpeedLimitRight = 100f;
             foreach(KeyValuePair<string, float[]> entry in speedLimitsMap)
             {
-                if (entry.Value[0] < linearSpeedLimit)
-                    linearSpeedLimit = entry.Value[0];
-                if (entry.Value[1] < linearSpeedLimit)
-                    angularSpeedLimit = entry.Value[1];
-                linearSpeedLimit = Mathf.Clamp(linearSpeedLimit, 0f, linearSpeedLimit);
-                angularSpeedLimit = Mathf.Clamp(angularSpeedLimit, 0f, angularSpeedLimit);
+                if (entry.Value[0] < linearSpeedLimitForward)
+                    linearSpeedLimitForward = entry.Value[0];
+                if (entry.Value[1] < linearSpeedLimitBackward)
+                    linearSpeedLimitBackward = entry.Value[1];
+                if (entry.Value[2] < angularSpeedLimitLeft)
+                    angularSpeedLimitLeft = entry.Value[2];
+                if (entry.Value[3] < angularSpeedLimitRight)
+                    angularSpeedLimitRight = entry.Value[3];
+
+                // Make sure they are larger than 0
+                linearSpeedLimitBackward = Mathf.Clamp(linearSpeedLimitBackward, 0f, 100f);
+                linearSpeedLimitForward = Mathf.Clamp(linearSpeedLimitForward, 0f, 100f);
+                angularSpeedLimitLeft = Mathf.Clamp(angularSpeedLimitLeft, 0f, 100f);
+                angularSpeedLimitRight = Mathf.Clamp(angularSpeedLimitRight, 0f, 100f);
             }
         } 
     }

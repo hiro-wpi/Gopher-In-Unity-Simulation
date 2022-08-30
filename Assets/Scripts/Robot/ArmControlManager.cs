@@ -77,6 +77,7 @@ public class ArmControlManager : MonoBehaviour
             gameObject.GetComponentInChildren<ArticulationCollisionDetection>();
     }
 
+
     // Manual control
     void FixedUpdate()
     {
@@ -85,8 +86,22 @@ public class ArmControlManager : MonoBehaviour
         {
             UpdateManualControl();
         }
+        // Grasping detection
+        CheckGrasping();
     }
     private void UpdateManualControl()
+    {
+        // End effector position control
+        if (deltaPosition != Vector3.zero || deltaRotation != Vector3.zero)
+        {
+            Quaternion deltaRotationQuaternion = Quaternion.Euler(deltaRotation);
+            jointAngles = jointController.GetCurrentJointTargets();
+            jointAngles = newtonIK.SolveVelocityIK(jointAngles, deltaPosition, deltaRotationQuaternion);
+            jointController.SetJointTargets(jointAngles);
+        }
+    }
+    
+    private void CheckGrasping()
     {
         // Graspable object detection
         if ((gripperClosed) && (!grasping.isGrasping))
@@ -104,19 +119,16 @@ public class ArmControlManager : MonoBehaviour
                     float speedLimitPercentage = 
                         0.1f * (10f - grasping.GetGraspedObjectMass());
                     speedLimitPercentage = Mathf.Clamp(speedLimitPercentage, 0f, 1f);
-                    wheelSpeedLimitID = wheelController.AddSpeedLimit(1.0f * speedLimitPercentage, 
-                                                                 1.0f * speedLimitPercentage, 
-                                                                 wheelSpeedLimitID);
+                    wheelSpeedLimitID = wheelController.AddSpeedLimit(
+                                                        new float[] 
+                                                        {
+                                                            1.0f * speedLimitPercentage, 
+                                                            1.0f * speedLimitPercentage,
+                                                            1.0f * speedLimitPercentage, 
+                                                            1.0f * speedLimitPercentage
+                                                        },
+                                                        wheelSpeedLimitID);
                 }
-        }
-        
-        // End effector position control
-        if (deltaPosition != Vector3.zero || deltaRotation != Vector3.zero)
-        {
-            Quaternion deltaRotationQuaternion = Quaternion.Euler(deltaRotation);
-            jointAngles = jointController.GetCurrentJointTargets();
-            jointAngles = newtonIK.SolveVelocityIK(jointAngles, deltaPosition, deltaRotationQuaternion);
-            jointController.SetJointTargets(jointAngles);
         }
     }
 
@@ -151,6 +163,7 @@ public class ArmControlManager : MonoBehaviour
         // Home Position
         if (presetIndex == 0)
             MoveToJointPosition(jointController.homePosition);
+        // Presets
         else
             if (flipPresetAngles)
             {
