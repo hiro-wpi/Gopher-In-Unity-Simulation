@@ -9,12 +9,12 @@ public class BaseControl : MonoBehaviour
     public AutoNavigation autoNavigation;
     public float linearSpeed = 1.5f;
     public float angularSpeed = 1.5f;
-    private Vector2 _driveDir = Vector2.zero;
+    private Vector3 _driveDir = Vector3.zero;
 
     public void OnDrive(InputAction.CallbackContext context)
     {
-        _driveDir = context.ReadValue<Vector2>();
-        wheelController.SetRobotVelocity(_driveDir.y * linearSpeed, _driveDir.x * -angularSpeed);
+        _driveDir = context.ReadValue<Vector3>();
+        wheelController.SetRobotVelocity(_driveDir.z * linearSpeed, _driveDir.x * -angularSpeed);
     }
 
     public void OnTarget(InputAction.CallbackContext context)
