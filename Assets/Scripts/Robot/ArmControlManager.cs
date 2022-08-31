@@ -161,8 +161,9 @@ public class ArmControlManager : MonoBehaviour
     public bool MoveToPreset(int presetIndex)
     {
         // Do not allow auto moving when grasping heavy object
-        if (grasping.isGrasping && grasping.GetGraspedObjectMass() > 1)
-            return false;
+        // TEMP
+        //if (grasping.isGrasping && grasping.GetGraspedObjectMass() > 1)
+        //    return false;
 
         // Home Position
         if (presetIndex == 0)

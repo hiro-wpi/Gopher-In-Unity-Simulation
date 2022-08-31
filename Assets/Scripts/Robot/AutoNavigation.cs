@@ -92,13 +92,10 @@ public class AutoNavigation : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Autonomy disabled
-        if (!active)
-            return;
         // Check goals
         if (waypoints.Length == 0)
             return;
-        
+
         // Check replan
         elapsed += Time.fixedDeltaTime;
         if (elapsed > replanTime)
@@ -107,6 +104,10 @@ public class AutoNavigation : MonoBehaviour
             elapsed = 0f;
             SetGoal(this.goal);
         }
+
+        // Autonomy disabled
+        if (!active)
+            return;
 
         // Check goal
         // select tolerance
@@ -189,24 +190,32 @@ public class AutoNavigation : MonoBehaviour
         // Must have valid goal and plan first
         if (goal[1] == -100f)
         {
-            Debug.Log("No valid goal is set");
+            Debug.Log("No valid goal is set.");
             return;
         }
 
-        // Change nav mesh obsatcle usage
-        SetObstacleActive(true, false);
         // Change arm pose
         if (changeArmPose)
-            ChangeArmPose(5);
+        {
+            bool success = ChangeArmPose(5);
+            Debug.Log("Changing arm pose failed.");
+            if (!success)
+                return;
+        }
+        // Change nav mesh obsatcle usage
+        SetObstacleActive(true, false);
         active = true;
     }
-    private void ChangeArmPose(int presetIndex)
+    private bool ChangeArmPose(int presetIndex)
     {
+        bool leftSuccess = true;
+        bool rightSuccess = true;
         if (leftArmControlManager != null && rightArmControlManager != null)
         {
-            leftArmControlManager.MoveToPreset(presetIndex);
-            rightArmControlManager.MoveToPreset(presetIndex);
+            leftSuccess = leftArmControlManager.MoveToPreset(presetIndex);
+            rightSuccess = rightArmControlManager.MoveToPreset(presetIndex);
         }
+        return leftSuccess && rightSuccess;
     }
 
     public void DisableAutonomy()
@@ -271,13 +280,11 @@ public class AutoNavigation : MonoBehaviour
         path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, 
                               goal, agent.areaMask, path);
-        if (path.corners.Length == 0)
-            return false;
         // Set trajectories
         SetTrajectory(path);
         waypointIndex = 0;
         rotationNeeded = true;
-        return true;
+        return (path.corners.Length != 0);
     }
     private void SetTrajectory(NavMeshPath path)
     {
