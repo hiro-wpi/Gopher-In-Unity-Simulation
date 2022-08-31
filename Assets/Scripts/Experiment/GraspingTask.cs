@@ -18,10 +18,6 @@ public class GraspingTask : Task
         // Check if all task objects reach the neighbor of the current goal
         foreach (GameObject taskObject in taskObjects)
         {
-            Debug.Log(taskObject.name);
-            Debug.Log(taskObject.transform.position);
-            Debug.Log(goals[0].gameObject.name);
-            Debug.Log(goals[0].transform.position);
             if (!goals[0].CheckIfObjectReachedGoal(taskObject))
                 return false;
         }

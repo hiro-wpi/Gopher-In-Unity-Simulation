@@ -158,8 +158,12 @@ public class ArmControlManager : MonoBehaviour
 
 
     // Move to Preset
-    public void MoveToPreset(int presetIndex)
+    public bool MoveToPreset(int presetIndex)
     {
+        // Do not allow auto moving when grasping heavy object
+        if (grasping.isGrasping && grasping.GetGraspedObjectMass() > 1)
+            return false;
+
         // Home Position
         if (presetIndex == 0)
             MoveToJointPosition(jointController.homePosition);
@@ -179,6 +183,7 @@ public class ArmControlManager : MonoBehaviour
             }
             else
                 MoveToJointPosition(presets[presetIndex-1].jointAngles);
+        return true;
     }
     private void MoveToJointPosition(float[] jointAngles)
     {

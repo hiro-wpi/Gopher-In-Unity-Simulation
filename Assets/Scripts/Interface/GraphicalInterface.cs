@@ -224,11 +224,19 @@ public class GraphicalInterface : MonoBehaviour
                 Ray ray = mapCamera.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out hit))
                 {
+                    // Cancel previous goal
                     if ((hit.point - prevClickPoint).magnitude < 0.5)
+                    {
                         autoNavigation.DisableAutonomy();
+                        prevClickPoint = Vector3.zero;
+                    }
+                    // Set goal
                     else
+                    {
                         autoNavigation.SetGoal(hit.point);
-                } 
+                        prevClickPoint = hit.point;
+                    }
+                }
             }
         }
         // barcode

@@ -23,6 +23,7 @@ public class ExperimentManager : MonoBehaviour
     // Task
     public bool experimentStarted;
     private bool taskStarted;
+    private bool taskLoaded;
     private Task currentTask;
     // whether using the same scene and robot during the whole experiment
     public bool keepSameSceneAndRobot;
@@ -64,7 +65,9 @@ public class ExperimentManager : MonoBehaviour
             LoadQuitMenus();
 
         // Check if user starts to move the robot
-        if (currentTask != null && !taskStarted && currentTask.CheckTaskStart())
+        if (currentTask != null && 
+            taskLoaded && !taskStarted && 
+            currentTask.CheckTaskStart())
         {
             // start
             taskStarted = true;
@@ -199,6 +202,7 @@ public class ExperimentManager : MonoBehaviour
             Destroy(currentTask);
         }
         // Get a new task
+        taskLoaded = false;
         currentTask = experiments[experimentIndex].GetTask(taskIndex);
         
         // Load new scene and 
@@ -290,6 +294,8 @@ public class ExperimentManager : MonoBehaviour
         gUI = currentTask.gUI;
         gUI.SetUIActive(true);
         // TODO cUI = currentTask.CUI;
+
+        taskLoaded = true;
     }
 
     // Reload current task

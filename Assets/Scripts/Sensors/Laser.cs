@@ -17,7 +17,6 @@ public class Laser : SurroundingDetection
     private GameObject scanResultParent;
     private GameObject[] scanResultObjects;
 
-
     void OnDestroy() 
     {
         SetScanResultInstantiationActive(false);
