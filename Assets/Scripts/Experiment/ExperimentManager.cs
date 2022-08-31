@@ -21,7 +21,7 @@ public class ExperimentManager : MonoBehaviour
     private System.Random randomInt = new System.Random();
     private int[] randomizedIndices;
     // Task
-    private bool experimentStarted;
+    public bool experimentStarted;
     private bool taskStarted;
     private Task currentTask;
     // whether using the same scene and robot during the whole experiment
@@ -45,6 +45,7 @@ public class ExperimentManager : MonoBehaviour
     void Start()
     {
         // Start the main menus
+        experimentStarted = false;
         LoadMainMenus();
         // experiments
         totalTaskIndex = 0;

@@ -41,7 +41,7 @@ public class CollisionAvoidance : MonoBehaviour
         float minDistance = GetMinDistanceToObstacle();
         // only linear speed limit
         wheelController.AddSpeedLimit(new float[] 
-                                      {100f, minDistance * slowMultiplier,
+                                      {minDistance * slowMultiplier, 100f,
                                        100f, 100f},
                                       wheelSpeedLimitID);
     }

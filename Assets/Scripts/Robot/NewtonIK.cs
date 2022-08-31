@@ -104,19 +104,6 @@ public class NewtonIK : MonoBehaviour
 
             Vector3 positionError = endEffectorPosition - targetPosition;
             Quaternion rotationError = endEffectorRotation * Quaternion.Inverse(targetRotation);
-            /*
-            Vector3 rotationErrorEuler = new Vector3(Mathf.DeltaAngle(endEffectorRotation.eulerAngles[0], 
-                                                                           targetRotation.eulerAngles[0]),
-                                                     Mathf.DeltaAngle(endEffectorRotation.eulerAngles[1], 
-                                                                           targetRotation.eulerAngles[1]),
-                                                     Mathf.DeltaAngle(endEffectorRotation.eulerAngles[2], 
-                                                                           targetRotation.eulerAngles[2]));
-            Quaternion rotationError = Quaternion.Euler(rotationErrorEuler);
-            // rotationError = Quaternion.identity;
-            // Debug.Log(endEffectorRotation.eulerAngles);
-            // Debug.Log(targetRotation.eulerAngles);
-            // Debug.Log(targetPosition);
-            */
 
             // Orientation is stored in the jacobian as a scaled rotation axis
             // Where the axis of rotation is the vector, and the angle is the length of the vector (in radians)
@@ -124,18 +111,19 @@ public class NewtonIK : MonoBehaviour
             Vector3 rotationAxis;
             float rotationAngle;
             rotationError.ToAngleAxis(out rotationAngle, out rotationAxis);
-            
-            // Not sure why, but this convertion is needed
-            if (rotationAngle > 0)
-                rotationAxis = new Vector3(-rotationAxis.x, -rotationAxis.y, -rotationAxis.z);
-            rotationAngle = Mathf.DeltaAngle(rotationAngle, 0f);
-            
-            // Function returns angle in degrees, so convert to radians
-            rotationAngle = rotationAngle * Mathf.Deg2Rad;
-            // Now scale the rotation axis by the angle
-            rotationAxis *= rotationAngle; // Prioritize the position
+            // Wrap angle into [-pi, pi]
+            // (not exactly sure why this is necessary)
+            rotationAngle = Mathf.DeltaAngle(0f, rotationAngle);
 
-            // decay lambda over time
+            // Prevent rotationAxis being NaN crashed the algorithm
+            if (Mathf.Abs(rotationAngle) < 1e-3)
+                rotationAxis = Vector3.zero;
+            // Scale the rotation axis by the angle
+            // prioritize the position
+            else
+                rotationAxis *= rotationAngle * Mathf.Deg2Rad; 
+
+            // Decay lambda over time
             float lambda = (1 - e / EPOCHS) * 0.5f;
             positionError *= lambda;
             rotationAxis *= lambda;
@@ -145,15 +133,19 @@ public class NewtonIK : MonoBehaviour
                 newJointAngles[i] += errorAngles[i];
         }
 
-        // check convergence
+        // Result validation check
+        foreach (float jointAngle in newJointAngles)
+            if (jointAngle == float.NaN)
+                return (false, jointAngles);
+        
+        // Result Convergence check
         kinematicSolver.UpdateAngles(newJointAngles);
         kinematicSolver.UpdateAllTs();
         kinematicSolver.UpdateAllPose();
         (endEffectorPosition, endEffectorRotation) = kinematicSolver.GetPose(kinematicSolver.numJoint);
-        
         bool converged = (endEffectorPosition - targetPosition).magnitude < 0.1f;
 
-        // Set the new joint angles
+        // Return the new joint angles
         return (converged, newJointAngles);
     }
 

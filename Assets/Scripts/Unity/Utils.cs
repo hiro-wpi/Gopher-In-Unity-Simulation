@@ -73,6 +73,24 @@ public static class Utils
         }
     }
 
+    public static string ArrayToCSVLine<T>(T[] array)
+    {
+        string line = "";
+        // Add value to line
+        foreach (T value in array)
+        {
+            if (value is float || value is int)
+                line += string.Format("{0:0.000}", value) + ",";
+            else if (value is string)
+                line += value + ",";
+        }
+        // Remove "," in the end
+        if (line.Length > 0)
+            line.Remove(line.Length - 1);
+        return line;
+    }
+
+
     // Transform
     // from RUF (Unity) to FLU (regular)
     public static Vector3 ToFLU(Vector3 v)

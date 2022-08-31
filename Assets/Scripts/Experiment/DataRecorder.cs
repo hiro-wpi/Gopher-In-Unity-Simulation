@@ -45,7 +45,6 @@ public class DataRecorder : MonoBehaviour
     {
         // Initialization
         isRecording = false;
-        updateRate = 10;
 
         // 6 + 12 * 2 + 2 + 14 * 2
         robotValueToRecordHeader = new string[] 
@@ -75,7 +74,7 @@ public class DataRecorder : MonoBehaviour
             "right_end_x", "right_end_y", "right_end_z", 
             "right_end_ax", "right_end_ay", "right_end_az"
         };
-        robotStringToRecordHeader = new string[] {"time", "self_name", "other_name", "relative_speed"};
+        robotStringToRecordHeader = new string[] {"game_time", "self_name", "other_name", "relative_speed"};
     }
     
     // Start a new recording
@@ -104,10 +103,14 @@ public class DataRecorder : MonoBehaviour
         taskStringToRecordHeader = task.GetTaskStringToRecordHeader();
 
         // Headers
-        robotValueTextWriter.WriteLine(ArrayToCSVLine<string>(robotValueToRecordHeader));
-        robotStringTextWriter.WriteLine(ArrayToCSVLine<string>(robotStringToRecordHeader));
-        taskValueTextWriter.WriteLine(ArrayToCSVLine<string>(taskValueToRecordHeader));  
-        taskStringTextWriter.WriteLine(ArrayToCSVLine<string>(taskStringToRecordHeader));
+        robotValueTextWriter.WriteLine(
+            Utils.ArrayToCSVLine<string>(robotValueToRecordHeader));
+        robotStringTextWriter.WriteLine(
+            Utils.ArrayToCSVLine<string>(robotStringToRecordHeader));
+        taskValueTextWriter.WriteLine(
+            Utils.ArrayToCSVLine<string>(taskValueToRecordHeader));  
+        taskStringTextWriter.WriteLine(
+            Utils.ArrayToCSVLine<string>(taskStringToRecordHeader));
 
         // Start
         isRecording = true;
@@ -119,16 +122,20 @@ public class DataRecorder : MonoBehaviour
         // General robot data
         UpdateRobotData();
         if (robotValueToRecord != null && robotValueToRecord.Length > 0)
-            robotValueTextWriter.WriteLine(ArrayToCSVLine<float>(robotValueToRecord));
+            robotValueTextWriter.WriteLine(
+                Utils.ArrayToCSVLine<float>(robotValueToRecord));
         if (robotStringToRecord != null && robotStringToRecord.Length > 0)
-            robotStringTextWriter.WriteLine(ArrayToCSVLine<string>(robotStringToRecord));
+            robotStringTextWriter.WriteLine(
+                Utils.ArrayToCSVLine<string>(robotStringToRecord));
 
         // Task specified data
         UpdateTaskData();
         if (taskValueToRecord != null && taskValueToRecord.Length > 0)
-            taskValueTextWriter.WriteLine(ArrayToCSVLine<float>(taskValueToRecord));
+            taskValueTextWriter.WriteLine(
+                Utils.ArrayToCSVLine<float>(taskValueToRecord));
         if (taskStringToRecord != null && taskStringToRecord.Length > 0)
-            taskStringTextWriter.WriteLine(ArrayToCSVLine<string>(taskStringToRecord));
+            taskStringTextWriter.WriteLine(
+                Utils.ArrayToCSVLine<string>(taskStringToRecord));
     }
     
     // Stop current recording
@@ -280,22 +287,5 @@ public class DataRecorder : MonoBehaviour
         // Wrap to [0, 2pi)
         angle = angle % twoPI;
         return angle;
-    }
-
-    private string ArrayToCSVLine<T>(T[] array)
-    {
-        string line = "";
-        // Add value to line
-        foreach (T value in array)
-        {
-            if (value is float || value is int)
-                line += string.Format("{0:0.000}", value) + ",";
-            else if (value is string)
-                line += value + ",";
-        }
-        // Remove "," in the end
-        if (line.Length > 0)
-            line.Remove(line.Length - 1);
-        return line;
     }
 }

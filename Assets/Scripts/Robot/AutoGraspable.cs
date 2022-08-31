@@ -157,7 +157,7 @@ public class AutoGraspable : MonoBehaviour
         float rotationAngle;
         rotationError.ToAngleAxis(out rotationAngle, out rotationAxis);
         // Wrap and get magnitude
-        rotationAngle = Mathf.Abs(Mathf.DeltaAngle(rotationAngle, 0f));
+        rotationAngle = Mathf.Abs(Mathf.DeltaAngle(0f, rotationAngle));
         return rotationAngle;
     }
 

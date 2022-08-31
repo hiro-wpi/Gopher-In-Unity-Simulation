@@ -95,7 +95,8 @@ public class ComprehensiveExperiment : Experiment
                                                  };
     */
     // randomization
-    private System.Random random = new System.Random(0);
+    public int randomizationSeed = 0;
+    private System.Random random;
     private int startIndex;
     private int[,] indexArrayType1;
     private int[,] indexArrayType2;
@@ -116,6 +117,7 @@ public class ComprehensiveExperiment : Experiment
                 indexArrayType2[i, j] = temp[j];
             }
         // get randomized task order
+        random = new System.Random(randomizationSeed);
         string[] randomizedTasks = GetRandomizedTaskOrder();
 
         // General

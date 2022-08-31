@@ -7,6 +7,12 @@ using UnityEngine;
 /// </summary>
 public class TestExperiment : Experiment 
 {
+    // secondary
+    public GameObject[] trashCan;
+    public GameObject[] laundryBasket;
+    private string[] roomNames;
+    private System.Random random;
+    
     void Start()
     {
         // General
@@ -20,8 +26,8 @@ public class TestExperiment : Experiment
                                   "NavObs", "Disinfection"
                                  };
         // taskNames = new string[] {"GoHome", "Carrying", "Pushing", "LocalGrasping", "Navigation"};
-        taskDescriptions = new string[] {"Please navigate to room S103.", 
-                                         "Please read the vital value of Bed 2 in Room S103.",
+        taskDescriptions = new string[] {"Please navigate to Room S103.", 
+                                         "Please read the vital value of Bed 2",
 
                                          "Please carry the IV pole to Room P104.",
                                          "Please scan the medicine on the table and enter the bar code number.",
@@ -58,8 +64,12 @@ public class TestExperiment : Experiment
                                  new Vector3( 0.0f, 0f, -1.5f), new Vector3(-2.5f, 0f, -1.5f)}
                             };
 
+        // secondary task
+        random = new System.Random(0);
+        roomNames = new string[] {"Room S103", "Room P104", "Pharmacy", "Room P101"};
+
         // Create a gameobject container
-        GameObject tasksObject = new GameObject("Comprehensive Tasks");
+        GameObject tasksObject = new GameObject("Testing Tasks");
         tasksObject.transform.SetParent(this.transform);
 
         // Set up tasks
@@ -97,6 +107,31 @@ public class TestExperiment : Experiment
                                                      new Vector3(), 
                                                      new Vector3(), 
                                                      null);
+        // secondary task objects
+        if (taskIndex % 2 == 1)
+        {
+            // Secondary task
+            // get avaliable locations
+            string roomName = roomNames[(taskIndex-1)/2];
+            Vector3[] freeGroudPoss = HospitalMapUtil.GetFreeGroundSpace(roomName);
+            // select a object
+            int ind1 = random.Next(trashCan.Length);
+            int ind2 = random.Next(laundryBasket.Length);
+            // select a ground - manually set
+            int ground1 = freeGroudPoss.Length-1;
+            int ground2 = freeGroudPoss.Length-2;
+            // spawn info
+            Task.SpawnInfo[] secondaryObjectSpawnArray = new Task.SpawnInfo[2];
+            secondaryObjectSpawnArray[0] = Task.ToSpawnInfo(trashCan[ind1], 
+                                                            freeGroudPoss[ground1],
+                                                            Vector3.zero, null);
+            secondaryObjectSpawnArray[1] = Task.ToSpawnInfo(laundryBasket[ind2], 
+                                                            freeGroudPoss[ground2],
+                                                            new Vector3(), null);
+            staticObjectSpawnArray = Utils.ConcatenateArray(staticObjectSpawnArray, 
+                                                            secondaryObjectSpawnArray);
+        }
+        
         // dynamic object - human
         Task.SpawnInfo[] humanSpawnArray = new Task.SpawnInfo[0];
         if (levelNames[levelIndex] == "Level2")

@@ -55,6 +55,7 @@ public class GraphicalInterface : MonoBehaviour
     private RenderTexture mapRendertexture;
     private GameObject mapCameraObject;
     private Camera mapCamera;
+    private Vector3 prevClickPoint = Vector3.zero;
     
     // battery
     private float robotSpawnedTime;
@@ -222,7 +223,12 @@ public class GraphicalInterface : MonoBehaviour
                 RaycastHit hit;
                 Ray ray = mapCamera.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out hit))
-                    autoNavigation.SetGoal(hit.point);
+                {
+                    if ((hit.point - prevClickPoint).magnitude < 0.5)
+                        autoNavigation.DisableAutonomy();
+                    else
+                        autoNavigation.SetGoal(hit.point);
+                } 
             }
         }
         // barcode

@@ -73,7 +73,7 @@ public class AutoNavigation : MonoBehaviour
         {
             // higher for better visualization
             lineRenderer.SetPosition(1 + i, waypoints[i + waypointIndex] + 
-                                            new Vector3(0f, 0.2f, 0f) ); 
+                                            new Vector3(0f, 0.05f, 0f) ); 
         }
         // Draw goal
         if (goalObject != null && 
@@ -240,8 +240,8 @@ public class AutoNavigation : MonoBehaviour
             // prevent nav mesh obstacles blocking path
             if (planningCoroutine != null)
                 StopCoroutine(planningCoroutine);
-            planningCoroutine = StartCoroutine(PathPlanningCoroutine(0.5f, goal));
             // path planning
+            planningCoroutine = StartCoroutine(PathPlanningCoroutine(0.5f, goal));
         }
         else
         {
@@ -253,15 +253,12 @@ public class AutoNavigation : MonoBehaviour
         SetObstacleActive(false, false);
         yield return new WaitForSeconds(0.1f);
         bool pathFound = FindGlobalPath(goal);
+
         // path found or not
         if (pathFound)
-        {
             this.goal = goal;
-        }
         else
-        {
             Debug.Log("No path found to given goal.");
-        }
         yield return new WaitForSeconds(time);
         SetObstacleActive(true, true);
     }

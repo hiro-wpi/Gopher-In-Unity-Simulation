@@ -119,7 +119,7 @@ public abstract class Task : MonoBehaviour
     public virtual string[] GetTaskStringToRecordHeader()
     {
         stringToRecordHeader = new string[2];
-        stringToRecordHeader[0] = "time";
+        stringToRecordHeader[0] = "game_time";
         stringToRecordHeader[1] = "user_inputs";
         return stringToRecordHeader;
     }

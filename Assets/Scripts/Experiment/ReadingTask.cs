@@ -43,6 +43,10 @@ public class ReadingTask : Task
             return;
         
         // Check result
+        // ignore result with only one digit
+        if (input.Length < 2)
+            return;
+        // check
         userResult = input;
         if (userResult == result)
             isCorrect = true;
