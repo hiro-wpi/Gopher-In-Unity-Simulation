@@ -50,7 +50,7 @@ public class BarCodeScanner : MonoBehaviour
         return result.Text;
     }
 
-    private Texture2D GetCameraTexture(float cropRatio = 1.0f)
+    private Texture2D GetCameraTexture(float cropRatio = 1.0f, bool saveToLocal = false)
     {
         RenderTexture current = RenderTexture.active;
         RenderTexture camCurrent = cam.targetTexture;
@@ -68,12 +68,15 @@ public class BarCodeScanner : MonoBehaviour
         cameraTexture.ReadPixels(new Rect(croppedStartSize, croppedStartSize, 
                                           croppedTextureSize, croppedTextureSize), 0, 0);
 
-        byte[] bytes = cameraTexture.EncodeToJPG();
-        // Write the returned byte array to a file in the project folder
-        File.WriteAllBytes(Application.dataPath + "/Data/SavedScreen.jpg", bytes);
-
+        // Save locally
+        if (saveToLocal)
+        {
+            byte[] bytes = cameraTexture.EncodeToJPG();
+            // Write the returned byte array to a file in the project folder
+            File.WriteAllBytes(Application.dataPath + "/Data/SavedScreen.jpg", bytes);
+        }
+        
         cameraTexture.Apply();
-
         RenderTexture.active = current;
         cam.targetTexture = camCurrent;
         return cameraTexture;

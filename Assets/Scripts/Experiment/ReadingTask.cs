@@ -12,7 +12,7 @@ public class ReadingTask : Task
     private bool isCorrect = false;
     // Bar code scanner for some tasks
     private BarCodeScanner barCodeScanner;
-    
+
 
     void Start()
     {
@@ -25,12 +25,26 @@ public class ReadingTask : Task
 
         if (Input.GetKeyDown(KeyCode.N))
         {
-            barCodeScanner.cam = gUI.GetCurrentMainCamera();
-            string result = barCodeScanner.Scan(1/2f);
-            if (result != "N/A")
-                // remove guard pattern for shortening
-                result = result.Substring(1, result.Length-2);
-            gUI.ShowPopUpMessage("Scan result: " + result, 2.0f);
+            // Get active cameras
+            Camera[] cameras = gUI.GetCurrentActiveCameras();
+            bool scanSucceeded = false;
+            // Try all active cameras
+            foreach(Camera cam in cameras)
+            {
+                barCodeScanner.cam = cam;
+                string result = barCodeScanner.Scan(1/2f);
+                // until one camera succeeded
+                if (result != "N/A")
+                {
+                    // remove guard pattern for shortening
+                    result = result.Substring(1, result.Length-2);
+                    scanSucceeded = true;
+                    break;
+                }
+            }
+            // All cameras failed
+            if (!scanSucceeded)
+                gUI.ShowPopUpMessage("Scan result: " + "N/A", 2.0f);
         }
     }
 

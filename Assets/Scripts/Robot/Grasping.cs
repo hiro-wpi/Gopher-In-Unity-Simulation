@@ -33,6 +33,9 @@ public class Grasping : MonoBehaviour
             return;
         graspableObject = gameObject;
         
+        // Remove highligh if any
+        HighlightUtils.UnhighlightObject(graspableObject);
+
         // Remove rigidbody
         Rigidbody rb = graspableObject.GetComponent<Rigidbody>();
         if (rb != null)
@@ -53,6 +56,9 @@ public class Grasping : MonoBehaviour
 
     public void Detach()
     {
+        isGrasping = false;
+
+        // No object
         if (graspableObject == null)
             return;
 
@@ -68,9 +74,7 @@ public class Grasping : MonoBehaviour
             graspableObject.transform.parent = null;
         else
             graspableObject.transform.parent = objectParent.transform;
-
         graspableObject = null;
-        isGrasping = false;
     }
 
     public float GetGraspedObjectMass()

@@ -216,28 +216,13 @@ public class GraphicalInterface : MonoBehaviour
             else
                 ZoomMap();
         // map navigation
-        if (displayMapInMain && autoNavigation != null)
+        if (displayMapInMain && autoNavigation != null &&
+            Input.GetMouseButtonDown(0))
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                RaycastHit hit;
-                Ray ray = mapCamera.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out hit))
-                {
-                    // Cancel previous goal
-                    if ((hit.point - prevClickPoint).magnitude < 0.5)
-                    {
-                        autoNavigation.DisableAutonomy();
-                        prevClickPoint = Vector3.zero;
-                    }
-                    // Set goal
-                    else
-                    {
-                        autoNavigation.SetGoal(hit.point);
-                        prevClickPoint = hit.point;
-                    }
-                }
-            }
+            RaycastHit hit;
+            Ray ray = mapCamera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit))
+                SetNavigationGoal(hit.point);
         }
         // barcode
         if (Input.GetKeyDown(KeyCode.B))
@@ -491,7 +476,7 @@ public class GraphicalInterface : MonoBehaviour
 
     
     // Setup ROBOT AND TASK
-    public void SetRobot(GameObject robot)
+    public void SetRobot(GameObject robot, bool isNewRobot)
     {
         // Robot
         this.robot = robot;
@@ -529,9 +514,12 @@ public class GraphicalInterface : MonoBehaviour
         cameraSystem.EnableCamera(cameraIndex);
         cameraSystem.SetTargetRenderTexture(secondaryCameraIndex, secondayCameraRendertexture);
         cameraSystem.EnableCamera(secondaryCameraIndex);
+        // TODO may be all this part is not necessary for existing robot?
+        // TEMP fix
+        ChangeCameraView(true, cameraIndex);
+        ChangeCameraView(false, secondaryCameraIndex);
 
-        // Laser
-        laser.SetScanResultInstantiationActive(true);
+        // Hide laser scan in the cameras
         foreach (Camera cam in cameraSystem.cameras)
             cam.cullingMask = cam.cullingMask & ~(1 << LayerMask.NameToLayer("Laser"));
         
@@ -686,10 +674,29 @@ public class GraphicalInterface : MonoBehaviour
             cameraSystem.DisableCamera(cameraIndex);
             mapCamera.enabled = true;
             cameraDisplay.GetComponent<RawImage>().texture = mapRendertexture;
+            // disable main camera control to have the mouse back
+            gopherControl.cameraControlEnabled = false;
+            Cursor.lockState = CursorLockMode.Confined;
             // Time.timeScale = 0f; // Can not stop due to auto path finding
             Time.timeScale = 0.5f;
         }
         displayMapInMain = !displayMapInMain;
+    }
+
+    public void SetNavigationGoal(Vector3 point)
+    {
+        // Cancel previous goal
+        if ((point - prevClickPoint).magnitude < 0.5)
+        {
+            autoNavigation.DisableAutonomy();
+            prevClickPoint = Vector3.zero;
+        }
+        // Set goal
+        else
+        {
+            autoNavigation.SetGoal(point);
+            prevClickPoint = point;
+        }
     }
 
     public void ShowPopUpMessage(string message, float duration=1.5f)
@@ -713,12 +720,17 @@ public class GraphicalInterface : MonoBehaviour
         input.text = "";
     }
 
-    public Camera GetCurrentMainCamera()
+    public Camera[] GetCurrentActiveCameras()
     {
+        Camera[] cameras = new Camera[0];
         if (robot != null)
-            return cameraSystem.cameras[cameraIndex];
-        else
-            return null;
+        {
+            cameras = new Camera[2];
+            cameras[0] = cameraSystem.cameras[cameraIndex];
+            cameras[1] = cameraSystem.cameras[secondaryCameraIndex];
+        }
+
+        return cameras;
     }
 
 

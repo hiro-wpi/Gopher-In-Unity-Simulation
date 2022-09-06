@@ -31,15 +31,15 @@ public class ArmControlManager : MonoBehaviour
         new JointAngles(new float[] {0.91f, -1.13f, -0.85f,
                                     -1.66f, 0.09f, -0.85f, 0.26f}),
         // preset 6 is for narrow pose
-        new JointAngles(new float[] {-2f, -1.8f, -1.8f, 
-                                      2f, -0.3f, -1f, Mathf.PI/2})
+        new JointAngles(new float[] {-2.1f, -1.9f, -1.8f, 
+                                      2f, -0.4f, -1f, Mathf.PI/2})
     };
 
     // Grasping
     public Grasping grasping;
     private ArticulationCollisionDetection leftCollision;
     private ArticulationCollisionDetection rightCollision;
-    public bool gripperClosed = false;
+    private bool gripperClosed = false;
     // grasping affects wheel velocity (if wheel attached)
     public ArticulationWheelController wheelController;
     public string wheelSpeedLimitID = "grasping limit";
@@ -97,6 +97,12 @@ public class ArmControlManager : MonoBehaviour
             Quaternion deltaRotationQuaternion = Quaternion.Euler(deltaRotation);
             jointAngles = jointController.GetCurrentJointTargets();
             jointAngles = newtonIK.SolveVelocityIK(jointAngles, deltaPosition, deltaRotationQuaternion);
+            jointController.SetJointTargets(jointAngles);
+        }
+        // Fixing joints when not controlling
+        else
+        {
+            jointAngles = jointController.GetCurrentJointTargets();
             jointController.SetJointTargets(jointAngles);
         }
     }
@@ -161,9 +167,8 @@ public class ArmControlManager : MonoBehaviour
     public bool MoveToPreset(int presetIndex)
     {
         // Do not allow auto moving when grasping heavy object
-        // TEMP
-        //if (grasping.isGrasping && grasping.GetGraspedObjectMass() > 1)
-        //    return false;
+        if (grasping.isGrasping && grasping.GetGraspedObjectMass() > 1)
+            return false;
 
         // Home Position
         if (presetIndex == 0)
@@ -294,7 +299,8 @@ public class ArmControlManager : MonoBehaviour
 
             // Assume we got to the target
             jointAngles = targetJointAngles;
-            (converged, targetJointAngles) = newtonIK.SolveIK(jointAngles, targetPosition, targetRotation);
+            (converged, targetJointAngles) = 
+                newtonIK.SolveIK(jointAngles, targetPosition, targetRotation);
             if (!converged)
             {
                 mode = Mode.Control;
@@ -311,7 +317,9 @@ public class ArmControlManager : MonoBehaviour
         mode = Mode.Control;
     }
     // Utils
-    private IEnumerator LerpJoints(float[] currentAngles, float[] targetJointAngles, float seconds)
+    private IEnumerator LerpJoints(float[] currentAngles, 
+                                   float[] targetJointAngles, 
+                                   float seconds)
     {
         float elapsedTime = 0;
         // Keep track of starting angles
@@ -323,7 +331,9 @@ public class ArmControlManager : MonoBehaviour
             // using atan2(sin(x-y), cos(x-y))
             for (var i = 0; i < targetJointAngles.Length; i++)
             {
-                currentAngles[i] = Mathf.Lerp(startingAngles[i], targetJointAngles[i], (elapsedTime / seconds));
+                currentAngles[i] = Mathf.Lerp(startingAngles[i], 
+                                              targetJointAngles[i], 
+                                              (elapsedTime / seconds));
             }
 
             elapsedTime += Time.deltaTime;

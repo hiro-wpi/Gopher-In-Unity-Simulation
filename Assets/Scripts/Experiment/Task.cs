@@ -232,7 +232,7 @@ public abstract class Task : MonoBehaviour
         robotStartPosition = robot.transform.position;
 
         // GUI set output
-        gUI.SetRobot(robot);
+        gUI.SetRobot(robot, true);
         gUI.SetTask(this);
 
         return robots;
@@ -247,7 +247,7 @@ public abstract class Task : MonoBehaviour
         robotStartPosition = robot.transform.position;
 
         // GUI set output
-        gUI.SetRobot(robot);
+        gUI.SetRobot(robot, false);
         gUI.SetTask(this);
     }
 

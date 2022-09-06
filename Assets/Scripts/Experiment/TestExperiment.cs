@@ -41,8 +41,8 @@ public class TestExperiment : Experiment
                                         };
         
         // Robot spawn pose and goal
-        robotSpawnPositions = new Vector3[] {new Vector3(11.0f, 0.0f, 2.0f)};
-        robotSpawnRotations = new Vector3[] {new Vector3(0f, 180f, 0f)};
+        robotSpawnPositions = new Vector3[] {new Vector3(11.0f, 0.0f, 1.0f)};
+        robotSpawnRotations = new Vector3[] {new Vector3(0f, -90f, 0f)};
                         
         // Human spawn position and trajectories
         dynamicObjectSpawnPositions = new Vector3[]

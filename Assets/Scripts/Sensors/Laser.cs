@@ -12,31 +12,20 @@ using UnityEngine;
 /// </summary>
 public class Laser : SurroundingDetection
 {
-    private bool instantiateScanResult;
+    public bool instantiateScanResult;
     public GameObject scanResultPrefab;
     private GameObject scanResultParent;
     private GameObject[] scanResultObjects;
 
-    void OnDestroy() 
+    new void Start()
     {
-        SetScanResultInstantiationActive(false);
-    }
+        base.Start();
 
-    public void SetScanResultInstantiationActive(bool active)
-    {
-        if (instantiateScanResult == active)
-            return;
-        
-        instantiateScanResult = active;
-        if (active)
+        // Visualize it in the scene
+        if (instantiateScanResult)
         {
             InstantiateScanResultObjects();
             InvokeRepeating("UpdateScanResult", 1f, 1f / updateRate);
-        }
-        else
-        {
-            CancelInvoke("UpdateScanResult");
-            Destroy(scanResultParent);
         }
     }
 
@@ -61,7 +50,6 @@ public class Laser : SurroundingDetection
             }
         }
     }
-
 
     private void InstantiateScanResultObjects()
     {

@@ -103,6 +103,7 @@ public class SurroundingDetection : MonoBehaviour
         if (maxIndex == int.MaxValue)
             maxIndex = samples;
 
+        // Get position that has valid scanning results
         List<Vector3> positions = new List<Vector3>();
         for (int i = minIndex; i < maxIndex; ++i)
         {

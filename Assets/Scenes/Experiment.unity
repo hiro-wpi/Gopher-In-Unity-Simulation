@@ -498,7 +498,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &183514186
 Transform:
   m_ObjectHideFlags: 0
@@ -2837,7 +2837,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &637322410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2918,7 +2918,7 @@ MonoBehaviour:
   laundryBasket:
   - {fileID: 62662473840794924, guid: 20d0f70e8903aa047bf6cc4ea740d2b9, type: 3}
   - {fileID: 62662473840794924, guid: 6f4fb7966cb3bdb4c9884584375c44f6, type: 3}
-  randomizationSeed: 20
+  randomizationSeed: 1
 --- !u!4 &637322411
 Transform:
   m_ObjectHideFlags: 0
@@ -4444,7 +4444,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1033869745
 Transform:
   m_ObjectHideFlags: 0
@@ -4534,7 +4534,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: 
   taskName: Reading
-  taskDescription: Please read the vital value of Bed 2 in Room S103.
+  taskDescription: Please read the vital value of Bed 1 in Room S103.
   gUI: {fileID: 0}
   cUI: {fileID: 0}
   result: 63
@@ -5597,7 +5597,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   experiments:
-  - {fileID: 637322410}
+  - {fileID: 183514187}
   freePlayTask: {fileID: 1161083585}
   randomizeTasks: 0
   experimentStarted: 0
@@ -6008,8 +6008,8 @@ MonoBehaviour:
   m_IgnoreNavMeshObstacle: 1
   m_OverrideTileSize: 0
   m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.12666667
+  m_OverrideVoxelSize: 1
+  m_VoxelSize: 0.1
   m_BuildHeightMesh: 0
   m_NavMeshData: {fileID: 0}
 --- !u!1 &1400726315
@@ -9172,7 +9172,7 @@ MonoBehaviour:
   taskObjectSpawnArray:
   - gameObject: {fileID: 8495972465087636767, guid: 84fa1bee68d88fd4f8f3da43a25b6caf, type: 3}
     position: {x: -8.9, y: 1.2, z: 13.4}
-    rotation: {x: 0, y: 90, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
     trajectory: []
   goalObjectSpawnArray:
   - gameObject: {fileID: 2416330375898432865, guid: e9d4276034b135f46981b1f974cbba19, type: 3}
