@@ -24,8 +24,7 @@ public class AutoNavigation : MonoBehaviour
     public NavMeshAgent agent;
     // nav mesh obstacles
     // during auto navigation, only the base one is enabled
-    public NavMeshObstacle[] baseNavMeshObstacles;
-    public NavMeshObstacle[] armNavMeshObstacles;
+    public NavMeshObstacle[] navMeshObstacles;
     private Coroutine planningCoroutine;
 
     // Motion planning
@@ -202,8 +201,6 @@ public class AutoNavigation : MonoBehaviour
             if (!success)
                 return;
         }
-        // Change nav mesh obsatcle usage
-        SetObstacleActive(true, false);
         active = true;
     }
     private bool ChangeArmPose(int presetIndex)
@@ -220,8 +217,6 @@ public class AutoNavigation : MonoBehaviour
 
     public void DisableAutonomy()
     {
-        // Resume nav obsatcle
-        SetObstacleActive(true, true);
         // Init parameters
         goal = new Vector3(0f, -100f, 0f);
         path = new NavMeshPath();
@@ -230,12 +225,12 @@ public class AutoNavigation : MonoBehaviour
         active = false;
     }
 
-    private void SetObstacleActive(bool baseActive, bool armActive)
+    private void SetObstacleActive(bool active)
     {
-        foreach(NavMeshObstacle navMeshObstacle in baseNavMeshObstacles)
-            navMeshObstacle.carving = baseActive;
-        foreach(NavMeshObstacle navMeshObstacle in armNavMeshObstacles)
-            navMeshObstacle.carving = armActive;
+        // In case arm is carrying objects
+        navMeshObstacles = robot.GetComponentsInChildren<NavMeshObstacle>();
+        foreach(NavMeshObstacle navMeshObstacle in navMeshObstacles)
+            navMeshObstacle.carving = active;
     }
 
     
@@ -259,7 +254,7 @@ public class AutoNavigation : MonoBehaviour
     }
     private IEnumerator PathPlanningCoroutine(float time, Vector3 goal)
     {
-        SetObstacleActive(false, false);
+        SetObstacleActive(false);
         yield return new WaitForSeconds(0.1f);
         bool pathFound = FindGlobalPath(goal);
 
@@ -269,7 +264,7 @@ public class AutoNavigation : MonoBehaviour
         else
             Debug.Log("No path found to given goal.");
         yield return new WaitForSeconds(time);
-        SetObstacleActive(true, true);
+        SetObstacleActive(true);
     }
     private bool FindGlobalPath(Vector3 goal)
     {

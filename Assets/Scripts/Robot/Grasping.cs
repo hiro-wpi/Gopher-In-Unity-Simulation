@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+
 
 /// <summary>
 ///     This script is used to fix the Unity physic
@@ -33,6 +35,12 @@ public class Grasping : MonoBehaviour
             return;
         graspableObject = gameObject;
         
+        // TEMP - may change once global planner is no longer the Unity one
+        // Activate nav mesh obstacle if any
+        NavMeshObstacle obs = graspableObject.GetComponentInChildren<NavMeshObstacle>();
+        if (obs != null)
+            obs.carving = true;
+        
         // Remove highligh if any
         HighlightUtils.UnhighlightObject(graspableObject);
 
@@ -57,10 +65,15 @@ public class Grasping : MonoBehaviour
     public void Detach()
     {
         isGrasping = false;
-
         // No object
         if (graspableObject == null)
             return;
+
+        // TEMP - may change once global planner is no longer the Unity one
+        // Inactivate nav mesh obstacle if any
+        NavMeshObstacle obs = graspableObject.GetComponentInChildren<NavMeshObstacle>();
+        if (obs != null)
+            obs.carving = false;
 
         // Add back rigidbody 
         if (objectRigidbodyMass != 0.0f)
