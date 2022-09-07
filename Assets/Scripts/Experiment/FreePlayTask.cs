@@ -26,7 +26,6 @@ public class FreePlayTask : Task
         {
             // Get active cameras
             Camera[] cameras = gUI.GetCurrentActiveCameras();
-            bool scanSucceeded = false;
             // Try all active cameras
             foreach(Camera cam in cameras)
             {
@@ -37,14 +36,10 @@ public class FreePlayTask : Task
                 {
                     // remove guard pattern for shortening
                     result = result.Substring(1, result.Length-2);
-                    gUI.ShowPopUpMessage("Scan result: " + result, 2.0f);
-                    scanSucceeded = true;
                     break;
                 }
             }
-            // All cameras failed
-            if (!scanSucceeded)
-                gUI.ShowPopUpMessage("Scan result: " + "N/A", 2.0f);
+            gUI.ShowPopUpMessage("Scan result: " + result, 2.0f);
         }
 
         
