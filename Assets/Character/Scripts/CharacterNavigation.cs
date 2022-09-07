@@ -56,7 +56,7 @@ public class CharacterNavigation : MonoBehaviour
         InvokeRepeating("CheckDestination", 0.2f, 0.2f);
     }
 
-    public void CheckDestination()
+    private void CheckDestination()
     {
         // agent may get destroyed before this script
         if (agent == null || !agent.isActiveAndEnabled)

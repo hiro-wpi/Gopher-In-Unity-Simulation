@@ -27,7 +27,6 @@ public class JointControlSubscriber : MonoBehaviour
     // Robot controller
     public ArticulationJointController jointController;
 
-    // Start is called before the first frame update
     void Start()
     {
         // Get ROS connection static instance
@@ -43,7 +42,6 @@ public class JointControlSubscriber : MonoBehaviour
         ros.Subscribe<Float64Msg>(joint7ControllerTopicName, moveJoint7);
     }
 
-    // Update is called once per frame
     void Update()
     {
     }

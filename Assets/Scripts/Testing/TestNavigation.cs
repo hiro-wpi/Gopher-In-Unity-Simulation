@@ -14,7 +14,6 @@ public class TestNavigation : MonoBehaviour
     public bool loop;
 
     private NavMeshPath path;
-    public LineRenderer lineRenderer;
     public bool displayPath;
 
     private float elapsed = 0.0f;
@@ -25,13 +24,6 @@ public class TestNavigation : MonoBehaviour
         characterNavigation.loop = loop;
 
         navMeshAgent = characterNavigation.agent;
-
-        if (lineRenderer != null)
-        {
-            lineRenderer.startWidth = 0.1f;
-            lineRenderer.endWidth = 0.1f;
-            lineRenderer.positionCount = 0;
-        }
 
         path = new NavMeshPath();
         elapsed = 0.0f;
@@ -48,23 +40,9 @@ public class TestNavigation : MonoBehaviour
                                   new Vector3(1.5f, 0f, 6.0f), 
                                   NavMesh.AllAreas, path);
         }
-        for (int i = 0; i < path.corners.Length - 1; i++)
-            Debug.DrawLine(path.corners[i], path.corners[i + 1], Color.red);
-        
 
-        if (lineRenderer != null && navMeshAgent.hasPath)
-        {
-            //DrawPath();
-        }
-    }
-
-    private void DrawPath()
-    {
-        lineRenderer.positionCount = navMeshAgent.path.corners.Length;
-
-        for (int i = 0; i < navMeshAgent.path.corners.Length; ++i)
-        {
-            lineRenderer.SetPosition(i, navMeshAgent.path.corners[i]);
-        }
+        if (displayPath)
+            for (int i = 0; i < path.corners.Length - 1; i++)
+                Debug.DrawLine(path.corners[i], path.corners[i + 1], Color.red);
     }
 }

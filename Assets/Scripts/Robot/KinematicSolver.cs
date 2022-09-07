@@ -181,7 +181,9 @@ public class KinematicSolver : MonoBehaviour
     }
 
 
-    public void OnDrawGizmos()
+    // For debug
+    /*
+    void OnDrawGizmos()
     {
         if (positions == null || positions.Length == 0)
         {
@@ -201,4 +203,5 @@ public class KinematicSolver : MonoBehaviour
             }
         }
     }
+    */
 }
