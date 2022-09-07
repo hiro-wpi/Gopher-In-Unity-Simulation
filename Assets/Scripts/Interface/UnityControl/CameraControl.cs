@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
 
-public class PanTiltCameraControl : MonoBehaviour
+public class CameraControl : MonoBehaviour
 {
-    public ArticulationCameraController articulationCameraController;
+    public ArticulationCameraController cameraController;
 
     public float mouseSensitivity = 2.5f;
     public float speed = 1.0f;
@@ -17,24 +17,20 @@ public class PanTiltCameraControl : MonoBehaviour
     public void OnRotate(InputAction.CallbackContext context)
     {
         controlDelta = context.ReadValue<Vector2>();
-    }
 
-    public void OnCenter(InputAction.CallbackContext context)
-    {
-        articulationCameraController.HomeCameraJoints();
-    }
-
-    void FixedUpdate()
-    {
         if (controlDelta.x == 0 && controlDelta.y == 0)
             return;
-        
         // Delta joint movement
-        (yawRotation, pitchRotation) = articulationCameraController.GetCameraJoints();
+        (yawRotation, pitchRotation) = cameraController.GetCameraJoints();
         yawRotation -= controlDelta.x * mouseSensitivity * Time.fixedDeltaTime;
         pitchRotation += controlDelta.y * mouseSensitivity * Time.fixedDeltaTime;
         
         // Move camera
-        articulationCameraController.SetCameraJoints(yawRotation, pitchRotation, speed);
+        cameraController.SetCameraJoints(yawRotation, pitchRotation, speed);
+    }
+
+    public void OnCenter(InputAction.CallbackContext context)
+    {
+        cameraController.HomeCameraJoints();
     }
 }

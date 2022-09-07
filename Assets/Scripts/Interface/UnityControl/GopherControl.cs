@@ -7,7 +7,7 @@ public class GopherControl : MonoBehaviour
     public ArmControl leftArm;
     public ArmControl rightArm;
     public BaseControl baseControl;
-    public PanTiltCameraControl mainCameraControl;
+    public CameraControl mainCameraControl;
     
     // Enum to select current control mode
     public enum ControlMode

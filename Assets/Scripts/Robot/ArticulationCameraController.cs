@@ -16,14 +16,38 @@ public class ArticulationCameraController : MonoBehaviour
     public float yawOffset = 0f;
     public float pitchOffset = 0f;
 
-    // Use this for initialization
+    private float targetYawRotation;
+    private float targetPitchRotation;
+    private float targetSpeed;
+
+
     void Start()
     {
+        targetYawRotation = yawOffset;
+        targetPitchRotation = pitchOffset;
+        targetSpeed = jointSpeed;
         HomeCameraJoints();
     }
 
-    void Update()
+    void FixedUpdate()
     {
+        SetJointTargetStep(cameraYawJoint, targetYawRotation, targetSpeed);
+        SetJointTargetStep(cameraPitchJoint, targetPitchRotation, targetSpeed);
+    }
+
+    public void SetCameraJoints(float yawRotation, float pitchRotation, float speed = 0)
+    {
+        // Default joint speed
+        if (speed <= 0)
+            targetSpeed = jointSpeed;
+        else
+            targetSpeed = speed;
+            
+        // Clamp
+        targetYawRotation = Mathf.Clamp(yawRotation, 
+                                        yawOffset - angleLimit, yawOffset + angleLimit);
+        targetPitchRotation = Mathf.Clamp(pitchRotation, 
+                                          pitchOffset - angleLimit, pitchOffset + angleLimit);
     }
 
     public (float, float) GetCameraJoints()
@@ -31,20 +55,7 @@ public class ArticulationCameraController : MonoBehaviour
         return (cameraYawJoint.xDrive.target * Mathf.Deg2Rad, 
                 cameraPitchJoint.xDrive.target * Mathf.Deg2Rad);
     }
-    public void SetCameraJoints(float yawRotation, float pitchRotation, float speed = 0)
-    {
-        // Default joint speed
-        if (speed <= 0)
-            speed = jointSpeed;
-        // Clamp
-        yawRotation = Mathf.Clamp(yawRotation, 
-                                  yawOffset - angleLimit, yawOffset + angleLimit);
-        pitchRotation = Mathf.Clamp(pitchRotation, 
-                                    pitchOffset - angleLimit, pitchOffset + angleLimit);
-        // Move joint
-        SetJointTargetStep(cameraYawJoint, yawRotation, speed);
-        SetJointTargetStep(cameraPitchJoint, pitchRotation, speed);
-    }
+
     
     // Home joints
     public void HomeCameraJoints()
@@ -57,13 +68,10 @@ public class ArticulationCameraController : MonoBehaviour
     }
     private bool HomeCameraAndCheck()
     {
+        SetCameraJoints(yawOffset, pitchOffset, jointSpeed);
+
         bool yawHomed = Mathf.Abs(cameraYawJoint.xDrive.target - yawOffset) < 0.001;
         bool pitchHomed = Mathf.Abs(cameraPitchJoint.xDrive.target - pitchOffset) < 0.001;
-        
-        if (!yawHomed)
-            SetJointTargetStep(cameraYawJoint, yawOffset, jointSpeed);
-        if (!pitchHomed)
-            SetJointTargetStep(cameraPitchJoint, pitchOffset, jointSpeed);
         if (yawHomed && pitchHomed)
             return true;
         return false;
