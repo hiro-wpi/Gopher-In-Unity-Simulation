@@ -31,8 +31,8 @@ public class ArticulationWheelController : MonoBehaviour
         new Dictionary<string, float[]>();
 
     // convertion
-    public float targetLinearSpeed;
-    public float targetAngularSpeed;
+    private float targetLinearSpeed;
+    private float targetAngularSpeed;
     private float velLeft;
     private float velRight;
     
@@ -46,24 +46,24 @@ public class ArticulationWheelController : MonoBehaviour
     }
 
 
-    public void SetRobotVelocity(float targetLinearSpeed, float targetAngularSpeed)
+    public void SetRobotVelocity(float linearSpeed, float angularSpeed)
     {
         // Set target
-        this.targetLinearSpeed = targetLinearSpeed;
-        this.targetAngularSpeed = targetAngularSpeed;
+        targetLinearSpeed = linearSpeed;
+        targetAngularSpeed = angularSpeed;
         // Speed limit (needs to be not less than 0)
         if (linearSpeedLimitForward >= 0)
-            this.targetLinearSpeed = 
-                Mathf.Clamp(this.targetLinearSpeed, -100, linearSpeedLimitForward);
+            targetLinearSpeed = 
+                Mathf.Clamp(targetLinearSpeed, -100, linearSpeedLimitForward);
         if (linearSpeedLimitBackward >= 0)
-            this.targetLinearSpeed = 
-                Mathf.Clamp(this.targetLinearSpeed, -linearSpeedLimitBackward, 100);
+            targetLinearSpeed = 
+                Mathf.Clamp(targetLinearSpeed, -linearSpeedLimitBackward, 100);
         if (angularSpeedLimitLeft >= 0)
-            this.targetAngularSpeed =
-                Mathf.Clamp(this.targetAngularSpeed, -100, angularSpeedLimitLeft);
+            targetAngularSpeed =
+                Mathf.Clamp(targetAngularSpeed, -100, angularSpeedLimitLeft);
         if (angularSpeedLimitRight >= 0)
-            this.targetAngularSpeed =
-                Mathf.Clamp(this.targetAngularSpeed, -angularSpeedLimitRight, 100);
+            targetAngularSpeed =
+                Mathf.Clamp(targetAngularSpeed, -angularSpeedLimitRight, 100);
     }
 
     private void SetRobotVelocityStep(float targetLinearSpeed, float targetAngularSpeed)

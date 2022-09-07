@@ -34,14 +34,10 @@ public class TwistSubscriber : MonoBehaviour
         ros.Subscribe<TwistMsg>(twistTopicName, updateVelocity);
     }
 
-    private void FixedUpdate()
-    {
-        wheelController.SetRobotVelocity(targetLinearVelocity, targetAngularVelocity);
-    }
-
     private void updateVelocity(TwistMsg twist)
     {
         targetLinearVelocity = twist.linear.From<FLU>().z * linearSpeed;
         targetAngularVelocity = twist.angular.From<FLU>().y * angularSpeed;
+        wheelController.SetRobotVelocity(targetLinearVelocity, targetAngularVelocity);
     }
 }
