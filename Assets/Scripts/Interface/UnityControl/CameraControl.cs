@@ -31,6 +31,9 @@ public class CameraControl : MonoBehaviour
 
     public void OnCenter(InputAction.CallbackContext context)
     {
-        cameraController.HomeCameraJoints();
+        if (context.performed)
+        {
+            cameraController.HomeCameraJoints();
+        }
     }
 }

@@ -220,11 +220,4 @@ public class GopherControl : MonoBehaviour
                 mainCameraControl.OnCenter(context);
         }
     }
-
-
-    // Debug only
-    public void Test(InputAction.CallbackContext context)
-    {
-        Debug.Log("Test");
-    }
 }

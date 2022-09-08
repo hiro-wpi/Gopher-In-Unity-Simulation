@@ -20,27 +20,33 @@ public class ArmControl : MonoBehaviour
     // PRESET
     public void OnHome(InputAction.CallbackContext context)
     {
-        armControlManager.MoveToPreset(0);
+        if (context.performed)
+            armControlManager.MoveToPreset(0);
     }
     public void OnPreset1(InputAction.CallbackContext context)
     {
-        armControlManager.MoveToPreset(1);
+        if (context.performed)
+            armControlManager.MoveToPreset(1);
     }
     public void OnPreset2(InputAction.CallbackContext context)
     {
-        armControlManager.MoveToPreset(2);
+        if (context.performed)
+            armControlManager.MoveToPreset(2);
     }
     public void OnPreset3(InputAction.CallbackContext context)
     {
-        armControlManager.MoveToPreset(3);
+        if (context.performed)
+            armControlManager.MoveToPreset(3);
     }
     public void OnPreset4(InputAction.CallbackContext context)
     {
-        armControlManager.MoveToPreset(4);
+        if (context.performed)
+            armControlManager.MoveToPreset(4);
     }
     public void OnPreset5(InputAction.CallbackContext context)
     {
-        armControlManager.MoveToPreset(5);
+        if (context.performed)
+            armControlManager.MoveToPreset(5);
     }
 
 

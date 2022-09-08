@@ -2378,7 +2378,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4167990687051885124}
-  - component: {fileID: 8908229603300564779}
+  - component: {fileID: 68583883986167112}
   m_Layer: 15
   m_Name: Unity Input System
   m_TagString: Untagged
@@ -2405,7 +2405,7 @@ Transform:
   m_Father: {fileID: 4458346262695965202}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8908229603300564779
+--- !u!114 &68583883986167112
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2434,7 +2434,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6894777472494071552}
         m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
-        m_MethodName: OnBaseTarget
+        m_MethodName: OnBase
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2444,56 +2444,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: 3573c083-a682-4619-838d-99505fd70411
-    m_ActionName: Gopher/Base Move[/Keyboard/g]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6894777472494071552}
-        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
-        m_MethodName: OnTranslate
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: e13bfe8f-deb2-432f-b08e-063f7fc0bad7
-    m_ActionName: Gopher/Arm Move[/Keyboard/q,/Keyboard/e,/Keyboard/a,/Keyboard/d,/Keyboard/w,/Keyboard/s]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6894777472494071552}
-        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
-        m_MethodName: OnArmRotate
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: b8a5c6fa-2ac6-4851-a53a-ce5278c3efd0
-    m_ActionName: Gopher/Arm Rotate[/Keyboard/numpad4,/Keyboard/numpad6,/Keyboard/numpad8,/Keyboard/numpad5,/Keyboard/numpad7,/Keyboard/numpad9]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6894777472494071552}
-        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
-        m_MethodName: OnArmGrasp
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: ee34f628-b3d5-4876-a172-7c97f523e87b
-    m_ActionName: Gopher/Arm Grip[/Keyboard/space]
+    m_ActionId: 80308657-5f5d-4398-8be0-47d80a897838
+    m_ActionName: Gopher/Base Control[/Keyboard/downArrow]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6894777472494071552}
@@ -2509,7 +2461,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 472398c1-6086-45f6-bb0f-5eb507731393
-    m_ActionName: Gopher/Left Arm[/Keyboard/leftArrow]
+    m_ActionName: Gopher/Left Arm Control[/Keyboard/leftArrow]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6894777472494071552}
@@ -2525,23 +2477,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: e367deee-f97f-463f-8442-61ccb7a8ad03
-    m_ActionName: Gopher/Rigth Arm[/Keyboard/rightArrow]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6894777472494071552}
-        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
-        m_MethodName: OnBase
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 80308657-5f5d-4398-8be0-47d80a897838
-    m_ActionName: Gopher/Base[/Keyboard/downArrow]
+    m_ActionName: Gopher/Rigth Arm Control[/Keyboard/rightArrow]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6894777472494071552}
@@ -2562,6 +2498,70 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6894777472494071552}
         m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnTranslate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: e13bfe8f-deb2-432f-b08e-063f7fc0bad7
+    m_ActionName: Gopher/Translate[/Keyboard/e,/Keyboard/q,/Keyboard/a,/Keyboard/d,/Keyboard/w,/Keyboard/s]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6894777472494071552}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnBaseTarget
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 3573c083-a682-4619-838d-99505fd70411
+    m_ActionName: Gopher/Base Target[/Keyboard/g]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6894777472494071552}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnArmRotate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b8a5c6fa-2ac6-4851-a53a-ce5278c3efd0
+    m_ActionName: Gopher/Arm Rotate[/Keyboard/l,/Keyboard/j,/Keyboard/i,/Keyboard/k,/Keyboard/o,/Keyboard/u]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6894777472494071552}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnArmGrasp
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: ee34f628-b3d5-4876-a172-7c97f523e87b
+    m_ActionName: Gopher/Arm Grasp[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6894777472494071552}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
         m_MethodName: OnArmTarget
         m_Mode: 0
         m_Arguments:
@@ -2573,39 +2573,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: e4176e5b-02ae-4476-bfe5-63556ee2c4cd
-    m_ActionName: Gopher/Arm Target[/Keyboard/r]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6894777472494071552}
-        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
-        m_MethodName: OnCameraRotate
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 302e6722-066f-4428-ba85-d64fb41c7ab7
-    m_ActionName: Gopher/Camera Rotate[/Mouse/delta]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6894777472494071552}
-        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
-        m_MethodName: OnCameraCenter
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 68925bdd-c8b6-4300-bc54-c31da624ab7c
-    m_ActionName: Gopher/Camera Center[/Mouse/middleButton]
+    m_ActionName: Gopher/Arm Target[/Keyboard/t]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6894777472494071552}
@@ -2621,7 +2589,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 47c4b6d7-b830-4bce-a350-864a42624ba2
-    m_ActionName: Gopher/Arm Prebuilt Pose 1[/Keyboard/f1]
+    m_ActionName: Gopher/Arm Home[/Keyboard/f1]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6894777472494071552}
@@ -2637,7 +2605,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 2cdd28cf-d4d5-476f-991e-756f623e045a
-    m_ActionName: Gopher/Arm Prebuilt Pose 2[/Keyboard/f2]
+    m_ActionName: Gopher/Arm Preset 1[/Keyboard/f2]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6894777472494071552}
@@ -2653,7 +2621,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: ae32e50b-4099-4359-bd6a-70ba47b3a51d
-    m_ActionName: Gopher/Arm Prebuilt Pose 3[/Keyboard/f3]
+    m_ActionName: Gopher/Arm Preset 2[/Keyboard/f3]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6894777472494071552}
@@ -2669,7 +2637,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: c5c2eec3-a36d-4619-91dd-2f5ad74bd5b1
-    m_ActionName: Gopher/Arm Prebuilt Pose 4[/Keyboard/f4]
+    m_ActionName: Gopher/Arm Preset 3[/Keyboard/f4]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6894777472494071552}
@@ -2685,7 +2653,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 42224df5-2370-418e-a53a-cb9a67c88149
-    m_ActionName: Gopher/Arm Preset 5[/Keyboard/f5]
+    m_ActionName: Gopher/Arm Preset 4[/Keyboard/f5]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6894777472494071552}
@@ -2701,7 +2669,39 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 50289da6-5707-4d1d-b002-1bb62907b9b7
-    m_ActionName: Gopher/Arm Preset 6[/Keyboard/f6]
+    m_ActionName: Gopher/Arm Preset 5[/Keyboard/f6]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6894777472494071552}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnCameraRotate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 302e6722-066f-4428-ba85-d64fb41c7ab7
+    m_ActionName: Gopher/Main Camera Rotate[/Mouse/delta]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6894777472494071552}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnCameraCenter
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 68925bdd-c8b6-4300-bc54-c31da624ab7c
+    m_ActionName: Gopher/Main Camera Center[/Mouse/middleButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gopher
@@ -3389,8 +3389,6 @@ MonoBehaviour:
   rightWheel: {fileID: 6789262393631268745}
   wheelTrackLength: 0.37476
   wheelRadius: 0.0605
-  targetLinearSpeed: 0
-  targetAngularSpeed: 0
 --- !u!114 &4914549699303064443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4097,7 +4095,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5442625470422939354}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4167990687051885124}

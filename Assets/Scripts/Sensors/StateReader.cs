@@ -63,6 +63,8 @@ public class StateReader : MonoBehaviour
             jointNames[i] = jointChain[i].jointName;
 
         // Get extra object's position and rotation
+        if (extraObjects == null)
+            extraObjects = new GameObject[0];
         objectPositions = new Vector3[extraObjects.Length];
         objectRotations = new Vector3[extraObjects.Length];
 
