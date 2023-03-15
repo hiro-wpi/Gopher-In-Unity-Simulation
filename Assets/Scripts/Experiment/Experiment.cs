@@ -25,7 +25,7 @@ public abstract class Experiment : MonoBehaviour
     public GameObject[] dynamicObjects;
     protected Vector3[] dynamicObjectSpawnPositions;
     protected Vector3[] dynamicObjectSpawnRotations;
-    protected Vector3[,] dynamicObjectTrajectories;
+    protected Vector3[][] dynamicObjectTrajectories;
     
     // task object
     public GameObject[] taskObjects;

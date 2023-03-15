@@ -5,54 +5,54 @@ using UnityEngine;
 using Unity.Robotics.ROSTCPConnector;
 using RosMessageTypes.Sensor;
 
+
 /// <summary>
 ///     This script subscribes and display an image
 ///     sent from ROS.
 /// </summary>
-public class ImageSubscriber : MonoBehaviour
+public class CompressedImageSubscriber : MonoBehaviour
 {
     // ROS Connector
     private ROSConnection ros;
     // Variables required for ROS communication
-    public string cameraTopicName = "camera/color/image_raw/compressed";
+    [SerializeField] private string compressedImageTopicName = 
+        "camera/color/image_raw/compressed";
+    
+    // Message
+    private Texture2D texture2D;
+    private bool isMessageReceived;
 
     // Display
-    public MeshRenderer meshRenderer;
-    
-    // Message info
-    private Texture2D texture2D;
-    private byte[] imageData;
-    private bool isMessageReceived;
+    [field:SerializeField] public RenderTexture TargetTexture { get; set; }
 
     void Start()
     {
         // Get ROS connection static instance
         ros = ROSConnection.GetOrCreateInstance();
 
-        // Display
+        // Initialize message
         texture2D = new Texture2D(1, 1);
-        meshRenderer.material = new Material(Shader.Find("Standard"));
+        isMessageReceived = false;
 
         // Subscriber
-        ros.Subscribe<CompressedImageMsg>(cameraTopicName, ReceiveImage);
-        isMessageReceived = false;
+        ros.Subscribe<CompressedImageMsg>(compressedImageTopicName, ReceiveImage);
     }
 
     void Update()
     {
-        // Display image if received
-        if (isMessageReceived)
+        // Copy to a target texture for display if received
+        if (isMessageReceived && TargetTexture != null)
         {
-            texture2D.LoadImage(imageData);
-            texture2D.Apply();
-            meshRenderer.material.SetTexture("_MainTex", texture2D);
+            Graphics.Blit(texture2D, TargetTexture);
             isMessageReceived = false;
         }
     }
 
     private void ReceiveImage(CompressedImageMsg compressedImage)
     {
-        imageData = compressedImage.data;
-        isMessageReceived = true; 
+        // this leads to memory leak
+        // texture2D = MessageExtensions.ToTexture2D(compressedImage);
+        texture2D.LoadImage(compressedImage.data);
+        isMessageReceived = true;
     }
 }

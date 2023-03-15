@@ -42,6 +42,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Mode Change",
+                    "type": "Button",
+                    "id": "82adae3e-aa05-4200-b49d-f85f04f9ce80",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Translate",
                     "type": "Value",
                     "id": "e13bfe8f-deb2-432f-b08e-063f7fc0bad7",
@@ -69,10 +78,10 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Arm Grasp",
+                    "name": "Arm Gripper",
                     "type": "Value",
                     "id": "ee34f628-b3d5-4876-a172-7c97f523e87b",
-                    "expectedControlType": "Axis",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -800,28 +809,6 @@
                 },
                 {
                     "name": "",
-                    "id": "83dd80c0-cb2e-4d56-be40-dc8eec4e13d8",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Arm Grasp",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "56df25cc-eeb1-432c-b209-f952e9f34eb6",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Arm Grasp",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "80622f4a-bd47-471a-be1c-c51c2a23cdc4",
                     "path": "<Keyboard>/t",
                     "interactions": "",
@@ -973,6 +960,72 @@
                     "action": "Main Camera Control",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8b0189de-97da-47f4-8c56-a08de1f31839",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Mode Change",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "2D Vector",
+                    "id": "3fdc6e23-8d8f-48a0-9773-e38c141abf6c",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Arm Gripper",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "8df79d6d-4c14-4699-91cf-7a72c6c866df",
+                    "path": "<Keyboard>/rightBracket",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Arm Gripper",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "507d4ae7-833a-4597-bc8c-b6340300a8e7",
+                    "path": "<Keyboard>/leftBracket",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Arm Gripper",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "da5e97fa-148c-4282-a5ca-ac5e87345df5",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Arm Gripper",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "67188614-3a76-4a25-b955-ce19975e6f9e",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Arm Gripper",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }

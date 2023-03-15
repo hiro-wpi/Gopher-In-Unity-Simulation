@@ -249,32 +249,28 @@ public class GraphicalInterface : MonoBehaviour
             return;
         
         // Control modes
-        if (Input.GetKeyDown(KeyCode.DownArrow)
-            && gopherControl.Mode != GopherControl.ControlMode.Base)
+        if (Input.GetKeyDown(KeyCode.DownArrow))
             RecordKey("DownArrow");
-        else if (Input.GetKeyDown(KeyCode.LeftArrow)
-                 && gopherControl.Mode != GopherControl.ControlMode.LeftArm)
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
             RecordKey("LeftArrow");
-        else if (Input.GetKeyDown(KeyCode.RightArrow)
-                 && gopherControl.Mode != GopherControl.ControlMode.RightArm)
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
             RecordKey("RightArrow");
         else if (Input.GetKeyDown(KeyCode.UpArrow))
             RecordKey("UpArrow");
 
         // Joint presets
-        if (gopherControl.Mode != GopherControl.ControlMode.Base)
-            if (Input.GetKeyDown(KeyCode.F1))
-                RecordKey("F1");
-            else if (Input.GetKeyDown(KeyCode.F2))
-                RecordKey("F2");
-            else if (Input.GetKeyDown(KeyCode.F3))
-                RecordKey("F3");
-            else if (Input.GetKeyDown(KeyCode.F4))
-                RecordKey("F4");
-            else if (Input.GetKeyDown(KeyCode.F5))
-                RecordKey("F5");
-            else if (Input.GetKeyDown(KeyCode.F8))
-                RecordKey("F8");
+        if (Input.GetKeyDown(KeyCode.F1))
+            RecordKey("F1");
+        else if (Input.GetKeyDown(KeyCode.F2))
+            RecordKey("F2");
+        else if (Input.GetKeyDown(KeyCode.F3))
+            RecordKey("F3");
+        else if (Input.GetKeyDown(KeyCode.F4))
+            RecordKey("F4");
+        else if (Input.GetKeyDown(KeyCode.F5))
+            RecordKey("F5");
+        else if (Input.GetKeyDown(KeyCode.F8))
+            RecordKey("F8");
 
         // Automation
         if (Input.GetKeyDown(KeyCode.T))
@@ -322,7 +318,7 @@ public class GraphicalInterface : MonoBehaviour
         // battery 
         UpdateBattery(stateReader.durationTime);
         // control mode
-        UpdateControlMode(gopherControl.cameraControlEnabled, gopherControl.Mode);
+        UpdateControlMode(gopherControl.CameraControlEnabled, gopherControl.ControlMode);
         UpdateCameraViewing(cameraIndex);
         // location
         UpdateLocalization(localization.position, localization.rotation);
@@ -346,7 +342,7 @@ public class GraphicalInterface : MonoBehaviour
     }
 
     private void UpdateControlMode(bool cameraControlEnabled, 
-                                   GopherControl.ControlMode controlMode)
+                                   GopherControl.Mode controlMode)
     {
         // Camera
         controlModeCameraDisplay.SetActive(cameraControlEnabled);
@@ -358,13 +354,13 @@ public class GraphicalInterface : MonoBehaviour
 
         switch (controlMode)
         {
-            case GopherControl.ControlMode.LeftArm:
+            case GopherControl.Mode.LeftArm:
                 controlModeLeftDisplay.SetActive(true);
                 break;
-            case GopherControl.ControlMode.RightArm:
+            case GopherControl.Mode.RightArm:
                 controlModeRightDisplay.SetActive(true);
                 break;
-            case GopherControl.ControlMode.Base:
+            case GopherControl.Mode.Base:
                 controlModeBaseDisplay.SetActive(true);
                 break;
             default:
@@ -433,7 +429,7 @@ public class GraphicalInterface : MonoBehaviour
         }
     }
 
-    private void UpdateHelpDisplay(GopherControl.ControlMode controlMode)
+    private void UpdateHelpDisplay(GopherControl.Mode controlMode)
     {
         helpDisplayText.text = "Switch Control\n" + "  Key ← ↓ →\n"
                              + "Switch Camera\n" + "  Num (0+) 8 4 5 6\n"
@@ -441,14 +437,14 @@ public class GraphicalInterface : MonoBehaviour
                              + "Camera Centering\n" + "  Mouse middle button\n";
         switch (controlMode)
         {
-            case GopherControl.ControlMode.LeftArm:
-            case GopherControl.ControlMode.RightArm:
+            case GopherControl.Mode.LeftArm:
+            case GopherControl.Mode.RightArm:
                 helpDisplayText.text += "Joint Position Control\n" + "  WA/SD/QE\n"
                                       + "Joint Rotation Control\n" + "  IK/JL/UO\n"
                                       + "Preset\n" + "  F1 F2 F3 F4 F5\n"
                                       + "Gripper Close/Open\n" + "  Space\n";
                 break;
-            case GopherControl.ControlMode.Base:
+            case GopherControl.Mode.Base:
                 helpDisplayText.text += "Base Control\n" + "  WA/SD\n";
                 break;
             default:
@@ -675,7 +671,7 @@ public class GraphicalInterface : MonoBehaviour
             mapCamera.enabled = true;
             cameraDisplay.GetComponent<RawImage>().texture = mapRendertexture;
             // disable main camera control to have the mouse back
-            gopherControl.cameraControlEnabled = false;
+            gopherControl.CameraControlEnabled = false;
             Cursor.lockState = CursorLockMode.Confined;
             // Time.timeScale = 0f; // Can not stop due to auto path finding
             Time.timeScale = 0.5f;

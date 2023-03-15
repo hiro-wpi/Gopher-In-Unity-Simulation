@@ -26,50 +26,50 @@ public class NavigationExperiment : Experiment
         
         // Robot spawn pose and goal
         robotSpawnPositions = new Vector3[]
-                            {
-                                new Vector3( 8.0f, 0.0f, -1.0f),
-                                new Vector3(-7.0f, 0.0f, -1.0f),
-                                new Vector3(-6.5f, 0.0f, -1.0f),
-                                new Vector3( 4.4f, 0.0f, -5.5f)
-                            };
+        {
+            new Vector3( 8.0f, 0.0f, -1.0f),
+            new Vector3(-7.0f, 0.0f, -1.0f),
+            new Vector3(-6.5f, 0.0f, -1.0f),
+            new Vector3( 4.4f, 0.0f, -5.5f)
+        };
         robotSpawnRotations = new Vector3[]
-                            {
-                                new Vector3(0f, -90f, 0f), 
-                                new Vector3(0f,  90f, 0f), 
-                                new Vector3(0f, 180f, 0f), 
-                                new Vector3(0f,  90f, 0f)
-                            };
+        {
+            new Vector3(0f, -90f, 0f), 
+            new Vector3(0f,  90f, 0f), 
+            new Vector3(0f, 180f, 0f), 
+            new Vector3(0f,  90f, 0f)
+        };
         // Human spawn position and trajectories
         dynamicObjectSpawnPositions = new Vector3[]
-                            {
-                                new Vector3(-6.7f, 0f, -8.0f),
-                                new Vector3( 8.0f, 0f,  5.0f),
-                                new Vector3( 0.5f, 0f,  7.0f),
-                                new Vector3(-2.5f, 0f, -1.5f)
-                            };
-        dynamicObjectTrajectories = new Vector3[,]
-                            {
-                                {new Vector3(-7.5f, 0f,  7.0f), new Vector3( 7.5f, 0f,  7.5f), 
-                                 new Vector3( 7.5f, 0f, -2.0f), new Vector3(-6.7f, 0f, -8.0f)},
-                                {new Vector3( 7.5f, 0f, -2.0f), new Vector3(-7.0f, 0f, -2.0f), 
-                                 new Vector3(-7.0f, 0f,  7.5f), new Vector3( 8.0f, 0f,  5.0f)},
-                                {new Vector3( 1.0f, 0f, -1.5f), new Vector3( 5.0f, 0f, -1.5f), 
-                                 new Vector3( 3.0f, 0f,  7.5f), new Vector3( 0.5f, 0f,  7.0f)}, 
-                                {new Vector3(-4.0f, 0f,  7.5f), new Vector3( 0.5f, 0f,  6.5f), 
-                                 new Vector3( 0.0f, 0f, -1.5f), new Vector3(-2.5f, 0f, -1.5f)}
-                            };
+        {
+            new Vector3(-6.7f, 0f, -8.0f),
+            new Vector3( 8.0f, 0f,  5.0f),
+            new Vector3( 0.5f, 0f,  7.0f),
+            new Vector3(-2.5f, 0f, -1.5f)
+        };
+        dynamicObjectTrajectories = new Vector3[][]
+        {
+            new[] {new Vector3(-7.5f, 0f,  7.0f), new Vector3( 7.5f, 0f,  7.5f), 
+                   new Vector3( 7.5f, 0f, -2.0f), new Vector3(-6.7f, 0f, -8.0f)},
+            new[] {new Vector3( 7.5f, 0f, -2.0f), new Vector3(-7.0f, 0f, -2.0f), 
+                   new Vector3(-7.0f, 0f,  7.5f), new Vector3( 8.0f, 0f,  5.0f)},
+            new[] {new Vector3( 1.0f, 0f, -1.5f), new Vector3( 5.0f, 0f, -1.5f), 
+                   new Vector3( 3.0f, 0f,  7.5f), new Vector3( 0.5f, 0f,  7.0f)}, 
+            new[] {new Vector3(-4.0f, 0f,  7.5f), new Vector3( 0.5f, 0f,  6.5f), 
+                   new Vector3( 0.0f, 0f, -1.5f), new Vector3(-2.5f, 0f, -1.5f)}
+        };
         // Goals
         goalSpawnPositions = new Vector3[]
-                            {
-                                new Vector3(-7.0f,  0.0f, -3.0f), 
-                                new Vector3( 0.5f,  0.0f,  6.5f), 
-                                new Vector3(-10.0f, 0.0f, -5.0f)
-                            };
+        {
+            new Vector3(-7.0f,  0.0f, -3.0f), 
+            new Vector3( 0.5f,  0.0f,  6.5f), 
+            new Vector3(-10.0f, 0.0f, -5.0f)
+        };
         wayPointGoalPositions = new Vector3[]
-                            {
-                                new Vector3(7.7f, 0.0f, -4.5f), new Vector3( 7.7f, 0.0f, 7.5f), 
-                                new Vector3(-7.0f, 0.0f, 8.5f), new Vector3(-7.0f, 0.0f, 13.0f)
-                            };
+        {
+            new Vector3(7.7f, 0.0f, -4.5f), new Vector3( 7.7f, 0.0f, 7.5f), 
+            new Vector3(-7.0f, 0.0f, 8.5f), new Vector3(-7.0f, 0.0f, 13.0f)
+        };
 
         // Create a gameobject container
         GameObject tasksParentObject = new GameObject("Navigation Tasks");
@@ -120,7 +120,7 @@ public class NavigationExperiment : Experiment
                 humanSpawnArray[i] = Task.ToSpawnInfo(dynamicObjects[0], 
                                                       dynamicObjectSpawnPositions[i], 
                                                       new Vector3(), 
-                                                      Utils.GetRow(dynamicObjectTrajectories, i));
+                                                      dynamicObjectTrajectories[i]);
             }
         }
         else if (levelNames[levelIndex] == "Level3")
@@ -131,7 +131,7 @@ public class NavigationExperiment : Experiment
                 humanSpawnArray[i] = Task.ToSpawnInfo(dynamicObjects[0], 
                                                       dynamicObjectSpawnPositions[i],
                                                       new Vector3(), 
-                                                      Utils.GetRow(dynamicObjectTrajectories, i));
+                                                      dynamicObjectTrajectories[i]);
             }
         }
         // goals

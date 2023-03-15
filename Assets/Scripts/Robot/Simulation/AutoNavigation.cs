@@ -147,7 +147,7 @@ public class AutoNavigation : MonoBehaviour
             // Fianl goal is reached
             if (waypointIndex == waypoints.Length)
             {
-                wheelController.SetRobotVelocity(0f, 0f);
+                wheelController.SetVelocity(Vector3.zero, Vector3.zero);
                 DisableAutonomy();
             }
         }
@@ -167,19 +167,22 @@ public class AutoNavigation : MonoBehaviour
         // Adjust rotation angle first
         if (Mathf.Abs(angleDifference) > 1 && rotationNeeded) // 1° tolorance
         {
-            // set angular speed
             float angularSpeed = Kp * angleDifference;
             angularSpeed = Mathf.Clamp(angularSpeed, -agent.angularSpeed, agent.angularSpeed);
-            wheelController.SetRobotVelocity(0f, angularSpeed * Mathf.Deg2Rad);
+            // set angular velocity
+            Vector3 angularVelocity = new Vector3(0f, angularSpeed * Mathf.Deg2Rad, 0f);
+            wheelController.SetVelocity(Vector3.zero, angularVelocity);
         }
         // Then handle by local planner
         else
         {
             rotationNeeded = false;
+            
+            float linearSpeed = Kp * distance;
+            linearSpeed = Mathf.Clamp(linearSpeed, -agent.speed, agent.speed);
             // set linear speed
-            float lineawrSpeed = Kp * distance;
-            lineawrSpeed = Mathf.Clamp(lineawrSpeed, -agent.speed, agent.speed);
-            wheelController.SetRobotVelocity(lineawrSpeed, 0f);
+            Vector3 linearVelocity = new Vector3(0f, 0f, linearSpeed);
+            wheelController.SetVelocity(linearVelocity, Vector3.zero);
         }
     }
     
@@ -288,7 +291,7 @@ public class AutoNavigation : MonoBehaviour
         // Invalid Trajectory -> stop sign
         if (path.corners.Length == 0)
         {
-            wheelController.SetRobotVelocity(0f, 0f);
+            wheelController.SetVelocity(Vector3.zero, Vector3.zero);
             return;
         }
         // Valid -> Set up waypoints and goal

@@ -126,14 +126,15 @@ public class ArmControlManager : MonoBehaviour
                         0.1f * (10f - grasping.GetGraspedObjectMass());
                     speedLimitPercentage = Mathf.Clamp(speedLimitPercentage, 0f, 1f);
                     wheelSpeedLimitID = wheelController.AddSpeedLimit(
-                                                        new float[] 
-                                                        {
-                                                            1.0f * speedLimitPercentage, 
-                                                            1.0f * speedLimitPercentage,
-                                                            1.0f * speedLimitPercentage, 
-                                                            1.0f * speedLimitPercentage
-                                                        },
-                                                        wheelSpeedLimitID);
+                        new float[] 
+                            {
+                                1.0f * speedLimitPercentage, 
+                                1.0f * speedLimitPercentage,
+                                1.0f * speedLimitPercentage, 
+                                1.0f * speedLimitPercentage
+                            },
+                            wheelSpeedLimitID
+                    );
                 }
         }
     }

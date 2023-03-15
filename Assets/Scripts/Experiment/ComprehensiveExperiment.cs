@@ -65,41 +65,46 @@ public class ComprehensiveExperiment : Experiment
     private int numStep = 4; // step per circle
     private int numCircle = 1;
     // TODO
-    private string[,] tasksType1 = new string[,] {
-                                                    {"1.1-2"},
-                                                    {"1.4-2"},
-                                                    {"1.2-2"},
-                                                    {"1.3-2"}
-                                                 };
-    private string[,] tasksType2 = new string[,] {
-                                                    {"2.4-2"},
-                                                    {"2.2-2"},
-                                                    {"2.1-2"},
-                                                    {"2.3-2"}
-                                                 };
+    private string[][] tasksType1 = new string[][] 
+    {
+        new[] {"1.1-2"},
+        new[] {"1.4-2"},
+        new[] {"1.2-2"},
+        new[] {"1.3-2"}
+    };
+    private string[][] tasksType2 = new string[][] 
+    {
+        new[] {"2.4-2"},
+        new[] {"2.2-2"},
+        new[] {"2.1-2"},
+        new[] {"2.3-2"}
+    };
     /*
     // official study
     private int numStep = 4; // step per circle
     private int numCircle = 3;
-    private string[,] tasksType1 = new string[,] {
-                                                    {"1.4-2", "1.2-3", "1.3-3"},
-                                                    {"1.2-1", "1.1-1", "1.3-2"},
-                                                    {"1.4-1", "1.3-1", "1.1-2"},
-                                                    {"1.2-2", "1.1-3", "1.4-3"}
-                                                 };
-    private string[,] tasksType2 = new string[,] {
-                                                    {"2.1-1", "2.3-1", "2.2-2"},
-                                                    {"2.4-2", "2.3-2", "2.4-1"},
-                                                    {"2.2-3", "2.3-3", "2.1-2"},
-                                                    {"2.2-1", "2.4-3", "2.1-3"}
-                                                 };
+    private string[][] tasksType1 = new string[][] 
+    {
+        new[] {"1.4-2", "1.2-3", "1.3-3"},
+        new[] {"1.2-1", "1.1-1", "1.3-2"},
+        new[] {"1.4-1", "1.3-1", "1.1-2"},
+        new[] {"1.2-2", "1.1-3", "1.4-3"}
+    };
+    private string[][] tasksType2 = new string[][] 
+    {
+        new[] {"2.1-1", "2.3-1", "2.2-2"},
+        new[] {"2.4-2", "2.3-2", "2.4-1"},
+        new[] {"2.2-3", "2.3-3", "2.1-2"},
+        new[] {"2.2-1", "2.4-3", "2.1-3"}
+    };
     */
+
     // randomization
     public int randomizationSeed = 0;
     private System.Random random;
     private int startIndex;
-    private int[,] indexArrayType1;
-    private int[,] indexArrayType2;
+    private int[][] indexArrayType1;
+    private int[][] indexArrayType2;
 
 
     void Start()
@@ -108,14 +113,13 @@ public class ComprehensiveExperiment : Experiment
         VerifyCompleteness();
         // Init index array (task order)
         int[] temp = Enumerable.Range(0, numCircle).ToArray();
-        indexArrayType1 = new int[numStep, numCircle];
-        indexArrayType2 = new int[numStep, numCircle];
-        for (int i = 0; i < indexArrayType1.GetLength(0); ++i)
-            for (int j = 0; j < indexArrayType1.GetLength(1); ++j)
-            {
-                indexArrayType1[i, j] = temp[j];
-                indexArrayType2[i, j] = temp[j];
-            }
+        indexArrayType1 = new int[numStep][];
+        indexArrayType2 = new int[numStep][];
+        for (int i = 0; i < indexArrayType1.Length; ++i)
+        {
+            indexArrayType1[i] = temp;
+            indexArrayType2[i] = temp;
+        }
         // get randomized task order
         random = new System.Random(randomizationSeed);
         string[] randomizedTasks = GetRandomizedTaskOrder();
@@ -148,23 +152,23 @@ public class ComprehensiveExperiment : Experiment
         
         // Human spawn position and trajectories
         dynamicObjectSpawnPositions = new Vector3[]
-                            {
-                                new Vector3(-6.7f, 0f, -8.0f),
-                                new Vector3( 8.0f, 0f,  5.0f),
-                                new Vector3( 0.5f, 0f,  7.0f),
-                                new Vector3(-2.5f, 0f, -1.5f)
-                            };
-        dynamicObjectTrajectories = new Vector3[,]
-                            {
-                                {new Vector3(-7.5f, 0f,  7.0f), new Vector3( 7.5f, 0f,  7.5f), 
-                                 new Vector3( 7.5f, 0f, -2.0f), new Vector3(-6.7f, 0f, -8.0f)},
-                                {new Vector3( 7.5f, 0f, -2.0f), new Vector3(-7.0f, 0f, -2.0f), 
-                                 new Vector3(-7.0f, 0f,  7.5f), new Vector3( 8.0f, 0f,  5.0f)},
-                                {new Vector3( 1.0f, 0f, -1.5f), new Vector3( 5.0f, 0f, -1.5f), 
-                                 new Vector3( 3.0f, 0f,  7.5f), new Vector3( 0.5f, 0f,  7.0f)}, 
-                                {new Vector3(-4.0f, 0f,  7.5f), new Vector3( 0.5f, 0f,  6.5f), 
-                                 new Vector3( 0.0f, 0f, -1.5f), new Vector3(-2.5f, 0f, -1.5f)}
-                            };
+        {
+            new Vector3(-6.7f, 0f, -8.0f),
+            new Vector3( 8.0f, 0f,  5.0f),
+            new Vector3( 0.5f, 0f,  7.0f),
+            new Vector3(-2.5f, 0f, -1.5f)
+        };
+        dynamicObjectTrajectories = new Vector3[][]
+        {
+            new[] {new Vector3(-7.5f, 0f,  7.0f), new Vector3( 7.5f, 0f,  7.5f), 
+                   new Vector3( 7.5f, 0f, -2.0f), new Vector3(-6.7f, 0f, -8.0f)},
+            new[] {new Vector3( 7.5f, 0f, -2.0f), new Vector3(-7.0f, 0f, -2.0f), 
+                   new Vector3(-7.0f, 0f,  7.5f), new Vector3( 8.0f, 0f,  5.0f)},
+            new[] {new Vector3( 1.0f, 0f, -1.5f), new Vector3( 5.0f, 0f, -1.5f), 
+                   new Vector3( 3.0f, 0f,  7.5f), new Vector3( 0.5f, 0f,  7.0f)}, 
+            new[] {new Vector3(-4.0f, 0f,  7.5f), new Vector3( 0.5f, 0f,  6.5f), 
+                   new Vector3( 0.0f, 0f, -1.5f), new Vector3(-2.5f, 0f, -1.5f)}
+        };
 
         // Create a gameobject container
         GameObject tasksObject = new GameObject("Comprehensive Tasks");
@@ -263,7 +267,7 @@ public class ComprehensiveExperiment : Experiment
                 humanSpawnArray[i] = Task.ToSpawnInfo(dynamicObjects[0], 
                                                       dynamicObjectSpawnPositions[i], 
                                                       new Vector3(), 
-                                                      Utils.GetRow(dynamicObjectTrajectories, i));
+                                                      dynamicObjectTrajectories[i]);
             }
         }
         else if (levelNames[levelIndex] == "Level3")
@@ -274,7 +278,7 @@ public class ComprehensiveExperiment : Experiment
                 humanSpawnArray[i] = Task.ToSpawnInfo(dynamicObjects[0], 
                                                       dynamicObjectSpawnPositions[i],
                                                       new Vector3(), 
-                                                      Utils.GetRow(dynamicObjectTrajectories, i));
+                                                      dynamicObjectTrajectories[i]);
             }
         }
 
@@ -470,10 +474,10 @@ public class ComprehensiveExperiment : Experiment
                 {
                     if (k == 0)
                         randomizedTasks[count] = 
-                            tasksType1[newJ, indexArrayType1[newJ, i]];
+                            tasksType1[newJ][indexArrayType1[newJ][i]];
                     else if (k == 1)
                         randomizedTasks[count] = 
-                            tasksType2[newJ, indexArrayType2[newJ, i]];
+                            tasksType2[newJ][indexArrayType2[newJ][i]];
                     count ++;
                 }
             }
@@ -562,16 +566,16 @@ public class ComprehensiveExperiment : Experiment
     private void VerifyCompleteness()
     {
         // Combine tasks from each part
-        string [] combination = new string[0];
-        combination = Utils.ConcatenateArray<string>(Utils.GetRow<string>(tasksType1, 0),
-                      Utils.ConcatenateArray<string>(Utils.GetRow<string>(tasksType1, 1),
-                      Utils.ConcatenateArray<string>(Utils.GetRow<string>(tasksType1, 2), 
-                                                     Utils.GetRow<string>(tasksType1, 3))));
+        string [] combination;
+        combination = Utils.ConcatenateArray(tasksType1[0],
+                      Utils.ConcatenateArray(tasksType1[1],
+                      Utils.ConcatenateArray(tasksType1[2], 
+                                             tasksType1[3])));
         VerifyTypeCompleteness(combination, 1);
-        combination = Utils.ConcatenateArray<string>(Utils.GetRow<string>(tasksType2, 0),
-                      Utils.ConcatenateArray<string>(Utils.GetRow<string>(tasksType2, 1),
-                      Utils.ConcatenateArray<string>(Utils.GetRow<string>(tasksType2, 2), 
-                                                     Utils.GetRow<string>(tasksType2, 3))));
+        combination = Utils.ConcatenateArray(tasksType2[0],
+                      Utils.ConcatenateArray(tasksType2[1],
+                      Utils.ConcatenateArray(tasksType2[2], 
+                                             tasksType2[3])));
         VerifyTypeCompleteness(combination, 2);
     }
     private void VerifyTypeCompleteness(string[] tasks, int type)

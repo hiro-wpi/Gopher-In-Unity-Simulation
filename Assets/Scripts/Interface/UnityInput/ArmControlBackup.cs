@@ -1,8 +1,13 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
 
-public class ArmControl : MonoBehaviour
+
+/// <summary>
+///     This script handles Unity input for Arm control.
+/// </summary>
+public class ArmControlBackup : MonoBehaviour
 {
     public ArmControlManager armControlManager;
 
@@ -13,9 +18,8 @@ public class ArmControl : MonoBehaviour
     // For TARGET - Automatic grasping
     public float automationSpeed = 0.05f;
 
-    void Start()
-    {}
-
+    void Start() { }
+    
     
     // PRESET
     public void OnHome(InputAction.CallbackContext context)

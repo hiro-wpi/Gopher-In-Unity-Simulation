@@ -3,8 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public static class Utils
 {
+    // Vector3
+    public static Vector3 ClampVector3(Vector3 vector, float min, float max)
+    {
+        return new Vector3(
+            Mathf.Clamp(vector.x, min, max),
+            Mathf.Clamp(vector.y, min, max),
+            Mathf.Clamp(vector.z, min, max)
+        );
+    }
+
+
     // Array related
     public static T[] ConcatenateArray<T>(T[] array1, T[] array2)
     {
@@ -17,27 +29,36 @@ public static class Utils
 
     public static int ArgMinArray<T>(T[] array)
     {
-        if (array.Length == 0) 
+        if (array.Length == 0)
             return -1;
 
         // Get smallest value and find the index
         T minValue = array.Min();
         return array.ToList().IndexOf(minValue);
     }
-    
-    public static T[] GetRow<T>(T[,] Array2D, int index)
+
+    public static T[][] TransposeArray<T>(T[][] Array2D)
     {
-        // Create a new container and copy all values in the row
-        T[] row = new T[Array2D.GetLength(1)];
-        for (int j = 0; j < row.Length; ++j)
-            row[j] = Array2D[index, j];
-        return row;
+        // Assume all rows have the same length
+        // new dimension
+        int colLength = Array2D.Length;
+        int rowLength = Array2D[0].Length;
+        // assign values
+        T[][] newArray = new T[rowLength][];
+        for (int i = 0; i < rowLength; ++i)
+        {
+            newArray[i] = new T[colLength];
+            for (int j = 0; j < colLength; ++j)
+                newArray[i][j] = Array2D[j][i];
+        }
+        return newArray;
     }
 
-    public static T[] Shuffle<T> (System.Random random, T[] array)
+    public static T[] Shuffle<T>(System.Random random, T[] array)
     {
+        // Knuth Shuffle
         int n = array.Length;
-        while (n > 1) 
+        while (n > 1)
         {
             int k = random.Next(n--);
             (array[n], array[k]) = (array[k], array[n]);
@@ -45,32 +66,15 @@ public static class Utils
         return array;
     }
 
-    public static T[,] RandomizeRow<T>(System.Random random, T[,] Array2D)
+    public static T[][] RandomizeRow<T>(System.Random random, T[][] Array2D)
     {
-        for (int i = 0; i < Array2D.GetLength(0); ++i)
+        // Randomize elements in each row
+        for (int i = 0; i < Array2D.Length; ++i)
         {
-            T[] temp = Shuffle(random, GetRow(Array2D, i));
-            for (int j = 0; j < Array2D.GetLength(1); ++j)
-            {
-                Array2D[i, j] = temp[j];
-            }
+            T[] temp = Shuffle(random, Array2D[i]);
+            Array2D[i] = temp;
         }
         return Array2D;
-    }
-
-    // GameObject
-    public static void SetGameObjectLayer(GameObject obj, string name, 
-                                          bool applyToChild=true)
-    {
-        int layer = LayerMask.NameToLayer(name);
-        obj.layer = layer;
-        if (applyToChild)
-        {
-            for (int i = 0; i < obj.transform.childCount; ++i)
-            {
-                obj.transform.GetChild(i).gameObject.layer = layer;
-            }
-        }
     }
 
     public static string ArrayToCSVLine<T>(T[] array)
@@ -88,6 +92,24 @@ public static class Utils
         if (line.Length > 0)
             line.Remove(line.Length - 1);
         return line;
+    }
+
+
+    // GameObject
+    public static void SetGameObjectLayer(
+        GameObject obj, string name, bool applyToChild = true)
+    {
+        // game object
+        int layer = LayerMask.NameToLayer(name);
+        obj.layer = layer;
+        // child
+        if (applyToChild)
+        {
+            for (int i = 0; i < obj.transform.childCount; ++i)
+            {
+                obj.transform.GetChild(i).gameObject.layer = layer;
+            }
+        }
     }
 
 
@@ -111,7 +133,7 @@ public static class Utils
         return new Quaternion(-q.y, q.z, q.x, -q.w);
     }
 
-    
+
     // Angles
     public static float WrapToPi(float angle)
     {

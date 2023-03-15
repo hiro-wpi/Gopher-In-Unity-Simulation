@@ -19,26 +19,29 @@ public class TestExperiment : Experiment
         useSameScene = true;  // use the same scene for all tasks
         sceneNames = new string[] {"Hospital"};
         levelNames = new string[] {"Level3"};
-        taskNames = new string[] {
-                                  "Navigation", "Reading",
-                                  "Carrying", "Scanning", 
-                                  "Pushing", "Grasping", 
-                                  "NavObs", "Disinfection"
-                                 };
+        taskNames = new string[] 
+        {
+            "Navigation", "Reading",
+            "Carrying", "Scanning", 
+            "Pushing", "Grasping", 
+            "NavObs", "Disinfection"
+        };
         // taskNames = new string[] {"GoHome", "Carrying", "Pushing", "LocalGrasping", "Navigation"};
-        taskDescriptions = new string[] {"Please navigate to Room S103.", 
-                                         "Please read the vital value of Bed 2",
+        taskDescriptions = new string[] 
+        {   
+            "Please navigate to Room S103.", 
+            "Please read the vital value of Bed 2",
 
-                                         "Please carry the IV pole to Room P104.",
-                                         "Please scan the medicine on the table and enter the bar code number.",
-                                         
-                                         "Please push the medical cart to the Pharmacy.",
-                                         "Please pick up the medicine with blue label in the medicine cabinet, " + 
-                                         "and put it on the tray on the table.",
-                                         
-                                         "Please navigate to Room P101.",
-                                         "Please disinfect the table.",
-                                        };
+            "Please carry the IV pole to Room P104.",
+            "Please scan the medicine on the table and enter the bar code number.",
+            
+            "Please push the medical cart to the Pharmacy.",
+            "Please pick up the medicine with blue label in the medicine cabinet, " + 
+            "and put it on the tray on the table.",
+            
+            "Please navigate to Room P101.",
+            "Please disinfect the table.",
+        };
         
         // Robot spawn pose and goal
         robotSpawnPositions = new Vector3[] {new Vector3(11.0f, 0.0f, 1.0f)};
@@ -46,23 +49,23 @@ public class TestExperiment : Experiment
                         
         // Human spawn position and trajectories
         dynamicObjectSpawnPositions = new Vector3[]
-                            {
-                                new Vector3(-6.7f, 0f, -8.0f),
-                                new Vector3( 8.0f, 0f,  5.0f),
-                                new Vector3( 0.5f, 0f,  7.0f),
-                                new Vector3(-2.5f, 0f, -1.5f)
-                            };
-        dynamicObjectTrajectories = new Vector3[,]
-                            {
-                                {new Vector3(-7.5f, 0f,  7.0f), new Vector3( 7.5f, 0f,  7.5f), 
-                                 new Vector3( 7.5f, 0f, -2.0f), new Vector3(-6.7f, 0f, -8.0f)},
-                                {new Vector3( 7.5f, 0f, -2.0f), new Vector3(-7.0f, 0f, -2.0f), 
-                                 new Vector3(-7.0f, 0f,  7.5f), new Vector3( 8.0f, 0f,  5.0f)},
-                                {new Vector3( 1.0f, 0f, -1.5f), new Vector3( 5.0f, 0f, -1.5f), 
-                                 new Vector3( 3.0f, 0f,  7.5f), new Vector3( 0.5f, 0f,  7.0f)}, 
-                                {new Vector3(-4.0f, 0f,  7.5f), new Vector3( 0.5f, 0f,  6.5f), 
-                                 new Vector3( 0.0f, 0f, -1.5f), new Vector3(-2.5f, 0f, -1.5f)}
-                            };
+        {
+            new Vector3(-6.7f, 0f, -8.0f),
+            new Vector3( 8.0f, 0f,  5.0f),
+            new Vector3( 0.5f, 0f,  7.0f),
+            new Vector3(-2.5f, 0f, -1.5f)
+        };
+        dynamicObjectTrajectories = new Vector3[][]
+        {
+            new[] {new Vector3(-7.5f, 0f,  7.0f), new Vector3( 7.5f, 0f,  7.5f), 
+                   new Vector3( 7.5f, 0f, -2.0f), new Vector3(-6.7f, 0f, -8.0f)},
+            new[] {new Vector3( 7.5f, 0f, -2.0f), new Vector3(-7.0f, 0f, -2.0f), 
+                   new Vector3(-7.0f, 0f,  7.5f), new Vector3( 8.0f, 0f,  5.0f)},
+            new[] {new Vector3( 1.0f, 0f, -1.5f), new Vector3( 5.0f, 0f, -1.5f), 
+                   new Vector3( 3.0f, 0f,  7.5f), new Vector3( 0.5f, 0f,  7.0f)}, 
+            new[] {new Vector3(-4.0f, 0f,  7.5f), new Vector3( 0.5f, 0f,  6.5f), 
+                   new Vector3( 0.0f, 0f, -1.5f), new Vector3(-2.5f, 0f, -1.5f)}
+        };
 
         // secondary task
         random = new System.Random(0);
@@ -143,7 +146,7 @@ public class TestExperiment : Experiment
                 humanSpawnArray[i] = Task.ToSpawnInfo(dynamicObjects[0], 
                                                       dynamicObjectSpawnPositions[i], 
                                                       new Vector3(), 
-                                                      Utils.GetRow(dynamicObjectTrajectories, i));
+                                                      dynamicObjectTrajectories[i]);
             }
         }
         else if (levelNames[levelIndex] == "Level3")
@@ -154,7 +157,7 @@ public class TestExperiment : Experiment
                 humanSpawnArray[i] = Task.ToSpawnInfo(dynamicObjects[0], 
                                                       dynamicObjectSpawnPositions[i],
                                                       new Vector3(), 
-                                                      Utils.GetRow(dynamicObjectTrajectories, i));
+                                                      dynamicObjectTrajectories[i]);
             }
         }
 

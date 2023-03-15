@@ -101,7 +101,9 @@ public class Dancing : MonoBehaviour
                                        keyFrames[frameIndex+1].linearSpeed, per);
         float angularSpeed = Mathf.Lerp(keyFrames[frameIndex].angularSpeed,
                                         keyFrames[frameIndex+1].angularSpeed, per);
-        wheelController.SetRobotVelocity(linearSpeed, angularSpeed);
+        Vector3 linearVelocity = new Vector3(0f, 0f, linearSpeed);
+        Vector3 angularVelocity = new Vector3(0f, angularSpeed, 0f);
+        wheelController.SetVelocity(linearVelocity, angularVelocity);
         // left arm
         float[] leftArmAngles = LerpArray(keyFrames[frameIndex].leftArmAngles, 
                                           keyFrames[frameIndex+1].leftArmAngles, per);
