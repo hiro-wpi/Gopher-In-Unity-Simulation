@@ -13,11 +13,12 @@ public class GopherControl : MonoBehaviour
     // Children control handlers
     [SerializeField] private ArmControl leftArmControl;
     [SerializeField] private ArmControl rightArmControl;
+    [SerializeField] private ChestControl chestControl;
     [SerializeField] private BaseControl baseControl;
     [SerializeField] private CameraControl mainCameraControl;
 
     // Available control modes
-    public enum Mode { Base, LeftArm, RightArm }
+    public enum Mode { Base, LeftArm, RightArm, Chest }
     // current control mode
     [field: SerializeField] 
     public bool CameraControlEnabled { get; set; } = false;
@@ -33,6 +34,7 @@ public class GopherControl : MonoBehaviour
         {
             baseControl.StopBase();
             rightArmControl.StopArm();
+            chestControl.StopChest();
             ControlMode = Mode.LeftArm;
         }
     }
@@ -43,6 +45,7 @@ public class GopherControl : MonoBehaviour
         {
             baseControl.StopBase();
             leftArmControl.StopArm();
+            chestControl.StopChest();
             ControlMode = Mode.RightArm;
         }
     }
@@ -53,7 +56,19 @@ public class GopherControl : MonoBehaviour
         {
             leftArmControl.StopArm();
             rightArmControl.StopArm();
+            chestControl.StopChest();
             ControlMode = Mode.Base;
+        }
+    }
+
+    public void OnChest(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {   
+            baseControl.StopBase();
+            leftArmControl.StopArm();
+            rightArmControl.StopArm();
+            ControlMode = Mode.Chest;
         }
     }
 
@@ -111,6 +126,11 @@ public class GopherControl : MonoBehaviour
             {
                 rightArmControl.OnModeChange(context);
             }
+
+            // else if (ControlMode == Mode.Chest)
+            // {
+            //     chestControl.OnModeChange(context);
+            // }
         }
     }
 
@@ -122,6 +142,49 @@ public class GopherControl : MonoBehaviour
             {
                 baseControl.OnTarget(context);
             }
+        }
+    }
+
+
+    // CHEST
+    public void OnChestTranslate(InputAction.CallbackContext context)
+    {
+        if(ControlMode == Mode.Chest)
+        {
+            chestControl.OnMove(context);
+        }
+        
+    }
+
+    public void OnChestHome(InputAction.CallbackContext context)
+    {
+        if(ControlMode == Mode.Chest)
+        {
+            chestControl.OnHome(context);
+        }
+    }
+
+    public void OnChestPreset1(InputAction.CallbackContext context)
+    {
+        if(ControlMode == Mode.Chest)
+        {
+            chestControl.OnPreset1(context);
+        }
+    }
+
+    public void OnChestPreset2(InputAction.CallbackContext context)
+    {
+        if(ControlMode == Mode.Chest)
+        {
+            chestControl.OnPreset2(context);
+        }
+    }
+
+    public void OnChestPreset3(InputAction.CallbackContext context)
+    {
+        if(ControlMode == Mode.Chest)
+        {
+            chestControl.OnPreset3(context);
         }
     }
 
