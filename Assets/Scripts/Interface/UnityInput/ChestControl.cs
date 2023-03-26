@@ -27,7 +27,7 @@ public class ChestControl : MonoBehaviour
     {
         if(context.performed)
         {
-            chestController.HomeChestJoint();
+            chestController.HomeChest();
         }
     }
 
