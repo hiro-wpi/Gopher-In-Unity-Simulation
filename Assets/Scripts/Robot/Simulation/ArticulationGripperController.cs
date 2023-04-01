@@ -11,7 +11,6 @@ using UnityEngine;
 /// </summary>
 public class ArticulationGripperController : MonoBehaviour
 {
-
     // New class to hold the articulation body and close/open values
     // Assume prismatic
     public ArticulationBody leftFinger;
