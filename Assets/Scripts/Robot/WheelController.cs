@@ -8,7 +8,7 @@ using UnityEngine;
 ///
 ///     Two control modes are available: Slow, and Regular,
 ///     which correspond to 0.5, 1 of the max velocity.
-///     Clipping and smoothing are also applied to the input.
+///     Clipping and Smoothing are also applied to the input.
 ///
 ///     The final result (linearVeclocity, angularVelocity) 
 ///     would be handled differently for 
@@ -17,13 +17,15 @@ using UnityEngine;
 public abstract class WheelController : MonoBehaviour
 {
     // Control parameters
+    [SerializeField] protected float linearSpeedMultiplier = 1.0f;
+    [SerializeField] protected float angularSpeedMultiplier = Mathf.PI/2.0f;
     [SerializeField] protected float maxLinearSpeed = 1.0f;
     [SerializeField] protected float maxAngularSpeed = Mathf.PI/2.0f;
     [SerializeField] protected float linearAcceleration = 2.0f;
-    [SerializeField] protected float angularAcceleration = Mathf.PI;
+    [SerializeField] protected float angularAcceleration = Mathf.PI*2;
     [SerializeField] protected float backwardMultiplier = 0.5f;
 
-    // Control mode (Different velocities)
+    // Control mode (different velocities multiplier)
     public enum Mode { Slow = 0, Regular = 1 }
     [field: SerializeField] public Mode ControlMode { get; set; } = Mode.Regular;
     [SerializeField] protected float[] modeMultiplier = { 0.5f, 1.0f };
@@ -36,11 +38,13 @@ public abstract class WheelController : MonoBehaviour
 
     // Velocity update rate
     [SerializeField] protected int updateRate = 60;
-    protected float deltaTime;
+    private float deltaTime;
 
     protected virtual void Start() 
     {
-        // Keep updating the velocity at a fixed rate
+        // Smooth velocity update -
+        // to consider the effect of acceleration and 
+        // avoid the velocity being updated too fast
         deltaTime = 1.0f / updateRate;
         InvokeRepeating("UpdateVelocities", 1.0f, deltaTime);
     }
@@ -52,14 +56,14 @@ public abstract class WheelController : MonoBehaviour
     {
         // Clipping and setting target velocity
         targetLinearVelocity = Utils.ClampVector3(
-            linear,
-            -maxLinearSpeed * modeMultiplier[(int)ControlMode] * backwardMultiplier,
-            maxLinearSpeed * modeMultiplier[(int)ControlMode]
+            linear * linearSpeedMultiplier * modeMultiplier[(int)ControlMode],
+            -maxLinearSpeed * backwardMultiplier,
+            maxLinearSpeed 
         );
         targetAngularVelocity = Utils.ClampVector3(
-            angular,
-            -maxAngularSpeed * modeMultiplier[(int)ControlMode],
-            maxAngularSpeed * modeMultiplier[(int)ControlMode]
+            angular * angularSpeedMultiplier * modeMultiplier[(int)ControlMode],
+            -maxAngularSpeed ,
+            maxAngularSpeed
         );
     }
 
