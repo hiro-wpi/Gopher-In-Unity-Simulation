@@ -6,20 +6,12 @@ using UnityEngine;
 
 /// <summary>
 ///     This script converts linear velocity and angular velocity 
-///     to joint velocities for differential drive robot in simulation.
-///
-///     Three control modes are available: Slow, Regular, and Fast,
-///     which correspond to 0.25, 0.5, 1.0 of the max velocity.
-///     Clipping and smoothing are also applied to the input.
+///     to articulation wheel speeds
+///     for differential drive robot in simulation.
 /// </summary>
-/// <remarks>
-///     As directly setting articulatio body velocity is still unstable,
-///     the better practice is still to set its target position at each time step.
-///     Velocity control is simulated by position control.
-/// </remarks>
 public class ArticulationWheelController : WheelController
 {
-    // Robot
+    // Robot wheels
     [SerializeField] private ArticulationBody leftWheel;
     [SerializeField] private ArticulationBody rightWheel;
     // parameters
@@ -28,6 +20,8 @@ public class ArticulationWheelController : WheelController
     // wheel speed
     private float leftWheelSpeed;
     private float rightWheelSpeed;
+    private float leftWheelJointSpeed;
+    private float rightWheelJointSpeed;
 
     // Extra speed limits
     // enforced by autonomy, manipulating objects, etc.
@@ -44,7 +38,6 @@ public class ArticulationWheelController : WheelController
         SetRobotSpeedStep(linearVelocity.z, angularVelocity.y);
     }
 
-
     public override void SetVelocity(Vector3 linear, Vector3 angular)
     {
         base.SetVelocity(linear, angular);
@@ -58,17 +51,19 @@ public class ArticulationWheelController : WheelController
         );
     }
 
-
-    // Update robot speed for one time step
+    // Update robot speed for next time step
     private void SetRobotSpeedStep(float linearSpeed, float angularSpeed)
     {
-        // Compute wheel joint velocity based on given speeds
+        // Compute wheel joint speeds based on given robot speeds
         if (linearSpeed != 0 || angularSpeed != 0)
         {
             leftWheelSpeed = -angularSpeed * (wheelTrackLength / 2) + linearSpeed;
             rightWheelSpeed = angularSpeed * (wheelTrackLength / 2) + linearSpeed;
-            SetWheelSpeedStep(leftWheel, leftWheelSpeed / wheelRadius * Mathf.Rad2Deg);
-            SetWheelSpeedStep(rightWheel, rightWheelSpeed / wheelRadius * Mathf.Rad2Deg);
+            leftWheelJointSpeed = leftWheelSpeed / wheelRadius * Mathf.Rad2Deg;
+            rightWheelJointSpeed = rightWheelSpeed / wheelRadius * Mathf.Rad2Deg;
+
+            SetWheelSpeedStep(leftWheel, leftWheelJointSpeed);
+            SetWheelSpeedStep(rightWheel, rightWheelJointSpeed);
         }
         // Directly stop the wheel if no speed is given
         else
@@ -78,22 +73,17 @@ public class ArticulationWheelController : WheelController
         }
     }
 
-    // Update wheel target for one time step
     private void SetWheelSpeedStep(ArticulationBody wheel, float jointSpeed)
     {
-        ArticulationDrive drive = wheel.xDrive;
-        drive.target += jointSpeed * Time.fixedDeltaTime;
-        wheel.xDrive = drive;
+        // Set joint target to the next timestep position given a speed
+        ArticulationBodyUtils.SetJointSpeedStep(wheel, jointSpeed);
     }
 
-    // Set desired angle as current angle to stop the wheel
     private void StopWheel(ArticulationBody wheel)
     {
-        ArticulationDrive drive = wheel.xDrive;
-        drive.target = wheel.jointPosition[0] * Mathf.Rad2Deg;
-        wheel.xDrive = drive;
+        // Set target to current position to stop the joint
+        ArticulationBodyUtils.StopJoint(wheel);
     }
-
 
     // Extra speed limits for the robot
     public string AddSpeedLimit(float[] speedLimits, string identifier = "")
@@ -111,6 +101,7 @@ public class ArticulationWheelController : WheelController
             speedLimitsDict.Add(identifier, speedLimits);
         }
         UpdateSpeedLimits();
+
         return identifier;
     }
 
@@ -121,6 +112,7 @@ public class ArticulationWheelController : WheelController
         {
             speedLimitsDict.Remove(identifier);
             UpdateSpeedLimits();
+            
             return true;
         }
         else

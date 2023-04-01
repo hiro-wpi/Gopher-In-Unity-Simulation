@@ -4,6 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+/// <summary>
+///    This Utils class contains some useful functions for
+///    Vector3 - ClampVector3
+///    Array - ConcatenateArray, ArgMinArray, TransposeArray, ShuffleArray, RandomizeRow, ArrayToCSVLine
+///    GameObject - SetGameObjectLayer
+///    Transform - ToFLU, FromFLU
+///    Angles - WrapToPi, WrapToTwoPi
+/// </summary>
 public static class Utils
 {
     // Vector3
@@ -15,7 +23,6 @@ public static class Utils
             Mathf.Clamp(vector.z, min, max)
         );
     }
-
 
     // Array related
     public static T[] ConcatenateArray<T>(T[] array1, T[] array2)
@@ -54,7 +61,7 @@ public static class Utils
         return newArray;
     }
 
-    public static T[] Shuffle<T>(System.Random random, T[] array)
+    public static T[] ShuffleArray<T>(T[] array, System.Random random)
     {
         // Knuth Shuffle
         int n = array.Length;
@@ -66,12 +73,12 @@ public static class Utils
         return array;
     }
 
-    public static T[][] RandomizeRow<T>(System.Random random, T[][] Array2D)
+    public static T[][] RandomizeRow<T>(T[][] Array2D, System.Random random)
     {
         // Randomize elements in each row
         for (int i = 0; i < Array2D.Length; ++i)
         {
-            T[] temp = Shuffle(random, Array2D[i]);
+            T[] temp = ShuffleArray(Array2D[i], random);
             Array2D[i] = temp;
         }
         return Array2D;
@@ -94,7 +101,6 @@ public static class Utils
         return line;
     }
 
-
     // GameObject
     public static void SetGameObjectLayer(
         GameObject obj, string name, bool applyToChild = true)
@@ -112,33 +118,35 @@ public static class Utils
         }
     }
 
-
     // Transform
     // from RUF (Unity) to FLU (regular)
     public static Vector3 ToFLU(Vector3 v)
     {
         return new Vector3(v.z, -v.x, v.y);
     }
+
     public static Quaternion ToFLU(Quaternion q)
     {
         return new Quaternion(q.z, -q.x, q.y, -q.w);
     }
+
     // from FLU (regular) to RUF (Unity)
     public static Vector3 FromFLU(Vector3 v)
     {
         return new Vector3(-v.y, v.z, v.x);
     }
+
     public static Quaternion FromFLU(Quaternion q)
     {
         return new Quaternion(-q.y, q.z, q.x, -q.w);
     }
-
 
     // Angles
     public static float WrapToPi(float angle)
     {
         return (angle + Mathf.PI) % (2f * Mathf.PI) - Mathf.PI;
     }
+
     public static float WrapToTwoPi(float angle)
     {
         return (angle + 2f * Mathf.PI) % (2f * Mathf.PI);
