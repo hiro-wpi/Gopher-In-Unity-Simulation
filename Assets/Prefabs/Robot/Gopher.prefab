@@ -1102,7 +1102,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4167990687051885124}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2505110431376419626
 MonoBehaviour:
@@ -1161,8 +1161,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d5eb0e393ddb08478f5690878bdf012, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftArmControl: {fileID: 0}
-  rightArmControl: {fileID: 0}
+  leftArmControl: {fileID: 2505110431376419626}
+  rightArmControl: {fileID: 792269828976222401}
+  chestControl: {fileID: 0}
   baseControl: {fileID: 1226250857912905337}
   mainCameraControl: {fileID: 7322360101057694725}
   <CameraControlEnabled>k__BackingField: 0
@@ -2432,6 +2433,7 @@ Transform:
   m_Children:
   - {fileID: 7727047010276722403}
   - {fileID: 1917608705697888244}
+  - {fileID: 4417516854681371868}
   - {fileID: 2163886474059526726}
   - {fileID: 1715495162921026227}
   - {fileID: 3202170895450577926}
@@ -2735,6 +2737,30 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 68925bdd-c8b6-4300-bc54-c31da624ab7c
     m_ActionName: Gopher/Main Camera Center[/Mouse/middleButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b4b4bb60-3f80-4727-ae1f-101cc9391d08
+    m_ActionName: Gopher/Chest Control[/Keyboard/slash]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b032c76d-3833-43b9-85b5-1843d45e3707
+    m_ActionName: Gopher/Chest Translate[/Keyboard/s,/Keyboard/w]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a9e38ea1-59d5-46f2-93b0-2cf45b7ad0cd
+    m_ActionName: Gopher/Chest Home[/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2874e968-cee0-4907-8f94-04149d16adcf
+    m_ActionName: Gopher/Chest Preset High[/Keyboard/3]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: bf0f4bc3-b654-4132-9b15-dbaa6fdf61f5
+    m_ActionName: Gopher/Chest Preset Middle[/Keyboard/2]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5d4eda8a-d086-487f-91c4-ea264220b314
+    m_ActionName: Gopher/Chest Preset Low[/Keyboard/1]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gopher
@@ -2931,7 +2957,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1591486353276211090}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4478812757678789719
 MonoBehaviour:
@@ -3409,11 +3435,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   robotRoot: {fileID: 6789262394414307240}
-  assignToAllChildren: 1
-  robotChainLength: 0
   stiffness: 10000
   damping: 100
   forceLimit: 100
+  assignToAllChildren: 1
+  robotChainLength: 0
 --- !u!114 &4478812758085542332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3503,7 +3529,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1591486353276211090}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4478812758972552441
 MonoBehaviour:
@@ -3742,6 +3768,7 @@ Transform:
   - {fileID: 4478812757878737029}
   - {fileID: 4478812757907068728}
   - {fileID: 4478812758085542334}
+  - {fileID: 6404578533424580927}
   - {fileID: 4478812757678789718}
   - {fileID: 4478812758972552440}
   - {fileID: 5602001585960177886}
@@ -3793,6 +3820,52 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.0000001, y: 1, z: 1.0000001}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &5018650023676429807
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4417516854681371868}
+  - component: {fileID: 2609110471528511685}
+  m_Layer: 15
+  m_Name: Chest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4417516854681371868
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5018650023676429807}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4167990687051885124}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2609110471528511685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5018650023676429807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9519b0b61b6d7930dbb3780478affee0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chestController: {fileID: 0}
+  movementDirection: 0
 --- !u!1 &5036911836533307963
 GameObject:
   m_ObjectHideFlags: 0
@@ -3823,7 +3896,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4167990687051885124}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7322360101057694725
 MonoBehaviour:
@@ -4197,7 +4270,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1591486353276211090}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6262894708065194689
 MonoBehaviour:
@@ -26019,6 +26092,58 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!1 &7799974525477382015
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6404578533424580927}
+  - component: {fileID: 2395791774243494772}
+  m_Layer: 15
+  m_Name: Chest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6404578533424580927
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7799974525477382015}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1591486353276211090}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2395791774243494772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7799974525477382015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7a91cf9478b1be4f9fef1c9e28527da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  preset:
+  - 0
+  - 0.22
+  - 0.44
+  velFraction: 0
+  chestJoint: {fileID: 6789262393830597520}
+  targetPosition: 0
+  targetSpeed: 0
 --- !u!1 &7999856651014996296
 GameObject:
   m_ObjectHideFlags: 0
@@ -26309,7 +26434,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4167990687051885124}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &792269828976222401
 MonoBehaviour:
