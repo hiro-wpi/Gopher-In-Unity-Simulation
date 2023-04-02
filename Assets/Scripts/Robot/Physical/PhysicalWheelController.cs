@@ -17,13 +17,18 @@ public class PhysicalWheelController : WheelController
 {
     // ROS communication
     [SerializeField] private TwistPublisher twistPublisher;
+
+    [SerializeField] private float publishRate = 60f;
+    [SerializeField] private float publishDeltaTime;
     
     protected override void Start()
     {
         // Update velocity
         base.Start();
+
         // Keep publishing the velocity at a fixed rate
-        InvokeRepeating("PublishVelocity", 1.0f, deltaTime);
+        publishDeltaTime = 1.0f / publishRate;
+        InvokeRepeating("PublishVelocity", 1.0f, publishDeltaTime);
     }
 
     void Update() { }

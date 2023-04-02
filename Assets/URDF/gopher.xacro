@@ -42,12 +42,12 @@
         <xacro:load_kortex arm="$(arg arm)" gripper="$(arg gripper)" dof="$(arg dof)" 
                            vision="$(arg vision)" sim="$(arg sim)" 
                            prefix="$(arg right_prefix)" parent="$(arg prefix)right_mounting_plate">
-            <origin xyz="0.05 -0.075 0.01" rpy="0 0 0" />
+            <origin xyz="0 -0.06 -0.04" rpy="0 0.78539 -1.5707" />
         </xacro:load_kortex>
         <xacro:load_kortex arm="$(arg arm)" gripper="$(arg gripper)" dof="$(arg dof)" 
                            vision="$(arg vision)" sim="$(arg sim)" 
                            prefix="$(arg left_prefix)" parent="$(arg prefix)left_mounting_plate">
-            <origin xyz="0.05 0.075 0.01" rpy="0 0 3.1416" />
+            <origin xyz="0.00 0.06 -0.04" rpy="0 0.78539 1.5707" />
         </xacro:load_kortex>
     </xacro:if>
     
