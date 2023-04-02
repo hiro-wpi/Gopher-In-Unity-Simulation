@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5077990550905147761
+--- !u!1 &796378385359372869
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,46 +8,46 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1186037857744682168}
-  - component: {fileID: 5971376993200583375}
-  - component: {fileID: 7987392395051181775}
+  - component: {fileID: 217796359167150146}
+  - component: {fileID: 2020788240513648348}
+  - component: {fileID: 1700009805212579137}
   m_Layer: 0
-  m_Name: left_kinova_mounting_plate_0
+  m_Name: base_collision_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1186037857744682168
+--- !u!4 &217796359167150146
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5077990550905147761}
+  m_GameObject: {fileID: 796378385359372869}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5644756596859784295}
+  m_Father: {fileID: 8412480328711198511}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &5971376993200583375
+--- !u!33 &2020788240513648348
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5077990550905147761}
-  m_Mesh: {fileID: 4300000, guid: 0048f509f16334badbb9b8b69c162e8b, type: 2}
---- !u!23 &7987392395051181775
+  m_GameObject: {fileID: 796378385359372869}
+  m_Mesh: {fileID: 4300000, guid: 17b814add855f8242865e5d519b82ba4, type: 2}
+--- !u!23 &1700009805212579137
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5077990550905147761}
+  m_GameObject: {fileID: 796378385359372869}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -83,7 +83,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &7319062583731757166
+--- !u!1 &7852557775265868603
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -91,27 +91,27 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5644756596859784295}
+  - component: {fileID: 8412480328711198511}
   m_Layer: 0
-  m_Name: left_kinova_mounting_plate
+  m_Name: base_collision
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5644756596859784295
+--- !u!4 &8412480328711198511
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7319062583731757166}
+  m_GameObject: {fileID: 7852557775265868603}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1186037857744682168}
+  - {fileID: 217796359167150146}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
