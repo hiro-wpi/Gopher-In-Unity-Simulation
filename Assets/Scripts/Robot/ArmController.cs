@@ -20,6 +20,8 @@ using UnityEngine;
 public abstract class ArmController : MonoBehaviour
 {
     // Control parameters
+    [SerializeField] protected float linearSpeedMultiplier = 0.25f;
+    [SerializeField] protected float angularSpeedMultiplier = 0.5f;
     [SerializeField] protected float maxLinearSpeed = 0.25f;
     [SerializeField] protected float maxAngularSpeed = 0.5f;
     [SerializeField] protected float gripperSpeed = 0.5f;
@@ -75,7 +77,6 @@ public abstract class ArmController : MonoBehaviour
             speed, -gripperSpeed, gripperSpeed
         );
     }
-
 
     // Set robot control mode
     public void SetMode(Mode mode)

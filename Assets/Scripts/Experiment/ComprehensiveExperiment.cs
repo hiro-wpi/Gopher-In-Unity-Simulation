@@ -455,9 +455,9 @@ public class ComprehensiveExperiment : Experiment
     private string[] GetRandomizedTaskOrder()
     {
         // Randomize order
-        startIndex = Utils.Shuffle<int>(random, Enumerable.Range(0, numStep).ToArray())[0];
-        indexArrayType1 = Utils.RandomizeRow<int>(random, indexArrayType1);
-        indexArrayType2 = Utils.RandomizeRow<int>(random, indexArrayType2);
+        startIndex = Utils.ShuffleArray<int>(Enumerable.Range(0, numStep).ToArray(), random)[0];
+        indexArrayType1 = Utils.RandomizeRow<int>(indexArrayType1, random);
+        indexArrayType2 = Utils.RandomizeRow<int>(indexArrayType2, random);
         string[] randomizedTasks = new string[numCircle * numStep * numType];
 
         // Based on the startStep, numStep of a circle and numCircle,
@@ -547,7 +547,7 @@ public class ComprehensiveExperiment : Experiment
                              "2." + (type2TaskIndex+1) + "-"  + (type2LevelIndex+1) + 
                              "at step " + stepIndex);
         // randomly select one
-        return Utils.Shuffle<string>(random, roomNames)[0];
+        return Utils.ShuffleArray<string>(roomNames, random)[0];
     }
 
 

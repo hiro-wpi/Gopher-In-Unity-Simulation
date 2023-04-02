@@ -203,14 +203,7 @@ public class ArticulationJointController : MonoBehaviour
     }
     public void StopJoint(ArticulationBody joint)
     {
-        float currPosition =  joint.jointPosition[0] * Mathf.Rad2Deg;
-        ArticulationDrive drive = joint.xDrive;
-
-        if (Mathf.Abs(drive.target - currPosition) > 1)
-        {
-            drive.target = currPosition;
-            joint.xDrive = drive;
-        }
+        ArticulationBodyUtils.StopJoint(joint);
     }
 
 

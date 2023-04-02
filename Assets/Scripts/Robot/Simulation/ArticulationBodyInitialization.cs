@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 /// <summary>
 ///     This script initializes the articulation bodies by 
 ///     setting stiffness, damping and force limit of
@@ -15,27 +16,27 @@ using UnityEngine;
 /// </remarks>
 public class ArticulationBodyInitialization : MonoBehaviour
 {
-    private ArticulationBody[] _articulationChain;
-    //public ArticulationBody[] ignoreList;
+    [SerializeField] private GameObject robotRoot;
+    [SerializeField] private float stiffness = 10000f;
+    [SerializeField] private float damping = 100f;
+    [SerializeField] private float forceLimit = 1000f;
 
-    public GameObject robotRoot;
-    public bool assignToAllChildren = true;
-    public int robotChainLength = 0;
-    public float stiffness = 10000f;
-    public float damping = 100f;
-    public float forceLimit = 1000f;
+    // Either assign to all children or assign to a specific length
+    [SerializeField] private bool assignToAllChildren = true;
+    [SerializeField] private int robotChainLength = 0;
+
+    private ArticulationBody[] articulationChain;
 
     private void Start()
     {
         // Get non-fixed joints
-        _articulationChain = robotRoot.GetComponentsInChildren<ArticulationBody>();
-        _articulationChain = _articulationChain.Where(joint => joint.jointType 
-                                                      != ArticulationJointType.FixedJoint).ToArray();
-        // remove joints from ignore list
-        // _articulationChain = _articulationChain.Where(joint => !ignoreList.Contains(joint)).ToArray();
-
+        articulationChain = robotRoot.GetComponentsInChildren<ArticulationBody>();
+        articulationChain = articulationChain.Where(
+            joint => joint.jointType != ArticulationJointType.FixedJoint
+        ).ToArray();
+        
         // Joint length to assign
-        int assignLength = _articulationChain.Length;
+        int assignLength = articulationChain.Length;
         if (!assignToAllChildren)
             assignLength = robotChainLength;
 
@@ -43,7 +44,7 @@ public class ArticulationBodyInitialization : MonoBehaviour
         const int friction = 100;
         for (var i = 0; i < assignLength; ++i)
         {
-            ArticulationBody joint = _articulationChain[i];
+            ArticulationBody joint = articulationChain[i];
             ArticulationDrive drive = joint.xDrive;
 
             joint.jointFriction = friction;
