@@ -19,8 +19,6 @@ public class Grasping : MonoBehaviour
     private GameObject objectParent;
     private float objectRigidbodyMass = 0.0f;
 
-    private AutoGraspable graspable;
-
     void Start()
     {
     }
