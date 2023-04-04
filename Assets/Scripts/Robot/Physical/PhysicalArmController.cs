@@ -4,16 +4,17 @@ using UnityEngine;
 
 
 /// <summary>
-///     This script send Unity input for arm control 
-///     to ROS as Twist message.
-///
-///     Three control modes are available: Slow, and Regular,
-///     which correspond to 0.5, 1.0 of the max velocity.
+///     This script sends Unity input for end-effector control 
+///     to ROS as Twist message. The gripper command 
+///     is set by sending a request to ROS.
+///     
+///     Two control modes are available: Slow, and Regular,
+///     which correspond to 0.5, 1 of the max velocity.
 ///     Clipping is also applied to the input.
+///     Smoothing is handled by low level joint controller
 ///     
 ///     The current velocity is adjusted w.r.t. the robot base,
-///     and published to ROS at a fixed rate.
-///     The gripper command is set by sending a request to ROS.
+///     and published to ROS at a fixed rate. 
 /// </summary>
 public class PhysicalArmController : ArmController
 {
@@ -28,16 +29,15 @@ public class PhysicalArmController : ArmController
     // ROS communication
     [SerializeField] private TwistCommandPublisher twistCommandPublisher;
     [SerializeField] private GripperCommandService gripperCommandService;
+    [SerializeField] protected int publishRate = 60;
 
-    protected override void Start()
+    void Start()
     {
         // Compute transformation w.r.t. robot base
         armRotationOffsetQuaternion = Quaternion.Euler(armRotationOffset);
 
-        // Update velocity
-        base.Start();
         // Keep publishing the velocity at a fixed rate
-        InvokeRepeating("PublishVelocity", 1.0f, deltaTime);
+        InvokeRepeating("PublishVelocity", 1.0f, 1.0f / publishRate);
     }
 
     void Update() { }
@@ -47,7 +47,7 @@ public class PhysicalArmController : ArmController
     {
         // Convert velocities to robot base coordinate
         globalLinearVelocity = armRotationOffsetQuaternion * linearVelocity;
-        // TODO: check why this is correct
+        // TODO: check why this is incorrect
         // globalAngularVelocity = armRotationOffsetQuaternion * angularVelocity;
         globalAngularVelocity = angularVelocity;
 
@@ -58,11 +58,14 @@ public class PhysicalArmController : ArmController
     }
 
     // Request service when gripper speed is set
-    public override void SetGripperSpeed(float speed)
+    public override void SetGripperPosition(float position)
     {
-        base.SetGripperSpeed(speed);
+        base.SetGripperPosition(position);
 
         // Request service
-        gripperCommandService.SendGripperCommandService(currentGripperSpeed);
+        gripperCommandService.SendGripperCommandService(gripperPosition);
     }
+
+    // Send command to move to pre-defined positions
+    public override void MoveToPreset(int presetIndex) { }
 }

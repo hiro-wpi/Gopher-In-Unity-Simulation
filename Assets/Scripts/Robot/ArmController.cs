@@ -10,8 +10,7 @@ using UnityEngine;
 ///     Two control modes are available: Slow, and Regular,
 ///     which correspond to 0.5, 1 of the max velocity.
 ///     Clipping is also applied to the input.
-///     Smoothing is handled by actual arm controller 
-///     // TODO: add smoothing
+///     Smoothing is handled by low level joint controller
 ///
 ///     The final result
 ///     would be handled differently for 
@@ -22,9 +21,9 @@ public abstract class ArmController : MonoBehaviour
     // Control parameters
     [SerializeField] protected float linearSpeedMultiplier = 0.25f;
     [SerializeField] protected float angularSpeedMultiplier = 0.5f;
+    [SerializeField] protected float gripperPositionMultiplier = 1.0f;
     [SerializeField] protected float maxLinearSpeed = 0.25f;
     [SerializeField] protected float maxAngularSpeed = 0.5f;
-    [SerializeField] protected float gripperSpeed = 0.5f;
 
     // Control mode (Different velocities)
     public enum Mode { Slow = 0, Regular = 1 }
@@ -34,17 +33,9 @@ public abstract class ArmController : MonoBehaviour
     // Variable to hold velocity
     [SerializeField, ReadOnly] protected Vector3 linearVelocity;
     [SerializeField, ReadOnly] protected Vector3 angularVelocity;
-    [SerializeField, ReadOnly] protected float currentGripperSpeed;
+    [SerializeField, ReadOnly] protected float gripperPosition;
 
-    // Velocity update rate
-    [SerializeField] protected int updateRate = 60;
-    protected float deltaTime;
-
-    protected virtual void Start()
-    {
-        // Use the velocity at a fixed rate
-        deltaTime = 1.0f / updateRate;
-    }
+    void Start() { }
 
     void Update() { }
 
@@ -53,9 +44,9 @@ public abstract class ArmController : MonoBehaviour
     {
         // Clipping and setting target linear velocity
         linearVelocity = Utils.ClampVector3(
-            linear,
-            -maxLinearSpeed * modeMultiplier[(int)ControlMode],
-            maxLinearSpeed * modeMultiplier[(int)ControlMode]
+            linear * linearSpeedMultiplier * modeMultiplier[(int)ControlMode],
+            -maxLinearSpeed,
+            maxLinearSpeed
         );
     }
 
@@ -63,18 +54,26 @@ public abstract class ArmController : MonoBehaviour
     {
         // Clipping and setting target angular velocity
         angularVelocity = Utils.ClampVector3(
-            angular,
-            -maxAngularSpeed * modeMultiplier[(int)ControlMode],
-            maxAngularSpeed * modeMultiplier[(int)ControlMode]
+            angular * angularSpeedMultiplier * modeMultiplier[(int)ControlMode],
+            -maxAngularSpeed,
+            maxAngularSpeed
         );
     }
 
-    // Set gripper speed
-    public virtual void SetGripperSpeed(float speed)
+    public virtual void StopEndEffector()
     {
-        // Clipping and setting gripper speed
-        currentGripperSpeed = Mathf.Clamp(
-            speed, -gripperSpeed, gripperSpeed
+        linearVelocity = Vector3.zero;
+        angularVelocity = Vector3.zero;
+    }
+
+    // Set gripper position
+    public virtual void SetGripperPosition(float position)
+    {
+        // Clipping and setting gripper position
+        gripperPosition = Mathf.Clamp(
+            position * gripperPositionMultiplier,
+            0.0f,
+            1.0f
         );
     }
 
@@ -91,6 +90,6 @@ public abstract class ArmController : MonoBehaviour
         ControlMode = (Mode)(((int)ControlMode + 1) % numMode);
     }
 
-    // Pre-defined position
+    // Pre-defined positions
     public virtual void MoveToPreset(int presetIndex) { }
 }

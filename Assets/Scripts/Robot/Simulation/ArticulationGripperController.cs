@@ -4,45 +4,45 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-///     This script is used to control the robotic
-///     end-effector. This script is originally used 
-///     for robotic 2F-85, with modification into prismatic gripper. 
-//      Others can also be used with minor modification.
+///     This script is used to control the robotic end-effector. 
+///     with simple two-finger prismatics grippers.
 /// </summary>
 public class ArticulationGripperController : MonoBehaviour
 {
-    // New class to hold the articulation body and close/open values
-    // Assume prismatic
-    public ArticulationBody leftFinger;
-    public ArticulationBody rightFinger;
+    // Assume two-finger prismatic joints
+    [SerializeField] private ArticulationBody leftFinger;
+    [SerializeField] private ArticulationBody rightFinger;
 
-    void Start()
-    {
-    }
+    void Start() { }
 
     public void CloseGripper()
     {
-        SetGripper(1f);
+        SetGripper(1.0f);
     }
 
     public void OpenGripper()
     {
-        SetGripper(0f);
+        SetGripper(0.0f);
+    }
+
+    public void StopGripper()
+    {
+        ArticulationBodyUtils.StopJoint(leftFinger);
+        ArticulationBodyUtils.StopJoint(rightFinger);
     }
 
     public void SetGripper(float value)
     {
-        float leftValue = Mathf.Lerp(leftFinger.xDrive.lowerLimit, leftFinger.xDrive.upperLimit, value);
-        SetTarget(leftFinger, leftValue);
+        // Get absolute position values
+        float leftValue = Mathf.Lerp(
+            leftFinger.xDrive.lowerLimit, leftFinger.xDrive.upperLimit, value
+        );
+        float rightValue = Mathf.Lerp(
+            rightFinger.xDrive.lowerLimit, rightFinger.xDrive.upperLimit, value
+        );
 
-        float rightValue = Mathf.Lerp(rightFinger.xDrive.lowerLimit, rightFinger.xDrive.upperLimit, value);
-        SetTarget(rightFinger, rightValue);
-    }
-
-    void SetTarget(ArticulationBody joint, float target)
-    {
-        ArticulationDrive drive = joint.xDrive;
-        drive.target = target;
-        joint.xDrive = drive;
+        // Set values
+        ArticulationBodyUtils.SetJointTarget(leftFinger, leftValue);
+        ArticulationBodyUtils.SetJointTarget(rightFinger, rightValue);
     }
 }

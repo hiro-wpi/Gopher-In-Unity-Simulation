@@ -15,7 +15,7 @@ public class ArmControl : MonoBehaviour
     // Container for the speed vector
     private Vector3 linearVelocity = Vector3.zero;
     private Vector3 angularVelocity = Vector3.zero;
-    private float gripperSpeed = 0f;
+    private float gripperPosition = 0f;
 
     void Start() { }
     
@@ -73,9 +73,9 @@ public class ArmControl : MonoBehaviour
     public void OnGripper(InputAction.CallbackContext context)
     {
         // Read input
-        gripperSpeed = context.ReadValue<Vector2>().y;
+        gripperPosition = context.ReadValue<Vector2>().y;
         // Set velocity
-        armController.SetGripperSpeed(gripperSpeed);
+        armController.SetGripperPosition(gripperPosition);
     }
 
     // Stop
@@ -89,8 +89,7 @@ public class ArmControl : MonoBehaviour
 
     public void StopGripper()
     {
-        gripperSpeed = 0f;
-        armController.SetGripperSpeed(gripperSpeed);
+        armController.StopGripper();
     }
 
     // Change mode

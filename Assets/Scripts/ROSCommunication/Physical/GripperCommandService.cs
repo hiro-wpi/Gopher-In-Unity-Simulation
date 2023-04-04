@@ -30,7 +30,7 @@ public class GripperCommandService : MonoBehaviour
         {
             input = new GripperCommandMsg
             {
-                mode = 2,  // 1: force, 2: velocity, 3: position
+                mode = 3,  // 1: force, 2: velocity, 3: position
                 gripper = new GripperMsg
                 {
                     finger = new FingerMsg[] { }
@@ -42,8 +42,8 @@ public class GripperCommandService : MonoBehaviour
 
     void Update() { }
 
-    // Request service to set gripper speed
-    public void SendGripperCommandService(float speed)
+    // Request service to set gripper position
+    public void SendGripperCommandService(float position)
     {
         // Update value
         sendGripperCommand.input.gripper.finger = new FingerMsg[]
@@ -51,7 +51,7 @@ public class GripperCommandService : MonoBehaviour
             new FingerMsg
             {
                 finger_identifier = 0,
-                value = speed
+                value = position
             }
         };
 
