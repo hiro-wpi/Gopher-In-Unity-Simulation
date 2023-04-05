@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
 
-
 /// <summary>
 ///     This script handles Unity input for Base control.
 /// </summary>

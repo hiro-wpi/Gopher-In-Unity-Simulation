@@ -6,7 +6,6 @@ using Unity.Robotics.ROSTCPConnector;
 using Unity.Robotics.ROSTCPConnector.ROSGeometry;
 using RosMessageTypes.Geometry;
 
-
 /// <summary>
 ///     This script publishes twist msg to a ROS topic
 /// </summary>

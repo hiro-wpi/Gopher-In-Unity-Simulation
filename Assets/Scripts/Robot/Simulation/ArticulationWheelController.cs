@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 /// <summary>
 ///     This script converts linear velocity and angular velocity 
 ///     to articulation wheel speeds

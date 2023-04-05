@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 /// <summary>
 ///    This Utils class contains some useful functions for
 ///    Vector3 - ClampVector3

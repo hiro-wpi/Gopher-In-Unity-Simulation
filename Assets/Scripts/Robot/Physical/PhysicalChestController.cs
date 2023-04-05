@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 /// <summary>
 ///     This script send Unity input for chest control 
 ///     to ROS as Twist message.

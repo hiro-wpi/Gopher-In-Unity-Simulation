@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 /// <summary>
 ///     This script is used to detect graspable objects
 ///     and set it as a target of arm control manager

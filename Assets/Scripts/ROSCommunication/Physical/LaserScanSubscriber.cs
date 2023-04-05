@@ -5,7 +5,6 @@ using UnityEngine;
 using Unity.Robotics.ROSTCPConnector;
 using RosMessageTypes.Sensor;
 
-
 /// <summary>
 ///     This script subscribes laser scan
 /// </summary>

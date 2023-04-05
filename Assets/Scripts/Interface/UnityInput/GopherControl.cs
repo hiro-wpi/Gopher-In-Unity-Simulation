@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
 /// <summary>
 ///     This script handles Unity input for Gopher control.
 ///     For now, only one component of the Gopher is controlled 

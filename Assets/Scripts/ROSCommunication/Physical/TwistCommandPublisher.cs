@@ -8,7 +8,6 @@ using RosMessageTypes.KortexDriver;
 using GeoTwist = RosMessageTypes.Geometry.TwistMsg;
 using KortexTwist = RosMessageTypes.KortexDriver.TwistMsg;
 
-
 /// <summary>
 ///     This script publishes twistCommand command msg to a ROS topic.
 ///     TwistCommand is a customized message for Kinova arm control.

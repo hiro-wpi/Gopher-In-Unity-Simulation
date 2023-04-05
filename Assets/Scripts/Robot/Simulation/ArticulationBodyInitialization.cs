@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 /// <summary>
 ///     This script initializes the articulation bodies by 
 ///     setting stiffness, damping and force limit of

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-
 /// <summary>
 ///    This drawer is used to make a variable 
 ///    read-only in the inspector

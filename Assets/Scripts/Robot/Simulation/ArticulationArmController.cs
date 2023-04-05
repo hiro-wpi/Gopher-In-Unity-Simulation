@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 /// <summary>
 ///     This script sends commands to robot joints and gripper.
 ///     
@@ -19,7 +18,7 @@ public class ArticulationArmController : ArmController
     public ArticulationJointController jointController;
     public ArticulationGripperController gripperController;
 
-    public virtual void EmergencyStop(bool stop = true) 
+    public virtual void EmergencyStop(bool stop = true)
     {
         emergencyStop = stop;
     }

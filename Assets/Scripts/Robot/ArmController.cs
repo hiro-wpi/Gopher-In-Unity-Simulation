@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 /// <summary>
 ///     An abstract class to handle Unity input for arm control,
 ///     including both joint control and gripper control.

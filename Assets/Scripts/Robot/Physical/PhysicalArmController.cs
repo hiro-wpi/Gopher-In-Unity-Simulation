@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 /// <summary>
 ///     This script sends Unity input for end-effector control 
 ///     to ROS as Twist message. The gripper command 

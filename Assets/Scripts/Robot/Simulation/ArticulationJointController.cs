@@ -5,7 +5,7 @@ using UnityEngine;
 
 /// <summary>
 ///     This script allows robot joints to be controlled with 
-///     SetJointTarget(), SetJointTargetStep(), SetJointSpeedStep().
+///     SetJointTarget, SetJointTargetStep, SetJointSpeedStep.
 ///     It also provides joint pose intializaiton.
 /// </summary>
 public class ArticulationJointController : MonoBehaviour
