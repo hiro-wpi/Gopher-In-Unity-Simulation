@@ -101,9 +101,10 @@ public class TrajectoryPlanner : MonoBehaviour
             float[] positions = point.positions.Select(r => (float)r).ToArray();
             float[] velocities = point.velocities.Select(r => (float)r).ToArray();
 
+            ArticulationBody[] joints = jointController.GetJoints();
             for (int joint = 0; joint < numJoint; joint++)
             {
-                jointController.SetJointTarget(joint, positions[joint]);
+                ArticulationBodyUtils.SetJointTarget(joints[joint], positions[joint]);
             }
 
             yield return new WaitForSeconds(waitTimeAfterWaypoint);

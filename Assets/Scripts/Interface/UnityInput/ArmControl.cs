@@ -86,11 +86,6 @@ public class ArmControl : MonoBehaviour
         armController.SetAngularVelocity(angularVelocity);
     }
 
-    public void StopGripper()
-    {
-        armController.StopGripper();
-    }
-
     // Change mode
     public void OnModeChange(InputAction.CallbackContext context)
     {

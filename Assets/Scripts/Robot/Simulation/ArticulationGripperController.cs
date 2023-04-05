@@ -15,6 +15,11 @@ public class ArticulationGripperController : MonoBehaviour
 
     void Start() { }
 
+    public ArticulationBody[] GetGripperJoints()
+    {
+        return new ArticulationBody[] { leftFinger, rightFinger };
+    }
+
     public void CloseGripper()
     {
         SetGripper(1.0f);

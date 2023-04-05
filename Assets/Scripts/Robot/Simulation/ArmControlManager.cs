@@ -71,10 +71,10 @@ public class ArmControlManager : MonoBehaviour
         mode = Mode.Control;
 
         // Init gripper setting
-        leftCollision = gripperController.leftFinger.
-            gameObject.GetComponentInChildren<ArticulationCollisionDetection>();
-        rightCollision = gripperController.rightFinger.
-            gameObject.GetComponentInChildren<ArticulationCollisionDetection>();
+        ArticulationBody[] fingers = gripperController.GetGripperJoints();
+
+        leftCollision = fingers[0].gameObject.GetComponentInChildren<ArticulationCollisionDetection>();
+        rightCollision = fingers[1].gameObject.GetComponentInChildren<ArticulationCollisionDetection>();
     }
 
 
@@ -173,7 +173,8 @@ public class ArmControlManager : MonoBehaviour
 
         // Home Position
         if (presetIndex == 0)
-            MoveToJointPosition(jointController.homePosition);
+            return false;
+            // MoveToJointPosition(jointController.homePositions);
         // Presets
         else
             if (flipPresetAngles)
@@ -186,12 +187,15 @@ public class ArmControlManager : MonoBehaviour
                         multiplier = 1;
                     angles[i] = multiplier * presets[presetIndex-1].jointAngles[i];
                 }
-                MoveToJointPosition(angles);
+                return false;
+                // MoveToJointPosition(angles);
             }
             else
-                MoveToJointPosition(presets[presetIndex-1].jointAngles);
+                return false;
+                // MoveToJointPosition(presets[presetIndex-1].jointAngles);
         return true;
     }
+    /*
     private void MoveToJointPosition(float[] jointAngles)
     {
         if (currentCoroutine != null)
@@ -202,9 +206,10 @@ public class ArmControlManager : MonoBehaviour
     {
         mode = Mode.Target;
         yield return new WaitUntil(() => 
-            jointController.MoveToJointPositionStep(jointPosition) == true);
+            jointController.MoveToJointPositionsStep(jointPosition) == true);
         mode = Mode.Control;
     }
+    */
 
 
     // Automatic grasping

@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-///     A simple arm angle array that is 
-///     visualizable in the editor
+///     A simple arm angle array that is visualizable in the editor
 /// </summary>                               
 [System.Serializable]
 public class JointAngles
