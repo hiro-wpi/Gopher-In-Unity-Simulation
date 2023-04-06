@@ -19,7 +19,7 @@ public class GopherControl : MonoBehaviour
     // Available control modes
     public enum Mode { Base, LeftArm, RightArm, Chest }
     // current control mode
-    [field: SerializeField] 
+    [field: SerializeField]
     public bool CameraControlEnabled { get; set; } = false;
     [field: SerializeField]
     public Mode ControlMode { get; private set; } = Mode.Base;

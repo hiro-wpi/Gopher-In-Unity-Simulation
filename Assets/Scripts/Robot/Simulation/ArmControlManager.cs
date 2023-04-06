@@ -63,7 +63,7 @@ public class ArmControlManager : MonoBehaviour
     void Start()
     {
         // Home joints at the beginning
-        jointController.HomeJoints();
+        jointController.SetJointTargets(presets[0].Angles, true);
         gripperController.OpenGripper();
 
         // Init manual control and automation params

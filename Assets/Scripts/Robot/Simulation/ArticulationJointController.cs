@@ -16,8 +16,6 @@ public class ArticulationJointController : MonoBehaviour
     // Articulation Bodies Presets
     // When joint position is set to be IGNORE_VAL, don't change it
     public static float IGNORE_VAL = -100f;
-    // Homing position
-    [SerializeField] private float[] homePositions = {-1f, -Mathf.PI/2, -Mathf.PI/2, 2.2f, 0.0f, -1.2f, Mathf.PI};
     
     // Articulation Bodies
     [SerializeField] private ArticulationBody[] articulationChain;
@@ -41,12 +39,6 @@ public class ArticulationJointController : MonoBehaviour
         {
             collider.enabled = active;
         }
-    }
-
-    // Home joints
-    public void HomeJoints(bool disableColliders = false)
-    {
-        SetJointTargets(homePositions, disableColliders);
     }
 
     // Set joint target
