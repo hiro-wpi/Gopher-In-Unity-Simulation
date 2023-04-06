@@ -12,7 +12,7 @@ using UnityEngine;
 ///     
 ///     The current velocity is published to ROS at a fixed rate.
 /// </summary>
-public class PhysicalWheelController : WheelController
+public class PhysicalBaseController : BaseController
 {
     // ROS communication
     [SerializeField] private TwistPublisher twistPublisher;
@@ -30,7 +30,7 @@ public class PhysicalWheelController : WheelController
         InvokeRepeating("PublishVelocity", 1.0f, publishDeltaTime);
     }
 
-    void Update() { }
+    void Update() {}
 
     // Publish the current velocity
     private void PublishVelocity()

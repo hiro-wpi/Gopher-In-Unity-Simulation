@@ -3,69 +3,55 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-///     This script controls the chest joints
+///     An abstract class to handle Unity input for chest control.
+///     For speed control, chest control takes speed fraction as input,
+///     which is defined as the ratio of the maximum avaliable speed.
+///
+///     The input (speedFraction or position) would be handled differently
+///     for simulation robot or physical robot
 /// </summary>
 public abstract class ChestController : MonoBehaviour
 {
-    // public ArticulationBody chestJoint;
-    
-    // limits of the stand, located at each soft limit
-    // private float lowerLimit = 0.0f; // meters
-    // private float upperLimit = 0.44f; // meters
+    // Control parameters
+    [SerializeField] protected float speedFractionmultiplier = 1.0f;
+    [SerializeField] protected float lowerLimit = 0.0f;
+    [SerializeField] protected float upperLimit = 0.44f;
 
-    private float multiplier = 1.0f; // mulitpler for the vel
-    
-    // public TwistPublisher twistPublisher;
+    // Arm control mode
+    public enum ControlMode { Speed, Position }
+    protected ControlMode controlMode = ControlMode.Speed;
 
-    // private float velocityLimit = 0.1f;  // the absolute max speed going up or down
-    // private float accelerationLimit = 0.3f;
+    // Variable to hold speed fraction
+    [SerializeField, ReadOnly] protected float speedFraction = 0.0f;
+    [SerializeField, ReadOnly] protected float position = 0.0f;
 
-    // public float targetPosition;
-
-    // private float homePosition = 0.44f;
-
-    // public float targetSpeed;
-
-    public float[] preset = {0.0f, 0.22f, 0.44f};
-
-    public float velFraction = 0.0f;
-    
+    // Preset positions: low, home, high
+    [SerializeField] protected float[] preset = {0.0f, 0.22f, 0.44f};
 
     void Start() {}
 
-    void FixedUpdate() {}
+    void Update() {}
 
-    //asbtract
-    public void VelocityControl(float velFraction_)
+    public virtual void SetSpeedFraction(float fraction)
     {
-        Debug.Log("Reached");
-        
-        velFraction =  Mathf.Clamp(velFraction_*multiplier, -1.0f, 1.0f);
-
-        Debug.Log(velFraction);
+        speedFraction = Mathf.Clamp(
+            fraction * speedFractionmultiplier, -1.0f, 1.0f
+        );
     }
 
+    public virtual void SetPosition(float pos)
+    {
+        position = Mathf.Clamp(pos, lowerLimit, upperLimit);
+    }
 
-    // public abstract void absolutePositionControl(float position, float velFraction_)
-    // {
-    //     SetChestJoint(position, Mathf.Abs(velFraction_)*velocityLimit);
-    // }
+    public virtual void SetControlMode(ControlMode mode)
+    {
+        controlMode = mode;
+    }
 
-    // public void relativePositionControl(float relativePosition, float velFraction_)
-    // {
-    //     float pos = GetChestJoint();
-    //     SetChestJoint(relativePosition + pos, Mathf.Abs(velFraction_)*velocityLimit);
-    // }
+    public virtual void StopChest() {}
 
-    // public void MoveToPreset(int presetIndex)
-    // {
-    //     SetChestJoint(preset[presetIndex-1], velocityLimit);
-    // }
+    public virtual void HomeChest() {}
 
-    public abstract void HomeChest();
-
-    public abstract void StopChest();
-
-    public abstract void MoveToPreset(int presetIndex);
-
+    public virtual void MoveToPreset(int presetIndex) {}
 }

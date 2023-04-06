@@ -74,7 +74,7 @@ public class PaintingTask : Task
         // Painter
         paintShooting = taskObjects[0].GetComponentInChildren<PaintShooting>();
         // attach to end effector (default right)
-        GameObject rightEndEffector = robot.GetComponentsInChildren<Grasping>()[1].endEffector.gameObject;
+        GameObject rightEndEffector = robot.GetComponentsInChildren<Grasping>()[1].GetEndEffector();
         taskObjects[0].transform.parent = rightEndEffector.transform;
         taskObjects[0].transform.localPosition = Vector3.zero;
         taskObjects[0].transform.localRotation = Quaternion.identity;

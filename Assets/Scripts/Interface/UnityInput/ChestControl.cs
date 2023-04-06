@@ -15,12 +15,7 @@ public class ChestControl : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         movementDirection = context.ReadValue<float>();
-        // Debug.Log(movementDirection);
-        // chestController.translate( movementDirection );
-
-        chestController.VelocityControl(movementDirection);
-        // chestController.testPositionControl(movementDirection);
-
+        chestController.SetSpeedFraction(movementDirection);
     }   
 
     public void OnHome(InputAction.CallbackContext context)

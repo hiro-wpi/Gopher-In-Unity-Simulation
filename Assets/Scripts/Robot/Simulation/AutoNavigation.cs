@@ -15,7 +15,7 @@ public class AutoNavigation : MonoBehaviour
 
     // Robot
     public GameObject robot;
-    public ArticulationWheelController wheelController;
+    public ArticulationBaseController baseController;
     public ArmControlManager leftArmControlManager;
     public ArmControlManager rightArmControlManager;
     // nav mesh agent
@@ -147,7 +147,7 @@ public class AutoNavigation : MonoBehaviour
             // Fianl goal is reached
             if (waypointIndex == waypoints.Length)
             {
-                wheelController.SetVelocity(Vector3.zero, Vector3.zero);
+                baseController.SetVelocity(Vector3.zero, Vector3.zero);
                 DisableAutonomy();
             }
         }
@@ -171,7 +171,7 @@ public class AutoNavigation : MonoBehaviour
             angularSpeed = Mathf.Clamp(angularSpeed, -agent.angularSpeed, agent.angularSpeed);
             // set angular velocity
             Vector3 angularVelocity = new Vector3(0f, angularSpeed * Mathf.Deg2Rad, 0f);
-            wheelController.SetVelocity(Vector3.zero, angularVelocity);
+            baseController.SetVelocity(Vector3.zero, angularVelocity);
         }
         // Then handle by local planner
         else
@@ -182,7 +182,7 @@ public class AutoNavigation : MonoBehaviour
             linearSpeed = Mathf.Clamp(linearSpeed, -agent.speed, agent.speed);
             // set linear speed
             Vector3 linearVelocity = new Vector3(0f, 0f, linearSpeed);
-            wheelController.SetVelocity(linearVelocity, Vector3.zero);
+            baseController.SetVelocity(linearVelocity, Vector3.zero);
         }
     }
     
@@ -291,7 +291,7 @@ public class AutoNavigation : MonoBehaviour
         // Invalid Trajectory -> stop sign
         if (path.corners.Length == 0)
         {
-            wheelController.SetVelocity(Vector3.zero, Vector3.zero);
+            baseController.SetVelocity(Vector3.zero, Vector3.zero);
             return;
         }
         // Valid -> Set up waypoints and goal

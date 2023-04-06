@@ -31,7 +31,9 @@ public class ArticulationJointController : MonoBehaviour
         colliders = colliders.Where(collider => collider.enabled == true).ToArray();
     }
 
-    void Start() { }
+    void Start() {}
+
+    void Update() {}
 
     private void SetCollidersActive(bool active)
     {

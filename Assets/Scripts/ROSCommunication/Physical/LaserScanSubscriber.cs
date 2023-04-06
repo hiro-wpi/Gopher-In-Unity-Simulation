@@ -36,7 +36,7 @@ public class LaserScanSubscriber : MonoBehaviour
         ros.Subscribe<LaserScanMsg>(laserScanTopicName, ReceiveLaserScan);
     }
 
-    void Update() { }
+    void Update() {}
 
     private void ReceiveLaserScan(LaserScanMsg laserScan)
     {   

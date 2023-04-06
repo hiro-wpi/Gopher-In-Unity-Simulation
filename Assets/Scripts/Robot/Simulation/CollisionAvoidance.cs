@@ -5,7 +5,7 @@ using UnityEngine;
 public class CollisionAvoidance : MonoBehaviour
 {
     public float updateRate;
-    public ArticulationWheelController wheelController;
+    public ArticulationBaseController baseController;
     public Laser laser;
     public float detectionAngleMin = -0.1589f;
     public float detectionAngleMax =  0.1589f;
@@ -44,7 +44,7 @@ public class CollisionAvoidance : MonoBehaviour
         if (minDistance < stopDistance)
             minDistance = 0f;
         // only linear speed limit
-        wheelController.AddSpeedLimit(new float[] 
+        baseController.AddSpeedLimit(new float[] 
                                       {minDistance * slowMultiplier, 100f,
                                        100f, 100f},
                                       wheelSpeedLimitID);

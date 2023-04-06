@@ -38,14 +38,14 @@ public class CollisionReader : MonoBehaviour
         {
             GameObject parent = articulationBody.gameObject;
             ArticulationCollisionDetection collisionDetection =
-                                           parent.AddComponent<ArticulationCollisionDetection>();
-            collisionDetection.setParent(robotRoot);
+                parent.AddComponent<ArticulationCollisionDetection>();
+            collisionDetection.SetParent(robotRoot);
         }
         foreach (GameObject extraObject in extraObjects)
         {
             ArticulationCollisionDetection collisionDetection = 
-                                           extraObject.AddComponent<ArticulationCollisionDetection>();
-            collisionDetection.setParent(robotRoot);
+                extraObject.AddComponent<ArticulationCollisionDetection>();
+            collisionDetection.SetParent(robotRoot);
         }
 
         // To store collision information
@@ -54,9 +54,7 @@ public class CollisionReader : MonoBehaviour
         collisionRelativeSpeed = new float[storageLength];
     }
 
-    void Update()
-    {
-    }
+    void Update() {}
 
     public void OnCollision(string self, string other, float relativeSpeed)
     {

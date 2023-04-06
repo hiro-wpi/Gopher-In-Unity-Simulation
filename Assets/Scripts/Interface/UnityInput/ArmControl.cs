@@ -16,7 +16,7 @@ public class ArmControl : MonoBehaviour
     private Vector3 angularVelocity = Vector3.zero;
     private float gripperPosition = 0f;
 
-    void Start() { }
+    void Start() {}
     
     // TODO //
     // PRESET

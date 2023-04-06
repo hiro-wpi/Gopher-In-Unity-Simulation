@@ -17,7 +17,7 @@ public class ArmControlBackup : MonoBehaviour
     // For TARGET - Automatic grasping
     public float automationSpeed = 0.05f;
 
-    void Start() { }
+    void Start() {}
     
     
     // PRESET

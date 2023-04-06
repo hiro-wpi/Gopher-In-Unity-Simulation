@@ -9,7 +9,7 @@ using UnityEngine;
 public class BaseControl : MonoBehaviour
 {
     // Local controller and autonomy
-    [SerializeField] private WheelController wheelController;
+    [SerializeField] private BaseController baseController;
     [SerializeField] private AutoNavigation autoNavigation;
 
     // Container for the speed vector
@@ -24,7 +24,7 @@ public class BaseControl : MonoBehaviour
         linearVelocity = new Vector3(0f, 0f, driveDir.z);
         angularVelocity = new Vector3(0f, -driveDir.x, 0f);
         // Set velocity
-        wheelController.SetVelocity(linearVelocity, angularVelocity);
+        baseController.SetVelocity(linearVelocity, angularVelocity);
     }
 
     // Stop base
@@ -32,7 +32,7 @@ public class BaseControl : MonoBehaviour
     {
         linearVelocity = Vector3.zero;
         angularVelocity = Vector3.zero;
-        wheelController.SetVelocity(linearVelocity, angularVelocity);
+        baseController.SetVelocity(linearVelocity, angularVelocity);
     }
 
     // Change mode
@@ -40,7 +40,7 @@ public class BaseControl : MonoBehaviour
     {
         if (context.performed)
         {
-            wheelController.SwitchMode();
+            baseController.SwitchMode();
         }
     }
 

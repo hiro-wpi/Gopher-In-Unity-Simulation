@@ -16,7 +16,6 @@ public class ChestStopService : MonoBehaviour
     // Message
     private HomingRequest stopCommand;
 
-    // Start is called before the first frame update
     void Start()
     {
         // Get ROS connection static instance
@@ -26,13 +25,11 @@ public class ChestStopService : MonoBehaviour
         );
     }
 
-    void Update() { }
+    void Update() {}
 
     // Request service to home the chest
     public void SendChestStopService()
     {
-        Debug.Log("Stopping ...");
-
         StopRequest stopRequest = new StopRequest(true);
         // Request service
         ros.SendServiceMessage<StopResponse>(
@@ -43,6 +40,6 @@ public class ChestStopService : MonoBehaviour
     // Callback function for service response
     private void StopCommandCallback(StopResponse response)
     {
-        Debug.Log("Chest command response: " + response.state);
+        // Debug.Log("Chest command response: " + response.state);
     }
 }

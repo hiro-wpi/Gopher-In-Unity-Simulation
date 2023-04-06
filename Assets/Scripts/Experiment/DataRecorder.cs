@@ -231,7 +231,7 @@ public class DataRecorder : MonoBehaviour
         robotValueToRecord[38] = ToFLUEuler(stateReader.jointPositions[9]);
         robotValueToRecord[39] = ToFLUEuler(stateReader.jointPositions[10]);
         robotValueToRecord[40] = stateReader.jointPositions[11]; // gripper
-        robotValueToRecord[41] = graspings[0].isGrasping? 1f : 0f;
+        robotValueToRecord[41] = graspings[0].IsGrasping? 1f : 0f;
         // left end effector
         Vector3 leftPosition = Utils.ToFLU(stateReader.objectPositions[0]);
         Vector3 leftRotation = Mathf.Deg2Rad * 
@@ -253,7 +253,7 @@ public class DataRecorder : MonoBehaviour
         robotValueToRecord[53] = ToFLUEuler(stateReader.jointPositions[18]);
         robotValueToRecord[54] = ToFLUEuler(stateReader.jointPositions[19]);
         robotValueToRecord[55] = stateReader.jointPositions[20]; // gripper
-        robotValueToRecord[56] = graspings[1].isGrasping? 1f : 0f;
+        robotValueToRecord[56] = graspings[1].IsGrasping? 1f : 0f;
         // right end effector
         Vector3 rightPosition = Utils.ToFLU(stateReader.objectPositions[1]);
         Vector3 rightRotation = Mathf.Deg2Rad * 

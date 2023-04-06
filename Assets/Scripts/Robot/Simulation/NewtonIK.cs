@@ -12,7 +12,7 @@ public class NewtonIK : MonoBehaviour
     public ArticulationBody root;
     public ArticulationBody endEffector;
     public Transform localToWorldTransform;
-    public KinematicSolver kinematicSolver;
+    public ForwardKinematics forwardKinematics;
     public float dampedSquaresLambda = 0.01f;
 
     void Start() {}
@@ -58,7 +58,7 @@ public class NewtonIK : MonoBehaviour
         };
 
         // Switch case for different IK types
-        jacobian = kinematicSolver.GetJacobian();
+        jacobian = forwardKinematics.GetJacobian();
         ArticulationJacobian invJ = new ArticulationJacobian(1, 1);
         switch (inverseMethod)
         {
@@ -99,8 +99,8 @@ public class NewtonIK : MonoBehaviour
         for (int e = 0; e < EPOCHS; e++)
         {
             // calculate error between our current end effector position and the target position
-            kinematicSolver.SolveFK(newJointAngles);
-            (endEffectorPosition, endEffectorRotation) = kinematicSolver.GetPose(kinematicSolver.numJoint);
+            forwardKinematics.SolveFK(newJointAngles);
+            (endEffectorPosition, endEffectorRotation) = forwardKinematics.GetPose(forwardKinematics.NumJoint);
 
             Vector3 positionError = endEffectorPosition - targetPosition;
             Quaternion rotationError = endEffectorRotation * Quaternion.Inverse(targetRotation);
@@ -139,10 +139,10 @@ public class NewtonIK : MonoBehaviour
                 return (false, jointAngles);
         
         // Result Convergence check
-        kinematicSolver.UpdateAngles(newJointAngles);
-        kinematicSolver.UpdateAllTs();
-        kinematicSolver.UpdateAllPose();
-        (endEffectorPosition, endEffectorRotation) = kinematicSolver.GetPose(kinematicSolver.numJoint);
+        forwardKinematics.UpdateAngles(newJointAngles);
+        forwardKinematics.UpdateAllTs();
+        forwardKinematics.UpdateAllPose();
+        (endEffectorPosition, endEffectorRotation) = forwardKinematics.GetPose(forwardKinematics.NumJoint);
         bool converged = (endEffectorPosition - targetPosition).magnitude < 0.1f;
 
         // Return the new joint angles
@@ -155,7 +155,7 @@ public class NewtonIK : MonoBehaviour
         float[] newJointAngles = jointAngles.Clone() as float[];
 
         // calculate error between our current end effector position and the target position
-        kinematicSolver.SolveFK(newJointAngles);
+        forwardKinematics.SolveFK(newJointAngles);
 
         // Orientation is stored in the jacobian as a scaled rotation axis
         // Where the axis of rotation is the vector, and the angle is the length of the vector (in radians)

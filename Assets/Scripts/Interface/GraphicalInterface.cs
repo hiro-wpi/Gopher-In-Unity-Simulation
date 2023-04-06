@@ -491,9 +491,9 @@ public class GraphicalInterface : MonoBehaviour
         Grasping[] graspings = robot.GetComponentsInChildren<Grasping>();
         leftEndEffectorRef = new GameObject("gopher/left_arm_ik_reference");
         rightEndEffectorRef = new GameObject("gopher/right_arm_ik_reference");
-        leftEndEffectorRef.transform.parent = graspings[0].endEffector.transform;
+        leftEndEffectorRef.transform.parent = graspings[0].GetEndEffector().transform;
         leftEndEffectorRef.transform.localPosition = Vector3.zero;
-        rightEndEffectorRef.transform.parent = graspings[1].endEffector.transform;
+        rightEndEffectorRef.transform.parent = graspings[1].GetEndEffector().transform;
         rightEndEffectorRef.transform.localPosition = Vector3.zero;
         // TODO 2 The proper reference is different from the tool frame...
         leftEndEffectorRef.transform.localRotation = Quaternion.Euler(new Vector3(0f, -90f, 180f));

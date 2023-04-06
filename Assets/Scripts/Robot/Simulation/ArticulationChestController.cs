@@ -7,160 +7,83 @@ using UnityEngine;
 /// </summary>
 public class ArticulationChestController : ChestController
 {
-    public ArticulationBody chestJoint;
-    
-    // limits of the stand, located at each soft limit
-    private float lowerLimit = 0.0f; // meters
-    private float upperLimit = 0.44f; // meters
-    // public TwistPublisher twistPublisher;
-
-    private float velocityLimit = 0.1f;  // the absolute max speed going up or down
-    // private float accelerationLimit = 0.3f;
-
-    public float targetPosition;
-
-    private float homePosition = 0.44f;
-
-    public float targetSpeed;
-
-    // private float[] preset = {0.0f, 0.22f, 0.44f};
-
-    // public float velFraction = 0.0f;
-
-    //sim
-    void Start()
+    // Emergency Stop
+    [SerializeField] private bool emergencyStop = false;
+    public virtual void EmergencyStop(bool stop = true)
     {
-        targetPosition = lowerLimit;
-        targetSpeed = velocityLimit;
-        
-        // HomeChestJoint();
+        emergencyStop = stop;
     }
 
-    //sim
+    // Chest joint
+    [SerializeField] private ArticulationBody chestJoint;
+    [SerializeField] private float maximumSpeed = 0.1f;
+    private float speed = 0.0f;
+
+    void Start() {}
+
     void FixedUpdate()
     {
-                                    
-        // Vector3 vel = new Vector3(0, velFraction, 0);
-        // twistPublisher.PublishTwist(vel, new Vector3(0,0,0));
-        SetJointTargetStep(chestJoint, targetPosition, targetSpeed);
-    }
-
-    // public void testPositionControl(float input)
-    // {
-    //     // if(input == 0.0f) StopChest();
-    //     if(input < 0.0f) absolutePositionControl(homePosition, 0.5f);
-    //     else if(input > 0.0f) relativePositionControl(-0.1f, 1.0f);
-    // }
-
-    //asbtract
-    public void velocityControl(float velFraction_)
-    {
-        velFraction = velFraction_;
-        
-        if(velFraction_ == 0.0f)
+        // Emergency stop
+        if (emergencyStop)
         {
             StopChest();
-        }
-        else if(velFraction_ < 0.0f) //negative
-        {
-            SetChestJoint(lowerLimit, Mathf.Abs(velFraction_)*velocityLimit);
-        }
-        else if(velFraction_ > 0.0f)
-        {
-            SetChestJoint(upperLimit, Mathf.Abs(velFraction_)*velocityLimit);
-        }
-    }
-
-
-    public void absolutePositionControl(float position, float velFraction_)
-    {
-        SetChestJoint(position, Mathf.Abs(velFraction_)*velocityLimit);
-    }
-
-    public void relativePositionControl(float relativePosition, float velFraction_)
-    {
-        float pos = GetChestJoint();
-        SetChestJoint(relativePosition + pos, Mathf.Abs(velFraction_)*velocityLimit);
-    }
-
-    public override void MoveToPreset(int presetIndex)
-    {
-        SetChestJoint(preset[presetIndex-1], velocityLimit);
-    }
-
-    public override void StopChest()
-    {
-        SetChestJoint(GetChestJoint());
-    }
-
-    // sim
-    public void SetChestJoint(float position, float speed = 0.0f)
-    {
-        // Clamp
-        targetPosition = Mathf.Clamp(position, lowerLimit, upperLimit);
-        targetSpeed = Mathf.Clamp(speed, 0.0f, velocityLimit);
-    }
-
-    // sim
-    public float GetChestJoint()
-    {
-        return chestJoint.xDrive.target;
-    }
-
-    // sim
-    // Home joint
-    public override void HomeChest()
-    {
-        Debug.Log("Homing in Progress");
-        StartCoroutine(HomeChestJointCoroutine());
-    }
-    private IEnumerator HomeChestJointCoroutine()
-    {
-        yield return new WaitUntil(() => HomeChestAndCheck() == true);
-    }
-    private bool HomeChestAndCheck()
-    {
-        // SetCameraJoints(yawOffset, pitchOffset, velocityLimit);
-        SetChestJoint(homePosition, velocityLimit);
-
-        bool homed = Mathf.Abs(chestJoint.xDrive.target - homePosition) < 0.001;
-        
-        if(homed)
-        {
-            Debug.Log("Finished homing Chest");
-            SetChestJoint(homePosition, 0.0f);
-        }
-
-        return homed;
-    }
-
-    // sim
-    // Utils
-    private void SetJointTargetStep(ArticulationBody joint, float target, float speed)
-    {
-        if (float.IsNaN(target))
             return;
-        
-        // Get drive
-        ArticulationDrive drive = joint.xDrive;
-        float currentTarget = drive.target;
-
-        // Speed limit
-        float deltaPosition = speed * Time.fixedDeltaTime;
-        if (Mathf.Abs(currentTarget - target) > deltaPosition)
-            target = currentTarget + deltaPosition * Mathf.Sign(target-currentTarget);
-
-        // Joint limit
-        if (joint.twistLock == ArticulationDofLock.LimitedMotion)
-        {
-            if (target > drive.upperLimit)
-                target = drive.upperLimit;
-            else if (target < drive.lowerLimit)
-                target = drive.lowerLimit;
         }
 
-        // Set target
-        drive.target = target;
-        joint.xDrive = drive;
+        // Speed control
+        if (controlMode == ControlMode.Speed)
+        {
+            speed = speedFraction * maximumSpeed;
+            ArticulationBodyUtils.SetJointSpeedStep(chestJoint, speed);
+        }
+        // Position control
+        else
+        {
+            ArticulationBodyUtils.SetJointTargetStep(chestJoint, position, maximumSpeed);
+        }
+    }
+
+    public override void StopChest() 
+    {
+        ArticulationBodyUtils.StopJoint(chestJoint);
+    }
+
+    public override void HomeChest() 
+    {
+        // Home is half the range
+        SetJointPosition(upperLimit / 2.0f);
+    }
+
+    public override void MoveToPreset(int presetIndex) 
+    {
+        SetJointPosition(preset[presetIndex]);
+    }
+
+    // Set joint position with coroutine
+    private void SetJointPosition(float position) 
+    {
+        StartCoroutine(SetJointPositionCoroutine(position));
+    }
+
+    private IEnumerator SetJointPositionCoroutine(float position)
+    {
+        controlMode = ControlMode.Position;
+        SetPosition(position);
+        
+        yield return new WaitUntil(() => CheckPositionReached(position) == true);
+        controlMode = ControlMode.Speed;
+    }
+
+    private bool CheckPositionReached(float position)
+    {
+        // Check if current joint target is set to the position
+        if (Mathf.Abs(chestJoint.xDrive.target - position) > 0.00001)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 }

@@ -5,25 +5,25 @@ using UnityEngine;
 /// <summary>
 ///     This script detects ArticulationBody collision with
 ///     ohter RididBody/ArticulationBody/collider. The result
-///     is sent to the sensor "collisionReader".
+///     is sent to the sensor "CollisionReader".
 /// </summary>
 public class ArticulationCollisionDetection : MonoBehaviour
 {
     // Robot
-    public GameObject parent;
+    private GameObject parent;
     // For reading collision names
     private CollisionReader collisionReader;
     private string selfName;
     private string otherName;
     // For checking object in touch with the collider
-    public GameObject collidingObject;
+    public GameObject CollidingObject { get; private set; }
     
     void Start()
     {
         selfName = gameObject.name;
     }
 
-    public void setParent(GameObject p)
+    public void SetParent(GameObject p)
     {
         parent = p;
         collisionReader = p.GetComponentInChildren<CollisionReader>();
@@ -33,24 +33,29 @@ public class ArticulationCollisionDetection : MonoBehaviour
     {
         // Ignore self-collision
         GameObject parentObject = other.gameObject.transform.root.gameObject;
-        if(parent == parentObject)
+        if (parent == parentObject)
+        {
             return;
+        }
         
         // Get name
-        collidingObject = GetCollisionGameObject(other);
-        otherName = collidingObject.name;
+        CollidingObject = GetCollisionGameObject(other);
+        otherName = CollidingObject.name;
 
         // On collision
         if (collisionReader != null)
-            collisionReader.OnCollision(selfName, otherName, 
-                                        other.relativeVelocity.magnitude);
+        {
+            collisionReader.OnCollision(
+                selfName, otherName, other.relativeVelocity.magnitude
+            );
+        }
     }
 
     void OnCollisionExit(Collision other)
     {
-        if (collidingObject == GetCollisionGameObject(other))
+        if (CollidingObject == GetCollisionGameObject(other))
         {
-            collidingObject = null;
+            CollidingObject = null;
         }
     }
 
@@ -60,12 +65,20 @@ public class ArticulationCollisionDetection : MonoBehaviour
         // Find parent rigid body or articulation body
         Rigidbody otherRb = other.collider.attachedRigidbody;
         ArticulationBody otherAB = other.collider.attachedArticulationBody;
+
+        // Find the collision game object
         if (otherRb != null)
+        {
             otherGameObject = otherRb.gameObject;
+        }
         else if (otherAB != null)
+        {
             otherGameObject = otherAB.gameObject;
+        }
         else
+        {
             otherGameObject = other.collider.gameObject;
+        }
         
         return otherGameObject;
     }

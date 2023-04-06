@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 ///     An abstract class to handle Unity input for wheel control
 ///
-///     Two control modes are available: Slow, and Regular,
+///     Two speed modes are available: Slow, and Regular,
 ///     which correspond to 0.5, 1 of the max velocity.
 ///     Clipping and Smoothing are also applied to the input.
 ///
@@ -13,7 +13,7 @@ using UnityEngine;
 ///     would be handled differently for 
 ///     simulation robot or physical robot
 /// </summary>
-public abstract class WheelController : MonoBehaviour
+public abstract class BaseController : MonoBehaviour
 {
     // Control parameters
     [SerializeField] protected float linearSpeedMultiplier = 1.0f;
@@ -26,7 +26,7 @@ public abstract class WheelController : MonoBehaviour
 
     // Control mode (different velocities multiplier)
     public enum Mode { Slow = 0, Regular = 1 }
-    [field: SerializeField] public Mode ControlMode { get; set; } = Mode.Regular;
+    [field: SerializeField] public Mode SpeedMode { get; set; } = Mode.Regular;
     [SerializeField] protected float[] modeMultiplier = { 0.5f, 1.0f };
 
     // Variable to hold velocity
@@ -48,19 +48,19 @@ public abstract class WheelController : MonoBehaviour
         InvokeRepeating("UpdateVelocities", 1.0f, deltaTime);
     }
 
-    void Update() { }
+    void Update() {}
 
     // Set robot velocity
     public virtual void SetVelocity(Vector3 linear, Vector3 angular)
     {
         // Clipping and setting target velocity
         targetLinearVelocity = Utils.ClampVector3(
-            linear * linearSpeedMultiplier * modeMultiplier[(int)ControlMode],
+            linear * linearSpeedMultiplier * modeMultiplier[(int)SpeedMode],
             -maxLinearSpeed * backwardMultiplier,
             maxLinearSpeed 
         );
         targetAngularVelocity = Utils.ClampVector3(
-            angular * angularSpeedMultiplier * modeMultiplier[(int)ControlMode],
+            angular * angularSpeedMultiplier * modeMultiplier[(int)SpeedMode],
             -maxAngularSpeed ,
             maxAngularSpeed
         );
@@ -69,14 +69,14 @@ public abstract class WheelController : MonoBehaviour
     // Set robot control mode
     public void SetMode(Mode mode)
     {
-        ControlMode = mode;
+        SpeedMode = mode;
     }
 
     // Switch to the next robot control mode
     public void SwitchMode()
     {
         int numMode = System.Enum.GetNames(typeof(Mode)).Length;
-        ControlMode = (Mode)(((int)ControlMode + 1) % numMode);
+        SpeedMode = (Mode)(((int)SpeedMode + 1) % numMode);
     }
 
     // Update both the linear and angular velocity

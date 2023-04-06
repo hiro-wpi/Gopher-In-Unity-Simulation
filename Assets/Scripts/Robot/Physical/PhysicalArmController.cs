@@ -7,7 +7,7 @@ using UnityEngine;
 ///     to ROS as Twist message. The gripper command 
 ///     is set by sending a request to ROS.
 ///     
-///     Two control modes are available: Slow, and Regular,
+///     Two speed modes are available: Slow, and Regular,
 ///     which correspond to 0.5, 1 of the max velocity.
 ///     Clipping is also applied to the input.
 ///     Smoothing is handled by low level joint controller
@@ -39,7 +39,7 @@ public class PhysicalArmController : ArmController
         InvokeRepeating("PublishVelocity", 1.0f, 1.0f / publishRate);
     }
 
-    void Update() { }
+    void Update() {}
 
     // Publish the current velocity
     private void PublishVelocity()
@@ -66,5 +66,8 @@ public class PhysicalArmController : ArmController
     }
 
     // Send command to move to pre-defined positions
-    public override void MoveToPreset(int presetIndex) { }
+    public override bool MoveToPreset(int presetIndex) 
+    { 
+        return false;
+    }
 }

@@ -12,39 +12,75 @@ public class ArticulationGripperController : MonoBehaviour
     // Assume two-finger prismatic joints
     [SerializeField] private ArticulationBody leftFinger;
     [SerializeField] private ArticulationBody rightFinger;
+    private bool gripperClosed = false;
 
     // Grasping
     [SerializeField] private Grasping grasping;
     private ArticulationCollisionDetection leftCollision;
     private ArticulationCollisionDetection rightCollision;
-    private bool gripperClosed = false;
-
-    // grasping affects wheel velocity (if wheel attached)
-    [SerializeField] private ArticulationWheelController wheelController;
+    // grasping affects wheel velocity (if wheel controller attached)
+    [SerializeField] private ArticulationBaseController baseController;
     [SerializeField] private string wheelSpeedLimitID = "grasping limit";
 
     void Start() 
     { 
-        // Init gripper setting
-        leftCollision = leftFinger.gameObject.GetComponentInChildren<ArticulationCollisionDetection>();
-        rightCollision = rightFinger.gameObject.GetComponentInChildren<ArticulationCollisionDetection>();
+        // Init grasping collision detection
+        leftCollision = leftFinger.gameObject.
+            GetComponentInChildren<ArticulationCollisionDetection>();
+        rightCollision = rightFinger.gameObject.
+            GetComponentInChildren<ArticulationCollisionDetection>();
     }
 
     void FixedUpdate()
     {
-        // Grasping detection
+        // Graspable object detection
         CheckGrasping();
     }
 
     // Gripper position control
+    public void SetGripper(float position)
+    {
+        // Ignore the actual value
+        if (position > 0.5)
+        {
+            CloseGripper();
+        }
+        else
+        {
+            OpenGripper();
+        }
+    }
+
     public void CloseGripper()
     {
-        SetGripper(1.0f);
+        // Close gripper
+        SetGripperTarget(1.0f);
+        gripperClosed = true;
     }
 
     public void OpenGripper()
     {
-        SetGripper(0.0f);
+        // Open gripper
+        SetGripperTarget(0.0f);
+        gripperClosed = false;
+
+        // Release grasping object
+        grasping.Detach();
+        // Resume speed if wheel controller attached
+        if (baseController != null)
+            baseController.RemoveSpeedLimit(wheelSpeedLimitID);
+    }
+
+    public void ChangeGripperStatus()
+    {
+        if (gripperClosed)
+        {
+            OpenGripper();
+        }
+        else
+        {
+            CloseGripper();
+        }
     }
 
     public void StopGripper()
@@ -53,7 +89,7 @@ public class ArticulationGripperController : MonoBehaviour
         ArticulationBodyUtils.StopJoint(rightFinger);
     }
 
-    public void SetGripper(float value)
+    private void SetGripperTarget(float value)
     {
         // Get absolute position values
         float leftValue = Mathf.Lerp(
@@ -72,55 +108,34 @@ public class ArticulationGripperController : MonoBehaviour
     private void CheckGrasping()
     {
         // Graspable object detection
-        if ((gripperClosed) && (!grasping.isGrasping))
-        {
-            // If both fingers are touching the same graspable object
-            if ((leftCollision.collidingObject != null) && 
-                (rightCollision.collidingObject != null) &&
-                (leftCollision.collidingObject == rightCollision.collidingObject) &&           
-                (leftCollision.collidingObject.tag == "GraspableObject") )
+        if (!gripperClosed || grasping.IsGrasping)
+            return;
 
-                grasping.Attach(leftCollision.collidingObject);
-                // slow down wheel based on the object mass
-                if (wheelController != null)
-                {
-                    float speedLimitPercentage = 
-                        0.1f * (10f - grasping.GetGraspedObjectMass());
-                    speedLimitPercentage = Mathf.Clamp(speedLimitPercentage, 0f, 1f);
-                    wheelSpeedLimitID = wheelController.AddSpeedLimit(
-                        new float[] 
-                            {
-                                1.0f * speedLimitPercentage, 
-                                1.0f * speedLimitPercentage,
-                                1.0f * speedLimitPercentage, 
-                                1.0f * speedLimitPercentage
-                            },
-                            wheelSpeedLimitID
-                    );
-                }
+        // If both fingers in touch with the same graspable object
+        if ((leftCollision.CollidingObject != null) && 
+            (rightCollision.CollidingObject != null) &&
+            (leftCollision.CollidingObject == rightCollision.CollidingObject) &&           
+            (leftCollision.CollidingObject.tag == "GraspableObject"))
+        {
+            // Attach object to the tool frame
+            grasping.Attach(leftCollision.CollidingObject);
+            
+            // Slow down wheel based on the object mass
+            if (baseController != null)
+            {
+                float speedLimit = 1f - 0.1f * grasping.GetGraspedObjectMass();
+                speedLimit = Mathf.Clamp(speedLimit, 0.1f, 1f);
+                baseController.AddSpeedLimit(
+                    new float[] { speedLimit, speedLimit, speedLimit, speedLimit }, 
+                    wheelSpeedLimitID
+                );
+            }
         }
     }
 
-    // Gripper functions
-    public void ChangeGripperStatus()
+    // Get grasping status
+    public float GetGraspedObjectMass()
     {
-        if (gripperClosed)
-            OpenGripper2();
-        else
-            CloseGripper2();
-    }
-    public void CloseGripper2()
-    {
-        CloseGripper();
-        gripperClosed = true;
-    }
-    public void OpenGripper2()
-    {
-        OpenGripper();
-        gripperClosed = false;
-        grasping.Detach();
-        // resume speed
-        if (wheelController != null)
-            wheelController.RemoveSpeedLimit(wheelSpeedLimitID);
+        return grasping.GetGraspedObjectMass();
     }
 }

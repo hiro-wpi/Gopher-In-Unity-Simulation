@@ -16,7 +16,6 @@ public class ChestHomeService : MonoBehaviour
     // Message
     private HomingRequest homeCommand;
 
-    // Start is called before the first frame update
     void Start()
     {
         // Get ROS connection static instance
@@ -26,13 +25,11 @@ public class ChestHomeService : MonoBehaviour
         );
     }
 
-    void Update() { }
+    void Update() {}
 
     // Request service to home the chest
     public void SendChestHomeService()
     {
-        Debug.Log("Homing Requested...");
-
         // homeCommand.command = true;
         HomingRequest homingRequest = new HomingRequest(true);
         // Request service
@@ -44,6 +41,6 @@ public class ChestHomeService : MonoBehaviour
     // Callback function for service response
     private void HomeCommandCallback(HomingResponse response)
     {
-        Debug.Log("Home command response: " + response.state);
+        // Debug.Log("Home command response: " + response.state);
     }
 }

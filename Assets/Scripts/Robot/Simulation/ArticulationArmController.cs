@@ -5,9 +5,13 @@ using UnityEngine;
 /// <summary>
 ///     This script sends commands to robot joints and gripper.
 ///     
-///     Two control modes are available: Slow, and Regular,
+///     Two speed modes are available: Slow, and Regular,
 ///     which correspond to 0.5, 1 of the max velocity.
 ///     Clipping is also applied to the input.
+///
+///     Two control modes are used to control the arm
+///     Control: directly control the end effector using IK
+///     Target: send joints to a target positions
 /// </summary>
 public class ArticulationArmController : ArmController
 {
@@ -24,10 +28,8 @@ public class ArticulationArmController : ArmController
     [SerializeField] private NewtonIK newtonIK;
 
     // Arm control mode
-    // Control: directly control the end effector
-    // Target: send joints to target positions
-    private enum Mode { Control, Target }
-    private Mode mode;
+    private enum ControlMode { Control, Target }
+    private ControlMode controlMode = ControlMode.Control;
 
     // Manual IK input - velocity control
     private float[] jointAngles;
@@ -64,13 +66,9 @@ public class ArticulationArmController : ArmController
     void Start() 
     { 
         // Home joints at the beginning
-        jointController.SetJointTargets(homePositions, ture);
+        jointController.SetJointTargets(homePositions.Angles, true);
         gripperController.OpenGripper();
-
-        // Init as Control mode and automation params
-        mode = Mode.Control;
-
-  }
+    }
 
     void FixedUpdate()
     {
@@ -78,66 +76,110 @@ public class ArticulationArmController : ArmController
         if (emergencyStop)
         {
             jointController.StopJoints();
+            gripperController.StopGripper();
             return;
         }
 
-        // If in manual mode
-        if (mode == Mode.Control)
+        // If in manual controlMode
+        if (controlMode == ControlMode.Control)
         {
             UpdateManualControl();
         }
+    }
 
-        // jointController.SetEndEffectorVelocity(linearVelocity, angularVelocity);
-        gripperController.SetGripper(gripperPosition);
+    // When gripper speed is set
+    public override void SetGripperPosition(float position)
+    {
+        base.SetGripperPosition(position);
+        gripperController.SetGripper(position);
     }
 
     private void UpdateManualControl()
     {
         // End effector position control
-        if (deltaPosition != Vector3.zero || deltaRotation != Vector3.zero)
+        if (linearVelocity != Vector3.zero || angularVelocity != Vector3.zero)
         {
-            Quaternion deltaRotationQuaternion = Quaternion.Euler(deltaRotation);
             jointAngles = jointController.GetCurrentJointTargets();
-            jointAngles = newtonIK.SolveVelocityIK(jointAngles, deltaPosition, deltaRotationQuaternion);
+            jointAngles = newtonIK.SolveVelocityIK(
+                jointAngles, linearVelocity, Quaternion.Euler(angularVelocity)
+            );
             jointController.SetJointTargets(jointAngles);
         }
         // Fixing joints when not controlling
+        /*
         else
         {
             jointAngles = jointController.GetCurrentJointTargets();
             jointController.SetJointTargets(jointAngles);
         }
+        */
     }
 
     // Move to Preset
-    public bool MoveToPreset(int presetIndex)
+    public override bool MoveToPreset(int presetIndex)
     {
-        // Do not allow auto moving when grasping heavy object
-        if (grasping.isGrasping && grasping.GetGraspedObjectMass() > 1)
+        // Do not allow moving joints to preset when grasping heavy object
+        if (gripperController.GetGraspedObjectMass() > 1.0f)
+        {
             return false;
-
-        // Home Position
+        }
+        
+        // Get preset angles
+        float[] angles;
         if (presetIndex == 0)
-            return false;
-            // MoveToJointPosition(jointController.homePositions);
-        // Presets
+        {
+            angles = homePositions.Angles;
+        }
         else
-            if (flipPresetAngles)
+        {
+            angles = presets[presetIndex-1].Angles;
+        }
+        // flip angles if needed (left vs right)
+        if (flipPresetAngles)
+        {
+            // Joint 1 is not flipped, but 180 degree offset
+            angles[0] = angles[0] + Mathf.PI;
+            // Other joints are flipped to negative
+            for (int i = 1; i < angles.Length; ++i)
             {
-                float[] angles = new float[presets[presetIndex-1].jointAngles.Length];
-                for (int i = 0; i < angles.Length; ++i)
+                if (angles[i] == IGNORE_VAL)
                 {
-                    int multiplier = -1;
-                    if (presets[presetIndex-1].jointAngles[i] == IGNORE_VAL)
-                        multiplier = 1;
-                    angles[i] = multiplier * presets[presetIndex-1].jointAngles[i];
+                    continue;
                 }
-                return false;
-                // MoveToJointPosition(angles);
+                angles[i] = -1 * angles[i];
             }
-            else
+        }
+        
+        // Move to presets
+        if (currentCoroutine != null)
+        {
+            StopCoroutine(currentCoroutine);
+        }
+        currentCoroutine = StartCoroutine(MoveToPresetCoroutine(angles));  
+
+        return true;
+    }
+
+    private IEnumerator MoveToPresetCoroutine(float[] angles)
+    {
+        controlMode = ControlMode.Target;
+        jointController.SetJointTargets(angles, false);
+
+        yield return new WaitUntil(() => CheckPositionReached(angles) == true);
+        controlMode = ControlMode.Control;
+    }
+
+    private bool CheckPositionReached(float[] angles)
+    {
+        float[] currTargets = jointController.GetCurrentJointTargets();
+        for (int i = 0; i < angles.Length; ++i)
+        {
+            if ((angles[i] != IGNORE_VAL) && 
+                (Mathf.Abs(currTargets[i] - angles[i]) > 0.00001))
+            {
                 return false;
-                // MoveToJointPosition(presets[presetIndex-1].jointAngles);
+            }
+        }
         return true;
     }
 }

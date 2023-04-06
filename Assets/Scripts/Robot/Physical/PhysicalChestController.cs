@@ -14,42 +14,42 @@ public class PhysicalChestController : ChestController
     [SerializeField] private TwistPublisher twistPublisher;
     [SerializeField] private ChestHomeService homeService;
     [SerializeField] private ChestStopService stopService;
-    // [SerializeField] private ServiceCaller serviceCaller;
 
-    // Velocity update rate
-    [SerializeField] protected int updateRate = 60;
-    protected float deltaTime;
+    // Velocity publish rate
+    [SerializeField] protected int publishRate = 60;
     
     void Start()
     {
         // Keep publishing the velocity at a fixed rate
-        deltaTime = 1.0f / updateRate;
-        InvokeRepeating("PublishVelocity", 1.0f, deltaTime);
+        InvokeRepeating("PublishVelocity", 1.0f, 1.0f / publishRate);
     }
 
-    void Update() { }
+    void Update() {}
 
     // Publish the current velocity
     private void PublishVelocity()
     {
+        if (controlMode != ControlMode.Speed) 
+        {
+            return;
+        }
         // Publish to ROS
-        Vector3 vel = new Vector3(0, velFraction, 0);
-        twistPublisher.PublishTwist(vel, new Vector3(0,0,0));
-    }
-
-    public override void HomeChest()
-    {
-        homeService.SendChestHomeService();
-    }
-
-    public override void MoveToPreset(int presetIndex)
-    {
-        Debug.Log("Attempted to go to preset");
+        Vector3 velocity = new Vector3(0, speedFraction, 0);
+        twistPublisher.PublishTwist(velocity, new Vector3(0,0,0));
     }
 
     public override void StopChest()
     {
         // stopService.SendChestStopService();
-        twistPublisher.PublishTwist(new Vector3(0,0,0), new Vector3(0,0,0));
+        twistPublisher.PublishTwist(Vector3.zero, Vector3.zero);
     }
+
+    public override void HomeChest()
+    {
+        controlMode = ControlMode.Position;
+        homeService.SendChestHomeService();
+        controlMode = ControlMode.Speed;
+    }
+
+    public override void MoveToPreset(int presetIndex) {}
 }

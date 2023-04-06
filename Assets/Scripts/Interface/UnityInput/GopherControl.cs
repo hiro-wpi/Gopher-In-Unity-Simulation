@@ -24,7 +24,7 @@ public class GopherControl : MonoBehaviour
     [field: SerializeField]
     public Mode ControlMode { get; private set; } = Mode.Base;
     
-    void Start() { }
+    void Start() {}
 
     // CONTROL MODE
     public void OnLeftArm(InputAction.CallbackContext context)

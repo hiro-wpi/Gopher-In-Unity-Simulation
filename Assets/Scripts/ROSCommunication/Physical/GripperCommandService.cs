@@ -16,7 +16,6 @@ public class GripperCommandService : MonoBehaviour
     // Message
     private SendGripperCommandRequest sendGripperCommand;
 
-    // Start is called before the first frame update
     void Start()
     {
         // Get ROS connection static instance
@@ -33,14 +32,14 @@ public class GripperCommandService : MonoBehaviour
                 mode = 3,  // 1: force, 2: velocity, 3: position
                 gripper = new GripperMsg
                 {
-                    finger = new FingerMsg[] { }
+                    finger = new FingerMsg[] {}
                 },
                 duration = 0
             }
         };
     }
 
-    void Update() { }
+    void Update() {}
 
     // Request service to set gripper position
     public void SendGripperCommandService(float position)

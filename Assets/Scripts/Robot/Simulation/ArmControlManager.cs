@@ -41,7 +41,7 @@ public class ArmControlManager : MonoBehaviour
     private ArticulationCollisionDetection rightCollision;
     private bool gripperClosed = false;
     // grasping affects wheel velocity (if wheel attached)
-    public ArticulationWheelController wheelController;
+    public ArticulationBaseController baseController;
     public string wheelSpeedLimitID = "grasping limit";
 
     // ENUM for mode CONTROL or TARGET
@@ -71,10 +71,10 @@ public class ArmControlManager : MonoBehaviour
         mode = Mode.Control;
 
         // Init gripper setting
-        ArticulationBody[] fingers = gripperController.GetGripperJoints();
+        // ArticulationBody[] fingers = gripperController.GetGripperJoints();
 
-        leftCollision = fingers[0].gameObject.GetComponentInChildren<ArticulationCollisionDetection>();
-        rightCollision = fingers[1].gameObject.GetComponentInChildren<ArticulationCollisionDetection>();
+        // leftCollision = fingers[0].gameObject.GetComponentInChildren<ArticulationCollisionDetection>();
+        // rightCollision = fingers[1].gameObject.GetComponentInChildren<ArticulationCollisionDetection>();
     }
 
 
@@ -110,22 +110,23 @@ public class ArmControlManager : MonoBehaviour
     private void CheckGrasping()
     {
         // Graspable object detection
-        if ((gripperClosed) && (!grasping.isGrasping))
+        /*
+        if ((gripperClosed) && (!grasping.IsGrasping))
         {
             // If both fingers are touching the same graspable object
-            if ((leftCollision.collidingObject != null) && 
-                (rightCollision.collidingObject != null) &&
-                (leftCollision.collidingObject == rightCollision.collidingObject) &&           
-                (leftCollision.collidingObject.tag == "GraspableObject") )
+            if ((leftCollision.CollidingObject != null) && 
+                (rightCollision.CollidingObject != null) &&
+                (leftCollision.CollidingObject == rightCollision.CollidingObject) &&           
+                (leftCollision.CollidingObject.tag == "GraspableObject") )
 
-                grasping.Attach(leftCollision.collidingObject);
+                grasping.Attach(leftCollision.CollidingObject);
                 // slow down wheel based on the object mass
-                if (wheelController != null)
+                if (baseController != null)
                 {
                     float speedLimitPercentage = 
                         0.1f * (10f - grasping.GetGraspedObjectMass());
                     speedLimitPercentage = Mathf.Clamp(speedLimitPercentage, 0f, 1f);
-                    wheelSpeedLimitID = wheelController.AddSpeedLimit(
+                    wheelSpeedLimitID = baseController.AddSpeedLimit(
                         new float[] 
                             {
                                 1.0f * speedLimitPercentage, 
@@ -137,6 +138,7 @@ public class ArmControlManager : MonoBehaviour
                     );
                 }
         }
+        */
     }
 
 
@@ -159,8 +161,8 @@ public class ArmControlManager : MonoBehaviour
         gripperClosed = false;
         grasping.Detach();
         // resume speed
-        if (wheelController != null)
-            wheelController.RemoveSpeedLimit(wheelSpeedLimitID);
+        if (baseController != null)
+            baseController.RemoveSpeedLimit(wheelSpeedLimitID);
     }
 
 
@@ -168,7 +170,7 @@ public class ArmControlManager : MonoBehaviour
     public bool MoveToPreset(int presetIndex)
     {
         // Do not allow auto moving when grasping heavy object
-        if (grasping.isGrasping && grasping.GetGraspedObjectMass() > 1)
+        if (grasping.IsGrasping && grasping.GetGraspedObjectMass() > 1)
             return false;
 
         // Home Position
@@ -179,21 +181,21 @@ public class ArmControlManager : MonoBehaviour
         else
             if (flipPresetAngles)
             {
-                float[] angles = new float[presets[presetIndex-1].jointAngles.Length];
+                float[] angles = new float[presets[presetIndex-1].Angles.Length];
                 for (int i = 0; i < angles.Length; ++i)
                 {
                     int multiplier = -1;
-                    if (presets[presetIndex-1].jointAngles[i] == IGNORE_VAL)
+                    if (presets[presetIndex-1].Angles[i] == IGNORE_VAL)
                         multiplier = 1;
-                    angles[i] = multiplier * presets[presetIndex-1].jointAngles[i];
+                    angles[i] = multiplier * presets[presetIndex-1].Angles[i];
                 }
                 return false;
                 // MoveToJointPosition(angles);
             }
             else
                 return false;
-                // MoveToJointPosition(presets[presetIndex-1].jointAngles);
-        return true;
+                // MoveToJointPosition(presets[presetIndex-1].Angles);
+        // return true;
     }
     /*
     private void MoveToJointPosition(float[] jointAngles)
@@ -250,8 +252,8 @@ public class ArmControlManager : MonoBehaviour
 
         // Get target
         (targetHoverPoint, targetGrabPoint) = 
-            target.GetHoverAndGrapPoint(grasping.endEffector.transform.position,
-                                        grasping.endEffector.transform.rotation);
+            target.GetHoverAndGrapPoint(grasping.GetEndEffector().transform.position,
+                                        grasping.GetEndEffector().transform.rotation);
 
         // 1, Move to hover point
         targetPosition = targetHoverPoint.position;
@@ -268,7 +270,7 @@ public class ArmControlManager : MonoBehaviour
         }
 
         // Lerp between points
-        completionTime = (grasping.endEffector.transform.position - 
+        completionTime = (grasping.GetEndEffector().transform.position - 
                           targetPosition).magnitude / automationSpeed;
         yield return LerpJoints(jointAngles, targetJointAngles, completionTime);
 
@@ -286,7 +288,7 @@ public class ArmControlManager : MonoBehaviour
             yield break;
         }
 
-        completionTime = (grasping.endEffector.transform.position - 
+        completionTime = (grasping.GetEndEffector().transform.position - 
                           targetPosition).magnitude / automationSpeed;
         yield return LerpJoints(jointAngles, targetJointAngles, completionTime);
 
@@ -314,7 +316,7 @@ public class ArmControlManager : MonoBehaviour
             }
 
             // Lerp between points
-            completionTime = (grasping.endEffector.transform.position - 
+            completionTime = (grasping.GetEndEffector().transform.position - 
                               target.transform.position).magnitude / automationSpeed;
             yield return LerpJoints(jointAngles, targetJointAngles, completionTime);
         }
