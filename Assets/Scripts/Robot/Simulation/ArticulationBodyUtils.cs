@@ -73,29 +73,32 @@ public static class ArticulationBodyUtils
     }
 
     // Stop joint movement
-    public static void StopJoint(
-        ArticulationBody joint, bool isPrismatic = false)
+    public static void StopJoint(ArticulationBody joint)
     {
         // Get current position
         float currPosition;
-        // If joint is still moving, use the current position
-        if (joint.jointVelocity[0] > 0.001f)
+
+        // Revolute joint
+        if (joint.jointType == ArticulationJointType.RevoluteJoint)
         {
-            currPosition = joint.jointPosition[0];
+            currPosition = joint.jointPosition[0] * Mathf.Rad2Deg;
         }
-        // Else, use the target position
-        // to avoid movement caused by static error
+
+        // Prismatic joint has static error problem
         else
         {
-            currPosition = joint.xDrive.target;
+            // If joint is still moving, use the current position
+            if (joint.jointVelocity[0] > 0.01f)
+            {
+                currPosition = joint.jointPosition[0];
+            }
+            // If not, use the target position
+            else
+            {
+                currPosition = joint.xDrive.target;
+            }
         }
-        currPosition = joint.jointPosition[0];
 
-        if (!isPrismatic)
-        {
-            currPosition *= Mathf.Rad2Deg;
-        }
-        // Set target
-        SetJointTarget(joint, currPosition);
+        ArticulationBodyUtils.SetJointTarget(joint, currPosition);
     }
 }

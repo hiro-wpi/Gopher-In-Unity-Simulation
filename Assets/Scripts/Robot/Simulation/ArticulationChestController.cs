@@ -33,8 +33,6 @@ public class ArticulationChestController : ChestController
             return;
         }
 
-        Debug.Log(chestJoint.jointVelocity[0]);
-
         // Speed control
         if (controlMode == ControlMode.Speed)
         {
@@ -50,7 +48,7 @@ public class ArticulationChestController : ChestController
 
     public override void StopChest() 
     {
-        ArticulationBodyUtils.StopJoint(chestJoint, true);
+        ArticulationBodyUtils.StopJoint(chestJoint);
     }
 
     public override void HomeChest() 
