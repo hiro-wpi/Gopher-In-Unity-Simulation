@@ -16,6 +16,8 @@ public class BaseControl : MonoBehaviour
     private Vector3 linearVelocity = Vector3.zero;
     private Vector3 angularVelocity = Vector3.zero;
 
+    void Start() {}
+
     // Handle control input
     public void OnDrive(InputAction.CallbackContext context)
     {

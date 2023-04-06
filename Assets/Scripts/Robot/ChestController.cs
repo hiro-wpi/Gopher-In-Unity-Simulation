@@ -13,7 +13,7 @@ using UnityEngine;
 public abstract class ChestController : MonoBehaviour
 {
     // Control parameters
-    [SerializeField] protected float speedFractionmultiplier = 1.0f;
+    [SerializeField] protected float speedFractionMultiplier = 1.0f;
     [SerializeField] protected float lowerLimit = 0.0f;
     [SerializeField] protected float upperLimit = 0.44f;
 
@@ -35,7 +35,7 @@ public abstract class ChestController : MonoBehaviour
     public virtual void SetSpeedFraction(float fraction)
     {
         speedFraction = Mathf.Clamp(
-            fraction * speedFractionmultiplier, -1.0f, 1.0f
+            fraction * speedFractionMultiplier, -1.0f, 1.0f
         );
     }
 

@@ -66,7 +66,7 @@ public class ArticulationArmController : ArmController
     void Start() 
     { 
         // Home joints at the beginning
-        jointController.SetJointTargets(homePositions.Angles, true);
+        HomeJoints();
         gripperController.OpenGripper();
     }
 
@@ -116,6 +116,16 @@ public class ArticulationArmController : ArmController
     }
 
     // Move to Preset
+    private void HomeJoints()
+    {
+        float[] angles = homePositions.Angles;
+        if (flipPresetAngles)
+        {
+            angles = FlipAngles(angles);
+        }
+        currentCoroutine = StartCoroutine(MoveToPresetCoroutine(homePositions.Angles, true));
+    }
+
     public override bool MoveToPreset(int presetIndex)
     {
         // Do not allow moving joints to preset when grasping heavy object
@@ -137,17 +147,7 @@ public class ArticulationArmController : ArmController
         // flip angles if needed (left vs right)
         if (flipPresetAngles)
         {
-            // Joint 1 is not flipped, but 180 degree offset
-            angles[0] = angles[0] + Mathf.PI;
-            // Other joints are flipped to negative
-            for (int i = 1; i < angles.Length; ++i)
-            {
-                if (angles[i] == IGNORE_VAL)
-                {
-                    continue;
-                }
-                angles[i] = -1 * angles[i];
-            }
+            angles = FlipAngles(angles);
         }
         
         // Move to presets
@@ -155,15 +155,31 @@ public class ArticulationArmController : ArmController
         {
             StopCoroutine(currentCoroutine);
         }
-        currentCoroutine = StartCoroutine(MoveToPresetCoroutine(angles));  
+        currentCoroutine = StartCoroutine(MoveToPresetCoroutine(angles, false));
 
         return true;
     }
 
-    private IEnumerator MoveToPresetCoroutine(float[] angles)
+    private float[] FlipAngles(float[] angles)
+    {
+        // Joint 1 is not flipped, but 180 degree offset
+        angles[0] = angles[0] + Mathf.PI;
+        // Other joints are flipped to negative
+        for (int i = 1; i < angles.Length; ++i)
+        {
+            if (angles[i] == IGNORE_VAL)
+            {
+                continue;
+            }
+            angles[i] = -1 * angles[i];
+        }
+        return angles;
+    }
+
+    private IEnumerator MoveToPresetCoroutine(float[] angles, bool disableColliders)
     {
         controlMode = ControlMode.Target;
-        jointController.SetJointTargets(angles, false);
+        jointController.SetJointTargets(angles, disableColliders);
 
         yield return new WaitUntil(() => CheckPositionReached(angles) == true);
         controlMode = ControlMode.Control;

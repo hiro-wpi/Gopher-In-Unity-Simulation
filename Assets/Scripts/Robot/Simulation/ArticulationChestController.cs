@@ -19,7 +19,10 @@ public class ArticulationChestController : ChestController
     [SerializeField] private float maximumSpeed = 0.1f;
     private float speed = 0.0f;
 
-    void Start() {}
+    void Start() 
+    {
+        HomeChest();
+    }
 
     void FixedUpdate()
     {
@@ -29,6 +32,8 @@ public class ArticulationChestController : ChestController
             StopChest();
             return;
         }
+
+        Debug.Log(chestJoint.jointVelocity[0]);
 
         // Speed control
         if (controlMode == ControlMode.Speed)
@@ -45,7 +50,7 @@ public class ArticulationChestController : ChestController
 
     public override void StopChest() 
     {
-        ArticulationBodyUtils.StopJoint(chestJoint);
+        ArticulationBodyUtils.StopJoint(chestJoint, true);
     }
 
     public override void HomeChest() 

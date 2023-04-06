@@ -13,9 +13,9 @@ public class ArticulationWheelController : MonoBehaviour
     // Robot wheels
     [SerializeField] private ArticulationBody leftWheel;
     [SerializeField] private ArticulationBody rightWheel;
-    // parameters
-    [SerializeField] private float wheelTrackLength;
-    [SerializeField] private float wheelRadius;
+    // parameters for Freight base
+    [SerializeField] private float wheelTrackLength = 0.37476f;
+    [SerializeField] private float wheelRadius = 0.0605f;
     // wheel speed
     private float leftWheelSpeed;
     private float rightWheelSpeed;

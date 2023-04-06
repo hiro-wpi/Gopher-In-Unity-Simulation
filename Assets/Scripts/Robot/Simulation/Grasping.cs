@@ -13,7 +13,7 @@ using UnityEngine.AI;
 /// </summary>
 public class Grasping : MonoBehaviour
 {
-    [field:SerializeField] 
+    [field:SerializeField, ReadOnly] 
     public bool IsGrasping { get; private set; } = false;
 
     // End effector toolframe

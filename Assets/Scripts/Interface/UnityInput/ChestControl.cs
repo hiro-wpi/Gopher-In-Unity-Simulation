@@ -6,16 +6,14 @@ using UnityEngine;
 public class ChestControl : MonoBehaviour
 {
     public ChestController chestController;
-    public float movementDirection = 0.0f;
-    // // public float controlDelta = 0.0f;
-    // public float jointSpeed = 0.1f;
+    private float driveDirection = 0.0f;
 
-    // private float chestPosition;
+    void Start() {}
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        movementDirection = context.ReadValue<float>();
-        chestController.SetSpeedFraction(movementDirection);
+        driveDirection = context.ReadValue<Vector3>().z;
+        chestController.SetSpeedFraction(driveDirection);
     }   
 
     public void OnHome(InputAction.CallbackContext context)

@@ -97,6 +97,10 @@ public class GopherControl : MonoBehaviour
         {
             OnArmTranslate(context);
         }
+        if (ControlMode == Mode.Chest)
+        {
+            OnChestTranslate(context);
+        }
     }
 
 

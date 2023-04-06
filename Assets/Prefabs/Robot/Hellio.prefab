@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &201451131
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 201451132}
+  m_Layer: 15
+  m_Name: SurroudingDetectionCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &201451132
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 201451131}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.357425, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 702946891287746475}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &196545804416986240
 GameObject:
   m_ObjectHideFlags: 0
@@ -6525,6 +6556,7 @@ Transform:
   - {fileID: 702946891148747084}
   - {fileID: 7939491164301547613}
   - {fileID: 533617251880141816}
+  - {fileID: 201451132}
   m_Father: {fileID: 702946891102146247}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -21211,8 +21243,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9519b0b61b6d7930dbb3780478affee0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chestController: {fileID: 0}
-  movementDirection: 0
+  chestController: {fileID: 8558703757947020726}
 --- !u!1 &1585896648407052832
 GameObject:
   m_ObjectHideFlags: 0
@@ -21730,7 +21761,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateRate: 10
-  wheelController: {fileID: 7628781304040955774}
+  baseController: {fileID: 7628781304040955774}
   laser: {fileID: 1426212532071955897}
   detectionAngleMin: -0.1589
   detectionAngleMax: 0.1589
@@ -21789,7 +21820,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   active: 0
   robot: {fileID: 702946891374405994}
-  wheelController: {fileID: 7628781304040955774}
+  baseController: {fileID: 0}
   leftArmControlManager: {fileID: 7628781303651052176}
   rightArmControlManager: {fileID: 7628781304563526182}
   agent: {fileID: 7311777528451885136}
@@ -21971,7 +22002,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2fa1e23e4ed60843bd167862a1b6b58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  armController: {fileID: 0}
+  armController: {fileID: 1271706237}
 --- !u!1 &3416078105203718535
 GameObject:
   m_ObjectHideFlags: 0
@@ -23377,8 +23408,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8300320178575503715}
   - component: {fileID: 9012710540990295136}
-  - component: {fileID: 4932992141389241802}
-  - component: {fileID: 494332772365583328}
   - component: {fileID: 6954345732392209542}
   m_Layer: 15
   m_Name: ROS Input
@@ -23415,49 +23444,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   twistTopicName: base_controller/cmd_vel
-  wheelController: {fileID: 7628781304040955774}
+  baseController: {fileID: 7628781304040955774}
   linearSpeed: 1
   angularSpeed: 1
---- !u!114 &4932992141389241802
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3519214686838685179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e379f67b1d9c07f47b9bc2eaae8faf22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  joint1ControllerTopicName: left_arm_j1_pos_cmd
-  joint2ControllerTopicName: left_arm_j2_pos_cmd
-  joint3ControllerTopicName: left_arm_j3_pos_cmd
-  joint4ControllerTopicName: left_arm_j4_pos_cmd
-  joint5ControllerTopicName: left_arm_j5_pos_cmd
-  joint6ControllerTopicName: left_arm_j6_pos_cmd
-  joint7ControllerTopicName: left_arm_j7_pos_cmd
-  jointController: {fileID: 7628781303651052181}
---- !u!114 &494332772365583328
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3519214686838685179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e379f67b1d9c07f47b9bc2eaae8faf22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  joint1ControllerTopicName: right_arm_j1_pos_cmd
-  joint2ControllerTopicName: right_arm_j2_pos_cmd
-  joint3ControllerTopicName: right_arm_j3_pos_cmd
-  joint4ControllerTopicName: right_arm_j4_pos_cmd
-  joint5ControllerTopicName: right_arm_j5_pos_cmd
-  joint6ControllerTopicName: right_arm_j6_pos_cmd
-  joint7ControllerTopicName: right_arm_j7_pos_cmd
-  jointController: {fileID: 7628781304563526203}
 --- !u!114 &6954345732392209542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23692,14 +23681,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7a91cf9478b1be4f9fef1c9e28527da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speedFractionmultiplier: 1
+  lowerLimit: 0
+  upperLimit: 0.44
+  speedFraction: 0
+  position: 0
   preset:
   - 0
   - 0.22
   - 0.44
-  velFraction: 0
-  chestJoint: {fileID: 0}
-  targetPosition: 0
-  targetSpeed: 0
+  emergencyStop: 0
+  chestJoint: {fileID: 3416078106938707778}
+  maximumSpeed: 0.1
 --- !u!1 &4611389803342963657
 GameObject:
   m_ObjectHideFlags: 0
@@ -24097,7 +24090,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ae99511f8b14bf42b41976201fba8ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wheelController: {fileID: 7628781304040955774}
+  baseController: {fileID: 7628781304040955774}
   autoNavigation: {fileID: 4525726828786052778}
 --- !u!1 &6725351474006865503
 GameObject:
@@ -24797,7 +24790,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8e1649054758d642873e253708177e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  centerObject: {fileID: 0}
+  centerObject: {fileID: 201451131}
   seperateHumanDetection: 1
   debugVisualization: 0
   updateRate: 10
@@ -24864,6 +24857,7 @@ GameObject:
   - component: {fileID: 7939491165433940369}
   - component: {fileID: 7939491165433940371}
   - component: {fileID: 7628781303651052176}
+  - component: {fileID: 12984549}
   m_Layer: 15
   m_Name: Left Arm
   m_TagString: Untagged
@@ -24899,14 +24893,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointMaxSpeed: 1
-  homePosition:
-  - 0
-  - 2.3561945
-  - 0
-  - 0
-  - 1.570796
-  - 1.570796
-  - 1.570796
   articulationChain:
   - {fileID: 702946891589219527}
   - {fileID: 702946892146586589}
@@ -24929,6 +24915,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftFinger: {fileID: 1116073474907812253}
   rightFinger: {fileID: 1116073475132506751}
+  grasping: {fileID: 4172144274368844524}
+  baseController: {fileID: 7628781304040955774}
+  wheelSpeedLimitID: left grasping limit
 --- !u!114 &4172144274368844524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24941,8 +24930,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40a33471c2edc20499951eb535adadab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <IsGrasping>k__BackingField: 0
   endEffector: {fileID: 702946891623396106}
-  isGrasping: 0
 --- !u!114 &7939491165433940369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24955,7 +24944,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce5f02afdd59ffd489b7676a03d2c82b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numJoint: 7
+  <NumJoint>k__BackingField: 7
   alpha:
   - 3.1415927
   - 1.5707963
@@ -25026,7 +25015,7 @@ MonoBehaviour:
   root: {fileID: 702946890844590663}
   endEffector: {fileID: 702946892449577993}
   localToWorldTransform: {fileID: 702946891374405993}
-  kinematicSolver: {fileID: 7939491165433940369}
+  forwardKinematics: {fileID: 7939491165433940369}
   dampedSquaresLambda: 0.01
   inverseMethod: 1
 --- !u!114 &7628781303651052176
@@ -25036,7 +25025,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7628781303651052179}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: abdecafb5bfcf7e4bbff64c519040f27, type: 3}
   m_Name: 
@@ -25046,7 +25035,7 @@ MonoBehaviour:
   newtonIK: {fileID: 7939491165433940371}
   flipPresetAngles: 0
   presets:
-  - jointAngles:
+  - <Angles>k__BackingField:
     - 0.7
     - -1.5707964
     - -1.5707964
@@ -25054,7 +25043,7 @@ MonoBehaviour:
     - 0
     - -1
     - 1.5707964
-  - jointAngles:
+  - <Angles>k__BackingField:
     - -100
     - -100
     - -100
@@ -25062,7 +25051,7 @@ MonoBehaviour:
     - -100
     - -100
     - 3.1415927
-  - jointAngles:
+  - <Angles>k__BackingField:
     - -100
     - -100
     - -100
@@ -25070,7 +25059,7 @@ MonoBehaviour:
     - -100
     - -100
     - 1.5707964
-  - jointAngles:
+  - <Angles>k__BackingField:
     - 0.91
     - -1.13
     - -0.85
@@ -25078,20 +25067,92 @@ MonoBehaviour:
     - 0.09
     - -0.85
     - 0.26
-  - jointAngles:
+  - <Angles>k__BackingField:
     - -2.1
     - -1.9
     - -1.8
     - 2
     - -0.4
     - -1
-    - 1.570796
+    - 1.5707964
   grasping: {fileID: 4172144274368844524}
-  wheelController: {fileID: 7628781304040955774}
+  baseController: {fileID: 0}
   wheelSpeedLimitID: left grasping limit
   deltaPosition: {x: 0, y: 0, z: 0}
   deltaRotation: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
+--- !u!114 &12984549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7628781303651052179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe8dfc2bab9c637468dee32f8313f127, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linearSpeedMultiplier: 0.25
+  angularSpeedMultiplier: 0.5
+  gripperPositionMultiplier: 1
+  maxLinearSpeed: 0.25
+  maxAngularSpeed: 0.5
+  <SpeedMode>k__BackingField: 1
+  modeMultiplier:
+  - 0.5
+  - 1
+  linearVelocity: {x: 0, y: 0, z: 0}
+  angularVelocity: {x: 0, y: 0, z: 0}
+  gripperPosition: 0
+  emergencyStop: 0
+  jointController: {fileID: 7628781303651052181}
+  gripperController: {fileID: 7939491165433940368}
+  newtonIK: {fileID: 7939491165433940371}
+  target: {fileID: 0}
+  flipPresetAngles: 0
+  homePositions:
+    <Angles>k__BackingField:
+    - 0
+    - 2.3561945
+    - 0
+    - 0
+    - 1.5707964
+    - 1.5707964
+    - 1.5707964
+  presets:
+  - <Angles>k__BackingField:
+    - 0.7
+    - -1.5707964
+    - -1.5707964
+    - -1.2
+    - 0
+    - -1
+    - 1.5707964
+  - <Angles>k__BackingField:
+    - -2.1
+    - -1.9
+    - -1.8
+    - 2
+    - -0.4
+    - -1
+    - 1.5707964
+  - <Angles>k__BackingField:
+    - -100
+    - -100
+    - -100
+    - -100
+    - -100
+    - -100
+    - 3.1415927
+  - <Angles>k__BackingField:
+    - -100
+    - -100
+    - -100
+    - -100
+    - -100
+    - -100
+    - 1.5707964
 --- !u!1 &7628781304040955771
 GameObject:
   m_ObjectHideFlags: 0
@@ -25103,6 +25164,7 @@ GameObject:
   - component: {fileID: 7628781304040955772}
   - component: {fileID: 7628781304040955775}
   - component: {fileID: 7628781304040955774}
+  - component: {fileID: 476914934}
   - component: {fileID: 1426212532071955897}
   m_Layer: 15
   m_Name: Base
@@ -25141,7 +25203,7 @@ MonoBehaviour:
   robotRoot: {fileID: 702946891374405994}
   stiffness: 10000
   damping: 100
-  forceLimit: 100
+  forceLimit: 1000
   assignToAllChildren: 1
   robotChainLength: 0
 --- !u!114 &7628781304040955774
@@ -25163,13 +25225,27 @@ MonoBehaviour:
   linearAcceleration: 2
   angularAcceleration: 3.1415927
   backwardMultiplier: 0.5
-  <ControlMode>k__BackingField: 1
+  <SpeedMode>k__BackingField: 1
   modeMultiplier:
   - 0.5
   - 1
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
   updateRate: 60
+  emergencyStop: 0
+  wheelController: {fileID: 476914934}
+--- !u!114 &476914934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7628781304040955771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bb9c5ba8e806e3499c8ce7fdfdef000, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   leftWheel: {fileID: 702946891251394549}
   rightWheel: {fileID: 702946891148747083}
   wheelTrackLength: 0.37476
@@ -25199,7 +25275,7 @@ MonoBehaviour:
   obstacleRanges: []
   humanRanges: []
   instantiateScanResult: 1
-  scanResultPrefab: {fileID: 662264924414211634, guid: 81a7a695a4ffad24ea2a12b5198474c3, type: 3}
+  scanResultPrefab: {fileID: 662264924414211634, guid: 1e5d8f76ecdfcda4c8c51c2fa0ff6019, type: 3}
 --- !u!1 &7628781304563526201
 GameObject:
   m_ObjectHideFlags: 0
@@ -25215,6 +25291,7 @@ GameObject:
   - component: {fileID: 7628781304563526183}
   - component: {fileID: 7628781304563526181}
   - component: {fileID: 7628781304563526182}
+  - component: {fileID: 1271706237}
   m_Layer: 15
   m_Name: Right Arm
   m_TagString: Untagged
@@ -25250,14 +25327,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointMaxSpeed: 1
-  homePosition:
-  - 3.1415927
-  - -2.356194
-  - 0
-  - 0
-  - -1.570796
-  - -1.570796
-  - -1.570796
   articulationChain:
   - {fileID: 702946892193461561}
   - {fileID: 702946891138603920}
@@ -25280,6 +25349,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftFinger: {fileID: 8361661553216703108}
   rightFinger: {fileID: 8361661553120952278}
+  grasping: {fileID: 7340697812366614354}
+  baseController: {fileID: 7628781304040955774}
+  wheelSpeedLimitID: right grasping limit
 --- !u!114 &7340697812366614354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25292,8 +25364,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40a33471c2edc20499951eb535adadab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <IsGrasping>k__BackingField: 0
   endEffector: {fileID: 702946892220198238}
-  isGrasping: 0
 --- !u!114 &7628781304563526183
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25306,7 +25378,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce5f02afdd59ffd489b7676a03d2c82b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numJoint: 7
+  <NumJoint>k__BackingField: 7
   alpha:
   - 3.1415927
   - 1.5707963
@@ -25377,7 +25449,7 @@ MonoBehaviour:
   root: {fileID: 702946891810817846}
   endEffector: {fileID: 702946892500872109}
   localToWorldTransform: {fileID: 702946891374405993}
-  kinematicSolver: {fileID: 7628781304563526183}
+  forwardKinematics: {fileID: 0}
   dampedSquaresLambda: 0.01
   inverseMethod: 1
 --- !u!114 &7628781304563526182
@@ -25387,7 +25459,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7628781304563526201}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: abdecafb5bfcf7e4bbff64c519040f27, type: 3}
   m_Name: 
@@ -25397,7 +25469,7 @@ MonoBehaviour:
   newtonIK: {fileID: 7628781304563526181}
   flipPresetAngles: 1
   presets:
-  - jointAngles:
+  - <Angles>k__BackingField:
     - 0.7
     - -1.5707964
     - -1.5707964
@@ -25405,7 +25477,7 @@ MonoBehaviour:
     - 0
     - -1
     - 1.5707964
-  - jointAngles:
+  - <Angles>k__BackingField:
     - -100
     - -100
     - -100
@@ -25413,7 +25485,7 @@ MonoBehaviour:
     - -100
     - -100
     - 3.1415927
-  - jointAngles:
+  - <Angles>k__BackingField:
     - -100
     - -100
     - -100
@@ -25421,7 +25493,7 @@ MonoBehaviour:
     - -100
     - -100
     - 1.5707964
-  - jointAngles:
+  - <Angles>k__BackingField:
     - 0.91
     - -1.13
     - -0.85
@@ -25429,20 +25501,92 @@ MonoBehaviour:
     - 0.09
     - -0.85
     - 0.26
-  - jointAngles:
+  - <Angles>k__BackingField:
     - -2.1
     - -1.9
     - -1.8
     - 2
     - -0.4
     - -1
-    - 1.570796
+    - 1.5707964
   grasping: {fileID: 7340697812366614354}
-  wheelController: {fileID: 7628781304040955774}
+  baseController: {fileID: 0}
   wheelSpeedLimitID: right grasping limit
   deltaPosition: {x: 0, y: 0, z: 0}
   deltaRotation: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
+--- !u!114 &1271706237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7628781304563526201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe8dfc2bab9c637468dee32f8313f127, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linearSpeedMultiplier: 0.25
+  angularSpeedMultiplier: 0.5
+  gripperPositionMultiplier: 1
+  maxLinearSpeed: 0.25
+  maxAngularSpeed: 0.5
+  <SpeedMode>k__BackingField: 1
+  modeMultiplier:
+  - 0.5
+  - 1
+  linearVelocity: {x: 0, y: 0, z: 0}
+  angularVelocity: {x: 0, y: 0, z: 0}
+  gripperPosition: 0
+  emergencyStop: 0
+  jointController: {fileID: 7628781304563526203}
+  gripperController: {fileID: 7628781304563526180}
+  newtonIK: {fileID: 7628781304563526181}
+  target: {fileID: 0}
+  flipPresetAngles: 1
+  homePositions:
+    <Angles>k__BackingField:
+    - 0
+    - 2.356194
+    - 0
+    - 0
+    - 1.570796
+    - 1.570796
+    - 1.570796
+  presets:
+  - <Angles>k__BackingField:
+    - 0.7
+    - -1.5707964
+    - -1.5707964
+    - -1.2
+    - 0
+    - -1
+    - 1.5707964
+  - <Angles>k__BackingField:
+    - -2.1
+    - -1.9
+    - -1.8
+    - 2
+    - -0.4
+    - -1
+    - 1.5707964
+  - <Angles>k__BackingField:
+    - -100
+    - -100
+    - -100
+    - -100
+    - -100
+    - -100
+    - 3.1415927
+  - <Angles>k__BackingField:
+    - -100
+    - -100
+    - -100
+    - -100
+    - -100
+    - -100
+    - 1.5707964
 --- !u!1 &7812940282173944773
 GameObject:
   m_ObjectHideFlags: 0
@@ -26725,7 +26869,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftArmControl: {fileID: 8447311433636287976}
   rightArmControl: {fileID: 6703508411491720707}
-  chestControl: {fileID: 0}
+  chestControl: {fileID: 8344181040400090631}
   baseControl: {fileID: 5115408564277940411}
   mainCameraControl: {fileID: 3631924278391485127}
   <CameraControlEnabled>k__BackingField: 0
@@ -26774,7 +26918,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2fa1e23e4ed60843bd167862a1b6b58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  armController: {fileID: 0}
+  armController: {fileID: 12984549}
 --- !u!1 &8307823823007966970
 GameObject:
   m_ObjectHideFlags: 0
@@ -26823,7 +26967,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7527544419884785351
 Transform:
   m_ObjectHideFlags: 0

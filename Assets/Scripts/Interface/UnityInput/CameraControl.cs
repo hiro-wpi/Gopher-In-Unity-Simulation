@@ -14,6 +14,8 @@ public class CameraControl : MonoBehaviour
     private float yawRotation;
     private float pitchRotation;
 
+    void Start() {}
+
     public void OnRotate(InputAction.CallbackContext context)
     {
         controlDelta = context.ReadValue<Vector2>();

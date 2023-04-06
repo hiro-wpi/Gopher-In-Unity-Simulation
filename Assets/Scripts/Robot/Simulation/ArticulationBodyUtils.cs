@@ -73,24 +73,29 @@ public static class ArticulationBodyUtils
     }
 
     // Stop joint movement
-    public static void StopJoint(ArticulationBody joint, float threshold = 1f)
+    public static void StopJoint(
+        ArticulationBody joint, bool isPrismatic = false)
     {
-        // Get current joint position
-        float currPosition = joint.jointPosition[0] * Mathf.Rad2Deg;
+        // Get current position
+        float currPosition;
+        // If joint is still moving, use the current position
+        if (joint.jointVelocity[0] > 0.001f)
+        {
+            currPosition = joint.jointPosition[0];
+        }
+        // Else, use the target position
+        // to avoid movement caused by static error
+        else
+        {
+            currPosition = joint.xDrive.target;
+        }
+        currPosition = joint.jointPosition[0];
+
+        if (!isPrismatic)
+        {
+            currPosition *= Mathf.Rad2Deg;
+        }
         // Set target
         SetJointTarget(joint, currPosition);
-        /*
-        // Get drive
-        ArticulationDrive drive = joint.xDrive;
-        // Set new target to current position to stop the joint
-        // only if the difference is greater than threshold
-        // This is to avoid the joint to oscillate around the target
-        if (Mathf.Abs(drive.target - currPosition) > threshold)
-        {
-            drive.target = currPosition;
-            joint.xDrive = drive;
-        }
-        */
     }
-
 }

@@ -75,6 +75,7 @@ public class ArticulationJointController : MonoBehaviour
     {
         // Set joint targets
         SetJointTargetsStep(positions);
+        // Debug.Log("Set");
 
         // Check if current joint targets are set to the target positions
         float[] currTargets = GetCurrentJointTargets();
