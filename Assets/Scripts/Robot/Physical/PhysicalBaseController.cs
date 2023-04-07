@@ -16,6 +16,7 @@ public class PhysicalBaseController : BaseController
 {
     // ROS communication
     [SerializeField] private TwistPublisher twistPublisher;
+    [SerializeField] private BreakerCommandService baseBreakerService;
 
     [SerializeField] private float publishRate = 60f;
     [SerializeField] private float publishDeltaTime;
@@ -37,5 +38,12 @@ public class PhysicalBaseController : BaseController
     {
         // Publish to ROS
         twistPublisher.PublishTwist(linearVelocity, angularVelocity);
+    }
+
+    // Reset Breakers
+    private void ResetBaseBreaker()
+    {
+        // Send Ros Service Request
+        baseBreakerService.resetBreaker();
     }
 }

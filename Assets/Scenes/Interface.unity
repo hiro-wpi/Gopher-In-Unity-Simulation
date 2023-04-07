@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17276844, g: 0.21589246, b: 0.2978263, a: 1}
+  m_IndirectSpecularColor: {r: 0.17276794, g: 0.21589175, b: 0.29782546, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2664,7 +2664,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3469d439b9a140441a202bec27fd01db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speedFractionMultiplier: 1
+  lowerLimit: 0
+  upperLimit: 0.44
+  speedFraction: 0
+  position: 0
+  preset:
+  - 0
+  - 0.22
+  - 0.44
   twistPublisher: {fileID: 1358313819}
+  homeService: {fileID: 1358313821}
+  stopService: {fileID: 1358313820}
+  publishRate: 60
 --- !u!1 &492348142
 GameObject:
   m_ObjectHideFlags: 0
@@ -3915,7 +3927,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ae99511f8b14bf42b41976201fba8ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wheelController: {fileID: 1596080454}
+  baseController: {fileID: 0}
   autoNavigation: {fileID: 0}
 --- !u!1 &718278252
 GameObject:
@@ -6179,6 +6191,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1195795318}
   - component: {fileID: 1195795319}
+  - component: {fileID: 1195795322}
   m_Layer: 15
   m_Name: Base
   m_TagString: Untagged
@@ -6214,6 +6227,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   twistTopicName: base_controller/command
+--- !u!114 &1195795322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1195795317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdfa4a32a0f6a29bf830e8e906d24dd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  breakerName: base_breaker
 --- !u!1 &1203058695
 GameObject:
   m_ObjectHideFlags: 0
@@ -7188,6 +7214,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1358313818}
   - component: {fileID: 1358313819}
+  - component: {fileID: 1358313821}
+  - component: {fileID: 1358313820}
   m_Layer: 15
   m_Name: Chest
   m_TagString: Untagged
@@ -7223,6 +7251,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   twistTopicName: cmd_vel
+--- !u!114 &1358313820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1358313817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c88fb23c6e26e115ba2d3f27a3c484e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chestStopServiceName: z_chest_stop
+--- !u!114 &1358313821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1358313817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6c1d82f89a75804d8de2cf58c95160a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chestHomeServiceName: z_chest_home
 --- !u!1 &1375389006
 GameObject:
   m_ObjectHideFlags: 0
@@ -8039,20 +8093,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c87ed6fd46e5a4478ca3f86a716ea08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linearSpeedMultiplier: 0.25
+  angularSpeedMultiplier: 0.5
+  gripperPositionMultiplier: 1
   maxLinearSpeed: 0.25
   maxAngularSpeed: 0.5
-  gripperSpeed: 0.5
-  <ControlMode>k__BackingField: 1
+  <SpeedMode>k__BackingField: 1
   modeMultiplier:
   - 0.5
   - 1
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  currentGripperSpeed: 0
-  updateRate: 60
+  gripperPosition: 0
   armRotationOffset: {x: 0, y: 90, z: 45}
   twistCommandPublisher: {fileID: 1244266977}
   gripperCommandService: {fileID: 1244266976}
+  publishRate: 60
 --- !u!1 &1580419413
 GameObject:
   m_ObjectHideFlags: 0
@@ -8173,12 +8229,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20eb779221b812a498f07e30da1d8760, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linearSpeedMultiplier: 1
+  angularSpeedMultiplier: 1.5707964
   maxLinearSpeed: 0.5
   maxAngularSpeed: 0.785398
   linearAcceleration: 0.5
   angularAcceleration: 0.785398
   backwardMultiplier: 0.5
-  <ControlMode>k__BackingField: 1
+  <SpeedMode>k__BackingField: 1
   modeMultiplier:
   - 0.5
   - 1
@@ -8186,6 +8244,9 @@ MonoBehaviour:
   angularVelocity: {x: 0, y: 0, z: 0}
   updateRate: 60
   twistPublisher: {fileID: 1195795319}
+  baseBreakerService: {fileID: 1195795322}
+  publishRate: 60
+  publishDeltaTime: 0
 --- !u!1 &1639997634
 GameObject:
   m_ObjectHideFlags: 0
@@ -8881,20 +8942,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c87ed6fd46e5a4478ca3f86a716ea08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linearSpeedMultiplier: 0.25
+  angularSpeedMultiplier: 0.5
+  gripperPositionMultiplier: 1
   maxLinearSpeed: 0.25
   maxAngularSpeed: 0.5
-  gripperSpeed: 0.5
-  <ControlMode>k__BackingField: 1
+  <SpeedMode>k__BackingField: 1
   modeMultiplier:
   - 0.5
   - 1
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  currentGripperSpeed: 0
-  updateRate: 60
+  gripperPosition: 0
   armRotationOffset: {x: 0, y: -90, z: 45}
   twistCommandPublisher: {fileID: 546512100}
   gripperCommandService: {fileID: 546512099}
+  publishRate: 60
 --- !u!1 &1700604886
 GameObject:
   m_ObjectHideFlags: 0
@@ -9434,7 +9497,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chestController: {fileID: 0}
-  movementDirection: 0
 --- !u!1 &1783509529
 GameObject:
   m_ObjectHideFlags: 0
