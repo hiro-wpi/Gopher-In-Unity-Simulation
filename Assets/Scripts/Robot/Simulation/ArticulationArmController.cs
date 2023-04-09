@@ -83,7 +83,7 @@ public class ArticulationArmController : ArmController
         // If in manual controlMode
         if (controlMode == ControlMode.Control)
         {
-            UpdateManualControl();
+            ProcessManualControl();
         }
     }
 
@@ -94,25 +94,22 @@ public class ArticulationArmController : ArmController
         gripperController.SetGripper(position);
     }
 
-    private void UpdateManualControl()
+    private void ProcessManualControl()
     {
         // End effector position control
         if (linearVelocity != Vector3.zero || angularVelocity != Vector3.zero)
         {
+            // Convert to position error and angular error in next timestep
+            Vector3 linearError = linearVelocity * Time.fixedDeltaTime;
+            Vector3 angularError = angularVelocity * Time.fixedDeltaTime;
+            // Solve IK
             jointAngles = jointController.GetCurrentJointTargets();
             jointAngles = newtonIK.SolveVelocityIK(
-                jointAngles, linearVelocity, Quaternion.Euler(angularVelocity)
+                jointAngles, linearError, Quaternion.Euler(angularError)
             );
+            // Set joint targets to IK solution
             jointController.SetJointTargets(jointAngles);
         }
-        // Fixing joints when not controlling
-        /*
-        else
-        {
-            jointAngles = jointController.GetCurrentJointTargets();
-            jointController.SetJointTargets(jointAngles);
-        }
-        */
     }
 
     // Move to Preset

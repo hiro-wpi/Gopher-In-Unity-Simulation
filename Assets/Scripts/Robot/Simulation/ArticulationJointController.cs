@@ -105,7 +105,7 @@ public class ArticulationJointController : MonoBehaviour
     private void SetJointTargetStep(ArticulationBody joint, float target)
     {
         ArticulationBodyUtils.SetJointTargetStep(
-            joint, target * Mathf.Rad2Deg, jointMaxSpeed
+            joint, target * Mathf.Rad2Deg, jointMaxSpeed * Mathf.Rad2Deg
         );
     }
 
