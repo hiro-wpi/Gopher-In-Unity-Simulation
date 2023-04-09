@@ -7,7 +7,7 @@ using Unity.Robotics.Core;
 
 /// <summary>
 ///     This script publishes simulation time
-/// TODO - Change to use InvokeRepeat()
+///     TODO - Change to use InvokeRepeat()
 /// </summary>
 public class ROSClockPublisher : MonoBehaviour
 {

@@ -23444,9 +23444,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   twistTopicName: base_controller/cmd_vel
-  baseController: {fileID: 7628781304040955774}
-  linearSpeed: 1
-  angularSpeed: 1
+  wheelController: {fileID: 0}
 --- !u!114 &6954345732392209542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24133,10 +24131,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 841636302224200969}
+  - component: {fileID: 2095591850720556844}
   - component: {fileID: 828704671767976744}
   - component: {fileID: 1569239457840547957}
   - component: {fileID: 2726546486847738849}
-  - component: {fileID: 6803741729414113035}
   - component: {fileID: 2765524930972325134}
   - component: {fileID: 4463948716747119380}
   m_Layer: 15
@@ -24161,6 +24159,23 @@ Transform:
   m_Father: {fileID: 7527544419884785351}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2095591850720556844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6780721534204609730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e77a7a5fce02b78be8923080bd1cacac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  globalFrameIds:
+  - map
+  - odom
+  robot: {fileID: 702946891374405994}
+  publishRate: 30
 --- !u!114 &828704671767976744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24207,23 +24222,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   twistStampedTopicName: model_twist
   publishedTransform: {fileID: 702946891374405993}
-  publishRate: 10
---- !u!114 &6803741729414113035
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6780721534204609730}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e68f65278fa404640beeb137ab878606, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  globalFrameIds:
-  - map
-  - odom
-  robot: {fileID: 702946891374405994}
   publishRate: 10
 --- !u!114 &2765524930972325134
 MonoBehaviour:
