@@ -1333,7 +1333,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftArmControl: {fileID: 348347768}
   rightArmControl: {fileID: 1169512052}
-  chestControl: {fileID: 0}
+  chestControl: {fileID: 1777596443}
   baseControl: {fileID: 690529142}
   mainCameraControl: {fileID: 807567584}
   <CameraControlEnabled>k__BackingField: 0
@@ -2149,7 +2149,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &348347767
 Transform:
   m_ObjectHideFlags: 0
@@ -2664,7 +2664,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3469d439b9a140441a202bec27fd01db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speedFractionMultiplier: 1
+  lowerLimit: 0
+  upperLimit: 0.44
+  speedFraction: 0
+  position: 0
+  preset:
+  - 0
+  - 0.22
+  - 0.44
   twistPublisher: {fileID: 1358313819}
+  homeService: {fileID: 1358313821}
+  stopService: {fileID: 1358313820}
+  publishRate: 60
 --- !u!1 &492348142
 GameObject:
   m_ObjectHideFlags: 0
@@ -3147,7 +3159,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &546512098
 Transform:
   m_ObjectHideFlags: 0
@@ -3915,7 +3927,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ae99511f8b14bf42b41976201fba8ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wheelController: {fileID: 1596080454}
+  baseController: {fileID: 1596080454}
   autoNavigation: {fileID: 0}
 --- !u!1 &718278252
 GameObject:
@@ -6064,7 +6076,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1169512051
 Transform:
   m_ObjectHideFlags: 0
@@ -6675,7 +6687,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1244266975
 Transform:
   m_ObjectHideFlags: 0
@@ -7188,6 +7200,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1358313818}
   - component: {fileID: 1358313819}
+  - component: {fileID: 1358313821}
+  - component: {fileID: 1358313820}
   m_Layer: 15
   m_Name: Chest
   m_TagString: Untagged
@@ -7222,7 +7236,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8278f8560f47ef64da4b85c3593532be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  twistTopicName: cmd_vel
+  twistTopicName: z_chest_vel
+--- !u!114 &1358313820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1358313817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c88fb23c6e26e115ba2d3f27a3c484e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chestStopServiceName: z_chest_stop
+--- !u!114 &1358313821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1358313817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6c1d82f89a75804d8de2cf58c95160a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chestHomeServiceName: z_chest_home
 --- !u!1 &1375389006
 GameObject:
   m_ObjectHideFlags: 0
@@ -8011,7 +8051,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1559381810
 Transform:
   m_ObjectHideFlags: 0
@@ -8039,20 +8079,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c87ed6fd46e5a4478ca3f86a716ea08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linearSpeedMultiplier: 0.25
+  angularSpeedMultiplier: 0.5
+  gripperPositionMultiplier: 1
   maxLinearSpeed: 0.25
   maxAngularSpeed: 0.5
-  gripperSpeed: 0.5
-  <ControlMode>k__BackingField: 1
+  <SpeedMode>k__BackingField: 1
   modeMultiplier:
   - 0.5
   - 1
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  currentGripperSpeed: 0
-  updateRate: 60
+  gripperPosition: 0
   armRotationOffset: {x: 0, y: 90, z: 45}
   twistCommandPublisher: {fileID: 1244266977}
   gripperCommandService: {fileID: 1244266976}
+  publishRate: 60
 --- !u!1 &1580419413
 GameObject:
   m_ObjectHideFlags: 0
@@ -8173,12 +8215,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20eb779221b812a498f07e30da1d8760, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linearSpeedMultiplier: 1
+  angularSpeedMultiplier: 1.5707964
   maxLinearSpeed: 0.5
   maxAngularSpeed: 0.785398
   linearAcceleration: 0.5
   angularAcceleration: 0.785398
   backwardMultiplier: 0.5
-  <ControlMode>k__BackingField: 1
+  <SpeedMode>k__BackingField: 1
   modeMultiplier:
   - 0.5
   - 1
@@ -8186,6 +8230,8 @@ MonoBehaviour:
   angularVelocity: {x: 0, y: 0, z: 0}
   updateRate: 60
   twistPublisher: {fileID: 1195795319}
+  publishRate: 60
+  publishDeltaTime: 0
 --- !u!1 &1639997634
 GameObject:
   m_ObjectHideFlags: 0
@@ -8597,27 +8643,83 @@ MonoBehaviour:
     m_ActionId: 68925bdd-c8b6-4300-bc54-c31da624ab7c
     m_ActionName: Gopher/Main Camera Center[/Mouse/middleButton]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 220783361}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnChest
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: b4b4bb60-3f80-4727-ae1f-101cc9391d08
     m_ActionName: Gopher/Chest Control[/Keyboard/slash]
   - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: b032c76d-3833-43b9-85b5-1843d45e3707
-    m_ActionName: Gopher/Chest Translate[/Keyboard/s,/Keyboard/w]
-  - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 220783361}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnChestHome
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: a9e38ea1-59d5-46f2-93b0-2cf45b7ad0cd
     m_ActionName: Gopher/Chest Home[/Keyboard/d]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 220783361}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnChestPreset3
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 2874e968-cee0-4907-8f94-04149d16adcf
     m_ActionName: Gopher/Chest Preset High[/Keyboard/3]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 220783361}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnChestPreset2
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: bf0f4bc3-b654-4132-9b15-dbaa6fdf61f5
     m_ActionName: Gopher/Chest Preset Middle[/Keyboard/2]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 220783361}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnChestPreset1
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 5d4eda8a-d086-487f-91c4-ea264220b314
     m_ActionName: Gopher/Chest Preset Low[/Keyboard/1]
   m_NeverAutoSwitchControlSchemes: 0
@@ -8853,7 +8955,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1690188628
 Transform:
   m_ObjectHideFlags: 0
@@ -8881,20 +8983,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c87ed6fd46e5a4478ca3f86a716ea08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linearSpeedMultiplier: 0.25
+  angularSpeedMultiplier: 0.5
+  gripperPositionMultiplier: 1
   maxLinearSpeed: 0.25
   maxAngularSpeed: 0.5
-  gripperSpeed: 0.5
-  <ControlMode>k__BackingField: 1
+  <SpeedMode>k__BackingField: 1
   modeMultiplier:
   - 0.5
   - 1
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  currentGripperSpeed: 0
-  updateRate: 60
+  gripperPosition: 0
   armRotationOffset: {x: 0, y: -90, z: 45}
   twistCommandPublisher: {fileID: 546512100}
   gripperCommandService: {fileID: 546512099}
+  publishRate: 60
 --- !u!1 &1700604886
 GameObject:
   m_ObjectHideFlags: 0
@@ -9433,8 +9537,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9519b0b61b6d7930dbb3780478affee0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chestController: {fileID: 0}
-  movementDirection: 0
+  chestController: {fileID: 473864865}
 --- !u!1 &1783509529
 GameObject:
   m_ObjectHideFlags: 0
