@@ -100,8 +100,8 @@ public class ArticulationArmController : ArmController
         if (linearVelocity != Vector3.zero || angularVelocity != Vector3.zero)
         {
             // Convert to position error and angular error in next timestep
-            Vector3 linearError = linearVelocity * Time.fixedDeltaTime;
-            Vector3 angularError = angularVelocity * Time.fixedDeltaTime;
+            Vector3 linearError = - linearVelocity * Time.fixedDeltaTime;
+            Vector3 angularError = - angularVelocity * Time.fixedDeltaTime;
             // Solve IK
             jointAngles = jointController.GetCurrentJointTargets();
             jointAngles = newtonIK.SolveVelocityIK(
@@ -120,7 +120,7 @@ public class ArticulationArmController : ArmController
         {
             angles = FlipAngles(angles);
         }
-        currentCoroutine = StartCoroutine(MoveToPresetCoroutine(homePositions.Angles, true));
+        currentCoroutine = StartCoroutine(MoveToPresetCoroutine(angles, true));
     }
 
     public override bool MoveToPreset(int presetIndex)
@@ -159,18 +159,22 @@ public class ArticulationArmController : ArmController
 
     private float[] FlipAngles(float[] angles)
     {
+        float[] flippedAngles = new float[angles.Length];
         // Joint 1 is not flipped, but 180 degree offset
-        angles[0] = angles[0] + Mathf.PI;
+        flippedAngles[0] = angles[0] + Mathf.PI;
         // Other joints are flipped to negative
         for (int i = 1; i < angles.Length; ++i)
         {
             if (angles[i] == IGNORE_VAL)
             {
-                continue;
+                flippedAngles[i] = angles[i];
             }
-            angles[i] = -1 * angles[i];
+            else
+            {
+                flippedAngles[i] = -angles[i];
+            }
         }
-        return angles;
+        return flippedAngles;
     }
 
     private IEnumerator MoveToPresetCoroutine(float[] angles, bool disableColliders)
