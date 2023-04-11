@@ -148,6 +148,28 @@ public class GopherControl : MonoBehaviour
         }
     }
 
+    // BASE BREAKER
+    public void OnBaseBreaker(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            baseControl.OnBaseBreaker(context);
+        }  
+    }
+
+
+    // CHEST BREAKERS
+
+    // Error with Intergration
+    // Once the breaker connected to the aux port is turned of, the system can not be remotely be reactivated
+    // public void OnChestBreaker(InputAction.CallbackContext context)
+    // {
+    //     if (context.performed)
+    //     {
+    //         chestControl.OnChestBreaker(context);
+    //     }  
+    // }
+
 
     // CHEST
     public void OnChestTranslate(InputAction.CallbackContext context)
@@ -188,6 +210,14 @@ public class GopherControl : MonoBehaviour
         if(ControlMode == Mode.Chest)
         {
             chestControl.OnPreset3(context);
+        }
+    }
+
+    public void OnChestStop(InputAction.CallbackContext context)
+    {
+        if(context.performed)
+        {
+            chestControl.StopChest();
         }
     }
 

@@ -11,8 +11,8 @@ This was intended for controlling the breakers on the freight research base.
 The breakers we are concerned about are:
 
 /base_breaker
-/aux1_breaker
-/aux2_breaker
+/aux_breaker_1
+/aux_breaker_2
 
 Replace the name in Unity accourdingly
 ***/
@@ -40,18 +40,19 @@ public class BreakerCommandService : MonoBehaviour
     void Update() {}
 
     // Kill the breaker
-    public void KillBreaker()
+    public void BreakerOff()
     {
         SendBreakerCommandService(false);
     }
 
-    // activate the breaker
-    public void activateBreaker()
+    // Activate the breaker
+    public void BreakerOn()
     {
         SendBreakerCommandService(true);
     }
 
     // Reset the breaker
+    // TODO Add a delay in between sent messages, the breaker doesnt turn off fully
     public void resetBreaker()
     {
         SendBreakerCommandService(false);
@@ -72,25 +73,4 @@ public class BreakerCommandService : MonoBehaviour
     {
         // Debug.Log("breaker command response: " + response.status);
     }
-
-
-    // Turn on the breaker
-    // Reset the breaker
-
-    // // Request service to home the chest
-    // public void SendChestHomeService()
-    // {
-    //     // homeCommand.command = true;
-    //     HomingRequest homingRequest = new HomingRequest(true);
-    //     // Request service
-    //     ros.SendServiceMessage<HomingResponse>(
-    //         chestHomeServiceName, homingRequest, HomeCommandCallback
-    //     );
-    // }
-
-    // // Callback function for service response
-    // private void HomeCommandCallback(HomingResponse response)
-    // {
-    //     // Debug.Log("Home command response: " + response.state);
-    // }
 }

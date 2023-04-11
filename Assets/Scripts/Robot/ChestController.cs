@@ -34,9 +34,13 @@ public abstract class ChestController : MonoBehaviour
 
     public virtual void SetSpeedFraction(float fraction)
     {
+        
         speedFraction = Mathf.Clamp(
             fraction * speedFractionMultiplier, -1.0f, 1.0f
         );
+        Debug.Log("ChestController << SetSpeedFraction Function");
+        // Debug.Log(speedFraction);
+
     }
 
     public virtual void SetPosition(float pos)
@@ -54,4 +58,10 @@ public abstract class ChestController : MonoBehaviour
     public virtual void HomeChest() {}
 
     public virtual void MoveToPreset(int presetIndex) {}
+
+    // Do Not Use 
+    // -> Issue with Intergration
+    //    See GopherControl.cs function OnChestBreaker
+    public virtual void ChestBreaker(float value) {}
+    
 }

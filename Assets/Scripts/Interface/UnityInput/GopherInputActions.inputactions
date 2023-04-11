@@ -202,6 +202,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "BaseBreaker",
+                    "type": "Button",
+                    "id": "d912e966-cb72-4e4e-be34-16fff7ed5929",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ChestStop",
+                    "type": "Button",
+                    "id": "5aafb7dd-bd1e-43bd-bbbc-1345982aba78",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1022,7 +1040,7 @@
                 {
                     "name": "",
                     "id": "14e63fb3-7131-432b-aeeb-f5a75bc6cb96",
-                    "path": "<Keyboard>/d",
+                    "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
@@ -1071,6 +1089,50 @@
                     "processors": "",
                     "groups": "",
                     "action": "Chest Preset 2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "08cdc86c-5191-4c91-ac2f-8570172b8c50",
+                    "path": "1DAxis(minValue=0)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "BaseBreaker",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "31af2ee9-3f3f-435c-af61-e670233cc2db",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "BaseBreaker",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "9ff80746-fd88-4a7f-afa9-3d1fd4bc5936",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "BaseBreaker",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "a048dbc2-b8ab-41cc-9740-9f74746c7e0e",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChestStop",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

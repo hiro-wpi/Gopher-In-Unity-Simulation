@@ -62,4 +62,17 @@ public class BaseControl : MonoBehaviour
             }
         }
     }
+    
+    // Breaker
+    public void OnBaseBreaker(InputAction.CallbackContext context)
+    {
+        if(context.performed)
+        {
+            float input = context.ReadValue<float>();
+            baseController.BaseBreaker(input);
+        }
+        
+    }
+
+
 }

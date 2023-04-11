@@ -1333,7 +1333,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftArmControl: {fileID: 348347768}
   rightArmControl: {fileID: 1169512052}
-  chestControl: {fileID: 0}
+  chestControl: {fileID: 1777596443}
   baseControl: {fileID: 690529142}
   mainCameraControl: {fileID: 807567584}
   <CameraControlEnabled>k__BackingField: 0
@@ -2149,7 +2149,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &348347767
 Transform:
   m_ObjectHideFlags: 0
@@ -2676,6 +2676,7 @@ MonoBehaviour:
   twistPublisher: {fileID: 1358313819}
   homeService: {fileID: 1358313821}
   stopService: {fileID: 1358313820}
+  chestBreakerService: {fileID: 0}
   publishRate: 60
 --- !u!1 &492348142
 GameObject:
@@ -3159,7 +3160,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &546512098
 Transform:
   m_ObjectHideFlags: 0
@@ -3927,7 +3928,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ae99511f8b14bf42b41976201fba8ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseController: {fileID: 0}
+  baseController: {fileID: 1596080454}
   autoNavigation: {fileID: 0}
 --- !u!1 &718278252
 GameObject:
@@ -6076,7 +6077,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1169512051
 Transform:
   m_ObjectHideFlags: 0
@@ -6701,7 +6702,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1244266975
 Transform:
   m_ObjectHideFlags: 0
@@ -7216,6 +7217,7 @@ GameObject:
   - component: {fileID: 1358313819}
   - component: {fileID: 1358313821}
   - component: {fileID: 1358313820}
+  - component: {fileID: 1358313822}
   m_Layer: 15
   m_Name: Chest
   m_TagString: Untagged
@@ -7250,7 +7252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8278f8560f47ef64da4b85c3593532be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  twistTopicName: cmd_vel
+  twistTopicName: z_chest_vel
 --- !u!114 &1358313820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7277,6 +7279,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chestHomeServiceName: z_chest_home
+--- !u!114 &1358313822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1358313817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdfa4a32a0f6a29bf830e8e906d24dd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  breakerName: aux_breaker_1
 --- !u!1 &1375389006
 GameObject:
   m_ObjectHideFlags: 0
@@ -8065,7 +8080,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1559381810
 Transform:
   m_ObjectHideFlags: 0
@@ -8658,15 +8673,35 @@ MonoBehaviour:
     m_ActionId: 68925bdd-c8b6-4300-bc54-c31da624ab7c
     m_ActionName: Gopher/Main Camera Center[/Mouse/middleButton]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 220783361}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnChest
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: b4b4bb60-3f80-4727-ae1f-101cc9391d08
     m_ActionName: Gopher/Chest Control[/Keyboard/slash]
   - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: b032c76d-3833-43b9-85b5-1843d45e3707
-    m_ActionName: Gopher/Chest Translate[/Keyboard/s,/Keyboard/w]
-  - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 220783361}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnChestHome
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: a9e38ea1-59d5-46f2-93b0-2cf45b7ad0cd
     m_ActionName: Gopher/Chest Home[/Keyboard/d]
   - m_PersistentCalls:
@@ -8681,6 +8716,38 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 5d4eda8a-d086-487f-91c4-ea264220b314
     m_ActionName: Gopher/Chest Preset Low[/Keyboard/1]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 220783361}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnBaseBreaker
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: d912e966-cb72-4e4e-be34-16fff7ed5929
+    m_ActionName: Gopher/New action
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 220783361}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnChestStop
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 5aafb7dd-bd1e-43bd-bbbc-1345982aba78
+    m_ActionName: Gopher/New action
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gopher
@@ -8914,7 +8981,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1690188628
 Transform:
   m_ObjectHideFlags: 0
@@ -9496,7 +9563,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9519b0b61b6d7930dbb3780478affee0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chestController: {fileID: 0}
+  chestController: {fileID: 473864865}
 --- !u!1 &1783509529
 GameObject:
   m_ObjectHideFlags: 0

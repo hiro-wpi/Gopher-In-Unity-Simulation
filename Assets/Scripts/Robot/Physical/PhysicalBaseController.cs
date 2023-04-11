@@ -40,10 +40,21 @@ public class PhysicalBaseController : BaseController
         twistPublisher.PublishTwist(linearVelocity, angularVelocity);
     }
 
-    // Reset Breakers
-    private void ResetBaseBreaker()
+    // Breaker
+    public override void BaseBreaker(float value)
     {
-        // Send Ros Service Request
-        baseBreakerService.resetBreaker();
+        if (value == 0)
+        {
+            // Kill Breakers
+            baseBreakerService.SendBreakerCommandService(false);
+        }
+        
+        if (value == 1)
+        {
+            // Activates Breakers
+            baseBreakerService.SendBreakerCommandService(true);
+        }
     }
+    
+
 }
