@@ -7,31 +7,29 @@ using Unity.Robotics.UrdfImporter;
 using RosMessageTypes.Geometry;
 
 /// <summary>
-///     This script reads the tree structures of all
-///     URDF links.
+///     This script provides a tf node class.
 /// </summary>
-public class TransformTree
+class TransformTreeNode
 {
     public readonly GameObject SceneObject;
-    public readonly List<TransformTree> Children;
+    public readonly List<TransformTreeNode> Children;
     public Transform Transform => SceneObject.transform;
     public string name => SceneObject.name;
     public bool IsALeafNode => Children.Count == 0;
 
-    public TransformTree(GameObject sceneObject)
+    public TransformTreeNode(GameObject sceneObject)
     {
         SceneObject = sceneObject;
-        Children = new List<TransformTree>();
+        Children = new List<TransformTreeNode>();
         PopulateChildNodes(this);
     }
 
-    public static TransformStampedMsg ToTransformStamped(TransformTree node)
+    public static TransformStampedMsg ToTransformStamped(TransformTreeNode node)
     {
-
-        return node.Transform.ToROSTransformStamped(Clock.time, node.name);
+        return node.Transform.ToROSTransformStamped(Clock.time);
     }
 
-    private static void PopulateChildNodes(TransformTree tfNode)
+    static void PopulateChildNodes(TransformTreeNode tfNode)
     {
         var parentTransform = tfNode.Transform;
         for (var childIndex = 0; childIndex < parentTransform.childCount; ++childIndex)
@@ -42,7 +40,7 @@ public class TransformTree
             // If game object has a URDFLink attached, it's a link in the transform tree
             if (childGO.TryGetComponent(out UrdfLink _))
             {
-                var childNode = new TransformTree(childGO);
+                var childNode = new TransformTreeNode(childGO);
                 tfNode.Children.Add(childNode);
             }
         }

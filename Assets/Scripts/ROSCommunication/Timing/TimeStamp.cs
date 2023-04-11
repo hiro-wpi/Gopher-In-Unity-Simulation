@@ -23,10 +23,11 @@ namespace Unity.Robotics.Core
             NanoSeconds = (uint)nsec;
         }
 
-        public TimeStamp(uint seconds, uint nanoseconds)
+        // (From a ROS2 Time message)
+        TimeStamp(uint sec, uint nsec)
         {
-            Seconds = seconds;
-            NanoSeconds = nanoseconds;
+            Seconds = sec;
+            NanoSeconds = nsec;
         }
 
         // NOTE: We could define these operators in a transport-specific extension package

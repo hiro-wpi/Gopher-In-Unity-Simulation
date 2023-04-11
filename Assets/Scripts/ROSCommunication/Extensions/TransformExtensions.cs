@@ -24,17 +24,16 @@ public static class TransformExtensions
         );
     }
 
-    public static TransformStampedMsg ToROSTransformStamped(this Transform tfUnity, 
-                                                            double time, 
-                                                            string frame_id)
+    public static TransformStampedMsg ToROSTransformStamped(
+        this Transform tfUnity, double timeStamp)
     {
-        TimeStamp timeStamp = new TimeStamp(time);
         return new TransformStampedMsg(
-            new HeaderMsg(Clock.GetCount(), 
-                          new TimeMsg(timeStamp.Seconds, timeStamp.NanoSeconds), 
-                          tfUnity.parent.gameObject.name),
+            new HeaderMsg(
+                Clock.GetCount(), 
+                new TimeStamp(timeStamp), 
+                tfUnity.parent.gameObject.name
+            ),
             tfUnity.gameObject.name,
-            tfUnity.ToROSTransform()
-        );
+            tfUnity.ToROSTransform());
     }
 }

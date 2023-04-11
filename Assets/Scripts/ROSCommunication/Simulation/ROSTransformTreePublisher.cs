@@ -1,5 +1,5 @@
+using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,8 +12,9 @@ using RosMessageTypes.Tf2;
 
 /// <summary>
 ///     This script publishes tf trees
+///     TODO - Change to use InvokeRepeat()
 /// </summary>
-public class TransformTreePublisher : MonoBehaviour
+public class ROSTransformTreePublisher : MonoBehaviour
 {
     // ROS Connector
     private ROSConnection ros;
@@ -23,34 +24,51 @@ public class TransformTreePublisher : MonoBehaviour
 
     // Robots
     public GameObject robot;
-    private TransformTree transformRoot;
+    private TransformTreeNode transformRoot;
 
     // Message
-    public float publishRate = 10f;
+    public float publishRate = 30f;
+
+    double lastPublishTimeSeconds;
+    double publishPeriodSeconds => 1.0f / publishRate;
+    bool shouldPublishMessage => Clock.NowTimeInSeconds > lastPublishTimeSeconds + publishPeriodSeconds;
 
     void Start()
     {
+        if (robot == null)
+        {
+            Debug.LogWarning(
+                $"No GameObject explicitly defined as {nameof(robot)}, so using {name} as root."
+            );
+            robot = gameObject;
+        }
+
         // Get ROS connection static instance
         ros = ROSConnection.GetOrCreateInstance();
         ros.RegisterPublisher<TFMessageMsg>(tfTopic);
 
         // Get robot transform tree
-        transformRoot = new TransformTree(robot);
+        transformRoot = new TransformTreeNode(robot);
 
-        InvokeRepeating("PublishTF", 1f, 1f/publishRate);
+        lastPublishTimeSeconds = Clock.time + publishPeriodSeconds;
     }
 
     void Update()
     {
+        if (shouldPublishMessage)
+        {
+            PublishTF();
+        }
+
     }
 
-    private static void PopulateTFList(List<TransformStampedMsg> tfList, TransformTree tfNode)
+    private static void PopulateTFList(List<TransformStampedMsg> tfList, TransformTreeNode tfNode)
     {
         // TODO: Some of this could be done once and cached rather than doing from scratch every time
         // Only generate transform messages from the children, because This node will be parented to the global frame
         foreach (var childTf in tfNode.Children)
         {
-            tfList.Add(TransformTree.ToTransformStamped(childTf));
+            tfList.Add(TransformTreeNode.ToTransformStamped(childTf));
 
             if (!childTf.IsALeafNode)
             {
@@ -68,7 +86,8 @@ public class TransformTreePublisher : MonoBehaviour
             var tfRootToGlobal = new TransformStampedMsg(
                 new HeaderMsg(Clock.GetCount(), new TimeStamp(Clock.time), globalFrameIds.Last()),
                 transformRoot.name,
-                transformRoot.Transform.To<FLU>());
+                transformRoot.Transform.To<FLU>()
+            );
             tfMessageList.Add(tfRootToGlobal);
         }
         else
@@ -84,7 +103,8 @@ public class TransformTreePublisher : MonoBehaviour
                 new HeaderMsg(Clock.GetCount(), new TimeStamp(Clock.time), globalFrameIds[i - 1]),
                 globalFrameIds[i],
                 // Initializes to identity transform
-                new TransformMsg());
+                new TransformMsg()
+            );
             tfMessageList.Add(tfGlobalToGlobal);
         }
 
@@ -92,5 +112,6 @@ public class TransformTreePublisher : MonoBehaviour
 
         var tfMessage = new TFMessageMsg(tfMessageList.ToArray());
         ros.Publish(tfTopic, tfMessage);
+        lastPublishTimeSeconds = Clock.FrameStartTimeInSeconds;
     }
 }
