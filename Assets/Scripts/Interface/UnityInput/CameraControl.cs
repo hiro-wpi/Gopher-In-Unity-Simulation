@@ -3,39 +3,34 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
 
+/// <summary>
+///     This script handles Unity input for Base control.
+/// </summary>
 public class CameraControl : MonoBehaviour
 {
-    public ArticulationCameraController cameraController;
+    // Local controller
+    [SerializeField] private CameraController cameraController;
 
-    public float mouseSensitivity = 2.5f;
-    public float speed = 1.0f;
-
-    private Vector2 controlDelta = Vector2.zero;
-    private float yawRotation;
-    private float pitchRotation;
+    // Container for the angular speed
+    private Vector3 angularVelocity;
+    private Vector2 velocityInput;
 
     void Start() {}
 
     public void OnRotate(InputAction.CallbackContext context)
     {
-        controlDelta = context.ReadValue<Vector2>();
+        velocityInput = context.ReadValue<Vector2>();
+        angularVelocity = new Vector3(0.0f, -velocityInput.x, velocityInput.y);
 
-        if (controlDelta.x == 0 && controlDelta.y == 0)
-            return;
-        // Delta joint movement
-        (yawRotation, pitchRotation) = cameraController.GetCameraJoints();
-        yawRotation -= controlDelta.x * mouseSensitivity * Time.fixedDeltaTime;
-        pitchRotation += controlDelta.y * mouseSensitivity * Time.fixedDeltaTime;
-        
-        // Move camera
-        cameraController.SetCameraJoints(yawRotation, pitchRotation, speed);
+        // Set velocity
+        cameraController.SetVelocity(angularVelocity);
     }
 
-    public void OnCenter(InputAction.CallbackContext context)
+    public void OnHome(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            cameraController.HomeCameraJoints();
+            cameraController.HomeCamera();
         }
     }
 }

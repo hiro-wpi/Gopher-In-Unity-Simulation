@@ -318,7 +318,7 @@ public class GraphicalInterface : MonoBehaviour
         // battery 
         UpdateBattery(stateReader.durationTime);
         // control mode
-        UpdateControlMode(gopherControl.CameraControlEnabled, gopherControl.ControlMode);
+        UpdateControlMode(gopherControl.MainCameraEnabled, gopherControl.ControlMode);
         UpdateCameraViewing(cameraIndex);
         // location
         UpdateLocalization(localization.position, localization.rotation);
@@ -671,7 +671,7 @@ public class GraphicalInterface : MonoBehaviour
             mapCamera.enabled = true;
             cameraDisplay.GetComponent<RawImage>().texture = mapRendertexture;
             // disable main camera control to have the mouse back
-            gopherControl.CameraControlEnabled = false;
+            gopherControl.ChangeMainCameraActive(false);
             Cursor.lockState = CursorLockMode.Confined;
             // Time.timeScale = 0f; // Can not stop due to auto path finding
             Time.timeScale = 0.5f;
