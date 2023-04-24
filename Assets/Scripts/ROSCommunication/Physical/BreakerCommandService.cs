@@ -6,18 +6,16 @@ using Unity.Robotics.ROSTCPConnector;
 using RosMessageTypes.Power;
 
 
-/***
-This was intended for controlling the breakers on the freight research base.
-The breakers we are concerned about are:
+/// <summary>
+/// This was intended for controlling the breakers on the freight research base.
+/// The breakers we are concerned about are:
 
-/base_breaker
-/aux_breaker_1
-/aux_breaker_2
+/// /base_breaker
+/// /aux_breaker_1
+/// /aux_breaker_2
 
-Replace the name in Unity accourdingly
-***/
-
-
+/// Replace the name in Unity accourdingly
+/// <summary>
 public class BreakerCommandService : MonoBehaviour
 {
     // ROS Connector
@@ -59,7 +57,6 @@ public class BreakerCommandService : MonoBehaviour
         SendBreakerCommandService(true);
     }
 
-
     // Send Command to the breaker
     public void SendBreakerCommandService(bool command)
     {
@@ -69,8 +66,5 @@ public class BreakerCommandService : MonoBehaviour
         );
     }
 
-    public void breakerCallback(BreakerCommandResponse response)
-    {
-        // Debug.Log("breaker command response: " + response.status);
-    }
+    public void breakerCallback(BreakerCommandResponse response) {}
 }

@@ -21,7 +21,7 @@ public class GraphicalInterface : MonoBehaviour
     
     // Robot
     private GameObject robot;
-    private Localization localization;
+    private FakeLocalization localization;
     private StateReader stateReader;
     private AutoNavigation autoNavigation;
     // main camera
@@ -321,7 +321,7 @@ public class GraphicalInterface : MonoBehaviour
         UpdateControlMode(gopherControl.MainCameraEnabled, gopherControl.ControlMode);
         UpdateCameraViewing(cameraIndex);
         // location
-        UpdateLocalization(localization.position, localization.rotation);
+        UpdateLocalization(localization.Position, localization.Rotation);
     }
 
     private void UpdateLinearSpeed(float linearSpeed, float multiplier=1f)
@@ -478,7 +478,7 @@ public class GraphicalInterface : MonoBehaviour
         this.robot = robot;
         cameraSystem = robot.GetComponentInChildren<CameraSystem>();
         laser = robot.GetComponentInChildren<Laser>();
-        localization = robot.GetComponentInChildren<Localization>();
+        localization = robot.GetComponentInChildren<FakeLocalization>();
         stateReader = robot.GetComponentInChildren<StateReader>();
         gopherControl = robot.GetComponentInChildren<GopherControl>();
         autoNavigation = robot.GetComponentInChildren<AutoNavigation>();
@@ -501,7 +501,7 @@ public class GraphicalInterface : MonoBehaviour
         
         // Cameras
         cameraSystem.enabled = true;
-        numCameras = cameraSystem.cameras.Length;
+        numCameras = cameraSystem.Cameras.Length;
         cameraSystem.DisableAllCameras();
         // turn on main camera and secondary camera
         cameraIndex = cameraSystem.GetIndex("Head");
@@ -516,7 +516,7 @@ public class GraphicalInterface : MonoBehaviour
         ChangeCameraView(false, secondaryCameraIndex);
 
         // Hide laser scan in the cameras
-        foreach (Camera cam in cameraSystem.cameras)
+        foreach (Camera cam in cameraSystem.Cameras)
             cam.cullingMask = cam.cullingMask & ~(1 << LayerMask.NameToLayer("Laser"));
         
         // Map
@@ -535,8 +535,8 @@ public class GraphicalInterface : MonoBehaviour
         // minimap framerate
         minimapCamera.targetTexture = minimapRendertexture;
         CameraFrameRate fr = minimapCameraObject.AddComponent<CameraFrameRate>();
-        fr.cam = minimapCamera;
-        fr.targetFrameRate = 5;
+        fr.SetCamera(minimapCamera);
+        fr.SetFrameRate(5);
 
         // Map camera game object
         if (mapCameraObject != null)
@@ -586,7 +586,7 @@ public class GraphicalInterface : MonoBehaviour
     }
     public void ChangeCameraView(bool mainCamera, int index)
     {
-        if (index < 0 || index >= cameraSystem.cameras.Length)
+        if (index < 0 || index >= cameraSystem.Cameras.Length)
             return;
         
         // Change main camera view
@@ -628,18 +628,18 @@ public class GraphicalInterface : MonoBehaviour
         if (cameraIndex == cameraSystem.GetIndex("Head") ||
             cameraIndex == cameraSystem.GetIndex("Back"))
         {
-            leftIKSolver.localToWorldTransform = robot.transform;
-            rightIKSolver.localToWorldTransform = robot.transform;
+            leftIKSolver.LocalToWorldTransform = robot.transform;
+            rightIKSolver.LocalToWorldTransform = robot.transform;
         }
         else if (cameraIndex == cameraSystem.GetIndex("Left"))
         {
-            leftIKSolver.localToWorldTransform = leftEndEffectorRef.transform;
-            rightIKSolver.localToWorldTransform = robot.transform;
+            leftIKSolver.LocalToWorldTransform = leftEndEffectorRef.transform;
+            rightIKSolver.LocalToWorldTransform = robot.transform;
         }
         else if (cameraIndex == cameraSystem.GetIndex("Right"))
         {
-            leftIKSolver.localToWorldTransform = robot.transform;
-            rightIKSolver.localToWorldTransform = rightEndEffectorRef.transform;
+            leftIKSolver.LocalToWorldTransform = robot.transform;
+            rightIKSolver.LocalToWorldTransform = rightEndEffectorRef.transform;
         }
     }
 
@@ -722,8 +722,8 @@ public class GraphicalInterface : MonoBehaviour
         if (robot != null)
         {
             cameras = new Camera[2];
-            cameras[0] = cameraSystem.cameras[cameraIndex];
-            cameras[1] = cameraSystem.cameras[secondaryCameraIndex];
+            cameras[0] = cameraSystem.Cameras[cameraIndex];
+            cameras[1] = cameraSystem.Cameras[secondaryCameraIndex];
         }
 
         return cameras;

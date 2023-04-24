@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+///     Provide Jacobian computation for kinematic solvers
+/// </summary>
 public static class JacobianTools
 {
     public static void Print(ArticulationJacobian jacobian)
@@ -19,6 +22,7 @@ public static class JacobianTools
         }
         Debug.Log(jacobianString);
     }
+
     public static List<float> Multiply(ArticulationJacobian jacobian, List<float> targetDelta)
     {
         List<float> result = new List<float>(jacobian.rows);
@@ -30,7 +34,6 @@ public static class JacobianTools
                 result[i] += jacobian[i, j] * targetDelta[j];
             }
         }
-
         return result;
     }
 
@@ -149,6 +152,7 @@ public static class JacobianTools
         if (jacobian.rows != jacobian.columns)
             throw new Exception("Can't find inverse for non square rows != columns jacobian!");
         ArticulationJacobian jacobianInv = new ArticulationJacobian(jacobian.rows, jacobian.columns);
+        
         // Initialize to identity
         for (int diagonal = 0; diagonal < jacobianInv.rows; diagonal++)
             jacobianInv[diagonal, diagonal] = 1.0f;
@@ -206,7 +210,8 @@ public static class JacobianTools
         }
     }
 
-    public static ArticulationJacobian FillMatrix(int startRow, List<int> cols, ArticulationJacobian oldJ)
+    public static ArticulationJacobian FillMatrix(
+        int startRow, List<int> cols, ArticulationJacobian oldJ)
     {
         ArticulationJacobian minJ = new ArticulationJacobian(6, cols.Count);
         int row = -1;
@@ -231,56 +236,8 @@ public static class JacobianTools
         return errRotation;
     }
 
-    public static Vector3 quaternionToEuler(Quaternion q)
-    {
-        float sqw = q.w * q.w;
-        float sqx = q.x * q.x;
-        float sqy = q.y * q.y;
-        float sqz = q.z * q.z;
-        float unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
-        float test = q.x * q.w - q.y * q.z;
-        Vector3 v;
-
-        if (test > 0.499 * unit)
-        { // singularity at north pole
-            v.x = 2 * Mathf.Atan2(q.x, q.w);
-            v.y = Mathf.PI / 2;
-            v.z = 0;
-            return NormalizeAngle(v);
-        }
-        if (test < -0.499 * unit)
-        { // singularity at south pole
-            v.x = -2 * Mathf.Atan2(q.x, q.w);
-            v.y = -Mathf.PI / 2;
-            v.z = 0;
-            return NormalizeAngle(v);
-        }
-        Quaternion q2 = new Quaternion(q.w, -q.x, -q.y, -q.z);
-        v.x = Mathf.Atan2(2 * q.y * q.w - 2 * q.x * q.z, sqx - sqy - sqz + sqw);
-        v.y = Mathf.Asin(2 * test / unit);
-        v.z = Mathf.Atan2(2 * q.x * q.w - 2 * q.y * q.z, -sqx + sqy - sqz + sqw);
-        return NormalizeAngle(v);
-    }
-
-    public static Vector3 NormalizeAngle(Vector3 v)
-    {
-        v.x = WrapToPI(v.x);
-        v.y = WrapToPI(v.y);
-        v.z = WrapToPI(v.z);
-        return v;
-    }
-
-    public static float WrapToPI(float angle)
-    {
-        angle = angle % (2 * Mathf.PI);
-        if (angle < -Mathf.PI)
-            angle += 2 * Mathf.PI;
-        else if (angle > Mathf.PI)
-            angle -= 2 * Mathf.PI;
-        return angle;
-    }
-
-    public static void Set(ArticulationJacobian jacobian, int i, Vector3 position, Vector3 rotation)
+    public static void Set(
+        ArticulationJacobian jacobian, int i, Vector3 position, Vector3 rotation)
     {
         jacobian[0, i] = position.x;
         jacobian[1, i] = position.y;

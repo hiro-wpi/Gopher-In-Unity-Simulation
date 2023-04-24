@@ -7,14 +7,11 @@ using UnityEngine.AI;
 public class TestAutoNavigation : MonoBehaviour
 {
     // Character
-    public AutoNavigation autoNavigation;
-    public GameObject target;
+    [SerializeField] private AutoNavigation autoNavigation;
+    [SerializeField] private  GameObject target;
     private Vector3 goal;
 
-    void Start()
-    {
-    }
-
+    void Start() {}
 
     void Update()
     {

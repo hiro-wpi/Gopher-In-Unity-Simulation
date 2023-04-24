@@ -150,4 +150,12 @@ public static class Utils
     {
         return (angle + 2f * Mathf.PI) % (2f * Mathf.PI);
     }
+
+    public static Vector3 WrapAnglesToPi(Vector3 angles)
+    {
+        angles.x = WrapToPi(angles.x);
+        angles.y = WrapToPi(angles.y);
+        angles.z = WrapToPi(angles.z);
+        return angles;
+    }
 }

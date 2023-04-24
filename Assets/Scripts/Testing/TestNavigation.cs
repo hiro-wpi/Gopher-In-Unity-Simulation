@@ -7,14 +7,15 @@ using UnityEngine.AI;
 public class TestNavigation : MonoBehaviour
 {
     // Character
-    public CharacterNavigation characterNavigation;
+    [SerializeField] private  CharacterNavigation characterNavigation;
     private NavMeshAgent navMeshAgent;
+    
+    // Trajectory
+    [SerializeField] private  Vector3[] humanTrajectory;
+    [SerializeField] private  bool loop;
 
-    public Vector3[] humanTrajectory;
-    public bool loop;
-
+    [SerializeField] private  bool displayPath;
     private NavMeshPath path;
-    public bool displayPath;
 
     private float elapsed = 0.0f;
 

@@ -10,29 +10,39 @@ using UnityEngine.Rendering;
 /// </summary>
 public class CameraFrameRate : MonoBehaviour
 {
-    public Camera cam;
-    public int targetFrameRate = 30;
-    public bool rendering;
+    [SerializeField] private Camera cam;
+    [SerializeField] private int targetFrameRate = 30;
+    [field:SerializeField] public bool Rendering { get; set; }
 
     void Start()
     {
-        cam.enabled = false;
-        // new enabled flag
-        rendering = true;
+        if (cam != null)
+        {
+            cam.enabled = false;
+        }
+        
+        // Use a new flag to control rendering
+        Rendering = true;
 
         // Start rendering
         InvokeRepeating("Render", 0f, 1f / targetFrameRate);
         RenderPipelineManager.endCameraRendering += OnEndCameraRendering;
     }
+
     void OnDestroy()
     {
         RenderPipelineManager.endCameraRendering -= OnEndCameraRendering;
         CancelInvoke("Render");
     }
     
-    void Render()
+    private void Render()
     {
-        if (rendering)
+        if (cam == null)
+            return;
+        
+        // Camera gets disabled after each rendering
+        // Enable camera if Rendering set to true
+        if (Rendering)
         {
             // this will cause problems for rendering dynamic objects
             // cam.Render();
@@ -44,16 +54,32 @@ public class CameraFrameRate : MonoBehaviour
                 cam.enabled = false;
         }
     }
+
     void OnEndCameraRendering(ScriptableRenderContext context, Camera camera)
     {
+        if (cam == null)
+            return;
+        
+        // Diable camera after rendering
         // only work with target Texture but not target Display
         if (cam.targetTexture != null)
             cam.enabled = false;
     }
 
+    public void SetCamera(Camera camera)
+    {
+        cam = camera;
+    }
+
+    public int GetFrameRate()
+    {
+        return targetFrameRate;
+    }
+
     public void SetFrameRate(int frameRate)
     {
         targetFrameRate = frameRate;
+        // Relaunch rendering
         CancelInvoke("Render");
         InvokeRepeating("Render", 0f, 1f / targetFrameRate);
     }

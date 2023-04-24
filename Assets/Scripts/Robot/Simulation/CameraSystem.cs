@@ -2,37 +2,50 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+///     A camera system that can be used to control multiple Cameras
+/// </summary>
 public class CameraSystem : MonoBehaviour
 {
-    public Camera[] cameras;
-    public string[] cameraNames;
-    public int frameRate;
+    [field:SerializeField] public Camera[] Cameras { get; private set; }
+    [SerializeField] private string[] cameraNames;
+    [SerializeField] private int frameRate;
+    private CameraFrameRate[] cameraFrameRates;
 
-    void Awake()
+    void Start()
     {
-        Debug.Assert(cameras.Length == cameraNames.Length);
+        Debug.Assert(Cameras.Length == cameraNames.Length);
 
-        foreach (Camera cam in cameras)
+        // Attach a camera frame rate to each camera if not already attached
+        for(int i = 0; i < Cameras.Length; ++i)
         {
-            CameraFrameRate fr = cam.gameObject.AddComponent<CameraFrameRate>();
-            fr.cam = cam;
-            fr.targetFrameRate = frameRate;
+            Camera cam = Cameras[i];
+
+            // get and add camera frame rate
+            CameraFrameRate fr = cam.gameObject.GetComponent<CameraFrameRate>();
+            if (fr == null)
+            {
+                fr = cam.gameObject.AddComponent<CameraFrameRate>();
+            }
+            cameraFrameRates[i] = fr;
+
+            // set up camera
+            fr.SetCamera(cam);
+            fr.SetFrameRate(frameRate);
         }
     }
 
-    void Update()
-    {
-    }
-
+    void Update() {}
 
     // Set target frame rate
     public void SetTargetFrameRate(string name, int frameRate)
     {
         SetTargetFrameRate(GetIndex(name), frameRate);
     }
+
     public void SetTargetFrameRate(int index, int frameRate)
     {
-        cameras[index].GetComponent<CameraFrameRate>().SetFrameRate(frameRate);
+        cameraFrameRates[index].SetFrameRate(frameRate);
     }
 
     // Set target RenderTexture
@@ -40,37 +53,40 @@ public class CameraSystem : MonoBehaviour
     {
         SetTargetRenderTexture(GetIndex(name), renderTexture);
     }
+
     public void SetTargetRenderTexture(int index, RenderTexture renderTexture)
     {
-        cameras[index].targetTexture = renderTexture;
+        Cameras[index].targetTexture = renderTexture;
     }
-
 
     // Enable and Disable
     public void EnableCamera(string name)
     {
         EnableCamera(GetIndex(name));
     }
+
     public void EnableCamera(int index)
     {
-        cameras[index].GetComponent<CameraFrameRate>().rendering = true;
+        cameraFrameRates[index].Rendering = true;
     }
+
     public void DisableCamera(string name)
     {
         DisableCamera(GetIndex(name));
     }
+
     public void DisableCamera(int index)
     {
-        cameras[index].GetComponent<CameraFrameRate>().rendering = false;
-    }
-    public void DisableAllCameras()
-    {
-        foreach (Camera cam in cameras)
-        {
-            cam.GetComponent<CameraFrameRate>().rendering = false;
-        }
+        cameraFrameRates[index].Rendering = false;
     }
 
+    public void DisableAllCameras()
+    {
+        for (int i = 0; i < Cameras.Length; ++i)
+        {
+            DisableCamera(i);
+        }
+    }
 
     // Utils
     public int GetIndex(string name)
