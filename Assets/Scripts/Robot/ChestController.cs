@@ -21,7 +21,7 @@ public abstract class ChestController : MonoBehaviour
     public enum ControlMode { Speed, Position }
     protected ControlMode controlMode = ControlMode.Speed;
 
-    // Variable to hold speed fraction
+    // Variable to hold speed fraction & target position
     [SerializeField, ReadOnly] protected float speedFraction = 0.0f;
     [SerializeField, ReadOnly] protected float position = 0.0f;
 
@@ -32,6 +32,7 @@ public abstract class ChestController : MonoBehaviour
 
     void Update() {}
 
+    // Speed control
     public virtual void SetSpeedFraction(float fraction)
     {
         
@@ -43,6 +44,7 @@ public abstract class ChestController : MonoBehaviour
 
     }
 
+    // Position control
     public virtual void SetPosition(float pos)
     {
         position = Mathf.Clamp(pos, lowerLimit, upperLimit);
@@ -53,15 +55,16 @@ public abstract class ChestController : MonoBehaviour
         controlMode = mode;
     }
 
+    // Stop
     public virtual void StopChest() {}
 
+    // Pre-defined positions
     public virtual void HomeChest() {}
-
+    
     public virtual void MoveToPreset(int presetIndex) {}
 
-    // Do Not Use 
-    // -> Issue with Intergration
-    //    See GopherControl.cs function OnChestBreaker
-    public virtual void ChestBreaker(float value) {}
-    
+    // Emergency stop
+    public virtual void EmergencyStop() {}
+
+    public virtual void EmergencyStopResume() {}
 }

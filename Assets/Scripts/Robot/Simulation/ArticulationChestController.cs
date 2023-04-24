@@ -9,10 +9,6 @@ public class ArticulationChestController : ChestController
 {
     // Emergency Stop
     [SerializeField] private bool emergencyStop = false;
-    public virtual void EmergencyStop(bool stop = true)
-    {
-        emergencyStop = stop;
-    }
 
     // Chest joint
     [SerializeField] private ArticulationBody chestJoint;
@@ -54,7 +50,7 @@ public class ArticulationChestController : ChestController
     public override void HomeChest() 
     {
         // Home is half the range
-        SetJointPosition(upperLimit / 2.0f);
+        SetJointPosition(lowerLimit + (upperLimit - lowerLimit) / 2.0f);
     }
 
     public override void MoveToPreset(int presetIndex) 
@@ -70,10 +66,12 @@ public class ArticulationChestController : ChestController
 
     private IEnumerator SetJointPositionCoroutine(float position)
     {
+        // Move to given position
         controlMode = ControlMode.Position;
         SetPosition(position);
-        
+        // Check if reached
         yield return new WaitUntil(() => CheckPositionReached(position) == true);
+        // Switch back to velocity control
         controlMode = ControlMode.Speed;
     }
 
@@ -88,5 +86,16 @@ public class ArticulationChestController : ChestController
         {
             return true;
         }
+    }
+
+    // Emergency Stop
+    public override void EmergencyStop()
+    {
+        emergencyStop = true;
+    }
+
+    public override void EmergencyStopResume()
+    {
+        emergencyStop = false;
     }
 }

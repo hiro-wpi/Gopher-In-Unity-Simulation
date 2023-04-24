@@ -121,7 +121,8 @@ public abstract class BaseController : MonoBehaviour
         return newVelocity;
     }
 
-    // Kills or Activates Breakers
-    public virtual void BaseBreaker(float value) {}
-    
+    // Emergency stop
+    public virtual void EmergencyStop() {}
+
+    public virtual void EmergencyStopResume() {}
 }

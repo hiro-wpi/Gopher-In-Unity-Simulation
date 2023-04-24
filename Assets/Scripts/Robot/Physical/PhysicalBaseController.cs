@@ -40,21 +40,16 @@ public class PhysicalBaseController : BaseController
         twistPublisher.PublishTwist(linearVelocity, angularVelocity);
     }
 
-    // Breaker
-    public override void BaseBreaker(float value)
+    // Emergency stop
+    public override void EmergencyStop()
     {
-        if (value == 0)
-        {
-            // Kill Breakers
-            baseBreakerService.SendBreakerCommandService(false);
-        }
-        
-        if (value == 1)
-        {
-            // Activates Breakers
-            baseBreakerService.SendBreakerCommandService(true);
-        }
+        // Activates Breakers
+        baseBreakerService.SendBreakerCommandService(true);
     }
-    
 
+    public override void EmergencyStopResume() 
+    {
+        // Kill Breakers
+        baseBreakerService.SendBreakerCommandService(false);
+    }
 }

@@ -3,38 +3,103 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-///     This script handles Unity input for Gopher control.
-///     For now, only one component of the Gopher is controlled 
-///     at a time.
+///     This script handles Unity input for Gopher.
+///     It controls the enabling and disabling of
+///     action maps and the control mode.
+///
+///     For now, only one component is controlled 
+///     at a time when using keyboard.
 /// </summary>
 public class GopherControl : MonoBehaviour
 {
-    // Children control handlers
-    [SerializeField] private ArmControl leftArmControl;
-    [SerializeField] private ArmControl rightArmControl;
-    [SerializeField] private ChestControl chestControl;
-    [SerializeField] private BaseControl baseControl;
-    [SerializeField] private CameraControl mainCameraControl;
+    // Unity input & action maps
+    // Enable / Disable to receive input or not
+    [SerializeField] private PlayerInput playerInput;
+    private InputActionMap baseInputMap;
+    private InputActionMap chestInputMap;
+    private InputActionMap leftArmInputMap;
+    private InputActionMap rightArmInputMap;
+    private InputActionMap cameraInputMap;
+    private InputActionMap[] actionMaps;
 
     // Available control modes
-    public enum Mode { Base, LeftArm, RightArm, Chest }
+    public enum Mode { Base, Chest, LeftArm, RightArm }
     // current control mode
     [field: SerializeField]
-    public bool CameraControlEnabled { get; set; } = false;
-    [field: SerializeField]
     public Mode ControlMode { get; private set; } = Mode.Base;
-    
-    void Start() {}
+    [field: SerializeField]
+    public bool MainCameraEnabled { get; private set; } = false;
 
-    // CONTROL MODE
+    void Start()
+    {
+        // Set up input action maps
+        baseInputMap = playerInput.actions.FindActionMap("GopherBase");
+        chestInputMap = playerInput.actions.FindActionMap("GopherChest");
+        leftArmInputMap = playerInput.actions.FindActionMap("GopherLeftArm");
+        rightArmInputMap = playerInput.actions.FindActionMap("GopherRightArm");
+        cameraInputMap = playerInput.actions.FindActionMap("GopherCamera");
+        // store it the same as Mode for easy enable/disable later
+        actionMaps = new InputActionMap[] {
+            baseInputMap, chestInputMap, leftArmInputMap, rightArmInputMap
+        };
+
+        // Default to base mode
+        SetMode(Mode.Base);
+    }
+
+    // Setting Mode
+    public void SetMode(Mode mode)
+    {
+        ControlMode = mode;
+        SetActionMap(ControlMode);
+    }
+
+    private void SetActionMap(Mode mode)
+    {
+        // Only one mode can be active at a time
+        // Disable all action maps and enable the selected one
+        foreach (InputActionMap map in actionMaps)
+        {
+            map.Disable();
+        }
+        actionMaps[(int)mode].Enable();
+    }
+
+    public void ChangeMainCameraActive(bool active)
+    {
+        MainCameraEnabled = active;
+        if (active)
+        {
+            cameraInputMap.Enable();
+        }
+        else
+        {
+            cameraInputMap.Disable();
+        }
+    }
+
+    // Control Mode - switch to mode
+    public void OnBase(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            SetMode(Mode.Base);
+        }
+    }
+
+    public void OnChest(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            SetMode(Mode.Chest);
+        }
+    }
+
     public void OnLeftArm(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            baseControl.StopBase();
-            rightArmControl.StopArm();
-            chestControl.StopChest();
-            ControlMode = Mode.LeftArm;
+            SetMode(Mode.LeftArm);
         }
     }
 
@@ -42,32 +107,7 @@ public class GopherControl : MonoBehaviour
     {
         if (context.performed)
         {
-            baseControl.StopBase();
-            leftArmControl.StopArm();
-            chestControl.StopChest();
-            ControlMode = Mode.RightArm;
-        }
-    }
-
-    public void OnBase(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            leftArmControl.StopArm();
-            rightArmControl.StopArm();
-            chestControl.StopChest();
-            ControlMode = Mode.Base;
-        }
-    }
-
-    public void OnChest(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {   
-            baseControl.StopBase();
-            leftArmControl.StopArm();
-            rightArmControl.StopArm();
-            ControlMode = Mode.Chest;
+            SetMode(Mode.RightArm);
         }
     }
 
@@ -75,265 +115,7 @@ public class GopherControl : MonoBehaviour
     {
         if (context.performed)
         {
-            CameraControlEnabled = !CameraControlEnabled;
-            if (CameraControlEnabled)
-                Cursor.lockState = CursorLockMode.Locked;
-            else
-                Cursor.lockState = CursorLockMode.Confined;
-        }
-    }
-
-
-    // TODO Split the action //
-    // Unity does not allow same key for different actions
-    public void OnTranslate(InputAction.CallbackContext context)
-    {
-        if (ControlMode == Mode.Base)
-        {
-            OnBaseDrive(context);
-        }
-        if (ControlMode == Mode.LeftArm || 
-            ControlMode == Mode.RightArm)
-        {
-            OnArmTranslate(context);
-        }
-        if (ControlMode == Mode.Chest)
-        {
-            OnChestTranslate(context);
-        }
-    }
-
-
-    // BASE
-    public void OnBaseDrive(InputAction.CallbackContext context)
-    {
-        if (ControlMode == Mode.Base)
-        {
-            baseControl.OnDrive(context);
-        }
-    }
-
-    public void OnModeChange(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            if (ControlMode == Mode.Base)
-            {
-                baseControl.OnModeChange(context);
-            }
-            else if (ControlMode == Mode.LeftArm)
-            {
-                leftArmControl.OnModeChange(context);
-            }
-            else if (ControlMode == Mode.RightArm)
-            {
-                rightArmControl.OnModeChange(context);
-            }
-
-            // else if (ControlMode == Mode.Chest)
-            // {
-            //     chestControl.OnModeChange(context);
-            // }
-        }
-    }
-
-    public void OnBaseTarget(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            if (ControlMode == Mode.Base)
-            {
-                baseControl.OnTarget(context);
-            }
-        }
-    }
-
-    // BASE BREAKER
-    public void OnBaseBreaker(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            baseControl.OnBaseBreaker(context);
-        }  
-    }
-
-
-    // CHEST BREAKERS
-
-    // Error with Intergration
-    // Once the breaker connected to the aux port is turned of, the system can not be remotely be reactivated
-    // public void OnChestBreaker(InputAction.CallbackContext context)
-    // {
-    //     if (context.performed)
-    //     {
-    //         chestControl.OnChestBreaker(context);
-    //     }  
-    // }
-
-
-    // CHEST
-    public void OnChestTranslate(InputAction.CallbackContext context)
-    {
-        if(ControlMode == Mode.Chest)
-        {
-            chestControl.OnMove(context);
-        }
-        
-    }
-
-    public void OnChestHome(InputAction.CallbackContext context)
-    {
-        if(ControlMode == Mode.Chest)
-        {
-            chestControl.OnHome(context);
-        }
-    }
-
-    public void OnChestPreset1(InputAction.CallbackContext context)
-    {
-        if(ControlMode == Mode.Chest)
-        {
-            chestControl.OnPreset1(context);
-        }
-    }
-
-    public void OnChestPreset2(InputAction.CallbackContext context)
-    {
-        if(ControlMode == Mode.Chest)
-        {
-            chestControl.OnPreset2(context);
-        }
-    }
-
-    public void OnChestPreset3(InputAction.CallbackContext context)
-    {
-        if(ControlMode == Mode.Chest)
-        {
-            chestControl.OnPreset3(context);
-        }
-    }
-
-    public void OnChestStop(InputAction.CallbackContext context)
-    {
-        if(context.performed)
-        {
-            chestControl.StopChest();
-        }
-    }
-
-
-    // ARM PRESET
-    public void OnArmHome(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            if(ControlMode == Mode.LeftArm)
-                leftArmControl.OnHome(context);
-            else if (ControlMode == Mode.RightArm)
-                rightArmControl.OnHome(context);
-        }
-    }
-    public void OnArmPreset1(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            if(ControlMode == Mode.LeftArm)
-                leftArmControl.OnPreset1(context);
-            else if (ControlMode == Mode.RightArm)
-                rightArmControl.OnPreset1(context);
-        }
-    }
-    public void OnArmPreset2(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            if(ControlMode == Mode.LeftArm)
-                leftArmControl.OnPreset2(context);
-            else if (ControlMode == Mode.RightArm)
-                rightArmControl.OnPreset2(context);
-        }
-    }
-    public void OnArmPreset3(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            if(ControlMode == Mode.LeftArm)
-                leftArmControl.OnPreset3(context);
-            else if (ControlMode == Mode.RightArm)
-                rightArmControl.OnPreset3(context);
-        }
-    }
-    public void OnArmPreset4(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            if(ControlMode == Mode.LeftArm)
-                leftArmControl.OnPreset4(context);
-            else if (ControlMode == Mode.RightArm)
-                rightArmControl.OnPreset4(context);
-        }
-    }
-    public void OnArmPreset5(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            if(ControlMode == Mode.LeftArm)
-                leftArmControl.OnPreset5(context);
-            else if (ControlMode == Mode.RightArm)
-                rightArmControl.OnPreset5(context);
-        }
-    }
-
-
-    // ARM IK
-    public void OnArmTranslate(InputAction.CallbackContext context)
-    {
-        if(ControlMode == Mode.LeftArm)
-            leftArmControl.OnTranslate(context);
-        else if (ControlMode == Mode.RightArm)
-            rightArmControl.OnTranslate(context);
-    }
-
-    public void OnArmRotate(InputAction.CallbackContext context)
-    {
-        if(ControlMode == Mode.LeftArm)
-            leftArmControl.OnRotate(context);
-        else if (ControlMode == Mode.RightArm)
-            rightArmControl.OnRotate(context);
-    }
-
-    public void OnArmTarget(InputAction.CallbackContext context)
-    {
-        if(ControlMode == Mode.LeftArm)
-            leftArmControl.OnTarget(context);
-        else if (ControlMode == Mode.RightArm)
-            rightArmControl.OnTarget(context);
-    }
-
-    public void OnArmGripper(InputAction.CallbackContext context)
-    {
-        if(ControlMode == Mode.LeftArm)
-            leftArmControl.OnGripper(context);
-        else if (ControlMode == Mode.RightArm)
-            rightArmControl.OnGripper(context);
-    }
-
-
-    // CAMERA
-    public void OnCameraRotate(InputAction.CallbackContext context)
-    {
-        if (CameraControlEnabled)
-        {
-            mainCameraControl.OnRotate(context);
-        }
-    }
-
-    public void OnCameraCenter(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            if (CameraControlEnabled)
-                mainCameraControl.OnCenter(context);
+            ChangeMainCameraActive(!MainCameraEnabled);
         }
     }
 }

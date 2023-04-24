@@ -13,14 +13,14 @@ public class CameraControl : MonoBehaviour
 
     // Container for the angular speed
     private Vector3 angularVelocity;
-    private Vector2 velocityInput;
+    private Vector2 inputVelocity;
 
     void Start() {}
 
     public void OnRotate(InputAction.CallbackContext context)
     {
-        velocityInput = context.ReadValue<Vector2>();
-        angularVelocity = new Vector3(0.0f, -velocityInput.x, velocityInput.y);
+        inputVelocity = context.ReadValue<Vector2>();
+        angularVelocity = new Vector3(0.0f, -inputVelocity.x, inputVelocity.y);
 
         // Set velocity
         cameraController.SetVelocity(angularVelocity);

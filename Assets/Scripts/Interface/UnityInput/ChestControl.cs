@@ -3,37 +3,43 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
 
+/// <summary>
+///     This script handles Unity input for Chest control.
+/// </summary>
 public class ChestControl : MonoBehaviour
 {
     public ChestController chestController;
-    private float driveDirection = 0.0f;
+    private float driveDirection;
 
     void Start() {}
 
-    // Moves the base up and down ("velocity" controller)
-    public void OnMove(InputAction.CallbackContext context)
+    // Moves the base up and down - "velocity" controller
+    public void OnTranslate(InputAction.CallbackContext context)
     {
-        // Debug.Log("ChestControl << OnMove Function");
-        driveDirection = context.ReadValue<Vector3>().z;
-        // Debug.Log(driveDirection);
+        driveDirection = context.ReadValue<float>();
         chestController.SetSpeedFraction(driveDirection);
-    }   
+    }
+
+    public void StopChest()
+    {
+        chestController.StopChest();
+    }
 
     // Home the chest
     public void OnHome(InputAction.CallbackContext context)
     {
         if(context.performed)
         {
-            Debug.Log("ChestContol << OnHome Function");
             chestController.HomeChest();
         }
     }
 
+    // Send chest to preset positions
     public void OnPreset1(InputAction.CallbackContext context)
     {
         if(context.performed)
         {
-            chestController.MoveToPreset(1);
+            chestController.MoveToPreset(0);
         }
     }
 
@@ -41,7 +47,7 @@ public class ChestControl : MonoBehaviour
     {
         if(context.performed)
         {
-            chestController.MoveToPreset(2);
+            chestController.MoveToPreset(1);
         }
     }
 
@@ -49,27 +55,24 @@ public class ChestControl : MonoBehaviour
     {
         if(context.performed)
         {
-            chestController.MoveToPreset(3);
+            chestController.MoveToPreset(2);
         }
     }
 
-    // Recommended Emergency Stop 
-    public void StopChest()
+    // Emergency Stop 
+    public void EmergencyStop(InputAction.CallbackContext context)
     {
-        chestController.StopChest();
+        if(context.performed)
+        {
+            chestController.EmergencyStop();
+        }
     }
 
-    // Error with Intergration
-    // Once the breaker connected to the aux port is turned of, the system can not be remotely be reactivated
-    // public void OnChestBreaker(InputAction.CallbackContext context)
-    // {
-    //     if(context.performed)
-    //     {
-    //         float input = context.ReadValue<float>();
-    //         chestController.ChestBreaker(input);
-    //     }
-        
-    // }
-
-
+    public void EmergencyStopResume(InputAction.CallbackContext context)
+    {
+        if(context.performed)
+        {
+            chestController.EmergencyStopResume();
+        }
+    }
 }

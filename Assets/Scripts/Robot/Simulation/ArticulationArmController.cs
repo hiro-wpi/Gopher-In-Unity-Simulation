@@ -66,7 +66,7 @@ public class ArticulationArmController : ArmController
     void Start() 
     { 
         // Home joints at the beginning
-        HomeJoints();
+        InitializeJoints();
         gripperController.OpenGripper();
     }
 
@@ -113,7 +113,7 @@ public class ArticulationArmController : ArmController
     }
 
     // Move to Preset
-    private void HomeJoints()
+    private void InitializeJoints()
     {
         float[] angles = homePositions.Angles;
         if (flipPresetAngles)
@@ -123,23 +123,28 @@ public class ArticulationArmController : ArmController
         currentCoroutine = StartCoroutine(MoveToPresetCoroutine(angles, true));
     }
 
-    public override bool MoveToPreset(int presetIndex)
+    public override void HomeJoints()
+    {
+        MoveToPreset(-1);
+    }
+
+    public override void MoveToPreset(int presetIndex)
     {
         // Do not allow moving joints to preset when grasping heavy object
         if (gripperController.GetGraspedObjectMass() > 1.0f)
         {
-            return false;
+            return;
         }
         
         // Get preset angles
         float[] angles;
-        if (presetIndex == 0)
+        if (presetIndex == -1)
         {
             angles = homePositions.Angles;
         }
         else
         {
-            angles = presets[presetIndex-1].Angles;
+            angles = presets[presetIndex].Angles;
         }
         // flip angles if needed (left vs right)
         if (flipPresetAngles)
@@ -153,8 +158,6 @@ public class ArticulationArmController : ArmController
             StopCoroutine(currentCoroutine);
         }
         currentCoroutine = StartCoroutine(MoveToPresetCoroutine(angles, false));
-
-        return true;
     }
 
     private float[] FlipAngles(float[] angles)
@@ -179,10 +182,12 @@ public class ArticulationArmController : ArmController
 
     private IEnumerator MoveToPresetCoroutine(float[] angles, bool disableColliders)
     {
+        // Move to given position
         controlMode = ControlMode.Target;
         jointController.SetJointTargets(angles, disableColliders);
-
+        // Check if reached
         yield return new WaitUntil(() => CheckPositionReached(angles) == true);
+        // Switch back to velocity control
         controlMode = ControlMode.Control;
     }
 
@@ -198,5 +203,16 @@ public class ArticulationArmController : ArmController
             }
         }
         return true;
+    }
+
+    // Emergency Stop
+    public override void EmergencyStop()
+    {
+        emergencyStop = true;
+    }
+
+    public override void EmergencyStopResume()
+    {
+        emergencyStop = false;
     }
 }

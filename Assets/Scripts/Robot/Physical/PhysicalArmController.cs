@@ -65,9 +65,28 @@ public class PhysicalArmController : ArmController
         gripperCommandService.SendGripperCommandService(gripperPosition);
     }
 
+    // TODO
+    public override void HomeJoints()
+    {
+        
+    }
+
     // Send command to move to pre-defined positions
-    public override bool MoveToPreset(int presetIndex) 
+    public override void MoveToPreset(int presetIndex) 
     { 
-        return false;
+        
+    }
+
+    // TODO
+    // Emergency Stop
+    public override void EmergencyStop()
+    {
+        
+    }
+    
+    // TODO
+    public override void EmergencyStopResume()
+    {
+        
     }
 }

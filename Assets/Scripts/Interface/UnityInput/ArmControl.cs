@@ -17,40 +17,16 @@ public class ArmControl : MonoBehaviour
     private float gripperPosition = 0f;
 
     void Start() {}
-    
-    // TODO //
-    // PRESET
-    public void OnHome(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-            armController.MoveToPreset(0);
-    }
-    public void OnPreset1(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-            armController.MoveToPreset(1);
-    }
-    public void OnPreset2(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-            armController.MoveToPreset(2);
-    }
-    public void OnPreset3(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-            armController.MoveToPreset(3);
-    }
-    public void OnPreset4(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-            armController.MoveToPreset(4);
-    }
-    public void OnPreset5(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-            armController.MoveToPreset(5);
-    }
 
+    // Change mode
+    public void OnModeChange(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            armController.SwitchMode();
+        }
+    }
+    
     // End effector control
     public void OnTranslate(InputAction.CallbackContext context)
     {
@@ -69,12 +45,24 @@ public class ArmControl : MonoBehaviour
     }    
 
     // Gripper
-    public void OnGripper(InputAction.CallbackContext context)
+    public void OnGrasp(InputAction.CallbackContext context)
     {
         // Read input
         gripperPosition = context.ReadValue<Vector2>().y;
         // Set velocity
         armController.SetGripperPosition(gripperPosition);
+    }
+
+    // TODO
+    // Handle autonomy input
+    public void OnTarget(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            // armController.MoveToTarget(
+            //    null, automationSpeed, false, false
+            // );
+        }
     }
 
     // Stop
@@ -86,24 +74,61 @@ public class ArmControl : MonoBehaviour
         armController.SetAngularVelocity(angularVelocity);
     }
 
-    // Change mode
-    public void OnModeChange(InputAction.CallbackContext context)
+    // Preset
+    public void OnHome(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            armController.SwitchMode();
+            armController.HomeJoints();
         }
     }
-    
-    // TODO //
-    // Handle autonomy input
-    public void OnTarget(InputAction.CallbackContext context)
+
+    public void OnPreset1(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            // armController.MoveToTarget(
-            //    null, automationSpeed, false, false
-            // );
+            armController.MoveToPreset(0);
+        }
+    }
+
+    public void OnPreset2(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            armController.MoveToPreset(1);
+        }
+    }
+
+    public void OnPreset3(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            armController.MoveToPreset(2);
+        }
+    }
+
+    public void OnPreset4(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            armController.MoveToPreset(3);
+        }
+    }
+
+    // Emergency Stop 
+    public void EmergencyStop(InputAction.CallbackContext context)
+    {
+        if(context.performed)
+        {
+            armController.EmergencyStop();
+        }
+    }
+
+    public void EmergencyStopResume(InputAction.CallbackContext context)
+    {
+        if(context.performed)
+        {
+            armController.EmergencyStopResume();
         }
     }
 }

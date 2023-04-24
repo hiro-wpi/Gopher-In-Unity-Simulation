@@ -21,14 +21,22 @@ public class ArticulationCameraController : CameraController
         // Speed control
         if (controlMode == ControlMode.Speed)
         {
-            ArticulationBodyUtils.SetJointSpeedStep(cameraYawJoint, angularVelocity.y);
-            ArticulationBodyUtils.SetJointSpeedStep(cameraPitchJoint, angularVelocity.z);
+            ArticulationBodyUtils.SetJointSpeedStep(
+                cameraYawJoint, angularVelocity.y * Mathf.Rad2Deg
+            );
+            ArticulationBodyUtils.SetJointSpeedStep(
+                cameraPitchJoint, angularVelocity.z * Mathf.Rad2Deg
+            );
         }
         // Position control
         else
         {
-            ArticulationBodyUtils.SetJointTargetStep(cameraYawJoint, angles.y, maxAngularSpeed);
-            ArticulationBodyUtils.SetJointTargetStep(cameraPitchJoint, angles.z, maxAngularSpeed);
+            ArticulationBodyUtils.SetJointTargetStep(
+                cameraYawJoint, angles.y, maxAngularSpeed * Mathf.Rad2Deg
+            );
+            ArticulationBodyUtils.SetJointTargetStep(
+                cameraPitchJoint, angles.z, maxAngularSpeed * Mathf.Rad2Deg
+            );
         }
     }
     

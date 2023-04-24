@@ -90,8 +90,12 @@ public abstract class ArmController : MonoBehaviour
     }
 
     // Pre-defined positions
-    public virtual bool MoveToPreset(int presetIndex) 
-    { 
-        return false;
-    }
+    public virtual void HomeJoints() {}
+
+    public virtual void MoveToPreset(int presetIndex) {}
+
+    // Emergency stop
+    public virtual void EmergencyStop() {}
+
+    public virtual void EmergencyStopResume() {}
 }

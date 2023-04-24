@@ -14,13 +14,10 @@ public class PhysicalChestController : ChestController
     [SerializeField] private TwistPublisher twistPublisher;
     [SerializeField] private ChestHomeService homeService;
     [SerializeField] private ChestStopService stopService;
-    [SerializeField] private BreakerCommandService chestBreakerService;
 
     // Velocity publish rate
     [SerializeField] protected int publishRate = 60;
 
-    
-    
     void Start()
     {
         // Keep publishing the velocity at a fixed rate
@@ -36,16 +33,14 @@ public class PhysicalChestController : ChestController
         {
             return;
         }
+        
         // Publish to ROS
-        Debug.Log("PhysicalChestController << PublishVelocity Function");
-        Debug.Log(speedFraction);
         Vector3 velocity = new Vector3(0, speedFraction, 0);
         twistPublisher.PublishTwist(velocity, new Vector3(0,0,0));
     }
 
     public override void StopChest()
     {
-        // stopService.SendChestStopService();
         twistPublisher.PublishTwist(Vector3.zero, Vector3.zero);
     }
 
@@ -56,21 +51,22 @@ public class PhysicalChestController : ChestController
         controlMode = ControlMode.Speed;
     }
 
-    public override void MoveToPreset(int presetIndex) {}
+    // TODO
+    // Send command to move to pre-defined positions
+    public override void MoveToPreset(int presetIndex) 
+    {
 
-    // Breaker
-    // Issue with Intergration
-    // public override void ChestBreaker(float value)
-    // {
-    //     if (value == 0)
-    //     {
-    //         chestBreakerService.SendBreakerCommandService(false);
-    //     }
-        
-    //     if (value == 1)
-    //     {
-    //         chestBreakerService.SendBreakerCommandService(true);
-    //     }
-    // }
+    }
     
+    // Emergency stop
+    public override void EmergencyStop()
+    {
+        stopService.SendChestStopService();
+    }
+
+    public override void EmergencyStopResume() 
+    {
+        // Physical motorized chest 
+        // does not need to resume from emergency stop
+    }
 }

@@ -57,6 +57,17 @@ public class ArticulationBaseController : BaseController
         );
     }
 
+    // Emergency Stop
+    public override void EmergencyStop()
+    {
+        emergencyStop = true;
+    }
+
+    public override void EmergencyStopResume()
+    {
+        emergencyStop = false;
+    }
+
     // Extra speed limits for the robot
     public string AddSpeedLimit(float[] speedLimits, string identifier = "")
     {

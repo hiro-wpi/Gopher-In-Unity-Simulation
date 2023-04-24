@@ -16,7 +16,7 @@ using UnityEngine;
 public class ArticulationBodyInitialization : MonoBehaviour
 {
     [SerializeField] private GameObject robotRoot;
-    [SerializeField] private float stiffness = 50000f;
+    [SerializeField] private float stiffness = 10000f;
     [SerializeField] private float damping = 100f;
     [SerializeField] private float forceLimit = 1000f;
 
