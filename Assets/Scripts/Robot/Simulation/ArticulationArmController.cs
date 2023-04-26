@@ -101,7 +101,7 @@ public class ArticulationArmController : ArmController
         {
             // Convert to position error and angular error in next timestep
             Vector3 linearError = - linearVelocity * Time.fixedDeltaTime;
-            Vector3 angularError = - angularVelocity * Time.fixedDeltaTime;
+            Vector3 angularError = - angularVelocity * Time.fixedDeltaTime * Mathf.Rad2Deg;
             // Solve IK
             jointAngles = jointController.GetCurrentJointTargets();
             jointAngles = newtonIK.SolveVelocityIK(

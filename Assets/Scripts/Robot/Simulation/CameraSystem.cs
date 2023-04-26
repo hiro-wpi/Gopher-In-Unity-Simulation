@@ -17,6 +17,7 @@ public class CameraSystem : MonoBehaviour
         Debug.Assert(Cameras.Length == cameraNames.Length);
 
         // Attach a camera frame rate to each camera if not already attached
+        cameraFrameRates = new CameraFrameRate[cameraNames.Length];
         for(int i = 0; i < Cameras.Length; ++i)
         {
             Camera cam = Cameras[i];
