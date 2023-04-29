@@ -11,6 +11,9 @@ public class ArticulationCameraController : CameraController
     [SerializeField] private ArticulationBody cameraYawJoint;
     [SerializeField] private ArticulationBody cameraPitchJoint;
 
+    // Home positions
+    [SerializeField] private Vector3 homeAngles;
+
     void Start()
     {
         HomeCamera();
@@ -18,7 +21,7 @@ public class ArticulationCameraController : CameraController
 
     void FixedUpdate()
     {
-        // Speed control
+        // Speed controlhomeAngles
         if (controlMode == ControlMode.Speed)
         {
             ArticulationBodyUtils.SetJointSpeedStep(
@@ -32,10 +35,14 @@ public class ArticulationCameraController : CameraController
         else
         {
             ArticulationBodyUtils.SetJointTargetStep(
-                cameraYawJoint, angles.y, maxAngularSpeed * Mathf.Rad2Deg
+                cameraYawJoint, 
+                angles.y * Mathf.Rad2Deg, 
+                maxAngularSpeed * Mathf.Rad2Deg
             );
             ArticulationBodyUtils.SetJointTargetStep(
-                cameraPitchJoint, angles.z, maxAngularSpeed * Mathf.Rad2Deg
+                cameraPitchJoint, 
+                angles.z * Mathf.Rad2Deg, 
+                maxAngularSpeed * Mathf.Rad2Deg
             );
         }
     }
@@ -50,9 +57,11 @@ public class ArticulationCameraController : CameraController
     {
         // Move to given position
         controlMode = ControlMode.Position;
-        SetPosition(Vector3.zero);
+        SetPosition(homeAngles);
         // Check if reached
-        yield return new WaitUntil(() => CheckPositionReached(Vector3.zero) == true);
+        yield return new WaitUntil(
+            () => CheckPositionReached(homeAngles) == true
+        );
         // Switch back to velocity control
         controlMode = ControlMode.Speed;
     }
@@ -60,8 +69,10 @@ public class ArticulationCameraController : CameraController
     private bool CheckPositionReached(Vector3 position)
     {
         // Check if current joint target is set to the position
-        if ((Mathf.Abs(cameraYawJoint.xDrive.target - position.y) > 0.00001f) || 
-            (Mathf.Abs(cameraPitchJoint.xDrive.target - position.z) > 0.00001f))
+        if ((new Vector3(
+                0.0f, cameraYawJoint.xDrive.target, cameraPitchJoint.xDrive.target
+             ) * Mathf.Deg2Rad - homeAngles
+            ).magnitude > 0.00001f)
         {
             return false;
         }
