@@ -87,11 +87,16 @@ public class ArticulationArmController : ArmController
         }
     }
 
-    // When gripper speed is set
+    // When gripper is set
     public override void SetGripperPosition(float position)
     {
         base.SetGripperPosition(position);
         gripperController.SetGripper(position);
+    }
+
+    public override void ChangeGripperStatus()
+    {
+        gripperController.ChangeGripperStatus();
     }
 
     private void ProcessManualControl()

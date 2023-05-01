@@ -28,7 +28,8 @@ public class ArticulationBaseController : BaseController
     private float[] speedLimit = new[] { 100f, 100f, 100f, 100f };
     // A dictionary to store all enforced speed limits
     // ID, [linear_forward, linear_backward, angular_left, angular_right]
-    private Dictionary<string, float[]> speedLimitsDict = new();
+    private Dictionary<string, float[]> speedLimitsDict = 
+        new() { {"default", new[] { 100f, 100f, 100f, 100f }} };
 
     // void Start() {}
 
@@ -72,7 +73,9 @@ public class ArticulationBaseController : BaseController
     public string AddSpeedLimit(float[] speedLimits, string identifier = "")
     {
         if (identifier == "")
+        {
             identifier = speedLimitsDict.Count.ToString();
+        }
 
         // Add or set new speed limits
         if (speedLimitsDict.ContainsKey(identifier))

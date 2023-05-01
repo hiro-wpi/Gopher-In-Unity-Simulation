@@ -30,7 +30,7 @@ public class GopherControl : MonoBehaviour
     [field: SerializeField]
     public bool MainCameraEnabled { get; private set; } = false;
 
-    void Start()
+    void OnEnable()
     {
         // Set up input action maps
         baseInputMap = playerInput.actions.FindActionMap("GopherBase");

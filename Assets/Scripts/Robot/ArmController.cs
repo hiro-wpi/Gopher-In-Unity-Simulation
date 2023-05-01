@@ -76,6 +76,11 @@ public abstract class ArmController : MonoBehaviour
         );
     }
 
+    public virtual void ChangeGripperStatus()
+    {
+        gripperPosition = 1.0f - gripperPosition;
+    }
+
     // Set robot control mode
     public void SetMode(Mode mode)
     {

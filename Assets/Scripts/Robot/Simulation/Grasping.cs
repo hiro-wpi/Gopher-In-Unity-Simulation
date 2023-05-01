@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +25,7 @@ public class Grasping : MonoBehaviour
     private GameObject graspableObject;
     private GameObject objectOriginalParent;
     private float objectMass = 0.0f;
+    private RigidbodyConstraints objectConstrains;
     private NavMeshObstacle[] navMeshObstacles;
 
     void Start() {}
@@ -51,30 +53,30 @@ public class Grasping : MonoBehaviour
     {
         // Check validity
         if (IsGrasping || graspableObject == gameObject || gameObject == null)
+        {
             return;
+        }
 
         // Valid object to grasp
         IsGrasping = true;
         graspableObject = gameObject;
 
-        // Get rigidbody mass and set kinematic to false
+        // Change parent to toolframe
+        objectOriginalParent = graspableObject.transform.parent?.gameObject;
+        graspableObject.transform.parent = endEffector.transform;
+
+        // Get rigidbody mass and remove it
         Rigidbody rb = graspableObject.GetComponent<Rigidbody>();
         if (rb != null)
         {
             objectMass = rb.mass;
-            rb.isKinematic = true;
+            objectConstrains = rb.constraints;
+            Destroy(rb);
         }
         else
         {
             objectMass = 0.0f;
         }
-
-        // Change parent to toolframe
-        if (graspableObject.transform.parent == null)
-            objectOriginalParent = null;
-        else
-            objectOriginalParent = graspableObject.transform.parent.gameObject;
-        graspableObject.transform.parent = endEffector.transform;
 
         // TEMP - may change once global planner is no longer the Unity one
         // Activate nav mesh obstacle if any
@@ -93,29 +95,23 @@ public class Grasping : MonoBehaviour
         IsGrasping = false;
         // No grasping object
         if (graspableObject == null)
+        {
             return;
+        }
+
+        // Change back parent
+        graspableObject.transform.parent = objectOriginalParent?.transform;
 
         // Add back rigidbody
-        /*
         if (objectMass != 0.0f)
         {
             Rigidbody rb = graspableObject.AddComponent<Rigidbody>();
             rb.mass = objectMass;
+            rb.constraints = objectConstrains;
+            objectMass = 0.0f;
+            objectConstrains = RigidbodyConstraints.None;
         }
-        */
-        Rigidbody rb = graspableObject.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.isKinematic = false;
-        }
-        objectMass = 0.0f;
-        
-        // Change back parent
-        if (objectOriginalParent == null)
-            graspableObject.transform.parent = null;
-        else
-            graspableObject.transform.parent = objectOriginalParent.transform;
-        
+
         // TEMP - may change once global planner is no longer the Unity one
         // Inactivate nav mesh obstacle if any
         foreach (NavMeshObstacle obstacle in navMeshObstacles)
