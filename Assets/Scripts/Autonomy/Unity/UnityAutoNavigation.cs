@@ -246,9 +246,6 @@ public class UnityAutoNavigation : AutoNavigation
                 return;
         }
         */
-        if (IsNavigating)
-            return;
-        
         IsNavigating = true;
     }
 
@@ -269,9 +266,6 @@ public class UnityAutoNavigation : AutoNavigation
 
     public override void PauseNavigation()
     {
-        if (!IsNavigating)
-            return;
-        
         // Stop moving the robot
         baseController.SetVelocity(Vector3.zero, Vector3.zero);
         IsNavigating = false;
