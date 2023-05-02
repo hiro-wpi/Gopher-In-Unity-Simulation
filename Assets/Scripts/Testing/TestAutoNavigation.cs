@@ -7,7 +7,7 @@ using UnityEngine.AI;
 public class TestAutoNavigation : MonoBehaviour
 {
     // Character
-    [SerializeField] private AutoNavigation autoNavigation;
+    [SerializeField] private UnityAutoNavigation autoNavigation;
     [SerializeField] private  GameObject target;
     private Vector3 goal;
 
@@ -17,8 +17,7 @@ public class TestAutoNavigation : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.G))
         {
-            autoNavigation.EnableAutonomy();
-            autoNavigation.drawPathEnabled = true;
+            autoNavigation.ResumeNavigation();
             goal = target.transform.position;
 
             autoNavigation.SetGoal(goal);
@@ -26,8 +25,7 @@ public class TestAutoNavigation : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.S))
         {
-            autoNavigation.DisableAutonomy();
-            autoNavigation.drawPathEnabled = false;
+            autoNavigation.StopNavigation();
         }
     }
 }

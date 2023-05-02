@@ -23,7 +23,7 @@ public class GraphicalInterface : MonoBehaviour
     private GameObject robot;
     private FakeLocalization localization;
     private StateReader stateReader;
-    private AutoNavigation autoNavigation;
+    private UnityAutoNavigation autoNavigation;
     // main camera
     public GameObject cameraDisplay;
     private Vector2 cameraResolution;
@@ -481,7 +481,7 @@ public class GraphicalInterface : MonoBehaviour
         localization = robot.GetComponentInChildren<FakeLocalization>();
         stateReader = robot.GetComponentInChildren<StateReader>();
         gopherControl = robot.GetComponentInChildren<GopherControl>();
-        autoNavigation = robot.GetComponentInChildren<AutoNavigation>();
+        autoNavigation = robot.GetComponentInChildren<UnityAutoNavigation>();
         // Get IK and End effector reference transform for
         // switching IK reference frame based on camera view
         // TODO 1 left first and right next, no better way to tell each apart
@@ -684,7 +684,7 @@ public class GraphicalInterface : MonoBehaviour
         // Cancel previous goal
         if ((point - prevClickPoint).magnitude < 0.5)
         {
-            autoNavigation.DisableAutonomy();
+            autoNavigation.StopNavigation();
             prevClickPoint = Vector3.zero;
         }
         // Set goal
