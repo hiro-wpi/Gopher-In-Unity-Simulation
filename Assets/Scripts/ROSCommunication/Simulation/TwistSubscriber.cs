@@ -17,29 +17,42 @@ public class TwistSubscriber : MonoBehaviour
     // Variables required for ROS communication
     public string twistTopicName = "cmd_vel";
 
-    public ArticulationWheelController wheelController;
-    private float targetLinearSpeed;
-    private float targetAngularSpeed;
+    // public ArticulationWheelController wheelController;
+    public ArticulationBaseController baseController;
+    private Vector3 targetLinearSpeed;
+    private Vector3 targetAngularSpeed;
     
     void Start()
     {
         // Get ROS connection static instance
         ros = ROSConnection.GetOrCreateInstance();
 
-        targetLinearSpeed = 0f;
-        targetAngularSpeed = 0f;
+        targetLinearSpeed = new Vector3();
+        targetAngularSpeed = new Vector3();
         
         ros.Subscribe<TwistMsg>(twistTopicName, UpdateVelocity);
     }
     
     void FixedUpdate()
     {
-        wheelController.SetRobotSpeedStep(targetLinearSpeed, targetAngularSpeed);
+        // wheelController.SetRobotSpeedStep(targetLinearSpeed, targetAngularSpeed);
+        baseController.SetVelocity(targetLinearSpeed, targetAngularSpeed);
     }
 
     private void UpdateVelocity(TwistMsg twist)
     {
-        targetLinearSpeed = twist.linear.From<FLU>().z;
-        targetAngularSpeed = twist.angular.From<FLU>().y;
+        targetLinearSpeed = twist.linear.From<FLU>();
+        targetAngularSpeed = twist.angular.From<FLU>();
     }
+
+    // void FixedUpdate()
+    // {
+    //     wheelController.SetRobotSpeedStep(targetLinearSpeed, targetAngularSpeed);
+    // }
+
+    // private void UpdateVelocity(TwistMsg twist)
+    // {
+    //     targetLinearSpeed = twist.linear.From<FLU>().z;
+    //     targetAngularSpeed = twist.angular.From<FLU>().y;
+    // }
 }
