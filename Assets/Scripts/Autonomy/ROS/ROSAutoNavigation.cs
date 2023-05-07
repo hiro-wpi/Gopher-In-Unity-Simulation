@@ -14,12 +14,27 @@ using UnityEngine;
 /// </summary>
 public class ROSAutoNavigation : AutoNavigation
 {
-    PoseStampedGoalPubisher publisher = new PoseStampedGoalPubisher();
+    [SerializeField] private MoveBaseCancelGoalService cancelGoalService;
+    [SerializeField] private MoveBaseSendGoalService sendGoalService;
+    [SerializeField] private MoveBaseMakePlanService makePlanService;
+
+    [SerializeField] private LocalPlannerSubscriber localPlanner;
+
+    void Update()
+    {
+        // Update if there is a new global plan
+        if(makePlanService.GetWaypointFlagStatus() == true)
+        {
+            GlobalWaypoints = makePlanService.GetGlobalWaypoints();
+        }
+
+        LocalWaypoints = localPlanner.getLocalWaypoints();
+    }
 
     // Set goal, regardless of the goal orientation
     public override void SetGoal(Vector3 position)
     {
-        SetGoal(position, new Vector3(0));
+        SetGoal(position, new Vector3());
     }
 
     // Set goal, with goal orientation
@@ -27,39 +42,41 @@ public class ROSAutoNavigation : AutoNavigation
     {
         TargetPosition = position;
         TargetOrientationEuler = orientation;
+
+        makePlanService.MakePlanCommandService(position, orientation);
     }
 
-    //  Update Global Waypoints
-    public void SetGlobalWaypoints(Vector3[] waypoints)
-    {
-        GlobalWaypoints = waypoints;
-    }
-
-    //  Update Local Waypoints
-    public void SetLocalWaypoints(Vector3[] waypoints)
-    {
-        LocalWaypoints = waypoints;
-    }
+    
+    // //  Update Local Waypoints
+    // public void SetLocalWaypoints(Vector3[] waypoints)
+    // {
+    //     LocalWaypoints = waypoints;
+    // }
 
     // Start, pause and resume navigation
     // Start is essentially the same as resume
-    public abstract void StartNavigation()
+    public override void StartNavigation()
     {
-        publisher.PublishPoseStampedCommand(TargetPosition, TargetOrientationEuler);
+        // publisher.PublishPoseStampedCommand(TargetPosition, TargetOrientationEuler);
+        sendGoalService.SendGoalCommandService(TargetPosition, TargetOrientationEuler);
     }
 
-    public abstract void PauseNavigation()
+    public override void PauseNavigation()
     {
-        
+        cancelGoalService.CancelGoalCommandService();
     }
-    public abstract void ResumeNavigation()
+    public override void ResumeNavigation()
     {
-        StartNavigation()
+        StartNavigation();
     }
 
     // Stop navigation, clear previous plan
-    public abstract void StopNavigation();
-
+    public override void StopNavigation()
+    {
+        cancelGoalService.CancelGoalCommandService();
+        GlobalWaypoints = new Vector3[0];
+        LocalWaypoints = new Vector3[0];
+    }
 
 
 }
