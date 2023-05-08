@@ -33,7 +33,7 @@ public class MoveBaseCancelGoalService : MonoBehaviour
         // Create Empty Request
         EmptyRequest emptyRequest = new EmptyRequest();
         
-    
+        Debug.Log("Sending Cancel Goal Ros Request");
         // Request service
         ros.SendServiceMessage<EmptyResponse>(
             moveBaseCancelGoalServiceName, emptyRequest, CancelGoalCallback

@@ -41,7 +41,7 @@ public class MoveBaseSendGoalService : MonoBehaviour
         Quaternion rot = Quaternion.LookRotation(rotation, Vector3.up);
         goalRequest.goal.pose.orientation = rot.To<FLU>();
 
-        
+        Debug.Log("Sending Send Goal Ros Request");
         // Request service
         ros.SendServiceMessage<GetPlanResponse>(
             moveBaseSendGoalServiceName, goalRequest, GoalCallback

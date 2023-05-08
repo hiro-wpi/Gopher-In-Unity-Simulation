@@ -17,7 +17,7 @@ public class TestGUI : MonoBehaviour
 
     // Robot
     public GameObject robot;
-    private AutoNavigation autoNavigation;
+    public ROSAutoNavigation autoNavigation;
     
     // Path visualization
     /*
@@ -30,7 +30,7 @@ public class TestGUI : MonoBehaviour
     void Start() 
     {
         // planner
-        autoNavigation = robot.GetComponentInChildren<AutoNavigation>();
+        autoNavigation = robot.GetComponentInChildren<ROSAutoNavigation>();
 
         // map render texture
         cameraDisplayRect = cameraDisplay.GetComponent<RectTransform>();

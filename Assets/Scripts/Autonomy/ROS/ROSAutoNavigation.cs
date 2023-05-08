@@ -19,22 +19,25 @@ public class ROSAutoNavigation : AutoNavigation
     [SerializeField] private MoveBaseMakePlanService makePlanService;
 
     [SerializeField] private LocalPlannerSubscriber localPlanner;
+    [SerializeField] private GlobalPlannerSubscriber globalPlanner;
 
     void Update()
     {
         // Update if there is a new global plan
-        if(makePlanService.GetWaypointFlagStatus() == true)
-        {
-            GlobalWaypoints = makePlanService.GetGlobalWaypoints();
-        }
-
+        // if(makePlanService.GetWaypointFlagStatus() == true)
+        // {
+        //     GlobalWaypoints = makePlanService.GetGlobalWaypoints();
+        // }
+        GlobalWaypoints = globalPlanner.getGlobalWaypoints();
         LocalWaypoints = localPlanner.getLocalWaypoints();
     }
+
+    
 
     // Set goal, regardless of the goal orientation
     public override void SetGoal(Vector3 position)
     {
-        SetGoal(position, new Vector3());
+        SetGoal(position, new Vector3(0,0,0));
     }
 
     // Set goal, with goal orientation
@@ -43,7 +46,7 @@ public class ROSAutoNavigation : AutoNavigation
         TargetPosition = position;
         TargetOrientationEuler = orientation;
 
-        makePlanService.MakePlanCommandService(position, orientation);
+       sendGoalService.SendGoalCommandService(position, orientation);
     }
 
     
@@ -58,7 +61,7 @@ public class ROSAutoNavigation : AutoNavigation
     public override void StartNavigation()
     {
         // publisher.PublishPoseStampedCommand(TargetPosition, TargetOrientationEuler);
-        sendGoalService.SendGoalCommandService(TargetPosition, TargetOrientationEuler);
+        // sendGoalService.SendGoalCommandService(TargetPosition, TargetOrientationEuler);
     }
 
     public override void PauseNavigation()
@@ -74,8 +77,8 @@ public class ROSAutoNavigation : AutoNavigation
     public override void StopNavigation()
     {
         cancelGoalService.CancelGoalCommandService();
-        GlobalWaypoints = new Vector3[0];
-        LocalWaypoints = new Vector3[0];
+        // GlobalWaypoints = new Vector3[0];
+        // LocalWaypoints = new Vector3[0];
     }
 
 

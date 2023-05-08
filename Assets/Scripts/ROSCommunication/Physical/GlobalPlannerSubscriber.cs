@@ -10,17 +10,17 @@ using RosMessageTypes.Nav;
 ///      This script subscribes to a local path topic
 /// </summary>
 
-public class LocalPlannerSubscriber : MonoBehaviour
+public class GlobalPlannerSubscriber : MonoBehaviour
 {
     //ROS Connector
     private ROSConnection ros;
     // Variables required for ROS communication
-    [SerializeField] private string localPlannerTopicName = "local_plan";
+    [SerializeField] private string GlobalPlannerTopicName = "global_plan";
 
     // path
     private bool isNewPathRecieved;
     private PathMsg path;
-    private Vector3[] LocalWaypoints =  new Vector3[0];
+    private Vector3[] GlobalWaypoints =  new Vector3[0];
     // private Vector3[] waypoints;
     // public ROSAutoNaviagation AutoNav;
 
@@ -33,7 +33,7 @@ public class LocalPlannerSubscriber : MonoBehaviour
         isNewPathRecieved = false;
 
         // Subscribe
-        ros.Subscribe<PathMsg>(localPlannerTopicName, Callback);
+        ros.Subscribe<PathMsg>(GlobalPlannerTopicName, Callback);
 
     }
 
@@ -42,7 +42,7 @@ public class LocalPlannerSubscriber : MonoBehaviour
         if(isNewPathRecieved)
         {
             // Create an empty list
-            LocalWaypoints = ConvertPathToArray(path);
+            GlobalWaypoints = ConvertPathToArray(path);
             isNewPathRecieved = false;
         }
         
@@ -65,9 +65,9 @@ public class LocalPlannerSubscriber : MonoBehaviour
         return waypoints;
     }
 
-    public Vector3[] getLocalWaypoints()
+    public Vector3[] getGlobalWaypoints()
     {
-        return LocalWaypoints;
+        return GlobalWaypoints;
     }
 
     void Callback(PathMsg apath)

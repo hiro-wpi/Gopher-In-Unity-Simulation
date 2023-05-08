@@ -97,7 +97,7 @@ public class MoveBaseMakePlanService : MonoBehaviour
         Quaternion rot = Quaternion.LookRotation(rotation, Vector3.up);
         planRequest.goal.pose.orientation = rot.To<FLU>();
 
-        
+        Debug.Log("Sending Make Plan Ros Request");
         // Request service
         ros.SendServiceMessage<GetPlanResponse>(
             moveBaseMakePlanServiceName, planRequest, PlanCallback
