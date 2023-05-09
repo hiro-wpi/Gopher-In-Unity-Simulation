@@ -38,6 +38,9 @@ public abstract class ArmController : MonoBehaviour
 
     void Update() {}
 
+    // Set joint positions (in radians)
+    public virtual void SetJointAngles(float[] jointAngles) {}
+
     // Set end effector velocity
     public virtual void SetLinearVelocity(Vector3 linear)
     {

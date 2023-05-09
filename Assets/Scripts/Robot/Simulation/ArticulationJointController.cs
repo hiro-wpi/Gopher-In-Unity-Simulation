@@ -51,7 +51,9 @@ public class ArticulationJointController : MonoBehaviour
         {
             StopCoroutine(currCoroutine);
         }
-        currCoroutine = StartCoroutine(SetJointTargetsCoroutine(targets, disableColliders));
+        currCoroutine = StartCoroutine(
+            SetJointTargetsCoroutine(targets, disableColliders)
+        );
     }
 
     // Coroutine for joint movement (move to target positions)

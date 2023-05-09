@@ -12,13 +12,9 @@ public class AutoGrasping : MonoBehaviour
     private GameObject targetObject;
     private Color prevColor;
 
-    void Start()
-    {
-    }
+    void Start() {}
 
-    void Update()
-    {
-    }
+    void Update() {}
 
     private void OnTriggerEnter(Collider other) 
     {

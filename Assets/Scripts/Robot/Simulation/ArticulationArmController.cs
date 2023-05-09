@@ -87,7 +87,7 @@ public class ArticulationArmController : ArmController
         }
     }
 
-    // When gripper is set
+    // Gripper
     public override void SetGripperPosition(float position)
     {
         base.SetGripperPosition(position);
@@ -99,6 +99,7 @@ public class ArticulationArmController : ArmController
         gripperController.ChangeGripperStatus();
     }
 
+    // Manual real-time control
     private void ProcessManualControl()
     {
         // End effector position control
@@ -117,15 +118,75 @@ public class ArticulationArmController : ArmController
         }
     }
 
+    // Move to joint angles
+    public override void SetJointAngles(float[] jointAngles)
+    {
+        if (currentCoroutine != null)
+        {
+            StopCoroutine(currentCoroutine);
+        }
+        currentCoroutine = StartCoroutine(MoveToAnglesCoroutine(jointAngles));
+    }
+
+    private IEnumerator MoveToAnglesCoroutine(
+        float[] angles, bool disableColliders = false)
+    {
+        // Move to given position
+        controlMode = ControlMode.Target;
+        jointController.SetJointTargets(angles, disableColliders);
+        // Check if reached
+        yield return new WaitUntil(() => CheckAnglesReached(angles) == true);
+        // Switch back to velocity control
+        controlMode = ControlMode.Control;
+    }
+
+    private bool CheckAnglesReached(float[] angles)
+    {
+        float[] currTargets = jointController.GetCurrentJointTargets();
+        for (int i = 0; i < angles.Length; ++i)
+        {
+            if ((angles[i] != IGNORE_VAL) && 
+                (Mathf.Abs(currTargets[i] - angles[i]) > 0.00001))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Move the joint following a trajectory
+    public void SetJointTrajectory(
+        float[] angles, float[] velocities, float[] accelerations)
+    {
+        if (currentCoroutine != null)
+        {
+            StopCoroutine(currentCoroutine);
+        }
+        currentCoroutine = StartCoroutine(FollowTrajectoryCoroutine());
+    }
+
+    private IEnumerator FollowTrajectoryCoroutine(
+        float[] angles, float[] velocities, float[] accelerations)
+    {
+        // Move to given position
+        controlMode = ControlMode.Target;
+        jointController.SetJointTrajectory(angles, velocities, accelerations);
+        // Check if reached
+        yield return new WaitUntil(() => CheckAnglesReached(angles) == true);
+        // Switch back to velocity control
+        controlMode = ControlMode.Control;
+    }
+
     // Move to Preset
     private void InitializeJoints()
     {
+        // Home angles
         float[] angles = homePositions.Angles;
         if (flipPresetAngles)
         {
             angles = FlipAngles(angles);
         }
-        currentCoroutine = StartCoroutine(MoveToPresetCoroutine(angles, true));
+        currentCoroutine = StartCoroutine(MoveToAnglesCoroutine(angles, true));
     }
 
     public override void HomeJoints()
@@ -158,11 +219,7 @@ public class ArticulationArmController : ArmController
         }
         
         // Move to presets
-        if (currentCoroutine != null)
-        {
-            StopCoroutine(currentCoroutine);
-        }
-        currentCoroutine = StartCoroutine(MoveToPresetCoroutine(angles, false));
+        SetJointAngles(angles);
     }
 
     private float[] FlipAngles(float[] angles)
@@ -183,31 +240,6 @@ public class ArticulationArmController : ArmController
             }
         }
         return flippedAngles;
-    }
-
-    private IEnumerator MoveToPresetCoroutine(float[] angles, bool disableColliders)
-    {
-        // Move to given position
-        controlMode = ControlMode.Target;
-        jointController.SetJointTargets(angles, disableColliders);
-        // Check if reached
-        yield return new WaitUntil(() => CheckPositionReached(angles) == true);
-        // Switch back to velocity control
-        controlMode = ControlMode.Control;
-    }
-
-    private bool CheckPositionReached(float[] angles)
-    {
-        float[] currTargets = jointController.GetCurrentJointTargets();
-        for (int i = 0; i < angles.Length; ++i)
-        {
-            if ((angles[i] != IGNORE_VAL) && 
-                (Mathf.Abs(currTargets[i] - angles[i]) > 0.00001))
-            {
-                return false;
-            }
-        }
-        return true;
     }
 
     // Emergency Stop
