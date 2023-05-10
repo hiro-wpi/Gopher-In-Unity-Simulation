@@ -5,8 +5,17 @@ using UnityEngine;
 
 /// <summary>
 ///     This script allows robot joints to be controlled with 
-///     SetJointTarget, SetJointTargetStep, SetJointSpeedStep.
-///     It also provides joint pose intializaiton.
+///
+///     SetJointTarget (use coroutine to move to target positions),
+///         Recommended for setting joint targets that are largely different
+///     
+///     SetJointTargetStep (move to the target positions in one delta time),
+///         Recommended for real-time servoing,
+///         in which the angles change is certainly small
+///
+///     SetJointSpeedStep (move at the target velocity in one delta time).
+///         Recommended for velocity control,
+///         in which desired joint velocities are known in each time step
 /// </summary>
 public class ArticulationJointController : MonoBehaviour
 {
@@ -26,7 +35,8 @@ public class ArticulationJointController : MonoBehaviour
 
     void Awake()
     {
-        // Only consider colliders that are active by default
+        // Get colliders of all articulation bodies
+        // Only consider those that are active by default
         colliders = articulationChain[0].GetComponentsInChildren<Collider>();
         colliders = colliders.Where(collider => collider.enabled == true).ToArray();
     }
@@ -35,15 +45,10 @@ public class ArticulationJointController : MonoBehaviour
 
     void Update() {}
 
-    private void SetCollidersActive(bool active)
-    {
-        foreach (Collider collider in colliders)
-        {
-            collider.enabled = active;
-        }
-    }
-
     // Set joint target
+    // Use coroutine to move to target positions given joint speed limits
+    // Recommended for setting joint targets that are largely 
+    // different from the current joint positions
     public void SetJointTargets(float[] targets, bool disableColliders = false)
     {
         // Stop current coroutine
@@ -51,6 +56,7 @@ public class ArticulationJointController : MonoBehaviour
         {
             StopCoroutine(currCoroutine);
         }
+        // Move to target positions
         currCoroutine = StartCoroutine(
             SetJointTargetsCoroutine(targets, disableColliders)
         );
@@ -66,18 +72,27 @@ public class ArticulationJointController : MonoBehaviour
         {
             SetCollidersActive(false);
         }
-        yield return new WaitUntil(() => MoveToJointPositionsStep(jointPositions) == true);
+        yield return new WaitUntil(() => SetJointTargetsStepAndCheck(jointPositions) == true);
         if (disableColliders)
         {
             SetCollidersActive(true);
         }
     }
 
-    private bool MoveToJointPositionsStep(float[] positions)
+    // This is only for the purpose of initializing joint positions
+    // at the start of the Unity simulation
+    private void SetCollidersActive(bool active)
+    {
+        foreach (Collider collider in colliders)
+        {
+            collider.enabled = active;
+        }
+    }
+
+    private bool SetJointTargetsStepAndCheck(float[] positions)
     {
         // Set joint targets
         SetJointTargetsStep(positions);
-        // Debug.Log("Set");
 
         // Check if current joint targets are set to the target positions
         float[] currTargets = GetCurrentJointTargets();
@@ -92,6 +107,10 @@ public class ArticulationJointController : MonoBehaviour
         return true;
     }
 
+    // Set joint target step
+    // Directly setting target positions
+    // Only recommended for real-time servoing / velocity control 
+    // in which the angles change is certainly small
     public void SetJointTargetsStep(float[] targets)
     {
         for (int i = 0; i < articulationChain.Length; ++i)
@@ -124,6 +143,13 @@ public class ArticulationJointController : MonoBehaviour
     {
         speed = Mathf.Clamp(speed, 0.0f, jointMaxSpeed);
         ArticulationBodyUtils.SetJointSpeedStep(joint, speed * Mathf.Rad2Deg);
+    }
+
+    // Set joint trajectory
+    public void SetJointTrajectories(
+        float[][] targets, float[][] speeds, float[][] acclerations = null)
+    {
+        
     }
 
     // Stop joints
