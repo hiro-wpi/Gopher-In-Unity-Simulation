@@ -5,12 +5,10 @@ using UnityEngine;
 /// <summary>
 ///     Autonomy for 2D navigation.
 ///
-///     The global planner used is the default
-///     Unity A* algorithm from NavMesh.
-///     NavMesh is necessary for this planner.
+///     The global planner references the 
+///     navigation_stack for global planning.
 ///
-///     The local planning strategy now is simply
-///     "rotate then move forward"
+///     The local planning uses dwa or teb local planners
 /// </summary>
 public class ROSAutoNavigation : AutoNavigation
 {
@@ -33,11 +31,6 @@ public class ROSAutoNavigation : AutoNavigation
 
     void Update()
     {
-        // Update if there is a new global plan
-        // if(makePlanService.GetWaypointFlagStatus() == true)
-        // {
-        //     GlobalWaypoints = makePlanService.GetGlobalWaypoints();
-        // }
 
         if(updateWaypoints)
         {
@@ -54,6 +47,8 @@ public class ROSAutoNavigation : AutoNavigation
     }
 
     // Set goal, with goal orientation
+        // Local and global waypoints are displayed based on the sent goal
+        // The robot doesn't move 
     public override void SetGoal(Vector3 position, Vector3 orientation)
     {
         TargetPosition = position;
@@ -64,33 +59,26 @@ public class ROSAutoNavigation : AutoNavigation
         updateWaypoints = true;
     }
 
-    
-    // //  Update Local Waypoints
-    // public void SetLocalWaypoints(Vector3[] waypoints)
-    // {
-    //     LocalWaypoints = waypoints;
-    // }
-
     // Start, pause and resume navigation
     // Start is essentially the same as resume
+        // Allow the robot to move along the planned waypoints
     public override void StartNavigation()
     {
-        // publisher.PublishPoseStampedCommand(TargetPosition, TargetOrientationEuler);
-        // sendGoalService.SendGoalCommandService(TargetPosition, TargetOrientationEuler);
         updateNav(true);
         updateWaypoints = true;
     }
 
+    // Pause robot navigation
+        // Stop the motion of the robot. Still allow the waypoints to be seen
     public override void PauseNavigation()
     {
-        // cancelGoalService.CancelGoalCommandService();
         updateNav(false);
         updateWaypoints = true;
     }
+
+    // Resume navigation
     public override void ResumeNavigation()
     {
-        // StartNavigation();
-        // baseController.Pause(false);
         updateNav(true);
         updateWaypoints = true;
     }
@@ -105,6 +93,7 @@ public class ROSAutoNavigation : AutoNavigation
         updateWaypoints = false;
     }
 
+    // Update the navigation status of the robot, and pause listening to the twist subsriber
     private void updateNav(bool isNav)
     {
         IsNavigating = isNav;

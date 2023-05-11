@@ -54,6 +54,7 @@ public class TwistSubscriber : MonoBehaviour
         targetAngularSpeed = twist.angular.From<FLU>();
     }
 
+    // Pause or resume listening to the cmd_vel topic, and setting the base controller velocity
     public void Pause(bool stop = true)
     {
         pause = stop;
