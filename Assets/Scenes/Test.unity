@@ -2830,10 +2830,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 273831453}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad85179a6815beac5a4de1e752722ec7, type: 3}
+  m_Script: {fileID: 11500000, guid: 18daf380504ed3e2493b490a86df0f78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalPlannerTopicName: move_base/TrajectoryPlannerROS/global_plan
+  poseTopicName: amcl_pose
 --- !u!1 &287771259
 GameObject:
   m_ObjectHideFlags: 0
@@ -14926,6 +14926,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraDisplay: {fileID: 1055565677}
   robot: {fileID: 273831452}
+  autoNavigation: {fileID: 0}
   localLineRenderer: {fileID: 1094711898}
   globalLineRenderer: {fileID: 631141393}
 --- !u!1001 &1995709187

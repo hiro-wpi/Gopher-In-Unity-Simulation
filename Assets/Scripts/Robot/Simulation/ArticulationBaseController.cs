@@ -14,10 +14,6 @@ public class ArticulationBaseController : BaseController
 {
     // Emergency Stop
     [SerializeField] private bool emergencyStop = false;
-    public virtual void EmergencyStop(bool stop = true)
-    {
-        emergencyStop = stop;
-    }
 
     // Local wheel controller
     [SerializeField] private ArticulationWheelController wheelController;
