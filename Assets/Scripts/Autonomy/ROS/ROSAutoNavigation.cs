@@ -21,6 +21,16 @@ public class ROSAutoNavigation : AutoNavigation
     [SerializeField] private LocalPlannerSubscriber localPlanner;
     [SerializeField] private GlobalPlannerSubscriber globalPlanner;
 
+    [SerializeField] private TwistSubscriber twistSubscriber;
+
+    private bool updateWaypoints = true;
+
+    void Start()
+    {
+        twistSubscriber.Pause(true);
+    }
+
+
     void Update()
     {
         // Update if there is a new global plan
@@ -28,11 +38,14 @@ public class ROSAutoNavigation : AutoNavigation
         // {
         //     GlobalWaypoints = makePlanService.GetGlobalWaypoints();
         // }
-        GlobalWaypoints = globalPlanner.getGlobalWaypoints();
-        LocalWaypoints = localPlanner.getLocalWaypoints();
-    }
 
-    
+        if(updateWaypoints)
+        {
+            GlobalWaypoints = globalPlanner.getGlobalWaypoints();
+            LocalWaypoints = localPlanner.getLocalWaypoints();
+        }
+        
+    }    
 
     // Set goal, regardless of the goal orientation
     public override void SetGoal(Vector3 position)
@@ -46,7 +59,9 @@ public class ROSAutoNavigation : AutoNavigation
         TargetPosition = position;
         TargetOrientationEuler = orientation;
 
-       sendGoalService.SendGoalCommandService(position, orientation);
+        sendGoalService.SendGoalCommandService(position, orientation);
+        updateNav(false);
+        updateWaypoints = true;
     }
 
     
@@ -62,23 +77,38 @@ public class ROSAutoNavigation : AutoNavigation
     {
         // publisher.PublishPoseStampedCommand(TargetPosition, TargetOrientationEuler);
         // sendGoalService.SendGoalCommandService(TargetPosition, TargetOrientationEuler);
+        updateNav(true);
+        updateWaypoints = true;
     }
 
     public override void PauseNavigation()
     {
-        cancelGoalService.CancelGoalCommandService();
+        // cancelGoalService.CancelGoalCommandService();
+        updateNav(false);
+        updateWaypoints = true;
     }
     public override void ResumeNavigation()
     {
-        StartNavigation();
+        // StartNavigation();
+        // baseController.Pause(false);
+        updateNav(true);
+        updateWaypoints = true;
     }
 
     // Stop navigation, clear previous plan
     public override void StopNavigation()
     {
         cancelGoalService.CancelGoalCommandService();
-        // GlobalWaypoints = new Vector3[0];
-        // LocalWaypoints = new Vector3[0];
+        GlobalWaypoints = new Vector3[0];
+        LocalWaypoints = new Vector3[0];
+        updateNav(false);
+        updateWaypoints = false;
+    }
+
+    private void updateNav(bool isNav)
+    {
+        IsNavigating = isNav;
+        twistSubscriber.Pause(!isNav);
     }
 
 

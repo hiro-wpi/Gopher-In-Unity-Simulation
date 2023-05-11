@@ -21,6 +21,9 @@ public class TwistSubscriber : MonoBehaviour
     public ArticulationBaseController baseController;
     private Vector3 targetLinearSpeed;
     private Vector3 targetAngularSpeed;
+
+    private bool pause = false;
+    
     
     void Start()
     {
@@ -36,6 +39,12 @@ public class TwistSubscriber : MonoBehaviour
     void FixedUpdate()
     {
         // wheelController.SetRobotSpeedStep(targetLinearSpeed, targetAngularSpeed);
+
+        if(pause)
+        {
+            return;
+        }
+
         baseController.SetVelocity(targetLinearSpeed, targetAngularSpeed);
     }
 
@@ -43,6 +52,15 @@ public class TwistSubscriber : MonoBehaviour
     {
         targetLinearSpeed = twist.linear.From<FLU>();
         targetAngularSpeed = twist.angular.From<FLU>();
+    }
+
+    public void Pause(bool stop = true)
+    {
+        pause = stop;
+        if(pause)
+        {
+            baseController.SetVelocity(Vector3.zero, Vector3.zero);
+        }
     }
 
     // void FixedUpdate()
