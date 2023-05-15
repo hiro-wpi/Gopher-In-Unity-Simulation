@@ -4,32 +4,42 @@ using UnityEngine;
 
 /// <summary>
 ///     Autonomy for arm manipulation.
-///     Plan a simple start-line trajectory 
+///     Plan a simple straight-line trajectory 
 ///     from current position to target position
 /// </summary>
-public abstract class UnityAutoManipulation : AutoManipulation
+public class UnityAutoManipulation : AutoManipulation
 {
-    public NewtonIK newtonIK;
+    // Parameter
+    [SerializeField] 
+
+    // Kinematic solver
+    public ForwardKinematics forwardKinematics;
+    public InverseKinematics inverseKinematics;
 
     void Start() {}
 
     void Update() {}
 
     public override (float[], float[][], float[][], float[][]) PlanTrajectory(
-        float[] currJointAngles, Vector3 targetPosition, Quaternion targetRotation
+        float[] currJointAngles, 
+        Vector3 targetPosition, 
+        Quaternion targetRotation,
+        bool cartesianSpace = false
     )
     {
         // Solve IK for target position joint angles
-        var (converged, targetJointAngles) = newtonIK.SolveIK(
+        var (converged, targetJointAngles) = inverseKinematics.SolveIK(
             currJointAngles, targetPosition, targetRotation
         );
         if (!converged)
         {
-            Debug.Log("No valid IK solution given to hover point.");
+            Debug.Log("No valid path to given target.");
             return (null, null, null, null);
         }
 
-        // Lerp between points
+        
+
+        // Lerp between points to generate a path
         completionTime = (grasping.GetEndEffector().transform.position - 
                           targetPosition).magnitude / automationSpeed;
         yield return LerpJoints(jointAngles, targetJointAngles, completionTime);
@@ -40,7 +50,9 @@ public abstract class UnityAutoManipulation : AutoManipulation
 
         // Assume we got to the target
         jointAngles = targetJointAngles;
-        (converged, targetJointAngles) = newtonIK.SolveIK(jointAngles, targetPosition, targetRotation);
+        (converged, targetJointAngles) = inverseKinematics.SolveIK(
+            jointAngles, targetPosition, targetRotation
+        );
         if (!converged)
         {
             Debug.Log("No valid IK solution given to grasping point.");
@@ -51,9 +63,6 @@ public abstract class UnityAutoManipulation : AutoManipulation
         completionTime = (grasping.GetEndEffector().transform.position - 
                           targetPosition).magnitude / automationSpeed;
         yield return LerpJoints(jointAngles, targetJointAngles, completionTime);
-
-        // Give back to manual control
-        mode = Mode.Control;
     }
 
     private IEnumerator LerpJoints(
@@ -80,7 +89,6 @@ public abstract class UnityAutoManipulation : AutoManipulation
             elapsedTime += Time.deltaTime;
 
             jointController.SetJointTargets(currentAngles);
-
             yield return new WaitForEndOfFrame();
         }
     }

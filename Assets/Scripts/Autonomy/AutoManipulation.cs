@@ -20,6 +20,9 @@ public abstract class AutoManipulation : MonoBehaviour
     // Plan a trajectory to move the end effector along a trajectory defined by
     // a sequence of time-stamped joint angles, velocities and accelerations.
     public abstract (float[], float[][], float[][], float[][]) PlanTrajectory(
-        float[] currJointAngles, Vector3 targetPosition, Quaternion targetRotation
+        float[] currJointAngles, 
+        Vector3 targetPosition, 
+        Quaternion targetRotation,
+        bool cartesianSpace = false
     );
 }

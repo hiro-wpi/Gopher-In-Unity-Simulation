@@ -7,17 +7,11 @@ using UnityEngine;
 ///     for Kinova Gen3 7-DOF robotic arm
 ///     using Newton numeric IK method
 /// </summary>
-public class NewtonIK : MonoBehaviour
+public class NewtonIK : InverseKinematics
 {
-    // One more transform to adjust the velocity ik coordinate
-    [field:SerializeField] public Transform LocalToWorldTransform { get; set; }
-    // Arm
-    [SerializeField] private ArticulationBody root;
-    [SerializeField] private ArticulationBody endEffector;
-    // Forward kinematic solver
-    [SerializeField] private ForwardKinematics forwardKinematics;
     // Damped least squares lambda
     [SerializeField] private float dampedSquaresLambda = 0.01f;
+    private ArticulationJacobian jacobian = new(1, 1);
 
     // Enum for the type of inverse method to use
     public enum InverseMethod
@@ -29,10 +23,9 @@ public class NewtonIK : MonoBehaviour
     }
     [SerializeField] private InverseMethod inverseMethod = InverseMethod.Transpose;
 
-    // We have to initialize it (or Unity crashes)
-    private ArticulationJacobian jacobian = new(1, 1);
-
     void Start() {}
+
+    void Update() {}
 
     private List<float> CalculateError(Vector3 positionError, Vector3 rotationAxis)
     {
@@ -70,8 +63,9 @@ public class NewtonIK : MonoBehaviour
         return errorAngles;
     }
 
-    public (bool, float[]) SolveIK(
-        float[] jointAngles, Vector3 targetPosition, Quaternion targetRotation)
+    public override (bool, float[]) SolveIK(
+        float[] jointAngles, Vector3 targetPosition, Quaternion targetRotation
+    )
     {
         float[] newJointAngles = jointAngles.Clone() as float[];
 
@@ -133,7 +127,9 @@ public class NewtonIK : MonoBehaviour
         return (converged, newJointAngles);
     }
 
-    public float[] SolveVelocityIK(float[] jointAngles, Vector3 positionError, Quaternion rotationError)
+    public override float[] SolveVelocityIK(
+        float[] jointAngles, Vector3 positionDelta, Quaternion rotationDelta
+    )
     {
         float[] newJointAngles = jointAngles.Clone() as float[];
 
@@ -143,7 +139,7 @@ public class NewtonIK : MonoBehaviour
         // Orientation is stored in the jacobian as a scaled rotation axis
         // Where the axis of rotation is the vector, and the angle is the length of the vector (in radians)
         // So, use ToAngleAxis to get axis and angle
-        rotationError.ToAngleAxis(out float rotationAngle, out Vector3  rotationAxis);
+        rotationDelta.ToAngleAxis(out float rotationAngle, out Vector3 rotationAxis);
 
         // Function returns angle in degrees, so convert to radians
         rotationAngle = Mathf.Deg2Rad * rotationAngle;
@@ -151,10 +147,10 @@ public class NewtonIK : MonoBehaviour
         rotationAxis *= rotationAngle; // Prioritize the position
 
         // transform to local
-        positionError = LocalToWorldTransform.TransformVector(positionError);
-        rotationAxis = LocalToWorldTransform.TransformVector(rotationAxis);
+        positionDelta = BaseTransform.TransformVector(positionDelta);
+        rotationAxis = BaseTransform.TransformVector(rotationAxis);
 
-        var errorAngles = CalculateError(positionError, rotationAxis);
+        var errorAngles = CalculateError(positionDelta, rotationAxis);
         for (int i = 0; i < newJointAngles.Length; i++)
             newJointAngles[i] += errorAngles[i];
 

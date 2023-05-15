@@ -628,18 +628,18 @@ public class GraphicalInterface : MonoBehaviour
         if (cameraIndex == cameraSystem.GetIndex("Head") ||
             cameraIndex == cameraSystem.GetIndex("Back"))
         {
-            leftIKSolver.LocalToWorldTransform = robot.transform;
-            rightIKSolver.LocalToWorldTransform = robot.transform;
+            leftIKSolver.BaseTransform = robot.transform;
+            rightIKSolver.BaseTransform = robot.transform;
         }
         else if (cameraIndex == cameraSystem.GetIndex("Left"))
         {
-            leftIKSolver.LocalToWorldTransform = leftEndEffectorRef.transform;
-            rightIKSolver.LocalToWorldTransform = robot.transform;
+            leftIKSolver.BaseTransform = leftEndEffectorRef.transform;
+            rightIKSolver.BaseTransform = robot.transform;
         }
         else if (cameraIndex == cameraSystem.GetIndex("Right"))
         {
-            leftIKSolver.LocalToWorldTransform = robot.transform;
-            rightIKSolver.LocalToWorldTransform = rightEndEffectorRef.transform;
+            leftIKSolver.BaseTransform = robot.transform;
+            rightIKSolver.BaseTransform = rightEndEffectorRef.transform;
         }
     }
 

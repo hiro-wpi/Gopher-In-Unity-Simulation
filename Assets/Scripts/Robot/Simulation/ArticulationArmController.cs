@@ -22,7 +22,7 @@ public class ArticulationArmController : ArmController
     // Arm component controller
     [SerializeField] private ArticulationJointController jointController;
     [SerializeField] private ArticulationGripperController gripperController;
-    [SerializeField] private NewtonIK newtonIK;
+    [SerializeField] private InverseKinematics inverseKinematics;
     [SerializeField] private AutoManipulation autoManipulation;
 
     // Arm control mode
@@ -116,7 +116,7 @@ public class ArticulationArmController : ArmController
             Vector3 angularError = - angularVelocity * Time.fixedDeltaTime * Mathf.Rad2Deg;
             // Solve IK
             jointAngles = jointController.GetCurrentJointTargets();
-            jointAngles = newtonIK.SolveVelocityIK(
+            jointAngles = inverseKinematics.SolveVelocityIK(
                 jointAngles, linearError, Quaternion.Euler(angularError)
             );
             // Set joint targets to IK solution
