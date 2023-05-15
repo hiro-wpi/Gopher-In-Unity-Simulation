@@ -215,9 +215,12 @@ public class ArmControlManager : MonoBehaviour
 
 
     // Automatic grasping
-    public void MoveToTarget(AutoGraspable target = null, float automationSpeed = 0.05f,
-                             bool closeGripper = true, 
-                             bool backToHoverPoint = true)
+    public void MoveToTarget(
+        AutoGraspable target = null, 
+        float automationSpeed = 0.05f,
+        bool closeGripper = true, 
+        bool backToHoverPoint = true
+    )
     {
         // Update target if given
         if (target != null)
@@ -245,13 +248,13 @@ public class ArmControlManager : MonoBehaviour
         mode = Mode.Target;
         // containers
         Transform targetHoverPoint;
-        Transform targetGrabPoint;
+        Transform targetGraspPoint;
         Vector3 targetPosition;
         Quaternion targetRotation;
         float completionTime;
 
         // Get target
-        (targetHoverPoint, targetGrabPoint) = 
+        (targetHoverPoint, targetGraspPoint) = 
             target.GetHoverAndGrapPoint(grasping.GetEndEffector().transform.position,
                                         grasping.GetEndEffector().transform.rotation);
 
@@ -275,8 +278,8 @@ public class ArmControlManager : MonoBehaviour
         yield return LerpJoints(jointAngles, targetJointAngles, completionTime);
 
         // 2, Move to graspable target
-        targetPosition = targetGrabPoint.position;
-        targetRotation = targetGrabPoint.rotation;
+        targetPosition = targetGraspPoint.position;
+        targetRotation = targetGraspPoint.rotation;
 
         // Assume we got to the target
         jointAngles = targetJointAngles;

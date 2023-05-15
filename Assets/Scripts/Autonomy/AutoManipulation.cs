@@ -7,14 +7,19 @@ using UnityEngine;
 ///     It supports path planning and sequence of motion.
 ///     
 ///     This autonomy could be achived using
-///     Unity Newton IK script (only for simulation robot) or
+///     Simple trajectory planner with Newton IK (only for simulation robot) or
 ///     packages in ROS (feasible for both simulation and physical robot).
 /// </summary>
-public class AutoManipulation : MonoBehaviour
+public abstract class AutoManipulation : MonoBehaviour
 {
     void Start() {}
 
     void Update() {}
 
-    
+    // Given current joint angles, target position and orientation,
+    // Plan a trajectory to move the end effector along a trajectory defined by
+    // a sequence of time-stamped joint angles, velocities and accelerations.
+    public abstract (float[], float[][], float[][], float[][]) PlanTrajectory(
+        float[] currJointAngles, Vector3 targetPosition, Quaternion targetRotation
+    );
 }

@@ -92,7 +92,7 @@ public class NewtonIK : MonoBehaviour
 
             // Orientation is stored in the jacobian as a scaled rotation axis
             // Where the axis of rotation is the vector, and the angle is the length of the vector (in radians)
-            // So, use ToAngleAxis to grab axis and angle
+            // So, use ToAngleAxis to get axis and angle
             rotationError.ToAngleAxis(out float rotationAngle, out Vector3 rotationAxis);
             // Wrap angle into [-pi, pi]
             // (not exactly sure why this is necessary)
@@ -142,7 +142,7 @@ public class NewtonIK : MonoBehaviour
 
         // Orientation is stored in the jacobian as a scaled rotation axis
         // Where the axis of rotation is the vector, and the angle is the length of the vector (in radians)
-        // So, use ToAngleAxis to grab axis and angle
+        // So, use ToAngleAxis to get axis and angle
         rotationError.ToAngleAxis(out float rotationAngle, out Vector3  rotationAxis);
 
         // Function returns angle in degrees, so convert to radians

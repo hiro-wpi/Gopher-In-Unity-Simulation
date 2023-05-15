@@ -84,6 +84,13 @@ public abstract class ArmController : MonoBehaviour
         gripperPosition = 1.0f - gripperPosition;
     }
 
+    // Autonomy function
+    public virtual void SetTarget(Vector3 position, Quaternion rotation) {}
+
+    public virtual void CancelTarget() {}
+
+    public virtual void MoveToTarget() {}
+
     // Set robot control mode
     public void SetMode(Mode mode)
     {
