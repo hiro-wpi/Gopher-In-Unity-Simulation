@@ -118,6 +118,25 @@ public static class Utils
     }
 
     // Transform
+    public static bool IsPoseClose(
+        Transform t1,
+        Transform t2,
+        float positionThreshold = 0.01f,
+        float rotationThreshold = 0.02f
+    )
+    {
+        // position
+        bool positionClose = Vector3.Distance(
+            t1.position, t2.position
+        ) < positionThreshold;
+        // rotation
+        bool rotationClose = Quaternion.Angle(
+            t1.rotation, t2.rotation
+        ) * Mathf.Deg2Rad < rotationThreshold;
+        
+        return positionClose && rotationClose;
+    }
+
     // from RUF (Unity) to FLU (regular)
     public static Vector3 ToFLU(Vector3 v)
     {

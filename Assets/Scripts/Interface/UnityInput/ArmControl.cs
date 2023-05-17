@@ -25,7 +25,7 @@ public class ArmControl : MonoBehaviour
             armController.SwitchMode();
         }
     }
-    
+
     // End effector control
     public void OnTranslate(InputAction.CallbackContext context)
     {
@@ -53,15 +53,12 @@ public class ArmControl : MonoBehaviour
         }
     }
 
-    // TODO
     // Handle autonomy input
     public void OnTarget(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            // armController.MoveToTarget(
-            //    null, automationSpeed, false, false
-            // );
+            armController.MoveToTarget();
         }
     }
 

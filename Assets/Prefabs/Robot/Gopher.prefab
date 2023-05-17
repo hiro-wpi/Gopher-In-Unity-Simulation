@@ -1121,13 +1121,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7725881371920992436}
-  - component: {fileID: 7974711132935201213}
+  - component: {fileID: 6687171582996424073}
   - component: {fileID: 3859801236347491249}
   - component: {fileID: 4296158096265951438}
+  - component: {fileID: 7974711132935201213}
   - component: {fileID: 2643296904155322097}
   - component: {fileID: 654651305978321806}
   m_Layer: 15
-  m_Name: Right Gripper
+  m_Name: Right Arm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1148,20 +1149,22 @@ Transform:
   m_Father: {fileID: 4408274995126300629}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &7974711132935201213
-CapsuleCollider:
+--- !u!114 &6687171582996424073
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 343481418151597648}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.07
-  m_Height: 0.25
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c05ae979a12774cb9199e16a57eaf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jointSpeed: 0.5
+  numberOfWaypoints: 3
+  forwardKinematics: {fileID: 5915472104543767608}
+  inverseKinematics: {fileID: 7628781304563526181}
 --- !u!1818360608 &3859801236347491249
 PositionConstraint:
   m_ObjectHideFlags: 0
@@ -1200,6 +1203,20 @@ RotationConstraint:
   m_Sources:
   - sourceTransform: {fileID: 7612944751291897102}
     weight: 1
+--- !u!136 &7974711132935201213
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343481418151597648}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.1
+  m_Height: 0.3
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2643296904155322097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1212,7 +1229,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bbc8fd8cb73a474abdfcf1f9882df2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  armControlManager: {fileID: 0}
+  armController: {fileID: 1271706237}
+  grasping: {fileID: 7340697812366614354}
 --- !u!208 &654651305978321806
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -7269,13 +7287,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3430922113509506315}
-  - component: {fileID: 8055751572133282946}
+  - component: {fileID: 1147033194995556153}
   - component: {fileID: 4803222528205093198}
   - component: {fileID: 3079397806337800268}
+  - component: {fileID: 8055751572133282946}
   - component: {fileID: 4325522361249530929}
   - component: {fileID: 1056611034991387054}
   m_Layer: 15
-  m_Name: Left Gripper
+  m_Name: Left Arm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7296,20 +7315,22 @@ Transform:
   m_Father: {fileID: 4408274995126300629}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &8055751572133282946
-CapsuleCollider:
+--- !u!114 &1147033194995556153
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 841231625782483514}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.07
-  m_Height: 0.25
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c05ae979a12774cb9199e16a57eaf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jointSpeed: 0.5
+  numberOfWaypoints: 3
+  forwardKinematics: {fileID: 7354815183373339855}
+  inverseKinematics: {fileID: 7939491165433940371}
 --- !u!1818360608 &4803222528205093198
 PositionConstraint:
   m_ObjectHideFlags: 0
@@ -7348,6 +7369,20 @@ RotationConstraint:
   m_Sources:
   - sourceTransform: {fileID: 718495484538954153}
     weight: 1
+--- !u!136 &8055751572133282946
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841231625782483514}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.1
+  m_Height: 0.3
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4325522361249530929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7360,7 +7395,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bbc8fd8cb73a474abdfcf1f9882df2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  armControlManager: {fileID: 0}
+  armController: {fileID: 12984549}
+  grasping: {fileID: 4172144274368844524}
 --- !u!208 &1056611034991387054
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -10924,7 +10960,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4985359068928457316
 Transform:
   m_ObjectHideFlags: 0
@@ -11013,8 +11049,6 @@ MonoBehaviour:
   active: 0
   robot: {fileID: 702946891374405994}
   baseController: {fileID: 0}
-  leftArmControlManager: {fileID: 0}
-  rightArmControlManager: {fileID: 0}
   agent: {fileID: 7311777528451885136}
   navMeshObstacles: []
   replanTime: 5
@@ -23007,10 +23041,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c4bdf48aad5eb146828cc5681ce4d33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <LocalToWorldTransform>k__BackingField: {fileID: 702946891374405993}
-  root: {fileID: 3042620302638808485}
-  endEffector: {fileID: 7059622136862380689}
+  <BaseTransform>k__BackingField: {fileID: 702946891374405993}
   forwardKinematics: {fileID: 7354815183373339855}
+  iterations: 10
   dampedSquaresLambda: 0.01
   inverseMethod: 1
 --- !u!114 &12984549
@@ -23040,8 +23073,11 @@ MonoBehaviour:
   emergencyStop: 0
   jointController: {fileID: 7628781303651052181}
   gripperController: {fileID: 7939491165433940368}
-  newtonIK: {fileID: 7939491165433940371}
-  target: {fileID: 0}
+  inverseKinematics: {fileID: 7939491165433940371}
+  autoManipulation: {fileID: 1147033194995556153}
+  targetSet: 0
+  targetPosition: {x: 0, y: 0, z: 0}
+  targetRotation: {x: 0, y: 0, z: 0, w: 0}
   flipPresetAngles: 0
   homePositions:
     <Angles>k__BackingField:
@@ -23358,10 +23394,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c4bdf48aad5eb146828cc5681ce4d33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <LocalToWorldTransform>k__BackingField: {fileID: 702946891374405993}
-  root: {fileID: 8098285666693883115}
-  endEffector: {fileID: 8962980062919973254}
+  <BaseTransform>k__BackingField: {fileID: 702946891374405993}
   forwardKinematics: {fileID: 5915472104543767608}
+  iterations: 10
   dampedSquaresLambda: 0.01
   inverseMethod: 1
 --- !u!114 &1271706237
@@ -23391,8 +23426,11 @@ MonoBehaviour:
   emergencyStop: 0
   jointController: {fileID: 7628781304563526203}
   gripperController: {fileID: 7628781304563526180}
-  newtonIK: {fileID: 7628781304563526181}
-  target: {fileID: 0}
+  inverseKinematics: {fileID: 7628781304563526181}
+  autoManipulation: {fileID: 6687171582996424073}
+  targetSet: 0
+  targetPosition: {x: 0, y: 0, z: 0}
+  targetRotation: {x: 0, y: 0, z: 0, w: 0}
   flipPresetAngles: 1
   homePositions:
     <Angles>k__BackingField:

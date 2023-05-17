@@ -152,7 +152,7 @@ public class AutoGraspable : MonoBehaviour
         for (int i = 0; i < angles.Length; ++i)
         {
             Quaternion hoverRot = graspRot * Quaternion.Euler(dir * angles[i]);
-            float angleDifference = GetAngleDifference(EndEffectorRotation, hoverRot);
+            float angleDifference = Quaternion.Angle(EndEffectorRotation, hoverRot);
             if (angleDifference < minAngleDifference)
             {
                 minHoverRot = hoverRot;
@@ -160,16 +160,6 @@ public class AutoGraspable : MonoBehaviour
             }
         }
         return minHoverRot;
-    }
-
-    private float GetAngleDifference(Quaternion r1, Quaternion r2)
-    {
-        // Angle difference
-        Quaternion rotationError = r1 * Quaternion.Inverse(r2);
-        rotationError.ToAngleAxis(out float rotationAngle, out Vector3 rotationAxis);
-        // Wrap and get magnitude
-        rotationAngle = Mathf.Abs(Mathf.DeltaAngle(0f, rotationAngle));
-        return rotationAngle;
     }
 
     private (Vector3, Quaternion) GetPosAndRotWithMinimumDistance(

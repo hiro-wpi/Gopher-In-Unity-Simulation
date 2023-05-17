@@ -143,7 +143,7 @@ public class ArticulationArmController : ArmController
     {
         if (!targetSet)
         {
-            Debug.Log("Target not set");
+            Debug.Log("Target not set.");
             return;
         }
 

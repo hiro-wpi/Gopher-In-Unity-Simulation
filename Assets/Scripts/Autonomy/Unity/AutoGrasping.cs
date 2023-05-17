@@ -13,11 +13,11 @@ public class AutoGrasping : MonoBehaviour
     private GameObject targetObject;
     // private Color prevColor;
 
-    // Container for grasping target
-    Transform targetHoverPoint;
-    Transform targetGraspPoint;
-    Vector3 targetPosition;
-    Quaternion targetRotation;
+    // Container for hovering and grasping target
+    private Transform targetHoverPoint;
+    private Transform targetGraspPoint;
+    // flag
+    private bool checkHoverReached = false;
 
     void Start() {}
 
@@ -40,6 +40,28 @@ public class AutoGrasping : MonoBehaviour
             //     |->  gameObject with Graspable related scripts
             targetObject = other.attachedRigidbody.gameObject;
             SetTargetObject(targetObject);
+        }
+    }
+
+    private void OnTriggerStay()
+    {
+        if (targetObject == null || checkHoverReached == false)
+        {
+            return;
+        }
+
+        // Check if the hover point is reached
+        if (Utils.IsPoseClose(
+            targetHoverPoint,
+            grasping.GetEndEffector().transform
+        ))
+        {
+            // Set grasping target
+            armController.SetTarget(
+                targetGraspPoint.position, 
+                targetGraspPoint.rotation
+            );
+            checkHoverReached = false;
         }
     }
 
@@ -87,10 +109,11 @@ public class AutoGrasping : MonoBehaviour
                 grasping.GetEndEffector().transform.rotation
             );
 
-        // Move to hover point
-        targetPosition = targetHoverPoint.position;
-        targetRotation = targetHoverPoint.rotation;
-        armController.SetTarget(targetPosition, targetRotation);
+        armController.SetTarget(
+            targetHoverPoint.position, 
+            targetHoverPoint.rotation
+        );
+        checkHoverReached = true;
 
         /*
         // Highlight
@@ -112,6 +135,7 @@ public class AutoGrasping : MonoBehaviour
         */
 
         targetObject = null;
+        checkHoverReached = false;
         armController.CancelTarget();
     }
 }

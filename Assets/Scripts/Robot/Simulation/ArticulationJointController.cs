@@ -171,7 +171,8 @@ public class ArticulationJointController : MonoBehaviour
         for (int i = 0; i < timeSteps.Length; i++)
         {
             // For each time frame in this timestep
-            int frames = Mathf.RoundToInt(timeSteps[i] / Time.fixedDeltaTime);
+            float prevTime = i == 0 ? 0 : timeSteps[i - 1];
+            int frames = Mathf.RoundToInt((timeSteps[i] - prevTime) / Time.fixedDeltaTime);
             for (int frame = 0; frame < frames; frame++)
             {
                 // For each joint in this time frame
@@ -212,6 +213,11 @@ public class ArticulationJointController : MonoBehaviour
 
     private bool SetJointTrajectoryStepAndCheck()
     {
+        if (targetPositions.Count == 0)
+        {
+            return true;
+        }
+        
         // Set joint targets of the next frame in the trajectory
         SetJointTargetsStep(targetPositions[currTrajectoryIndex++]);
         // Check if done
