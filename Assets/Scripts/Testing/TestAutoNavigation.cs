@@ -6,6 +6,7 @@ using UnityEngine.AI;
 
 public class TestAutoNavigation : MonoBehaviour
 {
+    /*
     // Character
     [SerializeField] private AutoNavigation autoNavigation;
     [SerializeField] private  GameObject target;
@@ -30,4 +31,5 @@ public class TestAutoNavigation : MonoBehaviour
             autoNavigation.drawPathEnabled = false;
         }
     }
+    */
 }

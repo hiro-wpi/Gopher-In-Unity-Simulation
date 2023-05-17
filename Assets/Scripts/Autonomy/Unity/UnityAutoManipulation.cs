@@ -10,7 +10,10 @@ using UnityEngine;
 public class UnityAutoManipulation : AutoManipulation
 {
     // Parameter
-    [SerializeField] 
+    // [SerializeField] private float cartesianSpeed = 0.05f;
+    [SerializeField] private float jointSpeed = 0.5f;
+    [SerializeField] private int numberOfWaypoints = 3;
+    private float completionTime;
 
     // Kinematic solver
     public ForwardKinematics forwardKinematics;
@@ -27,6 +30,15 @@ public class UnityAutoManipulation : AutoManipulation
         bool cartesianSpace = false
     )
     {
+        // Cartesian Space planning is not supported yet
+        if (cartesianSpace == true)
+        {
+            Debug.Log(
+                "Cartesian Space planning is not supported yet." +
+                "Use joint space planning instead."
+            );
+        }
+        
         // Solve IK for target position joint angles
         var (converged, targetJointAngles) = inverseKinematics.SolveIK(
             currJointAngles, targetPosition, targetRotation
@@ -37,59 +49,73 @@ public class UnityAutoManipulation : AutoManipulation
             return (null, null, null, null);
         }
 
-        
-
         // Lerp between points to generate a path
-        completionTime = (grasping.GetEndEffector().transform.position - 
-                          targetPosition).magnitude / automationSpeed;
-        yield return LerpJoints(jointAngles, targetJointAngles, completionTime);
+        completionTime = GetMaxDifferent(
+            currJointAngles, targetJointAngles
+        ) / jointSpeed;
 
-        // 2, Move to graspable target
-        targetPosition = targetGraspPoint.position;
-        targetRotation = targetGraspPoint.rotation;
-
-        // Assume we got to the target
-        jointAngles = targetJointAngles;
-        (converged, targetJointAngles) = inverseKinematics.SolveIK(
-            jointAngles, targetPosition, targetRotation
+        // Get trajectory
+        return GenerateJointTrajectory(
+            currJointAngles,
+            targetJointAngles,
+            numberOfWaypoints,
+            completionTime
         );
-        if (!converged)
-        {
-            Debug.Log("No valid IK solution given to grasping point.");
-            mode = Mode.Control;
-            yield break;
-        }
-
-        completionTime = (grasping.GetEndEffector().transform.position - 
-                          targetPosition).magnitude / automationSpeed;
-        yield return LerpJoints(jointAngles, targetJointAngles, completionTime);
     }
 
-    private IEnumerator LerpJoints(
-        float[] currentAngles, 
-        float[] targetJointAngles, 
-        float seconds
+    private float GetMaxDifferent(float[] ang1, float[] ang2)
+    {
+        float maxDiff = 0;
+        for (var i = 0; i < ang1.Length; i++)
+        {
+            var diff = Mathf.Abs(ang1[i] - ang2[i]);
+            if (diff > maxDiff)
+            {
+                maxDiff = diff;
+            }
+        }
+        return maxDiff;
+    }
+
+    // Generate a simple joint trajectory without velocity and acceleration
+    private (float[], float[][], float[][], float[][]) GenerateJointTrajectory(
+        float[] currentAngles,
+        float[] targetAngles,
+        int numWaypoints,
+        float completionTime
     )
     {
-        float elapsedTime = 0;
-        // Keep track of starting angles
-        var startingAngles = currentAngles.Clone() as float[];
-        while (elapsedTime < seconds)
+        // Initialize containers
+        int numJoints = currentAngles.Length;
+        float[] times = new float[numWaypoints+1];
+        float[][] angles = new float[numWaypoints+1][];
+        // float[][] velocities = new float[numWaypoints][];
+        // float[][] accelerations = new float[numWaypoints][];
+
+        // First waypoint is current position
+        times[0] = 0;
+        angles[0] = currentAngles;
+
+        // Lerp joint angles between current and target
+        for (int t = 1; t < numWaypoints+1; ++t)
         {
-            // lerp each joint angle in loop
-            // calculate smallest difference between current and target joint angle
-            // using atan2(sin(x-y), cos(x-y))
-            for (var i = 0; i < targetJointAngles.Length; i++)
+            // time
+            times[t] = t / (float)numWaypoints * completionTime;
+            
+            // angles
+            float[] jointValues = new float[numJoints];
+            for (int i = 0; i < numJoints; i++)
             {
-                currentAngles[i] = Mathf.Lerp(startingAngles[i], 
-                                              targetJointAngles[i], 
-                                              (elapsedTime / seconds));
+                jointValues[i] = Mathf.Lerp(
+                    currentAngles[i],
+                    targetAngles[i],
+                    t / (float)numWaypoints
+                );
             }
-
-            elapsedTime += Time.deltaTime;
-
-            jointController.SetJointTargets(currentAngles);
-            yield return new WaitForEndOfFrame();
+            angles[t] = jointValues;
         }
+
+        // Return trajectory without velocity and acceleration
+        return (times, angles, null, null);
     }
 }

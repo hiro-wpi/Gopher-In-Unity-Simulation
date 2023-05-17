@@ -16,8 +16,8 @@ public class AutoNavigation : MonoBehaviour
     // Robot
     public GameObject robot;
     public ArticulationBaseController baseController;
-    public ArmControlManager leftArmControlManager;
-    public ArmControlManager rightArmControlManager;
+    // public ArmControlManager leftArmControlManager;
+    // public ArmControlManager rightArmControlManager;
     // nav mesh agent
     // this is not actually used, only served as the parameter container
     // for speed, angularSpeed, stoppingDistance, areMask, etc.
@@ -210,11 +210,13 @@ public class AutoNavigation : MonoBehaviour
     {
         bool leftSuccess = true;
         bool rightSuccess = true;
+        /*
         if (leftArmControlManager != null && rightArmControlManager != null)
         {
             leftSuccess = leftArmControlManager.MoveToPreset(presetIndex);
             rightSuccess = rightArmControlManager.MoveToPreset(presetIndex);
         }
+        */
         return leftSuccess && rightSuccess;
     }
 
