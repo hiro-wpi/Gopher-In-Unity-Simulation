@@ -113,23 +113,23 @@ public class ROSAutoNavigation : AutoNavigation
     {   /*** 
             WRT ROS it is:
             
-            footprint:  [-0.2f, -0.3f, 0.0f]
-                        [-0.2f,  0.3f, 0.0f]
-                        [ 0.3f,  0.3f, 0.0f]
-                        [ 0.3f, -0.3f, 0.0f]
+            footprint:  [-0.2f, -0.32f, 0.0f]
+                        [-0.2f,  0.32f, 0.0f]
+                        [ 0.3f,  0.32f, 0.0f]
+                        [ 0.3f, -0.32f, 0.0f]
 
             WRT Unity it should be:
         
-            footprint:  [ 0.3f,  0.0f, -0.2f]
-                        [-0.3f,  0.0f, -0.2f]
-                        [-0.3f,  0.0f,  0.3f]
-                        [ 0.3f,  0.0f,  0.3f]
+            footprint:  [ 0.32f,  0.0f, -0.2f]
+                        [-0.32f,  0.0f, -0.2f]
+                        [-0.32f,  0.0f,  0.3f]
+                        [ 0.32f,  0.0f,  0.3f]
         
         ***/
-        Vector3[] polygon = {   new Vector3( 0.3f,  0.0f, -0.2f),
-                                new Vector3(-0.3f,  0.0f, -0.2f),
-                                new Vector3(-0.3f,  0.0f,  0.3f),
-                                new Vector3( 0.3f,  0.0f,  0.3f)};
+        Vector3[] polygon = {   new Vector3( 0.32f,  0.0f, -0.2f),
+                                new Vector3(-0.32f,  0.0f, -0.2f),
+                                new Vector3(-0.32f,  0.0f,  0.3f),
+                                new Vector3( 0.32f,  0.0f,  0.3f)};
 
         UpdateFootprint(polygon);
 
@@ -139,23 +139,23 @@ public class ROSAutoNavigation : AutoNavigation
     {   /*** 
             WRT ROS it is:
             
-            footprint:  [-0.2f, -0.3f, 0.0f]
-                        [-0.2f,  0.3f, 0.0f]
-                        [ 1.5f,  0.3f, 0.0f]
-                        [ 1.5f, -0.3f, 0.0f]
+            footprint:  [-0.2f, -0.32f, 0.0f]
+                        [-0.2f,  0.32f, 0.0f]
+                        [ 1.5f,  0.32f, 0.0f]
+                        [ 1.5f, -0.32f, 0.0f]
 
             WRT Unity it should be:
         
-            footprint:  [ 0.3f,  0.0f, -0.2f]
-                        [-0.3f,  0.0f, -0.2f]
-                        [-0.3f,  0.0f,  1.5f]
-                        [ 0.3f,  0.0f,  1.5f]
+            footprint:  [ 0.32f,  0.0f, -0.2f]
+                        [-0.32f,  0.0f, -0.2f]
+                        [-0.32f,  0.0f,  1.5f]
+                        [ 0.32f,  0.0f,  1.5f]
         
         ***/
-        Vector3[] polygon = {   new Vector3( 0.3f,  0.0f, -0.2f),
-                                new Vector3(-0.3f,  0.0f, -0.2f),
-                                new Vector3(-0.3f,  0.0f,  1.5f),
-                                new Vector3( 0.3f,  0.0f,  1.5f)};
+        Vector3[] polygon = {   new Vector3( 0.32f,  0.0f, -0.2f),
+                                new Vector3(-0.32f,  0.0f, -0.2f),
+                                new Vector3(-0.32f,  0.0f,  1.5f),
+                                new Vector3( 0.32f,  0.0f,  1.5f)};
 
         UpdateFootprint(polygon);
 
