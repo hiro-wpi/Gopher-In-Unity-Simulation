@@ -20,6 +20,9 @@ public class ROSAutoNavigation : AutoNavigation
     [SerializeField] private GlobalPlannerSubscriber globalPlanner;
 
     [SerializeField] private TwistSubscriber twistSubscriber;
+    [SerializeField] private PolygonPublisher polygonPublisher;
+
+
 
     private bool updateWaypoints = true;
 
@@ -89,16 +92,75 @@ public class ROSAutoNavigation : AutoNavigation
         cancelGoalService.CancelGoalCommandService();
         GlobalWaypoints = new Vector3[0];
         LocalWaypoints = new Vector3[0];
-        updateNav(false);
+        UpdateNav(false);
         updateWaypoints = false;
     }
 
     // Update the navigation status of the robot, and pause listening to the twist subsriber
-    private void updateNav(bool isNav)
+    private void UpdateNav(bool isNav)
     {
         IsNavigating = isNav;
         twistSubscriber.Pause(!isNav);
     }
+
+    public void UpdateFootprint(Vector3[] poly)
+    {
+        polygonPublisher.PublishPolygon(poly);
+    }
+
+    public void SetToNormalFootprint()
+    {   /*** 
+            WRT ROS it is:
+            
+            footprint:  [-0.2f, -0.3f, 0.0f]
+                        [-0.2f,  0.3f, 0.0f]
+                        [ 0.3f,  0.3f, 0.0f]
+                        [ 0.3f, -0.3f, 0.0f]
+
+            WRT Unity it should be:
+        
+            footprint:  [ 0.3f,  0.0f, -0.2f]
+                        [-0.3f,  0.0f, -0.2f]
+                        [-0.3f,  0.0f,  0.3f]
+                        [ 0.3f,  0.0f,  0.3f]
+        
+        ***/
+        Vector3[] polygon = {   new Vector3( 0.3f,  0.0f, -0.2f),
+                                new Vector3(-0.3f,  0.0f, -0.2f),
+                                new Vector3(-0.3f,  0.0f,  0.3f),
+                                new Vector3( 0.3f,  0.0f,  0.3f)};
+
+        UpdateFootprint(polygon);
+
+    }
+
+    public void SetToBaseWithCartFootprint()
+    {   /*** 
+            WRT ROS it is:
+            
+            footprint:  [-0.2f, -0.3f, 0.0f]
+                        [-0.2f,  0.3f, 0.0f]
+                        [ 1.5f,  0.3f, 0.0f]
+                        [ 1.5f, -0.3f, 0.0f]
+
+            WRT Unity it should be:
+        
+            footprint:  [ 0.3f,  0.0f, -0.2f]
+                        [-0.3f,  0.0f, -0.2f]
+                        [-0.3f,  0.0f,  1.5f]
+                        [ 0.3f,  0.0f,  1.5f]
+        
+        ***/
+        Vector3[] polygon = {   new Vector3( 0.3f,  0.0f, -0.2f),
+                                new Vector3(-0.3f,  0.0f, -0.2f),
+                                new Vector3(-0.3f,  0.0f,  1.5f),
+                                new Vector3( 0.3f,  0.0f,  1.5f)};
+
+        UpdateFootprint(polygon);
+
+    }
+
+    
 
 
 }
