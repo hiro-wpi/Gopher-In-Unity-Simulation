@@ -26,24 +26,24 @@ public class PolygonPublisher : MonoBehaviour
         ros.RegisterPublisher<PolygonMsg>(PolygonTopicName);
 
         // Initialize message
-        twist = new TwistMsg();
+        polygon = new PolygonMsg();
     }
 
     public void PublishPolygon(Vector3[] poly)
     {
         // Convert all vectors to points in
-        List<Point32msg> pointList = new List<Point32msg>();
+        List<Point32Msg> pointList = new List<Point32Msg>();
         foreach (Vector3 p in poly)
         {
-            Point32msg point = new Point32msg();
+            Point32Msg point = new Point32Msg();
             point.x = p.To<FLU>().x;
             point.y = p.To<FLU>().y;
-            pointList.append(point);
+            pointList.Add(point);
         }
 
         // Convert list to arrray
-        pointArray = array(pointList);
+        polygon.points = pointList.ToArray();
 
-        ros.Publish(twistTopicName, pointArray);
+        ros.Publish(PolygonTopicName, polygon);
     }
 }

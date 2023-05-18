@@ -58,7 +58,7 @@ public class ROSAutoNavigation : AutoNavigation
         TargetOrientationEuler = orientation;
 
         sendGoalService.SendGoalCommandService(position, orientation);
-        updateNav(false);
+        UpdateNav(false);
         updateWaypoints = true;
     }
 
@@ -67,7 +67,7 @@ public class ROSAutoNavigation : AutoNavigation
         // Allow the robot to move along the planned waypoints
     public override void StartNavigation()
     {
-        updateNav(true);
+        UpdateNav(true);
         updateWaypoints = true;
     }
 
@@ -75,14 +75,14 @@ public class ROSAutoNavigation : AutoNavigation
         // Stop the motion of the robot. Still allow the waypoints to be seen
     public override void PauseNavigation()
     {
-        updateNav(false);
+        UpdateNav(false);
         updateWaypoints = true;
     }
 
     // Resume navigation
     public override void ResumeNavigation()
     {
-        updateNav(true);
+        UpdateNav(true);
         updateWaypoints = true;
     }
 
@@ -103,6 +103,7 @@ public class ROSAutoNavigation : AutoNavigation
         twistSubscriber.Pause(!isNav);
     }
 
+    // Update the footprint of the robot used in the navigation stack by the DWA local planner
     public void UpdateFootprint(Vector3[] poly)
     {
         polygonPublisher.PublishPolygon(poly);

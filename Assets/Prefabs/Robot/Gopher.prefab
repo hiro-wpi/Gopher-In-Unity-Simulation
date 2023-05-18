@@ -45,6 +45,8 @@ GameObject:
   - component: {fileID: 535451132}
   - component: {fileID: 535451131}
   - component: {fileID: 273831454}
+  - component: {fileID: 4490393623539869091}
+  - component: {fileID: 1226114613}
   m_Layer: 15
   m_Name: Base
   m_TagString: Untagged
@@ -132,6 +134,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GlobalPlannerTopicName: move_base/TrajectoryPlannerROS/global_plan
+--- !u!114 &4490393623539869091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 535451129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18daf380504ed3e2493b490a86df0f78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Position>k__BackingField: {x: 0, y: 0, z: 0}
+  <Rotation>k__BackingField: {x: 0, y: 0, z: 0}
+  poseTopicName: amcl_pose
+--- !u!114 &1226114613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 535451129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bfb71e10314ed37c8cf206b70f67183, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PolygonTopicName: move_base/footprint
 --- !u!1 &631462978
 GameObject:
   m_ObjectHideFlags: 0
@@ -188,6 +218,7 @@ MonoBehaviour:
   localPlanner: {fileID: 535451131}
   globalPlanner: {fileID: 273831454}
   twistSubscriber: {fileID: 9012710540990295136}
+  polygonPublisher: {fileID: 1226114613}
 --- !u!1 &879516990
 GameObject:
   m_ObjectHideFlags: 0

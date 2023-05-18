@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// TODO
+//      Find a better inplementation for changing the base footprint.
+//      Used in Function Update()
+
 public class TestGUI : MonoBehaviour
 {
     // Main UI
     public GameObject cameraDisplay;
+    public GameObject minimapCameraDisplay;
     private Vector2 cameraResolution;
     private RectTransform cameraDisplayRect;
     // Map
@@ -14,6 +19,10 @@ public class TestGUI : MonoBehaviour
     private GameObject mapCameraObject;
     private Camera mapCamera;
     private Vector3 prevClickPoint = Vector3.zero;
+    // Minimap
+    private RenderTexture miniMapRendertexture;
+    private GameObject miniMapCameraObject;
+    private Camera miniMapCamera;
 
     // Robot
     public GameObject robot;
@@ -29,6 +38,7 @@ public class TestGUI : MonoBehaviour
 
     void Start() 
     {
+
         // planner
         autoNavigation = robot.GetComponentInChildren<ROSAutoNavigation>();
 
@@ -57,6 +67,8 @@ public class TestGUI : MonoBehaviour
         mapCamera.orthographicSize = 14f;
         mapCamera.cullingMask = LayerMask.GetMask("Robot", "Map", "UI");
         mapCamera.targetTexture = mapRendertexture;
+
+        
     }
 
     void Update()
@@ -71,6 +83,12 @@ public class TestGUI : MonoBehaviour
             autoNavigation.PauseNavigation();
         if (Input.GetKeyDown(KeyCode.T))
             autoNavigation.StopNavigation();
+
+        // Changing Footprint
+        if (Input.GetKeyDown(KeyCode.J))
+            autoNavigation.SetToNormalFootprint();
+        if (Input.GetKeyDown(KeyCode.K))
+            autoNavigation.SetToBaseWithCartFootprint();
 
         // Set goal
         if (Input.GetMouseButtonDown(0))
