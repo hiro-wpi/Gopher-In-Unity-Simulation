@@ -181,9 +181,9 @@ public class ArticulationJointController : MonoBehaviour
                 {
                     float t = (float) frame / frames;
                     // Calculate the target positions 
-                    positions[joint] = (speeds != null && accelerations != null) ?
-                        // TODO use constant acceleration model
-                        targets[i][joint] :
+                    positions[joint] = // (speeds != null && accelerations != null) ?
+                        // TODO implement model with speed and acceleration
+                        // targets[i][joint] :
                         // + speeds[i][joint] * t 
                         // + 0.5f * accelerations[i][joint] * t * t : 
                         // Only target is given, use linear interpolation

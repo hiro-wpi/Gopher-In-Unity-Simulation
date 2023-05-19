@@ -53,7 +53,8 @@ public class AutoGrasping : MonoBehaviour
         // Check if the hover point is reached
         if (Utils.IsPoseClose(
             targetHoverPoint,
-            grasping.GetEndEffector().transform
+            grasping.GetEndEffector().transform,
+            0.03f, 0.2f
         ))
         {
             // Set grasping target

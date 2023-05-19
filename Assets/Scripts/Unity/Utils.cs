@@ -122,7 +122,7 @@ public static class Utils
         Transform t1,
         Transform t2,
         float positionThreshold = 0.01f,
-        float rotationThreshold = 0.02f
+        float rotationThreshold = 0.05f
     )
     {
         // position

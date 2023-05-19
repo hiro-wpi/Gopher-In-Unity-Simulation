@@ -22,28 +22,22 @@ public class ROSAutoManipulation : AutoManipulation
         Vector3 targetPosition,
         Quaternion targetRotation,
         Action<float[], float[][], float[][], float[][]> callback,
-        bool cartesianSpace = true
+        bool cartesianSpace = false
     )
     {
-        /*
-        // Joint Space planning is not suggested
-        if (cartesianSpace == false)
+        // Cartesian Space planning is not supported yet
+        if (cartesianSpace == true)
         {
             Debug.Log(
                 "Cartesian Space planning is not supported yet." +
                 "Use joint space planning instead."
             );
         }
-        */
-
-        Debug.Log(targetPosition);
 
         // Offset the target position and orientation
         targetPosition = mobileBaseTransform.InverseTransformPoint(targetPosition);
-        targetRotation = Quaternion.Inverse(targetRotation) * mobileBaseTransform.rotation;
+        targetRotation = Quaternion.Inverse(mobileBaseTransform.rotation) * targetRotation;
         targetPosition.y -= chest.jointPosition[0];
-
-        Debug.Log(targetPosition);
 
         // Send path planning request
         planTrajectoryService.SendPlanTrajectoryRequest(

@@ -148,6 +148,7 @@ public class ArticulationArmController : ArmController
         }
 
         // Try to plan a path to the target
+        Debug.Log("Sending request to move to the target.");
         jointAngles = jointController.GetCurrentJointTargets();
         autoManipulation.PlanTrajectory(
             jointAngles, targetPosition, targetRotation, TrajectoryGenerated
@@ -159,7 +160,7 @@ public class ArticulationArmController : ArmController
     )
     {
         // check validity of the path
-        if (timeSteps.Length <= 0)
+        if (timeSteps.Length <= 1)
         {
             Debug.Log("No path found");
             return;

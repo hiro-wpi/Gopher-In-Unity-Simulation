@@ -51,7 +51,7 @@ public class PlanTrajectoryService : MonoBehaviour
         // Target Pose
         request.target_pose = new PoseMsg
         {
-            position = (targetPosition - Vector3.zero).To<FLU>(),
+            position = targetPosition.To<FLU>(),
             orientation = targetRotation.To<FLU>()
         };
 
@@ -84,7 +84,7 @@ public class PlanTrajectoryService : MonoBehaviour
         // Get trajectory
         for (int i = 0; i < points.Length; ++i)
         {
-            timeSteps[i] = points[i].time_from_start.sec 
+            timeSteps[i] = points[i].time_from_start.sec
                          + points[i].time_from_start.nanosec / 1e9f;
             angles[i] = points[i].positions.Select(d => (float)d).ToArray();
             velocities[i] = points[i].velocities.Select(d => (float)d).ToArray();
