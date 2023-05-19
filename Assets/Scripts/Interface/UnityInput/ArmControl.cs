@@ -14,7 +14,6 @@ public class ArmControl : MonoBehaviour
     // Container for the speed vector
     private Vector3 linearVelocity = Vector3.zero;
     private Vector3 angularVelocity = Vector3.zero;
-    private float gripperPosition = 0f;
 
     void Start() {}
 
@@ -26,7 +25,7 @@ public class ArmControl : MonoBehaviour
             armController.SwitchMode();
         }
     }
-    
+
     // End effector control
     public void OnTranslate(InputAction.CallbackContext context)
     {
@@ -47,21 +46,19 @@ public class ArmControl : MonoBehaviour
     // Gripper
     public void OnGrasp(InputAction.CallbackContext context)
     {
-        // Read input
-        gripperPosition = context.ReadValue<Vector2>().y;
-        // Set velocity
-        armController.SetGripperPosition(gripperPosition);
+        if (context.performed)
+        {
+            // Set velocity
+            armController.ChangeGripperStatus();
+        }
     }
 
-    // TODO
     // Handle autonomy input
     public void OnTarget(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            // armController.MoveToTarget(
-            //    null, automationSpeed, false, false
-            // );
+            armController.MoveToTarget();
         }
     }
 

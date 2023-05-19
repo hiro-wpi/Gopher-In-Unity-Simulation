@@ -38,6 +38,9 @@ public abstract class ArmController : MonoBehaviour
 
     void Update() {}
 
+    // Set joint positions (in radians)
+    public virtual void SetJointAngles(float[] jointAngles) {}
+
     // Set end effector velocity
     public virtual void SetLinearVelocity(Vector3 linear)
     {
@@ -75,6 +78,18 @@ public abstract class ArmController : MonoBehaviour
             1.0f
         );
     }
+
+    public virtual void ChangeGripperStatus()
+    {
+        gripperPosition = 1.0f - gripperPosition;
+    }
+
+    // Autonomy function
+    public virtual void SetTarget(Vector3 position, Quaternion rotation) {}
+
+    public virtual void CancelTarget() {}
+
+    public virtual void MoveToTarget() {}
 
     // Set robot control mode
     public void SetMode(Mode mode)

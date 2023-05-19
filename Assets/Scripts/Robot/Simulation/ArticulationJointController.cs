@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,8 +6,11 @@ using UnityEngine;
 
 /// <summary>
 ///     This script allows robot joints to be controlled with 
-///     SetJointTarget, SetJointTargetStep, SetJointSpeedStep.
-///     It also provides joint pose intializaiton.
+///
+///     SetJointTarget (use coroutine to move to target positions)
+///     SetJointTargetStep (move to the target positions in one delta time)
+///     SetJointSpeedStep (move at the target velocity in one delta time)
+///     SetJointTrajectory (use coroutine to move along a trajectory).
 /// </summary>
 public class ArticulationJointController : MonoBehaviour
 {
@@ -23,10 +27,14 @@ public class ArticulationJointController : MonoBehaviour
 
     // Coroutine for joint movement (move to target positions)
     private Coroutine currCoroutine;
+    // trajectory control
+    private List<float[]> targetPositions;
+    private int currTrajectoryIndex = 0;
 
     void Awake()
     {
-        // Only consider colliders that are active by default
+        // Get colliders of all articulation bodies
+        // Only consider those that are active by default
         colliders = articulationChain[0].GetComponentsInChildren<Collider>();
         colliders = colliders.Where(collider => collider.enabled == true).ToArray();
     }
@@ -35,6 +43,46 @@ public class ArticulationJointController : MonoBehaviour
 
     void Update() {}
 
+    // Set joint target
+    // Use coroutine to move to target positions given joint speed limits
+    // Recommended for setting joint targets that are largely 
+    // different from the current joint positions
+    public void SetJointTargets(
+        float[] targets, bool disableColliders = false, Action reached = null
+    )
+    {
+        // Stop current coroutine
+        if (currCoroutine != null)
+        {
+            StopCoroutine(currCoroutine);
+        }
+        // Move to target positions
+        currCoroutine = StartCoroutine(
+            SetJointTargetsCoroutine(targets, disableColliders, reached)
+        );
+    }
+
+    // Coroutine for joint movement (move to target positions)
+    private IEnumerator SetJointTargetsCoroutine(
+        float[] jointPositions, bool disableColliders = false, Action reached = null
+    )
+    {
+        // Disable colliders before homing to avoid collisions
+        // when the robot starts in a narrow space
+        if (disableColliders)
+        {
+            SetCollidersActive(false);
+        }
+        yield return new WaitUntil(() => SetJointTargetsStepAndCheck(jointPositions) == true);
+        if (disableColliders)
+        {
+            SetCollidersActive(true);
+        }
+        reached?.Invoke();
+    }
+
+    // This is only for the purpose of initializing joint positions
+    // at the start of the Unity simulation
     private void SetCollidersActive(bool active)
     {
         foreach (Collider collider in colliders)
@@ -43,40 +91,16 @@ public class ArticulationJointController : MonoBehaviour
         }
     }
 
-    // Set joint target
-    public void SetJointTargets(float[] targets, bool disableColliders = false)
-    {
-        // Stop current coroutine
-        if (currCoroutine != null)
-        {
-            StopCoroutine(currCoroutine);
-        }
-        currCoroutine = StartCoroutine(SetJointTargetsCoroutine(targets, disableColliders));
-    }
-
-    // Coroutine for joint movement (move to target positions)
-    private IEnumerator SetJointTargetsCoroutine(
-        float[] jointPositions, bool disableColliders = false)
-    {
-        // Disable colliders before homing to avoid collisions
-        // when the robot starts in a narrow space
-        if (disableColliders)
-        {
-            SetCollidersActive(false);
-        }
-        yield return new WaitUntil(() => MoveToJointPositionsStep(jointPositions) == true);
-        if (disableColliders)
-        {
-            SetCollidersActive(true);
-        }
-    }
-
-    private bool MoveToJointPositionsStep(float[] positions)
+    private bool SetJointTargetsStepAndCheck(float[] positions)
     {
         // Set joint targets
         SetJointTargetsStep(positions);
-        // Debug.Log("Set");
+        // Check if reached
+        return CheckJointTargetStep(positions);
+    }
 
+    private bool CheckJointTargetStep(float[] positions)
+    {
         // Check if current joint targets are set to the target positions
         float[] currTargets = GetCurrentJointTargets();
         for (int i = 0; i < positions.Length; ++i)
@@ -90,6 +114,10 @@ public class ArticulationJointController : MonoBehaviour
         return true;
     }
 
+    // Set joint target step
+    // Directly setting target positions
+    // Only recommended for real-time servoing / velocity control 
+    // in which the angles change is certainly small
     public void SetJointTargetsStep(float[] targets)
     {
         for (int i = 0; i < articulationChain.Length; ++i)
@@ -122,6 +150,78 @@ public class ArticulationJointController : MonoBehaviour
     {
         speed = Mathf.Clamp(speed, 0.0f, jointMaxSpeed);
         ArticulationBodyUtils.SetJointSpeedStep(joint, speed * Mathf.Rad2Deg);
+    }
+
+    // Set joint trajectory
+    public void SetJointTrajectory(
+        float[] timeSteps,
+        float[][] targets,
+        float[][] speeds = null,
+        float[][] accelerations = null,
+        Action reached = null
+    )
+    {
+        // Due to the fact that the robot control is actually
+        // just position control, interpolation is needed to 
+        // convert targets, speeds and accelerations values into a single list
+        // where each element represents the target positions at each Time.fixedDeltaTime
+        targetPositions = new List<float[]>();
+
+        // For each waypoint/timestep
+        for (int i = 0; i < timeSteps.Length; i++)
+        {
+            // For each time frame in this timestep
+            float prevTime = i == 0 ? 0 : timeSteps[i - 1];
+            int frames = Mathf.RoundToInt((timeSteps[i] - prevTime) / Time.fixedDeltaTime);
+            for (int frame = 0; frame < frames; frame++)
+            {
+                // For each joint in this time frame
+                float[] positions = new float[articulationChain.Length];
+                for (int joint = 0; joint < articulationChain.Length; joint++)
+                {
+                    float t = (float) frame / frames;
+                    // Calculate the target positions 
+                    positions[joint] = // (speeds != null && accelerations != null) ?
+                        // TODO implement model with speed and acceleration
+                        // targets[i][joint] :
+                        // + speeds[i][joint] * t 
+                        // + 0.5f * accelerations[i][joint] * t * t : 
+                        // Only target is given, use linear interpolation
+                        Mathf.Lerp(targets[i == 0 ? 0 : i - 1][joint], targets[i][joint], t);
+                }
+
+                // Add the target positions to the list
+                targetPositions.Add(positions);
+            }
+        }
+
+        // Stop current coroutine
+        if (currCoroutine != null)
+        {
+            StopCoroutine(currCoroutine);
+        }
+        // Move along trajectory
+        currCoroutine = StartCoroutine(SetJointTrajectoryCoroutine(reached));
+    }
+
+    public IEnumerator SetJointTrajectoryCoroutine(Action reached = null)
+    {
+        currTrajectoryIndex = 0;
+        yield return new WaitUntil(() => SetJointTrajectoryStepAndCheck() == true);
+        reached?.Invoke();
+    }
+
+    private bool SetJointTrajectoryStepAndCheck()
+    {
+        if (targetPositions.Count == 0)
+        {
+            return true;
+        }
+        
+        // Set joint targets of the next frame in the trajectory
+        SetJointTargetsStep(targetPositions[currTrajectoryIndex++]);
+        // Check if done
+        return currTrajectoryIndex == targetPositions.Count;
     }
 
     // Stop joints

@@ -67,8 +67,7 @@ public class ArticulationGripperController : MonoBehaviour
         // Release grasping object
         grasping.Detach();
         // Resume speed if wheel controller attached
-        if (baseController != null)
-            baseController.RemoveSpeedLimit(wheelSpeedLimitID);
+        baseController?.RemoveSpeedLimit(wheelSpeedLimitID);
     }
 
     public void ChangeGripperStatus()
@@ -107,10 +106,13 @@ public class ArticulationGripperController : MonoBehaviour
     // Grasping detection
     private void CheckGrasping()
     {
-        // Graspable object detection
+        // Check only when gripper is closed 
+        // but object is not yet grasped
         if (!gripperClosed || grasping.IsGrasping)
+        {
             return;
-
+        }
+            
         // If both fingers in touch with the same graspable object
         if ((leftCollision.CollidingObject != null) && 
             (rightCollision.CollidingObject != null) &&

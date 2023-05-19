@@ -50,7 +50,7 @@ public class ForwardKinematics : MonoBehaviour
     private Vector3[] axis;
 
     // Joint Jacobian
-    private ArticulationJacobian jacobian;
+    public ArticulationJacobian Jacobian { get; private set; }
 
     void Start()
     {
@@ -60,7 +60,7 @@ public class ForwardKinematics : MonoBehaviour
         axis = new Vector3[NumJoint + 1];
 
         T = new Matrix4x4[NumJoint + 1];
-        jacobian = new ArticulationJacobian(6, NumJoint);
+        Jacobian = new ArticulationJacobian(6, NumJoint);
     }
 
     public void SolveFK(float[] newAngles)
@@ -68,10 +68,9 @@ public class ForwardKinematics : MonoBehaviour
         UpdateAngles(newAngles);
         UpdateAllTs();
         UpdateAllPose();
-        UpdateJacobian();
     }
 
-    public void UpdateAngles(float[] newAngles)
+    private void UpdateAngles(float[] newAngles)
     {
         for (int i = 0; i < NumJoint; i++)
         {
@@ -88,7 +87,7 @@ public class ForwardKinematics : MonoBehaviour
         }
     }
 
-    public void UpdateAllTs()
+    private void UpdateAllTs()
     {
         for (int i = 0; i < NumJoint + 1; i++)
         {
@@ -112,7 +111,7 @@ public class ForwardKinematics : MonoBehaviour
         return T;
     }
 
-    public void UpdateAllPose()
+    private void UpdateAllPose()
     {
         // Compute cumulative Ts from base to end effector
         Matrix4x4[] cumulativeTs = GetCumulativeTsFromBase();
@@ -147,7 +146,7 @@ public class ForwardKinematics : MonoBehaviour
         // Matrix4x4 TTotal = Matrix4x4.identity;
         for (int i = 0; i < NumJoint + 1; i++)
         {
-            TTotal = TTotal * T[i];
+            TTotal *= T[i];
             Ts[i] = TTotal;
         }
         return Ts;
@@ -157,7 +156,7 @@ public class ForwardKinematics : MonoBehaviour
     {
         // Create a new ArticulationJacobian
         // px, py, pz, rx, ry, rz
-        jacobian = new ArticulationJacobian(6, NumJoint);
+        Jacobian = new ArticulationJacobian(6, NumJoint);
 
         Vector3[] zs = axis;
         Vector3[] ts = positions;
@@ -167,12 +166,14 @@ public class ForwardKinematics : MonoBehaviour
             Vector3 zT = Vector3.Cross(zs[i], ts[NumJoint] - ts[i]);
 
             // zB will be the scaled rotation representation of the joint
-            // So it's just the axis, with default length 1 (meaning a rotation of 1 radian around that axis)
+            // So it's just the axis, with default length 1 
+            // (meaning a rotation of 1 radian around that axis)
             Vector3 zB = zs[i];
-            JacobianTools.Set(jacobian, i, zT, zB);
+            JacobianTools.Set(Jacobian, i, zT, zB);
         }
     }
 
+    // Getter functions
     public (Vector3, Quaternion) GetPose(int i)
     {
         return (positions[i], rotations[i]);
@@ -183,16 +184,11 @@ public class ForwardKinematics : MonoBehaviour
         return (positions, rotations);
     }
 
-    public ArticulationJacobian GetJacobian()
-    {
-        return jacobian;
-    }
-
     // For debugging
     /*
     void OnDrawGizmos()
     {
-        if (positions == null || positions.Length == 0)
+        if (positions.?Length == 0)
         {
             return;
         }

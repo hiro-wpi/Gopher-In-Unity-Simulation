@@ -5,48 +5,49 @@ using System.Collections.Generic;
 using System.Text;
 using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 
-namespace RosMessageTypes.GopherMoveItConfig
+namespace RosMessageTypes.GopherMoveit
 {
     [Serializable]
     public class PlanTrajectoryRequest : Message
     {
-        public const string k_RosMessageName = "gopher_move_it_config/PlanTrajectory";
+        public const string k_RosMessageName = "gopher_moveit/PlanTrajectory";
         public override string RosMessageName => k_RosMessageName;
 
-        public JointsMsg joints;
-        public Geometry.PoseMsg target;
+        public float[] joints_input;
+        public Geometry.PoseMsg target_pose;
 
         public PlanTrajectoryRequest()
         {
-            this.joints = new JointsMsg();
-            this.target = new Geometry.PoseMsg();
+            this.joints_input = new float[0];
+            this.target_pose = new Geometry.PoseMsg();
         }
 
-        public PlanTrajectoryRequest(JointsMsg joints, Geometry.PoseMsg target)
+        public PlanTrajectoryRequest(float[] joints_input, Geometry.PoseMsg target_pose)
         {
-            this.joints = joints;
-            this.target = target;
+            this.joints_input = joints_input;
+            this.target_pose = target_pose;
         }
 
         public static PlanTrajectoryRequest Deserialize(MessageDeserializer deserializer) => new PlanTrajectoryRequest(deserializer);
 
         private PlanTrajectoryRequest(MessageDeserializer deserializer)
         {
-            this.joints = JointsMsg.Deserialize(deserializer);
-            this.target = Geometry.PoseMsg.Deserialize(deserializer);
+            deserializer.Read(out this.joints_input, sizeof(float), deserializer.ReadLength());
+            this.target_pose = Geometry.PoseMsg.Deserialize(deserializer);
         }
 
         public override void SerializeTo(MessageSerializer serializer)
         {
-            serializer.Write(this.joints);
-            serializer.Write(this.target);
+            serializer.WriteLength(this.joints_input);
+            serializer.Write(this.joints_input);
+            serializer.Write(this.target_pose);
         }
 
         public override string ToString()
         {
             return "PlanTrajectoryRequest: " +
-            "\njoints: " + joints.ToString() +
-            "\ntarget: " + target.ToString();
+            "\njoints_input: " + System.String.Join(", ", joints_input.ToList()) +
+            "\ntarget_pose: " + target_pose.ToString();
         }
 
 #if UNITY_EDITOR

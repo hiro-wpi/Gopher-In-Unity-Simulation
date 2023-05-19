@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using System.Text;
 using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 
-namespace RosMessageTypes.GopherMoveItConfig
+namespace RosMessageTypes.GopherMoveit
 {
     [Serializable]
     public class PlanTrajectoryResponse : Message
     {
-        public const string k_RosMessageName = "gopher_move_it_config/PlanTrajectory";
+        public const string k_RosMessageName = "gopher_moveit/PlanTrajectory";
         public override string RosMessageName => k_RosMessageName;
 
         public Moveit.RobotTrajectoryMsg trajectory;

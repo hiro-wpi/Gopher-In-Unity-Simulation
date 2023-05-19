@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,15 +18,12 @@ public class ArticulationArmController : ArmController
 {
     // Emergency Stop
     [SerializeField] private bool emergencyStop = false;
-    public virtual void EmergencyStop(bool stop = true)
-    {
-        emergencyStop = stop;
-    }
 
     // Arm component controller
     [SerializeField] private ArticulationJointController jointController;
     [SerializeField] private ArticulationGripperController gripperController;
-    [SerializeField] private NewtonIK newtonIK;
+    [SerializeField] private InverseKinematics inverseKinematics;
+    [SerializeField] private AutoManipulation autoManipulation;
 
     // Arm control mode
     private enum ControlMode { Control, Target }
@@ -35,13 +33,15 @@ public class ArticulationArmController : ArmController
     private float[] jointAngles;
     // Automatic grasping with IK solver
     private Coroutine currentCoroutine;
-    public AutoGraspable target;
+    [SerializeField, ReadOnly] private bool targetSet = false;
+    [SerializeField, ReadOnly] private Vector3 targetPosition;
+    [SerializeField, ReadOnly] private Quaternion targetRotation;
 
     // Presets
     private static float IGNORE_VAL = ArticulationJointController.IGNORE_VAL;
     [SerializeField] private bool flipPresetAngles;
     // default home position
-    [SerializeField] private JointAngles homePositions = new JointAngles(new float[] {
+    [SerializeField] private JointAngles homePositions = new(new float[] {
         -1f, -Mathf.PI/2, -Mathf.PI/2, 2.2f, 0.0f, -1.2f, Mathf.PI
     });
     [SerializeField] private JointAngles[] presets = 
@@ -87,13 +87,25 @@ public class ArticulationArmController : ArmController
         }
     }
 
-    // When gripper speed is set
+    // Control mode
+    public void SwitchToManualControl()
+    {
+        controlMode = ControlMode.Control;
+    }
+
+    // Gripper
     public override void SetGripperPosition(float position)
     {
         base.SetGripperPosition(position);
         gripperController.SetGripper(position);
     }
 
+    public override void ChangeGripperStatus()
+    {
+        gripperController.ChangeGripperStatus();
+    }
+
+    // Manual real-time control
     private void ProcessManualControl()
     {
         // End effector position control
@@ -104,7 +116,7 @@ public class ArticulationArmController : ArmController
             Vector3 angularError = - angularVelocity * Time.fixedDeltaTime * Mathf.Rad2Deg;
             // Solve IK
             jointAngles = jointController.GetCurrentJointTargets();
-            jointAngles = newtonIK.SolveVelocityIK(
+            jointAngles = inverseKinematics.SolveVelocityIK(
                 jointAngles, linearError, Quaternion.Euler(angularError)
             );
             // Set joint targets to IK solution
@@ -112,15 +124,83 @@ public class ArticulationArmController : ArmController
         }
     }
 
+    // Autonomous mode
+    public override void SetTarget(Vector3 position, Quaternion rotation)
+    {
+        targetSet = true;
+        targetPosition = position;
+        targetRotation = rotation;
+    }
+
+    public override void CancelTarget()
+    {
+        targetSet = false;
+        targetPosition = Vector3.zero;
+        targetRotation = Quaternion.identity;
+    }
+
+    public override void MoveToTarget()
+    {
+        if (!targetSet)
+        {
+            Debug.Log("Target not set.");
+            return;
+        }
+
+        // Try to plan a path to the target
+        Debug.Log("Sending request to move to the target.");
+        jointAngles = jointController.GetCurrentJointTargets();
+        autoManipulation.PlanTrajectory(
+            jointAngles, targetPosition, targetRotation, TrajectoryGenerated
+        );
+    }
+
+    public void TrajectoryGenerated(
+        float[] timeSteps, float[][] angles, float[][] velocities, float[][]accelerations
+    )
+    {
+        // check validity of the path
+        if (timeSteps.Length <= 1)
+        {
+            Debug.Log("No path found");
+            return;
+        }
+
+        // Execute the path
+        SetJointTrajectory(timeSteps, angles, velocities, accelerations);
+    }
+
+    // Move to joint angles
+    public override void SetJointAngles(float[] jointAngles)
+    {
+        // Move to given position
+        controlMode = ControlMode.Target;
+        jointController.SetJointTargets(jointAngles, false, SwitchToManualControl);
+    }
+
+    // Move the joint following a trajectory
+    public void SetJointTrajectory(
+        float[] timeSteps, float[][] angles, float[][] velocities, float[][] accelerations
+    )
+    {
+        controlMode = ControlMode.Target;
+        jointController.SetJointTrajectory(
+            timeSteps, angles, velocities, accelerations, SwitchToManualControl
+        );
+    }
+
     // Move to Preset
     private void InitializeJoints()
     {
+        // Home angles
         float[] angles = homePositions.Angles;
         if (flipPresetAngles)
         {
             angles = FlipAngles(angles);
         }
-        currentCoroutine = StartCoroutine(MoveToPresetCoroutine(angles, true));
+        // Move to the position
+        controlMode = ControlMode.Target;
+        jointController.SetJointTargets(angles, true, SwitchToManualControl);
     }
 
     public override void HomeJoints()
@@ -153,11 +233,7 @@ public class ArticulationArmController : ArmController
         }
         
         // Move to presets
-        if (currentCoroutine != null)
-        {
-            StopCoroutine(currentCoroutine);
-        }
-        currentCoroutine = StartCoroutine(MoveToPresetCoroutine(angles, false));
+        SetJointAngles(angles);
     }
 
     private float[] FlipAngles(float[] angles)
@@ -178,31 +254,6 @@ public class ArticulationArmController : ArmController
             }
         }
         return flippedAngles;
-    }
-
-    private IEnumerator MoveToPresetCoroutine(float[] angles, bool disableColliders)
-    {
-        // Move to given position
-        controlMode = ControlMode.Target;
-        jointController.SetJointTargets(angles, disableColliders);
-        // Check if reached
-        yield return new WaitUntil(() => CheckPositionReached(angles) == true);
-        // Switch back to velocity control
-        controlMode = ControlMode.Control;
-    }
-
-    private bool CheckPositionReached(float[] angles)
-    {
-        float[] currTargets = jointController.GetCurrentJointTargets();
-        for (int i = 0; i < angles.Length; ++i)
-        {
-            if ((angles[i] != IGNORE_VAL) && 
-                (Mathf.Abs(currTargets[i] - angles[i]) > 0.00001))
-            {
-                return false;
-            }
-        }
-        return true;
     }
 
     // Emergency Stop

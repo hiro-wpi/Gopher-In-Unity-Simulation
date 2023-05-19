@@ -6,6 +6,7 @@ using UnityEngine.AI;
 
 public class TestAutoNavigation : MonoBehaviour
 {
+    /*
     // Character
     [SerializeField] private UnityAutoNavigation autoNavigation;
     [SerializeField] private  GameObject target;
@@ -28,4 +29,5 @@ public class TestAutoNavigation : MonoBehaviour
             autoNavigation.StopNavigation();
         }
     }
+    */
 }
