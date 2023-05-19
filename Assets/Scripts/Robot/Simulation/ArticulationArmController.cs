@@ -149,12 +149,17 @@ public class ArticulationArmController : ArmController
 
         // Try to plan a path to the target
         jointAngles = jointController.GetCurrentJointTargets();
-        var (timeSteps, angles, velocities, accelerations) = 
-            autoManipulation.PlanTrajectory(
-                jointAngles, targetPosition, targetRotation
-            );
+        autoManipulation.PlanTrajectory(
+            jointAngles, targetPosition, targetRotation, TrajectoryGenerated
+        );
+    }
+
+    public void TrajectoryGenerated(
+        float[] timeSteps, float[][] angles, float[][] velocities, float[][]accelerations
+    )
+    {
         // check validity of the path
-        if (timeSteps == null)
+        if (timeSteps.Length <= 0)
         {
             Debug.Log("No path found");
             return;

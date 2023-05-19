@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,10 +20,11 @@ public abstract class AutoManipulation : MonoBehaviour
     // Given current joint angles, target position and orientation,
     // Plan a trajectory to move the end effector along a trajectory defined by
     // a sequence of time-stamped joint angles, velocities and accelerations.
-    public abstract (float[], float[][], float[][], float[][]) PlanTrajectory(
-        float[] currJointAngles, 
-        Vector3 targetPosition, 
+    public abstract void PlanTrajectory(
+        float[] currJointAngles,
+        Vector3 targetPosition,
         Quaternion targetRotation,
+        Action<float[], float[][], float[][], float[][]> callback,
         bool cartesianSpace = false
     );
 }

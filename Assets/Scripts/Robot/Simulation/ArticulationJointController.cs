@@ -182,10 +182,10 @@ public class ArticulationJointController : MonoBehaviour
                     float t = (float) frame / frames;
                     // Calculate the target positions 
                     positions[joint] = (speeds != null && accelerations != null) ?
-                        // Given speed and acceleration, use constant acceleration model
-                        targets[i][joint] + 
-                        speeds[i][joint] * t + 
-                        0.5f * accelerations[i][joint] * t * t : 
+                        // TODO use constant acceleration model
+                        targets[i][joint] :
+                        // + speeds[i][joint] * t 
+                        // + 0.5f * accelerations[i][joint] * t * t : 
                         // Only target is given, use linear interpolation
                         Mathf.Lerp(targets[i == 0 ? 0 : i - 1][joint], targets[i][joint], t);
                 }

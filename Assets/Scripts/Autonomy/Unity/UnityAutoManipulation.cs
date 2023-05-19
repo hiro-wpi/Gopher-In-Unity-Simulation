@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,20 +17,28 @@ public class UnityAutoManipulation : AutoManipulation
     private float completionTime;
 
     // Kinematic solver
-    public ForwardKinematics forwardKinematics;
-    public InverseKinematics inverseKinematics;
+    [SerializeField] private ForwardKinematics forwardKinematics;
+    [SerializeField] private InverseKinematics inverseKinematics;
 
     void Start() {}
 
     void Update() {}
 
-    public override (float[], float[][], float[][], float[][]) PlanTrajectory(
-        float[] currJointAngles, 
-        Vector3 targetPosition, 
+    public override void PlanTrajectory(
+        float[] currJointAngles,
+        Vector3 targetPosition,
         Quaternion targetRotation,
+        Action<float[], float[][], float[][], float[][]> callback,
         bool cartesianSpace = false
     )
     {
+        // Initialize 
+        int numJoint = currJointAngles.Length;
+        float[] timeSteps = new float[numJoint];
+        float[][] angles = new float[numJoint][];
+        float[][] velocities = new float[numJoint][];
+        float[][] accelerations = new float[numJoint][];
+
         // Cartesian Space planning is not supported yet
         if (cartesianSpace == true)
         {
@@ -46,21 +55,24 @@ public class UnityAutoManipulation : AutoManipulation
         if (!converged)
         {
             Debug.Log("No valid path to given target.");
-            return (null, null, null, null);
+            callback(timeSteps, angles, velocities, accelerations);
+            return;
         }
 
         // Lerp between points to generate a path
         completionTime = GetMaxDifferent(
             currJointAngles, targetJointAngles
         ) / jointSpeed;
-
-        // Get trajectory
-        return GenerateJointTrajectory(
+        // get trajectory
+        (timeSteps, angles, velocities, accelerations) = GenerateJointTrajectory(
             currJointAngles,
             targetJointAngles,
             numberOfWaypoints,
             completionTime
         );
+
+        // Send it back to the caller
+        callback(timeSteps, angles, velocities, accelerations);
     }
 
     private float GetMaxDifferent(float[] ang1, float[] ang2)
@@ -89,8 +101,8 @@ public class UnityAutoManipulation : AutoManipulation
         int numJoints = currentAngles.Length;
         float[] times = new float[numWaypoints+1];
         float[][] angles = new float[numWaypoints+1][];
-        // float[][] velocities = new float[numWaypoints][];
-        // float[][] accelerations = new float[numWaypoints][];
+        float[][] velocities = new float[numWaypoints+1][];
+        float[][] accelerations = new float[numWaypoints+1][];
 
         // First waypoint is current position
         times[0] = 0;
@@ -113,9 +125,11 @@ public class UnityAutoManipulation : AutoManipulation
                 );
             }
             angles[t] = jointValues;
+            velocities[t] = new float[numJoints];
+            accelerations[t] = new float[numJoints];
         }
 
         // Return trajectory without velocity and acceleration
-        return (times, angles, null, null);
+        return (times, angles, velocities, accelerations);
     }
 }
