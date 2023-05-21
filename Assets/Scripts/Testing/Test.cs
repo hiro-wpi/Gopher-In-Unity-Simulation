@@ -1,33 +1,44 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    public Transform t1;
-    public Transform t2;
+    void Start() {}
 
-    void Start()
-    {}
+    void Update() {}
 
-    void Update()
+    public float AddAndMultiplyRegular(float a, float b)
     {
-        /*
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log(GetAngleDifference(t1.rotation, t2.rotation));
-            Debug.Log(Quaternion.Angle(t1.rotation, t2.rotation));
-        }
-        */
+        return (a + b) * (a + b);
     }
 
-    private float GetAngleDifference(Quaternion r1, Quaternion r2)
+
+    public void AddAndMultiply(float a, float b, Action<float> callback)
     {
-        // Angle difference
-        Quaternion rotationError = r1 * Quaternion.Inverse(r2);
-        rotationError.ToAngleAxis(out float rotationAngle, out _);
-        // Wrap and get magnitude
-        rotationAngle = Mathf.Abs(Mathf.DeltaAngle(0f, rotationAngle));
-        return rotationAngle;
+        StartCoroutine(AddAndMultiplyCoroutine(a, b, callback));
+    }
+
+    private IEnumerator AddAndMultiplyCoroutine(float a, float b, Action<float> callback)
+    {
+        yield return new WaitForSeconds(1f);
+
+        callback( (a + b) * (a + b) );
+    }
+
+
+    public void Call()
+    {
+        float result = AddAndMultiplyRegular(2, 3);
+        Debug.Log(result);
+
+
+        AddAndMultiply(2, 3, CallBackFun);
+    }
+
+    private void CallBackFun(float result)
+    {
+        Debug.Log(result);
     }
 }
