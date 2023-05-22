@@ -12,16 +12,22 @@ using UnityEngine;
 /// </summary>
 public class ROSAutoNavigation : AutoNavigation
 {
+    // Move base services
     [SerializeField] private MoveBaseCancelGoalService cancelGoalService;
     [SerializeField] private MoveBaseSendGoalService sendGoalService;
     [SerializeField] private MoveBaseMakePlanService makePlanService;
 
+    // Local and global planners
     [SerializeField] private LocalPlannerSubscriber localPlanner;
     [SerializeField] private GlobalPlannerSubscriber globalPlanner;
+
+    // AMCL
+    [SerializeField] private PoseWithCovarianceStampedPublisher poseWithCovarianceStampedPublisher;
 
     [SerializeField] private TwistSubscriber twistSubscriber;
     [SerializeField] private PolygonPublisher polygonPublisher;
 
+    [SerializeField] private GameObject robot;
 
 
     private bool updateWaypoints = true;
@@ -29,6 +35,9 @@ public class ROSAutoNavigation : AutoNavigation
     void Start()
     {
         twistSubscriber.Pause(true);
+
+        // Publish initial pose
+        poseWithCovarianceStampedPublisher.PublishPoseStampedCommand(robot.transform.position, robot.transform.rotation.eulerAngles);
     }
 
 
