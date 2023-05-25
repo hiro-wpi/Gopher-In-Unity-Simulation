@@ -47,6 +47,12 @@ public class CameraController : MonoBehaviour
         angles = Utils.ClampVector3(ang, angleLowerLimit, angleUpperLimit);
     }
 
+    public virtual void SetPitchYawPosition(float pitch, float yaw)
+    {
+        Vector3 angle = new Vector3((float)0.0, yaw, pitch);
+        SetPosition(angle);
+    }
+
     public virtual void SetControlMode(ControlMode mode)
     {
         controlMode = mode;
