@@ -29,20 +29,45 @@ public class ROSAutoNavigation : AutoNavigation
 
     [SerializeField] private GameObject robot;
 
+    // Flags
+    private bool isTwistSubscriberPaused = false;
+    private bool isInitcialPoseSent = false;
+
+
 
     private bool updateWaypoints = true;
 
     void Start()
     {
-        twistSubscriber.Pause(true);
+        // twistSubscriber.Pause(true);
 
-        // Publish initial pose
-        poseWithCovarianceStampedPublisher.PublishPoseStampedCommand(robot.transform.position, robot.transform.rotation.eulerAngles);
+        // // Publish initial pose
+        // poseWithCovarianceStampedPublisher.PublishPoseStampedCommand(robot.transform.position, robot.transform.rotation.eulerAngles);
     }
 
 
     void Update()
     {
+        
+        // Initcialize twist subsciber
+        if(!isTwistSubscriberPaused)
+        {
+            if(twistSubscriber != null)
+            {
+                twistSubscriber.Pause(true);
+                isTwistSubscriberPaused = true;
+            }
+        }
+        
+        // Publish initial pose
+        if(!isInitcialPoseSent)
+        {
+            if(poseWithCovarianceStampedPublisher != null)
+            {
+                poseWithCovarianceStampedPublisher.PublishPoseStampedCommand(robot.transform.position, robot.transform.rotation.eulerAngles);
+                isInitcialPoseSent = true;
+            }
+        }
 
         if(updateWaypoints)
         {
