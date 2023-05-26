@@ -91,7 +91,6 @@ public class TestGUI : MonoBehaviour
             //    Map   -> Hospital Map Environement
             //    UI    -> Local and Global Paths
             //             There exist other UI elements, however, those are not directly below the camera
-
         mapCamera.targetTexture = mapRendertexture;
 
 
@@ -107,7 +106,7 @@ public class TestGUI : MonoBehaviour
         minimapCamera = minimapCameraObject.AddComponent<Camera>();
         minimapCamera.orthographic = true;
         minimapCamera.orthographicSize = 2f;
-        minimapCamera.cullingMask = LayerMask.GetMask("Robot", "Unlabeled Map", "UI");  
+        minimapCamera.cullingMask = LayerMask.GetMask("Robot", "Map", "UI");  
             // ^^ These are Layers defined in the Inspector Window In Unity. They are attached to
             //    Robot -> Gopher
             //    Map   -> Hospital Map Environement
@@ -115,7 +114,6 @@ public class TestGUI : MonoBehaviour
             //             There exist other UI elements, however, those are not directly below the camera
 
         minimapCamera.targetTexture = minimapRendertexture;
-
     }
 
     void Update()

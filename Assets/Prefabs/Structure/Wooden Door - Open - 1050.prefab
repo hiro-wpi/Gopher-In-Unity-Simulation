@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7410438168050486148}
   - component: {fileID: 3966534452157639305}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wooden Door - Open - 1050
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,6 +27,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2276683498809348176}
   m_Father: {fileID: 0}
@@ -103,6 +104,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8068073526183931155, guid: 394e61a6ea729f243aa6a5e576480a85, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: -7370156802671013846, guid: 394e61a6ea729f243aa6a5e576480a85, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.152
@@ -149,7 +154,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -3111565609762313623, guid: 394e61a6ea729f243aa6a5e576480a85, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: -1950733119399844177, guid: 394e61a6ea729f243aa6a5e576480a85, type: 3}
       propertyPath: m_LocalScale.x
@@ -215,26 +220,19 @@ PrefabInstance:
       propertyPath: m_Name
       value: wooden_door
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 394e61a6ea729f243aa6a5e576480a85, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2766212503428324877, guid: 394e61a6ea729f243aa6a5e576480a85, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 394e61a6ea729f243aa6a5e576480a85, type: 3}
---- !u!4 &2276683498809348176 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 394e61a6ea729f243aa6a5e576480a85, type: 3}
-  m_PrefabInstance: {fileID: 1734693899105679291}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &583971751519184214 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8068073526183931155, guid: 394e61a6ea729f243aa6a5e576480a85, type: 3}
-  m_PrefabInstance: {fileID: 1734693899105679291}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &5531442309963488722 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -3111565609762313623, guid: 394e61a6ea729f243aa6a5e576480a85, type: 3}
-  m_PrefabInstance: {fileID: 1734693899105679291}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &4499467064501463478 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2766212503428324877, guid: 394e61a6ea729f243aa6a5e576480a85, type: 3}
   m_PrefabInstance: {fileID: 1734693899105679291}
   m_PrefabAsset: {fileID: 0}
 --- !u!65 &8990269573348626799
@@ -250,6 +248,16 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.9538457, y: 0.04417379, z: 2.049999}
   m_Center: {x: 0.47534788, y: -0.021896956, z: 1.0250045}
+--- !u!4 &2276683498809348176 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 394e61a6ea729f243aa6a5e576480a85, type: 3}
+  m_PrefabInstance: {fileID: 1734693899105679291}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4499467064501463478 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2766212503428324877, guid: 394e61a6ea729f243aa6a5e576480a85, type: 3}
+  m_PrefabInstance: {fileID: 1734693899105679291}
+  m_PrefabAsset: {fileID: 0}
 --- !u!65 &6832545538897215286
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -263,6 +271,11 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.04544301, y: 0.11172153, z: 0.79888433}
   m_Center: {x: 0.7988453, y: -0.021586275, z: 1.0520039}
+--- !u!1 &5531442309963488722 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -3111565609762313623, guid: 394e61a6ea729f243aa6a5e576480a85, type: 3}
+  m_PrefabInstance: {fileID: 1734693899105679291}
+  m_PrefabAsset: {fileID: 0}
 --- !u!65 &1181896303507222714
 BoxCollider:
   m_ObjectHideFlags: 0
