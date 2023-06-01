@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,7 +17,7 @@ public class ArticulationRobotStateListener : RobotStateListener
     
     void Start() {
         while(reader.jointNames.Length == 0) {} // wait until the StateReader has joints
-        Debug.Assert(reader.jointPositions.Length == 23, "Issue with Robot Used, Different then what was exspected!");
+        Debug.Assert(reader.jointPositions.Length == 23, "Issue with Robot Used, Different then what was exspected! " + reader.jointPositions.Length.ToString() + " joints found");
         joints = reader.jointPositions;
 
     }

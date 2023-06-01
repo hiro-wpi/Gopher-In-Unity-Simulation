@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -107,7 +107,7 @@ public class TestGUI : MonoBehaviour
         minimapCamera = minimapCameraObject.AddComponent<Camera>();
         minimapCamera.orthographic = true;
         minimapCamera.orthographicSize = 2f;
-        minimapCamera.cullingMask = LayerMask.GetMask("Robot", "Unlabeled Map", "UI");  
+        minimapCamera.cullingMask = LayerMask.GetMask("RobotVisualization", "Unlabeled Map", "UI");  
             // ^^ These are Layers defined in the Inspector Window In Unity. They are attached to
             //    Robot -> Gopher
             //    Map   -> Hospital Map Environement
