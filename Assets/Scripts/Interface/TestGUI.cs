@@ -28,6 +28,7 @@ public class TestGUI : MonoBehaviour
 
     // Robot
     public GameObject robot;
+    public GameObject robotVisualization;
     // public GameObject robotFollower;
     public ROSAutoNavigation autoNavigation;
     
@@ -99,9 +100,9 @@ public class TestGUI : MonoBehaviour
         if (minimapCameraObject != null)
             Destroy(minimapCameraObject);
         minimapCameraObject = new GameObject("Minimap Camera");
-        minimapCameraObject.transform.parent = robot.transform; // parent is the large canvas. The location of the tranfrom is at the corner of the canvas. 
-        minimapCameraObject.transform.position = new Vector3(robot.transform.position.x, 5f, robot.transform.position.z);
-        minimapCameraObject.transform.rotation = Quaternion.Euler(new Vector3(90f, robot.transform.eulerAngles.y, robot.transform.eulerAngles.z));
+        minimapCameraObject.transform.parent = robotVisualization.transform; // parent is the large canvas. The location of the tranfrom is at the corner of the canvas. 
+        minimapCameraObject.transform.position = new Vector3(robotVisualization.transform.position.x, 5f, robotVisualization.transform.position.z);
+        minimapCameraObject.transform.rotation = Quaternion.Euler(new Vector3(90f, robotVisualization.transform.eulerAngles.y, robotVisualization.transform.eulerAngles.z));
 
         // map camera setting
         minimapCamera = minimapCameraObject.AddComponent<Camera>();

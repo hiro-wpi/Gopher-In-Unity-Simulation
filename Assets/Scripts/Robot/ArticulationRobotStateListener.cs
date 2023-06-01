@@ -15,7 +15,7 @@ public class ArticulationRobotStateListener : RobotStateListener
     [SerializeField] private float[] joints;
 
     // Flags
-    private bool isReaderInitcialized = false;
+    // private bool isReaderInitcialized = false;
 
 
 
@@ -26,39 +26,45 @@ public class ArticulationRobotStateListener : RobotStateListener
     IEnumerator ReaderInitcialization()
     {
         Debug.Log("Init Reader");
-        while (reader.jointNames.Length == 0) 
+        while (reader.jointPositions.Length == 0) 
         {
             yield return null;
         }
         isReaderInitcialized = true;
         Debug.Assert(reader.jointPositions.Length == 23, "Issue with Robot Used, Different then what was exspected! " + reader.jointPositions.Length.ToString() + " joints found");
         joints = reader.jointPositions;
+        UpdateVisualization();
     }
 
     void Update() 
     {
-        // Make sure that we have the right reader
         if (!isReaderInitcialized)
         {
             return;
         }
 
-        joints = reader.jointPositions;
+        ReadState();
+        UpdateVisualization();
 
     }
 
     public override void ReadState() 
     {
+
+        //Debug.Log("ReadState");
         basePosition = reader.position;
         baseOrientationEuler = reader.rotationEuler;
 
+        linearVelocity = reader.linearVelocity;
+        angularVelocity = reader.angularVelocity;
+
         // 0  -> chest
-        chestPosition = joints[0];
+        chestPosition = reader.jointPositions[0];
 
         // 1  -> camera yaw
-        cameraYawJoint = joints[1];
+        cameraYawJoint = reader.jointPositions[1];
         // 2  -> camera pitch
-        cameraPitchJoint = joints[2];
+        cameraPitchJoint = reader.jointPositions[2];
         // 3  -> left arm
         leftArmJointsPosition = SliceArray(3, 7);
         // 10 -> left gripper
@@ -71,7 +77,7 @@ public class ArticulationRobotStateListener : RobotStateListener
     private float[] SliceArray(int startElement, int numOfElements)
     {
         float[] sliceJoints = new float[numOfElements];  
-        Array.Copy(joints, startElement, sliceJoints, 0, numOfElements);
+        Array.Copy(reader.jointPositions, startElement, sliceJoints, 0, numOfElements);
         return sliceJoints;
     }
 
