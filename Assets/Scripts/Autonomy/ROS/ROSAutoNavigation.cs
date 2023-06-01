@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -31,7 +31,7 @@ public class ROSAutoNavigation : AutoNavigation
 
     // Flags
     private bool isTwistSubscriberPaused = false;
-    private bool isInitcialPoseSent = false;
+    private bool isInitcialPosePublished = false;
 
 
 
@@ -39,10 +39,36 @@ public class ROSAutoNavigation : AutoNavigation
 
     void Start()
     {
-        // twistSubscriber.Pause(true);
+        StartCoroutine(PauseTwistSubscriber());
+        StartCoroutine(PublishInitcialPose());
+    }
 
-        // // Publish initial pose
-        // poseWithCovarianceStampedPublisher.PublishPoseStampedCommand(robot.transform.position, robot.transform.rotation.eulerAngles);
+    IEnumerator PauseTwistSubscriber()
+    {
+        Debug.Log("Pausing Twist Subscriber");
+        // wait for the next time we fun the Fixed Update Functions()
+        //      the start function of all dependant objects would have completed
+        yield return new WaitForFixedUpdate();
+
+        // Pause Twist Subscriber
+        twistSubscriber.Pause(true);
+        isTwistSubscriberPaused = true;
+    }
+
+    // Publishes the initcial pose of the robot
+    IEnumerator PublishInitcialPose()
+    {
+        Debug.Log("Initciallizing Pose");
+
+        // wait for the next time we fun the Fixed Update Functions()
+        //      the start function of all dependant objects would have completed
+        yield return new WaitForFixedUpdate();
+
+        // Send the initcial Pose
+        poseWithCovarianceStampedPublisher.PublishPoseStampedCommand(robot.transform.position, robot.transform.rotation.eulerAngles);
+        isInitcialPosePublished = true;
+
+        Debug.Log(" Finished Initciallizing Pose");
     }
 
 
@@ -50,23 +76,15 @@ public class ROSAutoNavigation : AutoNavigation
     {
         
         // Initcialize twist subsciber
-        if(!isTwistSubscriberPaused)
+        if(isTwistSubscriberPaused == false)
         {
-            if(twistSubscriber != null)
-            {
-                twistSubscriber.Pause(true);
-                isTwistSubscriberPaused = true;
-            }
+            return;
         }
         
         // Publish initial pose
-        if(!isInitcialPoseSent)
+        if(isInitcialPosePublished == false)
         {
-            if(poseWithCovarianceStampedPublisher != null)
-            {
-                poseWithCovarianceStampedPublisher.PublishPoseStampedCommand(robot.transform.position, robot.transform.rotation.eulerAngles);
-                isInitcialPoseSent = true;
-            }
+            return;
         }
 
         if(updateWaypoints)
