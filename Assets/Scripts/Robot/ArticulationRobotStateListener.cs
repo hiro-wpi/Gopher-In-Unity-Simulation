@@ -14,15 +14,38 @@ public class ArticulationRobotStateListener : RobotStateListener
     [SerializeField] private StateReader reader;
     [SerializeField] private float[] joints;
 
-    
+    // Flags
+    private bool isReaderInitcialized = false;
+
+
+
     void Start() {
-        while(reader.jointNames.Length == 0) {} // wait until the StateReader has joints
+        StartCoroutine(ReaderInitcialization());
+    }
+
+    IEnumerator ReaderInitcialization()
+    {
+        Debug.Log("Init Reader");
+        while (reader.jointNames.Length == 0) 
+        {
+            yield return null;
+        }
+        isReaderInitcialized = true;
         Debug.Assert(reader.jointPositions.Length == 23, "Issue with Robot Used, Different then what was exspected! " + reader.jointPositions.Length.ToString() + " joints found");
+        joints = reader.jointPositions;
+    }
+
+    void Update() 
+    {
+        // Make sure that we have the right reader
+        if (!isReaderInitcialized)
+        {
+            return;
+        }
+
         joints = reader.jointPositions;
 
     }
-
-    void Update() {}
 
     public override void ReadState() 
     {
