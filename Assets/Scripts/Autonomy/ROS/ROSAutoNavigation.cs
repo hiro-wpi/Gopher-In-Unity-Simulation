@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -29,20 +29,63 @@ public class ROSAutoNavigation : AutoNavigation
 
     [SerializeField] private GameObject robot;
 
+    // Flags
+    private bool isTwistSubscriberPaused = false;
+    private bool isInitcialPosePublished = false;
+
+
 
     private bool updateWaypoints = true;
 
     void Start()
     {
-        twistSubscriber.Pause(true);
+        StartCoroutine(PauseTwistSubscriber());
+        StartCoroutine(PublishInitcialPose());
+    }
 
-        // Publish initial pose
+    IEnumerator PauseTwistSubscriber()
+    {
+        Debug.Log("Pausing Twist Subscriber");
+        // wait for the next time we fun the Fixed Update Functions()
+        //      the start function of all dependant objects would have completed
+        yield return new WaitForFixedUpdate();
+
+        // Pause Twist Subscriber
+        twistSubscriber.Pause(true);
+        isTwistSubscriberPaused = true;
+    }
+
+    // Publishes the initcial pose of the robot
+    IEnumerator PublishInitcialPose()
+    {
+        Debug.Log("Initciallizing Pose");
+
+        // wait for the next time we fun the Fixed Update Functions()
+        //      the start function of all dependant objects would have completed
+        yield return new WaitForFixedUpdate();
+
+        // Send the initcial Pose
         poseWithCovarianceStampedPublisher.PublishPoseStampedCommand(robot.transform.position, robot.transform.rotation.eulerAngles);
+        isInitcialPosePublished = true;
+
+        Debug.Log(" Finished Initciallizing Pose");
     }
 
 
     void Update()
     {
+        
+        // Initcialize twist subsciber
+        if(isTwistSubscriberPaused == false)
+        {
+            return;
+        }
+        
+        // Publish initial pose
+        if(isInitcialPosePublished == false)
+        {
+            return;
+        }
 
         if(updateWaypoints)
         {

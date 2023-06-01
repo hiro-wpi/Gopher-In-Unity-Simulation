@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,6 +25,7 @@ public class PoseWithCovarianceStampedPublisher : MonoBehaviour
     {
         // Get ROS connection static instance
         ros = ROSConnection.GetOrCreateInstance();
+  
         ros.RegisterPublisher<PoseWithCovarianceStampedMsg>(poseWithCovarianceStampedTopicName);
 
         // Initialize message
@@ -33,6 +34,8 @@ public class PoseWithCovarianceStampedPublisher : MonoBehaviour
 
     public void PublishPoseStampedCommand(Vector3 position, Vector3 rotation)
     {
+        
+        PoseWithCovarianceStampedMsg poseCommand = new PoseWithCovarianceStampedMsg();
         // Convert to ROS coordinate
         poseCommand.pose.pose.position = position.To<FLU>();
 
