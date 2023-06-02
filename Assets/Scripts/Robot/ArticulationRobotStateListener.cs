@@ -12,74 +12,51 @@ using UnityEngine;
 public class ArticulationRobotStateListener : RobotStateListener
 {
     [SerializeField] private StateReader reader;
-    [SerializeField] private float[] joints;
-
-    // Flags
-    // private bool isReaderInitcialized = false;
-
-
 
     void Start() {
         StartCoroutine(ReaderInitcialization());
     }
 
+    //void Update() { }
+
     IEnumerator ReaderInitcialization()
     {
-        Debug.Log("Init Reader");
+        // Initciallize the StateReader
         while (reader.jointPositions.Length == 0) 
         {
             yield return null;
         }
         isReaderInitcialized = true;
+
+        // Checking to See if the StateListener is connected to the Simulated Robot, not Physical
         Debug.Assert(reader.jointPositions.Length == 23, "Issue with Robot Used, Different then what was exspected! " + reader.jointPositions.Length.ToString() + " joints found");
-        joints = reader.jointPositions;
-        UpdateVisualization();
     }
-/*
-    void Update() 
-    {
-        if (!isReaderInitcialized)
-        {
-            return;
-        }
 
-        ReadState();
-        UpdateVisualization();
-
-    }
-*/
+    // Reads and Stores the Values from the StateReader
     public override void ReadState() 
     {
 
-        //Debug.Log("ReadState");
+        // Extract the base position from the StateReader
         basePosition = reader.position;
         baseOrientationEuler = reader.rotationEuler;
 
-        linearVelocity = reader.linearVelocity;
-        angularVelocity = reader.angularVelocity;
-
-        // 0  -> chest
+        // Extract the target joint positions from the StateReader
+        // Reference the StateReader jointnames for what index cooresponds to what joint
         chestPosition = reader.jointPositions[0];
-
-        // 1  -> camera yaw
-        cameraYawJoint = reader.jointPositions[1];
-        // 2  -> camera pitch
+        cameraYawJoint = reader.jointPositions[1]; 
         cameraPitchJoint = reader.jointPositions[2];
-        // 3  -> left arm
-        leftArmJointsPosition = SliceArray(3, 7);
-        // 10 -> left gripper
+        leftArmJointsPosition = SliceArray(3, 7); 
         leftArmGripperPosition = SliceArray(10, 2);
-        // 12 -> right arm
         rightArmJointsPosition = SliceArray(12, 7);
-        // 19 -> right gripper
         rightArmGripperPosition = SliceArray(19, 2);
 
     }
 
-    private float[] SliceArray(int startElement, int numOfElements)
+    // Extracts a set of elements from an array
+    private float[] SliceArray(int startIndex, int numOfElements)
     {
         float[] sliceJoints = new float[numOfElements];  
-        Array.Copy(reader.jointPositions, startElement, sliceJoints, 0, numOfElements);
+        Array.Copy(reader.jointPositions, startIndex, sliceJoints, 0, numOfElements);
         return sliceJoints;
     }
 

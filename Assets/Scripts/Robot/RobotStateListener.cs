@@ -13,25 +13,14 @@ public abstract class RobotStateListener : MonoBehaviour
 
     [SerializeField] private RobotStateVisualizer visualizer;
 
-    // Base
+    // Target Positions
     public Vector3 basePosition;
     public Vector3 baseOrientationEuler;
-
-    public Vector3 linearVelocity;
-    public Vector3 angularVelocity;
-
-    // Chest
     public float chestPosition;
-
-    // LeftArm
     public float[] leftArmJointsPosition;
-    public float[] leftArmGripperPosition;
-
-    // RightArm
     public float[] rightArmJointsPosition;
+    public float[] leftArmGripperPosition;
     public float[] rightArmGripperPosition;
-
-    // Camera
     public float cameraPitchJoint;
     public float cameraYawJoint;
 
@@ -54,16 +43,15 @@ public abstract class RobotStateListener : MonoBehaviour
     public void UpdateVisualization()
     {
         visualizer.SetBase(basePosition, baseOrientationEuler);
-        //visualizer.SetBase_(linearVelocity, angularVelocity);
         visualizer.SetChest(chestPosition);
         visualizer.SetLeftArm(leftArmJointsPosition);
         visualizer.SetRightArm(rightArmJointsPosition);
-        visualizer.SetCamera(cameraPitchJoint, cameraYawJoint);
         visualizer.SetLeftGripper(leftArmGripperPosition);
         visualizer.SetRightGripper(rightArmGripperPosition);
-
+        visualizer.SetCamera(cameraPitchJoint, cameraYawJoint);
     }
 
+    // Reads and Stores the target positions from the StateReader
     public virtual void ReadState() {}
 
 }

@@ -38,16 +38,14 @@ public class ROSAutoNavigation : AutoNavigation
     private bool updateWaypoints = true;
 
     void Start()
-    {
+    {   
         StartCoroutine(PauseTwistSubscriber());
         StartCoroutine(PublishInitcialPose());
     }
 
+    // Pauses the Twist Subscriber from controlling the base given Twist Commands
     IEnumerator PauseTwistSubscriber()
     {
-        Debug.Log("Pausing Twist Subscriber");
-        // wait for the next time we fun the Fixed Update Functions()
-        //      the start function of all dependant objects would have completed
         yield return new WaitForFixedUpdate();
 
         // Pause Twist Subscriber
@@ -55,20 +53,14 @@ public class ROSAutoNavigation : AutoNavigation
         isTwistSubscriberPaused = true;
     }
 
-    // Publishes the initcial pose of the robot
+    // Publishes the Initcial pose of the robot to AMCL
     IEnumerator PublishInitcialPose()
     {
-        Debug.Log("Initciallizing Pose");
-
-        // wait for the next time we fun the Fixed Update Functions()
-        //      the start function of all dependant objects would have completed
         yield return new WaitForFixedUpdate();
 
         // Send the initcial Pose
         poseWithCovarianceStampedPublisher.PublishPoseStampedCommand(robot.transform.position, robot.transform.rotation.eulerAngles);
         isInitcialPosePublished = true;
-
-        Debug.Log(" Finished Initciallizing Pose");
     }
 
 
