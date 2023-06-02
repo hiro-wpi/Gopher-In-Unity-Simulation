@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -74,6 +74,11 @@ public abstract class ArmController : MonoBehaviour
             0.0f,
             1.0f
         );
+    }
+
+    public virtual void ChangeGripperStatus() 
+    {
+        gripperPosition = 1.0f - gripperPosition;
     }
 
     // Set robot control mode

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -92,6 +92,10 @@ public class ArticulationArmController : ArmController
     {
         base.SetGripperPosition(position);
         gripperController.SetGripper(position);
+    }
+    public override void ChangeGripperStatus() 
+    {
+        gripperController.ChangeGripperStatus();
     }
 
     private void ProcessManualControl()

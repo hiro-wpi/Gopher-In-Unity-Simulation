@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -89,7 +89,7 @@ public class ArticulationGripperController : MonoBehaviour
         ArticulationBodyUtils.StopJoint(rightFinger);
     }
 
-    private void SetGripperTarget(float value)
+    public void SetGripperTarget(float value)
     {
         // Get absolute position values
         float leftValue = Mathf.Lerp(
