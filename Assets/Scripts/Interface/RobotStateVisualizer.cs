@@ -19,11 +19,11 @@ public class RobotStateVisualizer : MonoBehaviour
     public ArticulationBody baseAb;
     
     // Articulation Controllers
-    // Right Gripper
-    // Left Gripper
     public ArticulationChestController chestController;
     public ArticulationJointController leftJointController;
+    public ArticulationGripperController leftGripperController;
     public ArticulationJointController rightJointController;
+    public ArticulationGripperController rightGripperController;
     public ArticulationCameraController cameraController;
 
 
@@ -130,5 +130,23 @@ public class RobotStateVisualizer : MonoBehaviour
     {
         cameraController.SetPitchYawPosition(pitch, yaw);
     }
-    
+
+    public void SetLeftGripper(float[] targets)
+    {
+        if (targets.Length == 2)
+        { 
+            leftGripperController.SetGripperJointTarget(targets[0], targets[1]);
+        }
+        
+    }
+
+    public void SetRightGripper(float[] targets)
+    {
+        if (targets.Length == 2)
+        {
+            rightGripperController.SetGripperJointTarget(targets[0], targets[1]);
+        }
+        
+    }
+
 }

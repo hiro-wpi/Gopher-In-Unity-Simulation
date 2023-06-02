@@ -35,7 +35,7 @@ public class ArticulationRobotStateListener : RobotStateListener
         joints = reader.jointPositions;
         UpdateVisualization();
     }
-
+/*
     void Update() 
     {
         if (!isReaderInitcialized)
@@ -47,7 +47,7 @@ public class ArticulationRobotStateListener : RobotStateListener
         UpdateVisualization();
 
     }
-
+*/
     public override void ReadState() 
     {
 
@@ -68,10 +68,12 @@ public class ArticulationRobotStateListener : RobotStateListener
         // 3  -> left arm
         leftArmJointsPosition = SliceArray(3, 7);
         // 10 -> left gripper
+        leftArmGripperPosition = SliceArray(10, 2);
         // 12 -> right arm
         rightArmJointsPosition = SliceArray(12, 7);
         // 19 -> right gripper
-    
+        rightArmGripperPosition = SliceArray(19, 2);
+
     }
 
     private float[] SliceArray(int startElement, int numOfElements)

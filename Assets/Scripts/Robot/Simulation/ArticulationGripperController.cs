@@ -104,6 +104,14 @@ public class ArticulationGripperController : MonoBehaviour
         ArticulationBodyUtils.SetJointTarget(rightFinger, rightValue);
     }
 
+    // Directly sends in the desired joint positions of the fingers.
+    public void SetGripperJointTarget(float leftValue, float rightValue)
+    {
+        // Set values
+        ArticulationBodyUtils.SetJointTarget(leftFinger, leftValue);
+        ArticulationBodyUtils.SetJointTarget(rightFinger, rightValue);
+    }
+
     // Grasping detection
     private void CheckGrasping()
     {

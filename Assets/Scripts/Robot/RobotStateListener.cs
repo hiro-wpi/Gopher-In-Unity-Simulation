@@ -25,9 +25,11 @@ public abstract class RobotStateListener : MonoBehaviour
 
     // LeftArm
     public float[] leftArmJointsPosition;
+    public float[] leftArmGripperPosition;
 
     // RightArm
     public float[] rightArmJointsPosition;
+    public float[] rightArmGripperPosition;
 
     // Camera
     public float cameraPitchJoint;
@@ -57,6 +59,9 @@ public abstract class RobotStateListener : MonoBehaviour
         visualizer.SetLeftArm(leftArmJointsPosition);
         visualizer.SetRightArm(rightArmJointsPosition);
         visualizer.SetCamera(cameraPitchJoint, cameraYawJoint);
+        visualizer.SetLeftGripper(leftArmGripperPosition);
+        visualizer.SetRightGripper(rightArmGripperPosition);
+
     }
 
     public virtual void ReadState() {}
