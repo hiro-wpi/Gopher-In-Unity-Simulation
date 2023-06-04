@@ -13,6 +13,26 @@ using UnityEngine;
 /// </summary>
 public static class Utils
 {
+    // Random
+    public static float GenerateGaussianRandom(float mean, float std)
+    {
+        // Box-Muller transform
+        float u1 = 1.0f - Random.value;
+        float u2 = 1.0f - Random.value;
+        float z = Mathf.Sqrt(-2.0f * Mathf.Log(u1)) 
+                * Mathf.Sin(2.0f * Mathf.PI * u2);
+        return mean + std * z;
+    }
+
+    public static float RandomFlip(float value, float chance = 0.5f)
+    {
+        // Flip value with a given chance
+        if (Random.value > chance)
+            return value;
+        else
+            return -value;
+    }
+
     // Vector3
     public static Vector3 ClampVector3(Vector3 vector, float min, float max)
     {

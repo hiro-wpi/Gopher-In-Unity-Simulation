@@ -1,68 +1,227 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Unity.Collections;
+using Unity.Jobs;
+
 /// <summary>
-///    This script simulates a laser scanner to
-///    detect the surrounding obstacles.
+///     Detect the surrounding objects using raycast.
+///     Obstacle can be splited into obstacles & human.
 ///
-///    Inherited from SurroundingDetection
-///    Most methods are the same, but one more method 
-///    is written to instantiate numerous spheres to represent scan result
+///     Send batches of raycasts to be processed in jobs,
+///     which is shown in https://github.com/LotteMakesStuff/SimplePhysicsDemo
 /// </summary>
-public class Laser : SurroundingDetection
+public class Laser : MonoBehaviour
 {
-    public bool instantiateScanResult;
-    public GameObject scanResultPrefab;
-    private GameObject scanResultParent;
-    private GameObject[] scanResultObjects;
+    // General
+    [SerializeField] private GameObject laserGameObject;
+    [SerializeField] private bool seperateHumanDetection = true;
+    [SerializeField] private bool debugVisualization = false;
 
-    new void Start()
+    // Scan parameters
+    [SerializeField] private int updateRate = 10;
+    private float scanTime;
+    private float elapsedTime = 0f;
+    [SerializeField] private int samples = 180;
+    [SerializeField] private float angleMin = -1.5708f;
+    [SerializeField] private float angleMax = 1.5708f;
+    private float angleIncrement;
+    [SerializeField] private float rangeMin = 0.1f;
+    [SerializeField] private float rangeMax = 5.0f;
+    public (int, int, float, float, float, float) GetLaserScanParameters()
     {
-        base.Start();
-
-        // Visualize it in the scene
-        if (instantiateScanResult)
+        return (updateRate, samples, angleMin, angleMax, rangeMin, rangeMax);
+    }
+ 
+    // Scan sending
+    private NativeArray<Quaternion> raycastRotations;
+    private NativeArray<RaycastCommand> raycastCommands;
+    // create a batch of RaycastCommands to detect collisions
+    private struct PrepareRaycastCommands : IJobParallelFor
+    {
+        public Vector3 Position;
+        public Vector3 Forward;
+        public float MaxDistance;
+        public NativeArray<Quaternion> RaycastRotations;
+        // result
+        public NativeArray<RaycastCommand> RaycastCommands;
+        public void Execute(int i)
         {
-            InstantiateScanResultObjects();
-            InvokeRepeating("UpdateScanResult", 1f, 1f / updateRate);
+            RaycastCommands[i] = new RaycastCommand(
+                Position, RaycastRotations[i] * Forward, MaxDistance
+            );
         }
     }
-
-    private void UpdateScanResult()
+    // Scan reading
+    private NativeArray<RaycastHit> raycastHits;
+    
+    // Scan processing
+    private JobHandle ProcessHitsJobHandle;
+    private NativeArray<float> obstacleDistances;
+    private NativeArray<float> humanDistances;
+    // create a batch for collision callbacks
+    private struct ProcessHits : IJobParallelFor 
     {
-        // Cast rays towards diffent directions to find colliders
-        for (int i = 0; i < samples; ++i)
+        public bool SeperateHumanDetection;
+        public NativeArray<RaycastHit> RaycastHits;
+        public float MinDistance;
+        // result
+        public NativeArray<float> ObstacleDistances;
+        public NativeArray<float> HumanDistances;
+        public void Execute(int i)
         {
-            // Not detected
-            if (obstacleRanges[i] == 0f)
+            RaycastHit hit = RaycastHits[i];
+
+            // No hit
+            if (hit.distance < MinDistance || hit.distance == 0f)
             {
-                scanResultObjects[i].SetActive(false);
-            }   
-            // Detected
+                ObstacleDistances[i] = float.PositiveInfinity;
+                HumanDistances[i] = float.PositiveInfinity;
+                return;
+            }
+
+            // Regular scan hit
+            if (!SeperateHumanDetection
+                || hit.collider.gameObject.tag != "Human")
+            {
+                ObstacleDistances[i] = hit.distance;
+            }
+            // Hit human
             else
             {
-                scanResultObjects[i].SetActive(true);
-                // Angle
-                Vector3 rotation = rayRotations[i] * rayStartForward;
-                scanResultObjects[i].transform.position = 
-                    rayStartPosition + obstacleRanges[i] * rotation;
+                HumanDistances[i] = hit.distance;
             }
+        }
+    };
+
+    // Results
+    [field: SerializeField, ReadOnly]
+    public float[] Directions { get; private set; }
+    [field: SerializeField, ReadOnly]
+    public float[] ObstacleRanges { get; private set; }
+    [field: SerializeField, ReadOnly]
+    public float[] HumanRanges { get; private set; }
+
+    // Event
+    public delegate void ScanningFinishedHandler();
+    public event ScanningFinishedHandler ScanFinishedEvent;
+
+    void Start() 
+    {
+        // Initialize result containers
+        Directions = new float[samples];
+        ObstacleRanges = new float[samples];
+        HumanRanges = new float[samples];
+
+        // Calculate angles based on angle limit and number of samples
+        raycastRotations = new NativeArray<Quaternion>(samples, Allocator.Persistent);
+        angleIncrement = (angleMax - angleMin) / (samples - 1);
+        for (int i = 0; i < samples; ++i)
+        {
+            Directions[i] = angleMin + i * angleIncrement;
+            raycastRotations[i] = Quaternion.Euler(
+                new Vector3(0f, Directions[i] * Mathf.Rad2Deg, 0f)
+            );
+        }
+
+        // Update rate
+        scanTime = 1f / updateRate;
+    }
+
+    void OnEnable()
+    {
+        obstacleDistances = new(samples, Allocator.Persistent);
+        humanDistances = new(samples, Allocator.Persistent);
+    }
+
+    void OnDisable()
+    {
+        obstacleDistances.Dispose();
+        humanDistances.Dispose();
+    }
+
+    void OnDestroy()
+    {
+        raycastRotations.Dispose();
+    }
+
+    void FixedUpdate()
+    {
+        // Time reached + Job finished check
+        elapsedTime += Time.fixedDeltaTime;
+        if (elapsedTime < scanTime || !ProcessHitsJobHandle.IsCompleted)
+        {
+            return;
+        }
+        elapsedTime -= scanTime;
+
+        // Schedule jobs to send raycast commands
+        raycastCommands = new(samples, Allocator.TempJob);
+        PrepareRaycastCommands setupRaycastsJob = new() 
+        {
+            Position = laserGameObject.transform.position,
+            Forward = laserGameObject.transform.forward,
+            RaycastRotations = raycastRotations,
+            MaxDistance = rangeMax,
+            RaycastCommands = raycastCommands
+        };
+        JobHandle setupDenpendency = setupRaycastsJob.Schedule(samples, 32);
+
+        // Schedule jobs to read raycast results
+        raycastHits = new(samples, Allocator.TempJob);
+        JobHandle raycastsDependency = RaycastCommand.ScheduleBatch(
+            raycastCommands, raycastHits, 32, setupDenpendency
+        );
+
+        // Schedule jobs to process raycast results
+        var processHitsJob = new ProcessHits() 
+        {
+            SeperateHumanDetection = seperateHumanDetection,
+            RaycastHits = raycastHits,
+            MinDistance = rangeMin,
+            ObstacleDistances = obstacleDistances,
+            HumanDistances = humanDistances
+        };
+        ProcessHitsJobHandle = processHitsJob.Schedule(
+            samples, 32, raycastsDependency
+        );
+
+        // End job
+        ProcessHitsJobHandle.Complete();
+        raycastCommands.Dispose();
+        raycastHits.Dispose();
+
+        // Convert result to regular array
+        ObstacleRanges = obstacleDistances.ToArray();
+        HumanRanges = humanDistances.ToArray();
+        // Trigger event
+        ScanFinishedEvent?.Invoke();
+        // Visualization
+        if (debugVisualization)
+        {
+            DrawLaserScan(ObstacleRanges, Color.red);
+            DrawLaserScan(HumanRanges, Color.blue);
         }
     }
 
-    private void InstantiateScanResultObjects()
+    private void DrawLaserScan(float[] ranges, Color color)
     {
-        // Instantiate game objects for visualization  
-        scanResultParent = new GameObject("Scan Result Spheres");
-        scanResultObjects = new GameObject[samples];
+        // Draw laser scan
         for (int i = 0; i < samples; ++i)
         {
-            scanResultObjects[i] = Instantiate(scanResultPrefab, 
-                                               Vector3.zero, 
-                                               Quaternion.identity);
-            scanResultObjects[i].layer = LayerMask.NameToLayer("Laser");
-            scanResultObjects[i].transform.parent = scanResultParent.transform;
+            Vector3 rotation = (
+                raycastRotations[i] * laserGameObject.transform.forward
+            );
+            if (ranges[i] != float.PositiveInfinity || ranges[i] != 0.0f)
+            {
+                Debug.DrawRay(
+                    laserGameObject.transform.position, 
+                    ranges[i] * rotation, 
+                    color, 
+                    scanTime
+                );
+            }
         }
     }
 }

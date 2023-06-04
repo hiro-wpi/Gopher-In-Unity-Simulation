@@ -18,7 +18,7 @@ public class DataRecorder : MonoBehaviour
     // Robot
     private GameObject robot;
     private StateReader stateReader;
-    private SurroundingDetection surroundingDetection;
+    private Laser laser;
     private CollisionReader collisionReader;
     private Grasping[] graspings;
     private int collisionRecordIndex;
@@ -97,7 +97,7 @@ public class DataRecorder : MonoBehaviour
         // from robot
         this.robot = robots[0];
         stateReader = robot.GetComponentInChildren<StateReader>();
-        surroundingDetection = robot.GetComponentInChildren<SurroundingDetection>();
+        laser = robot.GetComponentInChildren<Laser>();
         collisionReader = robot.GetComponentInChildren<CollisionReader>();
         collisionRecordIndex = -1;
         graspings = robot.GetComponentsInChildren<Grasping>();
@@ -189,34 +189,34 @@ public class DataRecorder : MonoBehaviour
         robotValueToRecord[6] = ToFLUEuler(stateReader.angularVelocity[1]);
         
         // obs dis
-        robotValueToRecord[7] = surroundingDetection.obstacleRanges[89];
-        robotValueToRecord[8] = surroundingDetection.obstacleRanges[71];
-        robotValueToRecord[9] = surroundingDetection.obstacleRanges[53];
-        robotValueToRecord[10] = surroundingDetection.obstacleRanges[35];
-        robotValueToRecord[11] = surroundingDetection.obstacleRanges[17];
-        robotValueToRecord[12] = surroundingDetection.obstacleRanges[179];
-        robotValueToRecord[13] = surroundingDetection.obstacleRanges[161];
-        robotValueToRecord[14] = surroundingDetection.obstacleRanges[143];
-        robotValueToRecord[15] = surroundingDetection.obstacleRanges[125];
-        robotValueToRecord[16] = surroundingDetection.obstacleRanges[107];
-        int obsMinI = Utils.ArgMinArray(surroundingDetection.obstacleRanges);
-        robotValueToRecord[17] = surroundingDetection.obstacleRanges[obsMinI];
-        robotValueToRecord[18] = ToFLUEuler(surroundingDetection.directions[obsMinI]);
+        robotValueToRecord[7] = laser.ObstacleRanges[89];
+        robotValueToRecord[8] = laser.ObstacleRanges[71];
+        robotValueToRecord[9] = laser.ObstacleRanges[53];
+        robotValueToRecord[10] = laser.ObstacleRanges[35];
+        robotValueToRecord[11] = laser.ObstacleRanges[17];
+        robotValueToRecord[12] = laser.ObstacleRanges[179];
+        robotValueToRecord[13] = laser.ObstacleRanges[161];
+        robotValueToRecord[14] = laser.ObstacleRanges[143];
+        robotValueToRecord[15] = laser.ObstacleRanges[125];
+        robotValueToRecord[16] = laser.ObstacleRanges[107];
+        int obsMinI = Utils.ArgMinArray(laser.ObstacleRanges);
+        robotValueToRecord[17] = laser.ObstacleRanges[obsMinI];
+        robotValueToRecord[18] = ToFLUEuler(laser.Directions[obsMinI]);
 
         // human dis
-        robotValueToRecord[19] = surroundingDetection.humanRanges[89];
-        robotValueToRecord[20] = surroundingDetection.humanRanges[71];
-        robotValueToRecord[21] = surroundingDetection.humanRanges[53];
-        robotValueToRecord[22] = surroundingDetection.humanRanges[35];
-        robotValueToRecord[23] = surroundingDetection.humanRanges[17];
-        robotValueToRecord[24] = surroundingDetection.humanRanges[179];
-        robotValueToRecord[25] = surroundingDetection.humanRanges[161];
-        robotValueToRecord[26] = surroundingDetection.humanRanges[143];
-        robotValueToRecord[27] = surroundingDetection.humanRanges[125];
-        robotValueToRecord[28] = surroundingDetection.humanRanges[107];
-        int humMinI = Utils.ArgMinArray(surroundingDetection.humanRanges);
-        robotValueToRecord[29] = surroundingDetection.humanRanges[humMinI];
-        robotValueToRecord[30] = ToFLUEuler(surroundingDetection.directions[humMinI]);
+        robotValueToRecord[19] = laser.HumanRanges[89];
+        robotValueToRecord[20] = laser.HumanRanges[71];
+        robotValueToRecord[21] = laser.HumanRanges[53];
+        robotValueToRecord[22] = laser.HumanRanges[35];
+        robotValueToRecord[23] = laser.HumanRanges[17];
+        robotValueToRecord[24] = laser.HumanRanges[179];
+        robotValueToRecord[25] = laser.HumanRanges[161];
+        robotValueToRecord[26] = laser.HumanRanges[143];
+        robotValueToRecord[27] = laser.HumanRanges[125];
+        robotValueToRecord[28] = laser.HumanRanges[107];
+        int humMinI = Utils.ArgMinArray(laser.HumanRanges);
+        robotValueToRecord[29] = laser.HumanRanges[humMinI];
+        robotValueToRecord[30] = ToFLUEuler(laser.Directions[humMinI]);
 
         // main camera joint
         robotValueToRecord[31] = ToFLUEuler(stateReader.jointPositions[2]);

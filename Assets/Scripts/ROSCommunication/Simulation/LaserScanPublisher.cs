@@ -8,22 +8,21 @@ using RosMessageTypes.Sensor;
 using RosMessageTypes.Std;
 
 /// <summary>
-///     This script publishes laser scan
+///     This script publishes laser scan messages to ROS.
 /// </summary>
 public class LaserScanPublisher : MonoBehaviour
 {
     // ROS Connector
     private ROSConnection ros;
     // Variables required for ROS communication
-    public string laserTopicName = "base_scan";
-    public string laserLinkId = "laser_link";
+    [SerializeField] private string laserTopicName = "base_scan";
+    [SerializeField] private string laserLinkId = "laser_link";
 
     // Sensor
-    public Laser laser;
+    [SerializeField] private Laser laser;
 
     // Message
     private LaserScanMsg laserScan;
-    public float publishRate = 10f;
 
     void Start()
     {
@@ -32,37 +31,57 @@ public class LaserScanPublisher : MonoBehaviour
         ros.RegisterPublisher<LaserScanMsg>(laserTopicName);
 
         // Initialize messages
-        float angleIncrement = (laser.angleMax - laser.angleMin)/(laser.samples-1);
-        float scanTime = 1f / laser.updateRate;
-        float timeIncrement = scanTime / laser.samples;
-        float[] intensities = new float[laser.obstacleRanges.Length];
+        var (updateRate, samples, angleMin, angleMax, rangeMin, rangeMax) = 
+            laser.GetLaserScanParameters();
+        float angleIncrement = (angleMax - angleMin)/(samples-1);
+        float scanTime = 1f / updateRate;
+        float timeIncrement = 0;  // assume no time between scans
+        float[] intensities = new float[laser.ObstacleRanges.Length];
         laserScan = new LaserScanMsg
         {
-            header = new HeaderMsg(Clock.GetCount(), 
-                                   new TimeStamp(Clock.time), laserLinkId),
-            angle_min       = laser.angleMin,
-            angle_max       = laser.angleMax,
+            header = new HeaderMsg(
+                Clock.GetCount(), new TimeStamp(Clock.time), laserLinkId
+            ),
+            angle_min       = angleMin,
+            angle_max       = angleMax,
             angle_increment = angleIncrement,
             time_increment  = timeIncrement,
             scan_time       = scanTime,
-            range_min       = laser.rangeMin,
-            range_max       = laser.rangeMax,
-            ranges          = laser.obstacleRanges,      
+            range_min       = rangeMin,
+            range_max       = rangeMax,
+            ranges          = laser.ObstacleRanges,      
             intensities     = intensities
         };
 
-        InvokeRepeating("PublishScan", 1f, 1f/publishRate);
+        // Using InvokeRepeating to publish messages at a fixed rate,
+        // would cause asynchronous scan messages to be published when
+        // the robot is moving (current tf + last scan result).
+        // InvokeRepeating("PublishScan", 1f, 1f/publishRate);
+
+        // Use event based publishing to publish messages instead.
+        // The publish rate is controlled by the laser update rate.
+        laser.ScanFinishedEvent += PublishScan;
     }
 
-    void Update()
+    void Update(){}
+
+    void OnDestroy()
     {
+        laser.ScanFinishedEvent -= PublishScan;
     }
 
     private void PublishScan()
-    {   
-        laserScan.header = new HeaderMsg(Clock.GetCount(), 
-                                         new TimeStamp(Clock.time), laserLinkId);
-        laserScan.ranges = laser.obstacleRanges;
+    {
+        if (!this.isActiveAndEnabled)
+        {
+            return;
+        }
+
+        // Publish message
+        laserScan.header = new HeaderMsg(
+            Clock.GetCount(), new TimeStamp(Clock.time), laserLinkId
+        );
+        laserScan.ranges = laser.ObstacleRanges;
 
         ros.Publish(laserTopicName, laserScan);
     }

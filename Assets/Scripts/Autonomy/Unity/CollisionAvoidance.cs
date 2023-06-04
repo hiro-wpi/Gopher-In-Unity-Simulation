@@ -33,10 +33,12 @@ public class CollisionAvoidance : MonoBehaviour
     {
         // Get the index of the given range
         // to search for obstacles in laser scan
-        float angleIncrement = (laser.angleMax - laser.angleMin) / (laser.samples - 1);
-        for (int i = 0; i < laser.samples; ++i)
+        var (updateRate, samples, angleMin, angleMax, rangeMin, rangeMax) = 
+            laser.GetLaserScanParameters();
+        float angleIncrement = (angleMax - angleMin) / (samples - 1);
+        for (int i = 0; i < samples; ++i)
         {
-            float angle = laser.angleMin + i * angleIncrement;
+            float angle = angleMin + i * angleIncrement;
             if (minIndex == -1 && angle > detectionAngleMin)
                 minIndex = i;
             if (maxIndex == -1 && angle > detectionAngleMax)
@@ -81,10 +83,10 @@ public class CollisionAvoidance : MonoBehaviour
         float minDistance = 100f;
         for (int i = minIndex; i < maxIndex; ++i)
         {
-            if (laser.obstacleRanges[i] != 0 &&
-                laser.obstacleRanges[i] < minDistance)
+            if (laser.ObstacleRanges[i] != 0 &&
+                laser.ObstacleRanges[i] < minDistance)
             {
-                minDistance = laser.obstacleRanges[i];
+                minDistance = laser.ObstacleRanges[i];
             }
         }
         return minDistance;
