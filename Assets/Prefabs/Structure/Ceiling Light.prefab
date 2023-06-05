@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 266806469219143499}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Ceiling Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 160414107601934431}
   - component: {fileID: 2233188698459420247}
   - component: {fileID: 6727793234513778265}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Spot Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,10 +78,10 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 4
+  m_Intensity: 3
   m_Range: 10
   m_SpotAngle: 170
-  m_InnerSpotAngle: 160
+  m_InnerSpotAngle: 120
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
@@ -159,6 +159,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ceiling Light Frame
       objectReference: {fileID: 0}
+    - target: {fileID: 266806469219143498, guid: 7a36d253a72da0a40990cbafa52345c0, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 266806469219143499, guid: 7a36d253a72da0a40990cbafa52345c0, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -202,6 +206,18 @@ PrefabInstance:
     - target: {fileID: 266806469219143499, guid: 7a36d253a72da0a40990cbafa52345c0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 356577723907374723, guid: 7a36d253a72da0a40990cbafa52345c0, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 1113104616785616175, guid: 7a36d253a72da0a40990cbafa52345c0, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 6296767310298090007, guid: 7a36d253a72da0a40990cbafa52345c0, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a36d253a72da0a40990cbafa52345c0, type: 3}
