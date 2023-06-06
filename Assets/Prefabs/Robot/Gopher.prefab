@@ -217,8 +217,10 @@ MonoBehaviour:
   makePlanService: {fileID: 535451133}
   localPlanner: {fileID: 535451131}
   globalPlanner: {fileID: 273831454}
+  poseWithCovarianceStampedPublisher: {fileID: 0}
   twistSubscriber: {fileID: 9012710540990295136}
   polygonPublisher: {fileID: 1226114613}
+  robot: {fileID: 0}
 --- !u!1 &879516990
 GameObject:
   m_ObjectHideFlags: 0
@@ -11234,6 +11236,7 @@ GameObject:
   - component: {fileID: 7311777528451885136}
   - component: {fileID: 1357501058727305016}
   - component: {fileID: 6339115903784869607}
+  - component: {fileID: 4525726828786052778}
   m_Layer: 15
   m_Name: Base
   m_TagString: Untagged
@@ -11269,7 +11272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateRate: 10
-  laser: {fileID: 1426212532071955897}
+  laser: {fileID: 0}
   baseController: {fileID: 7628781304040955774}
   detectionAngleMin: -0.1589
   detectionAngleMax: 0.1589
@@ -11314,27 +11317,6 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 0
   m_Center: {x: 0, y: 0.75, z: 0}
   m_TimeToStationary: 0.5
---- !u!114 &4525726828786052778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2546227168383278878}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9bf926ce23329dd44b586927440c9c84, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  active: 0
-  robot: {fileID: 702946891374405994}
-  baseController: {fileID: 0}
-  agent: {fileID: 7311777528451885136}
-  navMeshObstacles: []
-  replanTime: 5
-  goalPrefab: {fileID: 2075622757900185994, guid: 8a7b41268e0286d47ae6853ee8ab563e, type: 3}
-  lineRenderer: {fileID: 6339115903784869607}
-  drawPathEnabled: 1
 --- !u!120 &6339115903784869607
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -11432,6 +11414,27 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!114 &4525726828786052778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2546227168383278878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bf926ce23329dd44b586927440c9c84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <TargetPosition>k__BackingField: {x: 0, y: 0, z: 0}
+  <TargetOrientationEuler>k__BackingField: {x: 0, y: 0, z: 0}
+  <IsNavigating>k__BackingField: 0
+  <GlobalWaypoints>k__BackingField: []
+  <LocalWaypoints>k__BackingField: []
+  robot: {fileID: 702946891374405994}
+  baseController: {fileID: 0}
+  agent: {fileID: 7311777528451885136}
+  replanTime: 5
 --- !u!1 &2577984059734556571
 GameObject:
   m_ObjectHideFlags: 0
@@ -21179,8 +21182,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   laserTopicName: gopher/base_scan
   laserLinkId: gopher/laser_link
-  laser: {fileID: 1426212532071955897}
-  publishRate: 10
+  laser: {fileID: 0}
 --- !u!1 &6869341501706853007
 GameObject:
   m_ObjectHideFlags: 0
@@ -23039,7 +23041,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7628781303481264634}
   - component: {fileID: 7628781303481264637}
-  - component: {fileID: 5095459542227791889}
+  - component: {fileID: 2115671143108962010}
   - component: {fileID: 7628781303481264636}
   - component: {fileID: 8644709394137983357}
   m_Layer: 15
@@ -23090,7 +23092,7 @@ MonoBehaviour:
   extraObjects: []
   objectPositions: []
   objectRotations: []
---- !u!114 &5095459542227791889
+--- !u!114 &2115671143108962010
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -23099,10 +23101,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7628781303481264633}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8e1649054758d642873e253708177e6, type: 3}
+  m_Script: {fileID: 11500000, guid: 40fcdb6b810c2cf6d8ccf87e3fd76812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  centerObject: {fileID: 201451131}
+  laserGameObject: {fileID: 201451131}
   seperateHumanDetection: 1
   debugVisualization: 0
   updateRate: 10
@@ -23111,9 +23113,9 @@ MonoBehaviour:
   angleMax: 3.141593
   rangeMin: 0.1
   rangeMax: 5
-  directions: []
-  obstacleRanges: []
-  humanRanges: []
+  <Directions>k__BackingField: []
+  <ObstacleRanges>k__BackingField: []
+  <HumanRanges>k__BackingField: []
 --- !u!114 &7628781303481264636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23414,7 +23416,7 @@ GameObject:
   - component: {fileID: 7628781304040955772}
   - component: {fileID: 7628781304040955774}
   - component: {fileID: 476914934}
-  - component: {fileID: 1426212532071955897}
+  - component: {fileID: 1247843086211099820}
   m_Layer: 15
   m_Name: Base
   m_TagString: Untagged
@@ -23481,7 +23483,7 @@ MonoBehaviour:
   rightWheel: {fileID: 702946891148747083}
   wheelTrackLength: 0.37476
   wheelRadius: 0.0605
---- !u!114 &1426212532071955897
+--- !u!114 &1247843086211099820
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -23490,23 +23492,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 7628781304040955771}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6a840d529c8e02b2827424acb20b4d3, type: 3}
+  m_Script: {fileID: 11500000, guid: 40fcdb6b810c2cf6d8ccf87e3fd76812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  centerObject: {fileID: 702946891660878700}
+  laserGameObject: {fileID: 702946891660878700}
   seperateHumanDetection: 0
-  debugVisualization: 0
+  debugVisualization: 1
   updateRate: 10
   samples: 90
   angleMin: -1.5708
   angleMax: 1.5708
   rangeMin: 0.1
   rangeMax: 5
-  directions: []
-  obstacleRanges: []
-  humanRanges: []
-  instantiateScanResult: 1
-  scanResultPrefab: {fileID: 662264924414211634, guid: 1e5d8f76ecdfcda4c8c51c2fa0ff6019, type: 3}
+  <Directions>k__BackingField: []
+  <ObstacleRanges>k__BackingField: []
+  <HumanRanges>k__BackingField: []
 --- !u!1 &7628781304563526201
 GameObject:
   m_ObjectHideFlags: 0

@@ -21639,6 +21639,26 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &1072445877 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6780721534204609730, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
+  m_PrefabInstance: {fileID: 1304358808}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1072445878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072445877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 084a854f5e15d3dd6b424da237c08101, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  iMUTopicName: gopher/imu
+  iMULinkId: gopher/chassis_link
+  iMU: {fileID: 1304358819}
 --- !u!1 &1085640825
 GameObject:
   m_ObjectHideFlags: 0
@@ -25671,6 +25691,10 @@ PrefabInstance:
       propertyPath: m_ParentAnchorRotation.z
       value: 0.00000002634178
       objectReference: {fileID: 0}
+    - target: {fileID: 1569239457840547957, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1617750775809444394, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
       propertyPath: m_ParentAnchorPosition.x
       value: -0.00000011920929
@@ -25798,6 +25822,10 @@ PrefabInstance:
     - target: {fileID: 2287848292065606904, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
       propertyPath: m_ParentAnchorRotation.z
       value: -0.7071069
+      objectReference: {fileID: 0}
+    - target: {fileID: 2726546486847738849, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3042620302638808485, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
       propertyPath: m_ParentAnchorPosition.x
@@ -26074,7 +26102,7 @@ PrefabInstance:
     - target: {fileID: 4463948716747119380, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
       propertyPath: laser
       value: 
-      objectReference: {fileID: 1304358819}
+      objectReference: {fileID: 1304358811}
     - target: {fileID: 4463948716747119380, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
       propertyPath: publishRate
       value: 10
@@ -26365,11 +26393,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 702946891102146246, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
   m_PrefabInstance: {fileID: 1304358808}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1304358811 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 702946891660878700, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
+--- !u!114 &1304358811 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1247843086211099820, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
   m_PrefabInstance: {fileID: 1304358808}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304358815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40fcdb6b810c2cf6d8ccf87e3fd76812, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!171741748 &1304358812 stripped
 ArticulationBody:
   m_CorrespondingSourceObject: {fileID: 3416078106938707778, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
@@ -26422,21 +26456,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1304358815}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40fcdb6b810c2cf6d8ccf87e3fd76812, type: 3}
+  m_Script: {fileID: 11500000, guid: 025a4aca93d9dec2493cc15552c7cc3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  laserGameObject: {fileID: 1304358811}
-  seperateHumanDetection: 0
-  debugVisualization: 0
-  updateRate: 10
-  samples: 90
-  angleMin: -1.5708
-  angleMax: 1.5708
-  rangeMin: 0.1
-  rangeMax: 5
-  <Directions>k__BackingField: []
-  <ObstacleRanges>k__BackingField: []
-  <HumanRanges>k__BackingField: []
+  robot: {fileID: 1304358809}
+  updateRate: 30
+  linearBiasMean: 0.1
+  linearBiasStd: 0.001
+  angularBiasMean: 0.0000075
+  angularBiasStd: 0.0000008
+  <Orientation>k__BackingField: {x: 0, y: 0, z: 0, w: 0}
+  <LinearAcceleration>k__BackingField: {x: 0, y: 0, z: 0}
+  <AngularVelocity>k__BackingField: {x: 0, y: 0, z: 0}
 --- !u!114 &1304358820
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -36,14 +36,17 @@ public class ROSAutoNavigation : AutoNavigation
     {
         twistSubscriber.Pause(true);
 
+        /*
         // Publish initial pose
-        poseWithCovarianceStampedPublisher.PublishPoseStampedCommand(robot.transform.position, robot.transform.rotation.eulerAngles);
+        poseWithCovarianceStampedPublisher.PublishPoseStampedCommand(
+            robot.transform.position, robot.transform.rotation.eulerAngles
+        );
+        */
     }
 
 
     void Update()
     {
-
         if(updateWaypoints)
         {
             GlobalWaypoints = globalPlanner.getGlobalWaypoints();
