@@ -10,8 +10,11 @@ public class IMU : MonoBehaviour
     // Robot
     [SerializeField] private GameObject robot;
     private Rigidbody rb;
+
     // Parameter
-    // [SerializeField] private int updateRate = 30;
+    [SerializeField] private int updateRate = 30;
+    private float scanTime;
+    private float elapsedTime = 0f;
 
     // Noise
     [SerializeField] private float linearBiasMean = 0.1f;
@@ -20,15 +23,22 @@ public class IMU : MonoBehaviour
     [SerializeField] private float angularBiasStd = 8.0e-7f;
 
     // Readings
-    [SerializeField, ReadOnly] private Quaternion orientation;
-    [SerializeField, ReadOnly] private Vector3 linearAcceleration;
-    [SerializeField, ReadOnly] private Vector3 angularVelocity;
+    [field: SerializeField] 
+    public Quaternion Orientation { get; private set; }
+    [field: SerializeField] 
+    public Vector3 LinearAcceleration { get; private set; }
+    [field: SerializeField] 
+    public Vector3 AngularVelocity { get; private set; }
     private Vector3 linearVelocity;
     private Vector3 lastPosition;
     private Vector3 lastRotationEuler;
     private Vector3 lastLinearVelocity;
 
-    void Start() 
+    // Event
+    public delegate void DataUpdatedHandler();
+    public event DataUpdatedHandler DataUpdatedEvent;
+
+    void Start()
     {
         rb = robot.GetComponentInChildren<Rigidbody>();
         if (rb == null)
@@ -37,19 +47,28 @@ public class IMU : MonoBehaviour
             lastPosition = robot.transform.position;
         }
 
-        // TODO Include update rate
+        // update rate
+        scanTime = 1.0f / updateRate;
     }
 
-    void FixedUpdate() 
+    void FixedUpdate()
     {
+        // Time reached check
+        elapsedTime += Time.fixedDeltaTime;
+        if (elapsedTime < scanTime)
+        {
+            return;
+        }
+        elapsedTime -= scanTime;
+
         // Orientation
-        orientation = robot.transform.rotation;
+        Orientation = robot.transform.rotation;
 
         // Linear & Angular velocity
         if (rb != null)
         {
             linearVelocity = rb.velocity;
-            angularVelocity = rb.angularVelocity;
+            AngularVelocity = rb.angularVelocity;
         }
         else
         {
@@ -59,7 +78,7 @@ public class IMU : MonoBehaviour
             ) / Time.fixedDeltaTime;
             lastPosition = robot.transform.position;
 
-            angularVelocity = (
+            AngularVelocity = (
                 robot.transform.rotation.eulerAngles - lastRotationEuler
             ) / Time.fixedDeltaTime;
             lastRotationEuler = robot.transform.rotation.eulerAngles;
@@ -67,16 +86,19 @@ public class IMU : MonoBehaviour
 
         // Linear acceleration
         linearVelocity = robot.transform.InverseTransformDirection(linearVelocity);
-        linearAcceleration = (linearVelocity - lastLinearVelocity) / Time.fixedDeltaTime;
+        LinearAcceleration = (linearVelocity - lastLinearVelocity) / Time.fixedDeltaTime;
         lastLinearVelocity = linearVelocity;
 
         // Add noise
-        linearAcceleration = ApplyBiasNoise(
-            linearAcceleration, linearBiasMean, linearBiasStd
+        LinearAcceleration = ApplyBiasNoise(
+            LinearAcceleration, linearBiasMean, linearBiasStd
         );
-        angularVelocity = ApplyBiasNoise(
-            angularVelocity, angularBiasMean, angularBiasStd
+        AngularVelocity = ApplyBiasNoise(
+            AngularVelocity, angularBiasMean, angularBiasStd
         );
+
+        // Trigger event
+        DataUpdatedEvent?.Invoke();
     }
 
     private Vector3 ApplyBiasNoise(Vector3 value, float mean, float std)
