@@ -9,7 +9,6 @@ using RosMessageTypes.Nav;
 /// <summary>
 ///      This script subscribes to a local path topic
 /// </summary>
-
 public class LocalPlannerSubscriber : MonoBehaviour
 {
     //ROS Connector
@@ -17,52 +16,37 @@ public class LocalPlannerSubscriber : MonoBehaviour
     // Variables required for ROS communication
     [SerializeField] private string localPlannerTopicName = "local_plan";
 
-    // path
-    private bool isNewPathRecieved;
+    // Message
+    private bool isNewPathReceived;
     private PathMsg path;
-    private Vector3[] LocalWaypoints =  new Vector3[0];
-    // private Vector3[] waypoints;
-    // public ROSAutoNaviagation AutoNav;
+    private Vector3[] LocalWaypoints = new Vector3[0];
 
     void Start()
     {
         // Get the ros connection
         ros = ROSConnection.GetOrCreateInstance();
 
-        // it flag
-        isNewPathRecieved = false;
+        // Init flag
+        isNewPathReceived = false;
 
         // Subscribe
-        ros.Subscribe<PathMsg>(localPlannerTopicName, Callback);
-
+        ros.Subscribe<PathMsg>(localPlannerTopicName, ReceiveNewPath);
     }
 
     void Update()
     {
-        if(isNewPathRecieved)
+        if(isNewPathReceived)
         {
             // Create an empty list
             LocalWaypoints = ConvertPathToArray(path);
-            isNewPathRecieved = false;
+            isNewPathReceived = false;
         }
-        
     }
 
-    public Vector3[] ConvertPathToArray(PathMsg apath)
+    private void ReceiveNewPath(PathMsg newPath)
     {
-        // Create an empty list
-        List<Vector3> vectorList = new List<Vector3>();
-
-        // Iterates through the path and only adds the positions 
-        foreach( var pose in path.poses)
-        {
-            vectorList.Add(pose.pose.position.From<FLU>());
-        }
-    
-        // Converts the list to an array
-        Vector3[] waypoints = vectorList.ToArray();
-        
-        return waypoints;
+        path = newPath;
+        isNewPathReceived = true;
     }
 
     public Vector3[] getLocalWaypoints()
@@ -70,13 +54,18 @@ public class LocalPlannerSubscriber : MonoBehaviour
         return LocalWaypoints;
     }
 
-    void Callback(PathMsg apath)
+    // Utils
+    private Vector3[] ConvertPathToArray(PathMsg path)
     {
-        path = apath;
-        isNewPathRecieved = true;
+        // Create an empty array
+        var poses = path.poses;
+        Vector3[] waypoints = new Vector3[poses.Length];
+
+        // Iterates through the path and only adds the positions 
+        for (int i = 0; i < poses.Length; i++)
+        {
+            waypoints[i] = poses[i].pose.position.From<FLU>();
+        }
+        return waypoints;
     }
-    
-    
-
-
 }

@@ -33,7 +33,7 @@ public class LaserScanPublisher : MonoBehaviour
         // Initialize messages
         var (updateRate, samples, angleMin, angleMax, rangeMin, rangeMax) = 
             laser.GetLaserScanParameters();
-        float angleIncrement = (angleMax - angleMin)/(samples-1);
+        float angleIncrement = (angleMax - angleMin) / (samples-1);
         float scanTime = 1f / updateRate;
         float timeIncrement = 0;  // assume no time between scans
         float[] intensities = new float[laser.ObstacleRanges.Length];
@@ -63,7 +63,7 @@ public class LaserScanPublisher : MonoBehaviour
         laser.ScanFinishedEvent += PublishScan;
     }
 
-    void Update(){}
+    void Update() {}
 
     void OnDestroy()
     {

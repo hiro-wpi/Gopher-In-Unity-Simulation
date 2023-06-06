@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -29,24 +29,56 @@ public class ROSAutoNavigation : AutoNavigation
 
     [SerializeField] private GameObject robot;
 
+    // Flags
+    private bool isTwistSubscriberPaused = false;
+    private bool isInitcialPosePublished = false;
+
+
 
     private bool updateWaypoints = true;
 
     void Start()
-    {
-        twistSubscriber.Pause(true);
+    {   
+        StartCoroutine(PauseTwistSubscriber());
+        StartCoroutine(PublishInitcialPose());
+    }
 
-        /*
-        // Publish initial pose
-        poseWithCovarianceStampedPublisher.PublishPoseStampedCommand(
-            robot.transform.position, robot.transform.rotation.eulerAngles
-        );
-        */
+    // Pauses the Twist Subscriber from controlling the base given Twist Commands
+    IEnumerator PauseTwistSubscriber()
+    {
+        yield return new WaitForFixedUpdate();
+
+        // Pause Twist Subscriber
+        twistSubscriber.Pause(true);
+        isTwistSubscriberPaused = true;
+    }
+
+    // Publishes the Initcial pose of the robot to AMCL
+    IEnumerator PublishInitcialPose()
+    {
+        yield return new WaitForFixedUpdate();
+
+        // Send the initcial Pose
+        poseWithCovarianceStampedPublisher.PublishPoseStampedCommand(robot.transform.position, robot.transform.rotation.eulerAngles);
+        isInitcialPosePublished = true;
     }
 
 
     void Update()
     {
+        
+        // Initcialize twist subsciber
+        if(isTwistSubscriberPaused == false)
+        {
+            return;
+        }
+        
+        // Publish initial pose
+        if(isInitcialPosePublished == false)
+        {
+            return;
+        }
+
         if(updateWaypoints)
         {
             GlobalWaypoints = globalPlanner.getGlobalWaypoints();
@@ -172,8 +204,4 @@ public class ROSAutoNavigation : AutoNavigation
         UpdateFootprint(polygon);
 
     }
-
-    
-
-
 }
