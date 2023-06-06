@@ -16,7 +16,7 @@ public class Laser : MonoBehaviour
 {
     // General
     [SerializeField] private GameObject laserGameObject;
-    [SerializeField] private bool seperateHumanDetection = true;
+    [SerializeField] private bool enableHumanDetection = true;
     [SerializeField] private bool debugVisualization = false;
 
     // Scan parameters
@@ -33,7 +33,7 @@ public class Laser : MonoBehaviour
     {
         return (updateRate, samples, angleMin, angleMax, rangeMin, rangeMax);
     }
- 
+
     // Scan sending
     private NativeArray<Quaternion> raycastRotations;
     private NativeArray<RaycastCommand> raycastCommands;
@@ -63,7 +63,6 @@ public class Laser : MonoBehaviour
     // create a batch for collision callbacks
     private struct ProcessHits : IJobParallelFor 
     {
-        public bool SeperateHumanDetection;
         public NativeArray<RaycastHit> RaycastHits;
         public float MinDistance;
         // result
@@ -78,19 +77,11 @@ public class Laser : MonoBehaviour
             {
                 ObstacleDistances[i] = float.PositiveInfinity;
                 HumanDistances[i] = float.PositiveInfinity;
-                return;
             }
-
-            // Regular scan hit
-            if (!SeperateHumanDetection
-                || hit.collider.gameObject.tag != "Human")
-            {
-                ObstacleDistances[i] = hit.distance;
-            }
-            // Hit human
+            // Scan hit
             else
             {
-                HumanDistances[i] = hit.distance;
+                ObstacleDistances[i] = hit.distance;
             }
         }
     };
@@ -104,8 +95,8 @@ public class Laser : MonoBehaviour
     public float[] HumanRanges { get; private set; }
 
     // Event
-    public delegate void ScanningFinishedHandler();
-    public event ScanningFinishedHandler ScanFinishedEvent;
+    public delegate void ScanFinishedHandler();
+    public event ScanFinishedHandler ScanFinishedEvent;
 
     void Start() 
     {
@@ -177,7 +168,6 @@ public class Laser : MonoBehaviour
         // Schedule jobs to process raycast results
         var processHitsJob = new ProcessHits() 
         {
-            SeperateHumanDetection = seperateHumanDetection,
             RaycastHits = raycastHits,
             MinDistance = rangeMin,
             ObstacleDistances = obstacleDistances,
@@ -190,6 +180,20 @@ public class Laser : MonoBehaviour
         // End job
         ProcessHitsJobHandle.Complete();
         raycastCommands.Dispose();
+
+        // Human detection involves tag/string checking
+        // which is not supported in burst/jobs
+        if (enableHumanDetection)
+        {
+            for (int i = 0; i < samples; ++i)
+            {
+                RaycastHit hit = raycastHits[i];
+                if (hit.collider?.gameObject.tag != "Human")
+                {
+                    humanDistances[i] = hit.distance;
+                }
+            }
+        }
         raycastHits.Dispose();
 
         // Convert result to regular array
