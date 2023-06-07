@@ -5,16 +5,20 @@ using UnityEngine;
 using Unity.Robotics.ROSTCPConnector;
 using RosMessageTypes.Std;
 
-
+/// <summary>
+///     This script sends a service request to 
+///     cancel all goals to move base
+/// </summary>
 public class MoveBaseCancelGoalService : MonoBehaviour
 {
     // ROS Connector
     private ROSConnection ros;
     // Variables required for ROS communication
-    [SerializeField] private string moveBaseCancelGoalServiceName = "move_base/cancel_goal";
+    [SerializeField] private string moveBaseCancelGoalServiceName = 
+        "move_base/cancel_goal";
 
     // Message
-    private EmptyRequest emptyCommand;
+    private EmptyRequest emptyRequest;
 
     void Start()
     {
@@ -23,26 +27,21 @@ public class MoveBaseCancelGoalService : MonoBehaviour
         ros.RegisterRosService<EmptyRequest, EmptyResponse>(
             moveBaseCancelGoalServiceName
         );
+
+        // Initialize service request
+        emptyRequest = new EmptyRequest();
     }
 
     void Update() {}
 
     // Request service to cancel all goal(s) to move base
-    public void CancelGoalCommandService()
+    public void CancelGoalCommand()
     {
-        // Create Empty Request
-        EmptyRequest emptyRequest = new EmptyRequest();
-        
-        Debug.Log("Sending Cancel Goal Ros Request");
         // Request service
         ros.SendServiceMessage<EmptyResponse>(
             moveBaseCancelGoalServiceName, emptyRequest, CancelGoalCallback
         );
     }
 
-    // Callback function for service response
-    private void CancelGoalCallback(EmptyResponse response)
-    {
-        // Debug.Log("Home command response: " + response.state);
-    }
+    private void CancelGoalCallback(EmptyResponse response) {}
 }

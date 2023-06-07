@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // TODO
-//      Find a better inplementation for changing the base footprint.
+//      Find a better implementation for changing the base footprint.
 //      Used in Function Update()
 
 public class TestGUI : MonoBehaviour

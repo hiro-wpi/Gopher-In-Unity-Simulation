@@ -5,7 +5,9 @@ using UnityEngine;
 using Unity.Robotics.ROSTCPConnector;
 using RosMessageTypes.KortexDriver;
 
-
+/// <summary>
+///     This script sends a service request to set gripper position
+/// </summary>
 public class GripperCommandService : MonoBehaviour
 {
     // ROS Connector

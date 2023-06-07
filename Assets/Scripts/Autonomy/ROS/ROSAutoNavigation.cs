@@ -15,11 +15,9 @@ public class ROSAutoNavigation : AutoNavigation
     // Move base services
     [SerializeField] private MoveBaseCancelGoalService cancelGoalService;
     [SerializeField] private MoveBaseSendGoalService sendGoalService;
-    [SerializeField] private MoveBaseMakePlanService makePlanService;
 
     // Local and global planners
-    [SerializeField] private LocalPlannerSubscriber localPlanner;
-    [SerializeField] private GlobalPlannerSubscriber globalPlanner;
+    [SerializeField] private PathSubscriber pathPlanner;
 
     // AMCL
     [SerializeField] private PoseWithCovarianceStampedPublisher poseWithCovarianceStampedPublisher;
@@ -81,8 +79,8 @@ public class ROSAutoNavigation : AutoNavigation
 
         if(updateWaypoints)
         {
-            GlobalWaypoints = globalPlanner.getGlobalWaypoints();
-            LocalWaypoints = localPlanner.getLocalWaypoints();
+            GlobalWaypoints = pathPlanner.getGlobalWaypoints();
+            LocalWaypoints = pathPlanner.getLocalWaypoints();
         }
         
     }    
@@ -133,7 +131,7 @@ public class ROSAutoNavigation : AutoNavigation
     // Stop navigation, clear previous plan
     public override void StopNavigation()
     {
-        cancelGoalService.CancelGoalCommandService();
+        cancelGoalService.CancelGoalCommand();
         GlobalWaypoints = new Vector3[0];
         LocalWaypoints = new Vector3[0];
         UpdateNav(false);

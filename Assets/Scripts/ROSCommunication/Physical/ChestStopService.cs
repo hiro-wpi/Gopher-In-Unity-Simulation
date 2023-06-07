@@ -5,7 +5,9 @@ using UnityEngine;
 using Unity.Robotics.ROSTCPConnector;
 using RosMessageTypes.GopherRosClearcore;
 
-
+/// <summary>
+///     This script sends a service request to home the chest
+/// <summary>
 public class ChestStopService : MonoBehaviour
 {
     // ROS Connector
@@ -28,7 +30,7 @@ public class ChestStopService : MonoBehaviour
     void Update() {}
 
     // Request service to home the chest
-    public void SendChestStopService()
+    public void SendChestStopRequest()
     {
         StopRequest stopRequest = new StopRequest(true);
         // Request service
@@ -37,9 +39,5 @@ public class ChestStopService : MonoBehaviour
         );
     }
 
-    // Callback function for service response
-    private void StopCommandCallback(StopResponse response)
-    {
-        // Debug.Log("Chest command response: " + response.state);
-    }
+    private void StopCommandCallback(StopResponse response) {}
 }

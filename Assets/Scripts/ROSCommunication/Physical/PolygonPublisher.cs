@@ -7,7 +7,8 @@ using Unity.Robotics.ROSTCPConnector.ROSGeometry;
 using RosMessageTypes.Geometry;
 
 /// <summary>
-///     This script publishes twist msg to a ROS topic
+///     This script publishes a poloygon msg to
+///     a ROS topic to specify update footprint of the robot.
 /// </summary>
 public class PolygonPublisher : MonoBehaviour
 {
@@ -31,18 +32,14 @@ public class PolygonPublisher : MonoBehaviour
 
     public void PublishPolygon(Vector3[] poly)
     {
-        // Convert all vectors to points in
-        List<Point32Msg> pointList = new List<Point32Msg>();
-        foreach (Vector3 p in poly)
+        // Convert vector3 array to point32Msg array
+        Point32Msg[] points = new Point32Msg[poly.Length];
+        for (int i = 0; i < poly.Length; i++)
         {
-            Point32Msg point = new Point32Msg();
-            point.x = p.To<FLU>().x;
-            point.y = p.To<FLU>().y;
-            pointList.Add(point);
+            points[i] = poly[i].To<FLU>();
         }
-
-        // Convert list to arrray
-        polygon.points = pointList.ToArray();
+        
+        polygon.points = points;
 
         ros.Publish(PolygonTopicName, polygon);
     }

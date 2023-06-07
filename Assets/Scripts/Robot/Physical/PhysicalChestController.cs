@@ -47,7 +47,7 @@ public class PhysicalChestController : ChestController
     public override void HomeChest()
     {
         controlMode = ControlMode.Position;
-        homeService.SendChestHomeService();
+        homeService.SendChestHomeRequest();
         controlMode = ControlMode.Speed;
     }
 
@@ -61,7 +61,7 @@ public class PhysicalChestController : ChestController
     // Emergency stop
     public override void EmergencyStop()
     {
-        stopService.SendChestStopService();
+        stopService.SendChestStopRequest();
     }
 
     public override void EmergencyStopResume() 

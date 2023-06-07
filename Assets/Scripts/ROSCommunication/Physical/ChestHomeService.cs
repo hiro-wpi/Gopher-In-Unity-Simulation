@@ -5,7 +5,9 @@ using UnityEngine;
 using Unity.Robotics.ROSTCPConnector;
 using RosMessageTypes.GopherRosClearcore;
 
-
+/// <summary>
+///     This script sends a service request to home the chest
+/// <summary>
 public class ChestHomeService : MonoBehaviour
 {
     // ROS Connector
@@ -28,9 +30,8 @@ public class ChestHomeService : MonoBehaviour
     void Update() {}
 
     // Request service to home the chest
-    public void SendChestHomeService()
+    public void SendChestHomeRequest()
     {
-        // homeCommand.command = true;
         HomingRequest homingRequest = new HomingRequest(true);
         // Request service
         ros.SendServiceMessage<HomingResponse>(
@@ -38,9 +39,5 @@ public class ChestHomeService : MonoBehaviour
         );
     }
 
-    // Callback function for service response
-    private void HomeCommandCallback(HomingResponse response)
-    {
-        // Debug.Log("Home command response: " + response.state);
-    }
+    private void HomeCommandCallback(HomingResponse response) {}
 }

@@ -6,21 +6,19 @@ using Unity.Robotics.ROSTCPConnector;
 using Unity.Robotics.ROSTCPConnector.ROSGeometry;
 using RosMessageTypes.Geometry;
 
-
 /// <summary>
-/// Publishes the goal to the move_base_simple/goal topic
-
+///     This script subscribes to AMCL result pose
 /// </summary>
-public class AMCLPoseSubscriber : Localization
+public class AMCLPoseSubscriber : MonoBehaviour
 {
-    
     // ROS Connector
     private ROSConnection ros;
     // Variables required for ROS communication
     [SerializeField] private string poseTopicName = "amcl_pose";
 
-    // // Message poseStampedTopicName
-    private PoseWithCovarianceStampedMsg poseMsg;
+    // Message
+    private Vector3 position;
+    private Vector3 rotation;
 
     void Start()
     {
@@ -29,15 +27,14 @@ public class AMCLPoseSubscriber : Localization
         ros.Subscribe<PoseWithCovarianceStampedMsg>(poseTopicName, poseCallback);
     }
 
-    void poseCallback(PoseWithCovarianceStampedMsg msg)
+    void poseCallback(PoseWithCovarianceStampedMsg poseMsg)
     {
-        poseMsg = msg;
+        position = poseMsg.pose.pose.position.From<FLU>();
+        rotation = poseMsg.pose.pose.orientation.From<FLU>().eulerAngles;
     }
 
-    public override void UpdateLocalization()
+    public (Vector3, Vector3) GetPose()
     {
-        Position = poseMsg.pose.pose.position.From<FLU>();
-        Quaternion orientation = poseMsg.pose.pose.orientation.From<FLU>();
-        Rotation = orientation.eulerAngles;
+        return (position, rotation);
     }
 }

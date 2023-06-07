@@ -7,14 +7,14 @@ using RosMessageTypes.Power;
 
 
 /// <summary>
-/// This was intended for controlling the breakers on the freight research base.
-/// The breakers we are concerned about are:
-
-/// /base_breaker
-/// /aux_breaker_1
-/// /aux_breaker_2
-
-/// Replace the name in Unity accourdingly
+///     This was intended for controlling the breakers on the freight research base.
+///     The breakers we are concerned about are:
+///
+///     /base_breaker
+///     /aux_breaker_1
+///     /aux_breaker_2
+///
+///     Replace the name in Unity accordingly
 /// <summary>
 public class BreakerCommandService : MonoBehaviour
 {
@@ -50,11 +50,16 @@ public class BreakerCommandService : MonoBehaviour
     }
 
     // Reset the breaker
-    // TODO Add a delay in between sent messages, the breaker doesnt turn off fully
-    public void resetBreaker()
+    public void ResetBreaker(float delay = 1f)
     {
-        SendBreakerCommandService(false);
-        SendBreakerCommandService(true);
+        StartCoroutine(ResetBreakerCoroutine(delay));
+    }
+    
+    private IEnumerator ResetBreakerCoroutine(float delay)
+    {
+        BreakerOff();
+        yield return new WaitForSeconds(delay);
+        BreakerOn();
     }
 
     // Send Command to the breaker
@@ -62,9 +67,9 @@ public class BreakerCommandService : MonoBehaviour
     {
         BreakerCommandRequest breakerRequest = new BreakerCommandRequest(command);
         ros.SendServiceMessage<BreakerCommandResponse>(
-            breakerName, breakerRequest, breakerCallback
+            breakerName, breakerRequest, BreakerCallback
         );
     }
 
-    public void breakerCallback(BreakerCommandResponse response) {}
+    private void BreakerCallback(BreakerCommandResponse response) {}
 }
