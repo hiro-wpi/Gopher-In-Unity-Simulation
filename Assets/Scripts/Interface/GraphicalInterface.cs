@@ -313,15 +313,15 @@ public class GraphicalInterface : MonoBehaviour
     {
         // Change UI according to robot status
         // speed
-        UpdateLinearSpeed(stateReader.linearVelocity[2]);
-        UpdateAngularSpeed(stateReader.angularVelocity[1]);
+        UpdateLinearSpeed(stateReader.LinearVelocity[2]);
+        UpdateAngularSpeed(stateReader.AngularVelocity[1]);
         // battery 
-        UpdateBattery(stateReader.durationTime);
+        UpdateBattery(stateReader.DurationTime);
         // control mode
         UpdateControlMode(gopherControl.MainCameraEnabled, gopherControl.ControlMode);
         UpdateCameraViewing(cameraIndex);
         // location
-        UpdateLocalization(localization.Position, localization.Rotation);
+        UpdateLocalization(localization.Position, localization.RotationEuler);
     }
 
     private void UpdateLinearSpeed(float linearSpeed, float multiplier=1f)

@@ -41,10 +41,8 @@ GameObject:
   m_Component:
   - component: {fileID: 535451130}
   - component: {fileID: 535451134}
-  - component: {fileID: 535451133}
   - component: {fileID: 535451132}
   - component: {fileID: 535451131}
-  - component: {fileID: 273831454}
   - component: {fileID: 4490393623539869091}
   - component: {fileID: 1226114613}
   - component: {fileID: 732307516}
@@ -83,19 +81,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveBaseCancelGoalServiceName: move_base/cancel_goal
---- !u!114 &535451133
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 535451129}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9dc3f73f9e8057dd0a12da7b72dab4f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveBaseMakePlanServiceName: move_base/make_plan
 --- !u!114 &535451132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,6 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveBaseSendGoalServiceName: move_base/send_goal
+  frameID: map
 --- !u!114 &535451131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121,20 +107,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0f51295d74820593975dc73806098c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localPlannerTopicName: move_base/TrajectoryPlannerROS/local_plan
---- !u!114 &273831454
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 535451129}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad85179a6815beac5a4de1e752722ec7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalPlannerTopicName: move_base/TrajectoryPlannerROS/global_plan
+  localPlanTopicName: local_plan
+  globalPlanTopicName: global_plan
 --- !u!114 &4490393623539869091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,8 +121,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18daf380504ed3e2493b490a86df0f78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Position>k__BackingField: {x: 0, y: 0, z: 0}
-  <Rotation>k__BackingField: {x: 0, y: 0, z: 0}
   poseTopicName: amcl_pose
 --- !u!114 &1226114613
 MonoBehaviour:
@@ -175,7 +147,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71e12d98deba6b57f91ce66c32499a2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poseWithCovarianceStampedTopicName: initcialpose
+  poseTopicName: initcialpose
+  frameID: map
 --- !u!1 &631462978
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,6 +179,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 535451130}
+  - {fileID: 4423686978361916943}
   m_Father: {fileID: 4408274995126300629}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -228,9 +202,7 @@ MonoBehaviour:
   <LocalWaypoints>k__BackingField: []
   cancelGoalService: {fileID: 535451134}
   sendGoalService: {fileID: 535451132}
-  makePlanService: {fileID: 535451133}
-  localPlanner: {fileID: 535451131}
-  globalPlanner: {fileID: 273831454}
+  pathPlanner: {fileID: 0}
   poseWithCovarianceStampedPublisher: {fileID: 732307516}
   twistSubscriber: {fileID: 9012710540990295136}
   polygonPublisher: {fileID: 1226114613}
@@ -22813,6 +22785,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9090ae501ff9cd459bec5271d40249c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &7569446234069699047
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4423686978361916943}
+  m_Layer: 15
+  m_Name: Arm
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4423686978361916943
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7569446234069699047}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 631462979}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7619653116843588704
 GameObject:
   m_ObjectHideFlags: 0
@@ -23119,7 +23122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   laserGameObject: {fileID: 201451131}
-  seperateHumanDetection: 1
+  enableHumanDetection: 1
   debugVisualization: 0
   updateRate: 10
   samples: 180
@@ -23510,7 +23513,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   laserGameObject: {fileID: 702946891660878700}
-  seperateHumanDetection: 0
+  enableHumanDetection: 1
   debugVisualization: 1
   updateRate: 10
   samples: 90

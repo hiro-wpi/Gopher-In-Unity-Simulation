@@ -177,13 +177,12 @@ public class TestGUI : MonoBehaviour
         }
 
         // Draw current point + waypoints
-        lineRenderer.positionCount = (1 + waypoints.Length);
-        lineRenderer.SetPosition(0, robot.transform.position);
+        lineRenderer.positionCount = waypoints.Length;
         for (int i = 0; i < waypoints.Length; ++i)
         {
             // y higher for better visualization
             lineRenderer.SetPosition(
-                1 + i, waypoints[i] + new Vector3(0f, 0.05f, 0f)
+                i, waypoints[i] + new Vector3(0f, 0.05f, 0f)
             ); 
         }
         

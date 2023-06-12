@@ -16,7 +16,7 @@ public class PoseWithCovarianceStampedPublisher : MonoBehaviour
     // ROS Connector
     private ROSConnection ros;
     // Variables required for ROS communication
-    [SerializeField] private string poseTopicName = "initcialpose";
+    [SerializeField] private string poseTopicName = "initial_pose";
     [SerializeField] private string frameID = "map";
 
     // PoseWithCovarianceStampedMsg
