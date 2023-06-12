@@ -25,6 +25,18 @@ public class RobotStateVisualizer : MonoBehaviour
     void Start() 
     {
         // Disable all the robot's physics
+        // disable all gravity
+        ArticulationBody[] articulationBodies = robotModel.GetComponentsInChildren<ArticulationBody>();
+        foreach (ArticulationBody articulationBody in articulationBodies)
+        {
+            articulationBody.useGravity = false;
+        }
+        Rigidbody[] rigidbodies = robotModel.GetComponentsInChildren<Rigidbody>();
+        foreach (Rigidbody rigidbody in rigidbodies)
+        {
+            rigidbody.useGravity = false;
+        }
+        // no colliders
         Collider[] colliders = robotModel.GetComponentsInChildren<Collider>();
         foreach (Collider collider in colliders)
         {
@@ -54,6 +66,12 @@ public class RobotStateVisualizer : MonoBehaviour
 
     void Update() 
     {
+        robotStateListener.ReadState();
+
+        Debug.Log(robotStateListener.JointNames[0]);
+        Debug.Log(robotStateListener.JointPositions[0]);
+        Debug.Log(robotStateListener.BasePosition);
+
         SetPose(
             robotStateListener.BasePosition, 
             robotStateListener.BaseOrientationEuler
@@ -77,7 +95,7 @@ public class RobotStateVisualizer : MonoBehaviour
     public void SetJoints(string[] names, float[] targets)
     {
         // check to make sure the length of the list for each is the same
-        Debug.Assert(names.Length != targets.Length, 
+        Debug.Assert(names.Length == targets.Length, 
             "The length of the joints' names and targets array are not the same"
         );
         

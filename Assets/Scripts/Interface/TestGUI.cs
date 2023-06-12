@@ -79,7 +79,7 @@ public class TestGUI : MonoBehaviour
             Destroy(mapCameraObject);
         mapCameraObject = new GameObject("Map Camera");
         mapCameraObject.transform.parent = transform; // parent is the large canvas. The location of the tranfrom is at the corner of the canvas. 
-        mapCameraObject.transform.position = new Vector3(0f, 5f, 0f);
+        mapCameraObject.transform.position = new Vector3(0f, -0.5f, 0f);
         mapCameraObject.transform.rotation = Quaternion.Euler(new Vector3(90f, 0f, 0f));
 
         // map camera setting
@@ -100,7 +100,7 @@ public class TestGUI : MonoBehaviour
             Destroy(minimapCameraObject);
         minimapCameraObject = new GameObject("Minimap Camera");
         minimapCameraObject.transform.parent = robotVisualization.transform; // parent is the large canvas. The location of the tranfrom is at the corner of the canvas. 
-        minimapCameraObject.transform.position = new Vector3(robotVisualization.transform.position.x, 5f, robotVisualization.transform.position.z);
+        minimapCameraObject.transform.position = robotVisualization.transform.position + new Vector3(0f, 5f, 0f);
         minimapCameraObject.transform.rotation = Quaternion.Euler(new Vector3(90f, robotVisualization.transform.eulerAngles.y, robotVisualization.transform.eulerAngles.z));
 
         // map camera setting

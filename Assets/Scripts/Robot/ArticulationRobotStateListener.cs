@@ -14,10 +14,10 @@ public class ArticulationRobotStateListener : RobotStateListener
 
     void Start() {}
 
-    // void Update() {}
+    void Update() {}
 
     // Reads and Stores the Values from the StateReader
-    protected override void ReadState() 
+    public override void ReadState() 
     {
         // StateReader not ready
         if (reader.JointNames == null || reader.JointNames.Length == 0)

@@ -9,13 +9,13 @@ using UnityEngine;
 public abstract class RobotStateListener : MonoBehaviour
 {
     // States to be read
-    [field: SerializeField, ReadOnly] 
+    [field: SerializeField, ReadOnly]
     public Vector3 BasePosition { get; protected set;}
-    [field: SerializeField, ReadOnly] 
+    [field: SerializeField, ReadOnly]
     public Vector3 BaseOrientationEuler { get; protected set;}
-    [field: SerializeField, ReadOnly] 
+    [field: SerializeField, ReadOnly]
     public string[] JointNames { get; protected set;} = new string[0];
-    [field: SerializeField, ReadOnly] 
+    [field: SerializeField, ReadOnly]
     public float[] JointPositions { get; protected set;} = new float[0];
 
     void Start() {}
@@ -23,5 +23,5 @@ public abstract class RobotStateListener : MonoBehaviour
     void Update() {}
 
     // Read and store the target values
-    protected abstract void ReadState();
+    public abstract void ReadState();
 }
