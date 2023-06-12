@@ -16,7 +16,7 @@ public class RobotStateVisualizer : MonoBehaviour
     [SerializeField] private GameObject robotModel;
 
     private ArticulationBody robotBase;
-    private Dictionary<string, ArticulationBody> jointDict;
+    private Dictionary<string, ArticulationBody> jointDict = new();
 
     // Visulaization vertical offset in the World
     // This could be used to avoid overlapping with the simulated robot
@@ -24,25 +24,6 @@ public class RobotStateVisualizer : MonoBehaviour
 
     void Start() 
     {
-        // Disable all the robot's physics
-        // disable all gravity
-        ArticulationBody[] articulationBodies = robotModel.GetComponentsInChildren<ArticulationBody>();
-        foreach (ArticulationBody articulationBody in articulationBodies)
-        {
-            articulationBody.useGravity = false;
-        }
-        Rigidbody[] rigidbodies = robotModel.GetComponentsInChildren<Rigidbody>();
-        foreach (Rigidbody rigidbody in rigidbodies)
-        {
-            rigidbody.useGravity = false;
-        }
-        // no colliders
-        Collider[] colliders = robotModel.GetComponentsInChildren<Collider>();
-        foreach (Collider collider in colliders)
-        {
-            collider.enabled = false;
-        }
-
         // Get the base (assumed to be the first joint)
         robotBase = robotModel.GetComponentInChildren<ArticulationBody>();
 
@@ -68,10 +49,6 @@ public class RobotStateVisualizer : MonoBehaviour
     {
         robotStateListener.ReadState();
 
-        Debug.Log(robotStateListener.JointNames[0]);
-        Debug.Log(robotStateListener.JointPositions[0]);
-        Debug.Log(robotStateListener.BasePosition);
-
         SetPose(
             robotStateListener.BasePosition, 
             robotStateListener.BaseOrientationEuler
@@ -95,22 +72,24 @@ public class RobotStateVisualizer : MonoBehaviour
     public void SetJoints(string[] names, float[] targets)
     {
         // check to make sure the length of the list for each is the same
-        Debug.Assert(names.Length == targets.Length, 
+        Debug.Assert(names.Length == targets.Length,
             "The length of the joints' names and targets array are not the same"
         );
-        
+
         // For each joint, set the target
-        for (int i = 0; i < names.Length; i++)
+        float target;
+        for (int i = 0; i < targets.Length; i++)
         {
             // if the given joint name exists
             if (jointDict.TryGetValue(names[i], out ArticulationBody joint))
             {
+                target = targets[i];
                 // set joint target
                 if (joint.jointType == ArticulationJointType.RevoluteJoint)
                 {
-                    targets[i] *= Mathf.Rad2Deg;
+                    target *= Mathf.Rad2Deg;
                 }
-                ArticulationBodyUtils.SetJointTarget(joint, targets[i]);
+                ArticulationBodyUtils.SetJointTarget(joint, target);
             }
         }
     }
