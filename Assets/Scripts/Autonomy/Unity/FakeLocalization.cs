@@ -8,8 +8,6 @@ using UnityEngine;
 /// </summary>
 public class FakeLocalization : Localization
 {
-    [SerializeField] private float updateRate = 10f;
-
     [SerializeField] private GameObject robot;
     [SerializeField] private float positionErrorStd = 0.2f;
     [SerializeField] private float rotationErrorStd = 0.2f;
@@ -25,14 +23,12 @@ public class FakeLocalization : Localization
     void Start()
     {
         Position = robot.transform.position;
-        Rotation = robot.transform.rotation.eulerAngles;
+        RotationEuler = robot.transform.rotation.eulerAngles;
         prevPosition = Position;
-        prevRotation = Rotation;
-
-        InvokeRepeating("UpdateLocalization", 1f, 1f/updateRate);
+        prevRotation = RotationEuler;
     }
 
-    void Update() {}
+    // void Update() {}
 
     public override void UpdateLocalization()
     {
@@ -49,7 +45,7 @@ public class FakeLocalization : Localization
 
         // Get a fake localization result
         Position = robot.transform.position + positionError;
-        Rotation = robot.transform.rotation.eulerAngles + rotationError;
+        RotationEuler = robot.transform.rotation.eulerAngles + rotationError;
     }
 
     private void UpdateLocalizationError()

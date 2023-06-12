@@ -11,38 +11,45 @@ using Unity.Robotics.UrdfImporter;
 /// </summary>
 public class StateReader : MonoBehaviour
 {
-    public int updateRate = 10;
+    [SerializeField] private int updateRate = 10;
     private float deltaTime;
+    private float elapsedTime = 0f;
 
     // Robot
-    public GameObject robot;
-    public float durationTime;
-    private float startTime;
+    [SerializeField] private GameObject robot;
 
+    // Reading
+    // Running time
+    private float startTime;
+    [field:SerializeField, ReadOnly] 
+    public float DurationTime { get; private set; }
+    
     // Position, Rotation & Velocity
     private Transform tf;
     private Rigidbody rb;
-    public Vector3 position;
-    private Quaternion rotation;
-    public Vector3 rotationEuler;
-    public Vector3 linearVelocity;
-    public Vector3 angularVelocity;
+    [field:SerializeField, ReadOnly] 
+    public Vector3 Position { get; private set; }
+    [field:SerializeField, ReadOnly] 
+    public Vector3 RotationEuler { get; private set; }
+    [field:SerializeField, ReadOnly] 
+    public Vector3 LinearVelocity { get; private set; }
+    [field:SerializeField, ReadOnly] 
+    public Vector3 AngularVelocity { get; private set; }
 
     // Joint states
     private UrdfJoint[] jointChain;
-    private int jointStateLength;
-    public string[] jointNames;
-    public float[] jointPositions;
-    public float[] jointVelocities;
-    public float[] jointForces;
-
-    // Extra
-    public GameObject[] extraObjects;
-    public Vector3[] objectPositions;
-    public Vector3[] objectRotations;
+    [field:SerializeField, ReadOnly] 
+    public string[] JointNames { get; private set; }
+    [field:SerializeField, ReadOnly] 
+    public float[] JointPositions { get; private set; }
+    [field:SerializeField, ReadOnly] 
+    public float[] JointVelocities { get; private set; }
+    [field:SerializeField, ReadOnly] 
+    public float[] JointForces { get; private set; }
 
     void Start()
     {
+        // Duration
         startTime = Time.time;
 
         // Get robot transform
@@ -51,72 +58,66 @@ public class StateReader : MonoBehaviour
     
         // Get joints
         jointChain = robot.GetComponentsInChildren<UrdfJoint>();
-        jointChain = jointChain.Where(joint => 
-                        (joint.JointType != UrdfJoint.JointTypes.Fixed)).ToArray();
-        jointStateLength = jointChain.Length;
+        jointChain = jointChain.Where(
+            joint => joint.JointType != UrdfJoint.JointTypes.Fixed
+        ).ToArray();
+        int jointStateLength = jointChain.Length;
 
-        jointNames = new string[jointStateLength];
-        jointPositions = new float[jointStateLength];
-        jointVelocities = new float[jointStateLength];
-        jointForces = new float[jointStateLength];
+        JointNames = new string[jointStateLength];
+        JointPositions = new float[jointStateLength];
+        JointVelocities = new float[jointStateLength];
+        JointForces = new float[jointStateLength];
         for (int i = 0; i < jointStateLength; ++i)
-            jointNames[i] = jointChain[i].jointName;
+        {
+            JointNames[i] = jointChain[i].jointName;
+        }
 
-        // Get extra object's position and rotation
-        if (extraObjects == null)
-            extraObjects = new GameObject[0];
-        objectPositions = new Vector3[extraObjects.Length];
-        objectRotations = new Vector3[extraObjects.Length];
-
-        // Update
+        // Update period
         deltaTime = 1f / updateRate;
-        InvokeRepeating("ReadState", 1f, deltaTime);
     }
 
-    void Update()
+    void FixedUpdate() 
     {
+        elapsedTime += Time.fixedDeltaTime;
+        if (elapsedTime >= deltaTime)
+        {
+            ReadState();
+            elapsedTime -= Time.fixedDeltaTime;
+        }
     }
 
-    void ReadState()
+    private void ReadState()
     {
         // Duration
-        durationTime = Time.time - startTime;
+        DurationTime = Time.time - startTime;
         
         // Pose and Velocity
         if (rb != null)
         {
             // lienar and angular velocity from rigidbody
-            linearVelocity = rb.velocity;
-            angularVelocity = rb.angularVelocity;
+            LinearVelocity = rb.velocity;
+            AngularVelocity = rb.angularVelocity;
         }
         else
         {
             // lienar and angular velocity from transform
-            linearVelocity = (tf.position - position) / deltaTime;
-            angularVelocity = (tf.rotation.eulerAngles - rotationEuler) / deltaTime;
+            LinearVelocity = (tf.position - Position) / deltaTime;
+            AngularVelocity = (tf.rotation.eulerAngles - RotationEuler) / deltaTime;
         }
         // transfer to local frame
-        linearVelocity = tf.InverseTransformDirection(linearVelocity);
-        angularVelocity = tf.InverseTransformDirection(angularVelocity);
+        LinearVelocity = tf.InverseTransformDirection(LinearVelocity);
+        AngularVelocity = tf.InverseTransformDirection(AngularVelocity);
 
-        // position and orientation
-        position = tf.position;
-        rotation = tf.rotation;
-        rotationEuler = rotation.eulerAngles;
+        // Position and orientation
+        Position = tf.position;
+        RotationEuler = tf.rotation.eulerAngles;
         
         // Joint states
-        for (int i = 0; i < jointStateLength; ++i)
+        for (int i = 0; i < jointChain.Length; ++i)
         {   
-            jointPositions[i] = jointChain[i].GetPosition();
-            jointVelocities[i] = jointChain[i].GetVelocity();
-            jointForces[i] = jointChain[i].GetEffort();
+            JointPositions[i] = jointChain[i].GetPosition();
+            JointVelocities[i] = jointChain[i].GetVelocity();
+            JointForces[i] = jointChain[i].GetEffort();
         }
-        
-        // Extra objects
-        for (int i = 0; i < extraObjects.Length; ++i)
-        {   
-            objectPositions[i] = extraObjects[i].transform.position;
-            objectRotations[i] = extraObjects[i].transform.rotation.eulerAngles;
-        } 
     }
 }

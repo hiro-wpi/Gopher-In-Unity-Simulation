@@ -1,91 +1,99 @@
-﻿using System.Collections;
+﻿using System;
+using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-// 
-// Handles controlling a visualization of the Gopher Robot. 
-// We assume that this should be seperate from the simulation.
-//
+using Unity.Robotics.UrdfImporter;
 
+/// <summary>
+//      Visuazlize the state of the robot in the scene.
+/// </summary>
 public class RobotStateVisualizer : MonoBehaviour
 {
-    // Visulaization Placement in the World
-    [SerializeField] private float verticalPosition;
+    // Robot
+    [SerializeField] private RobotStateListener robotStateListener;
+    [SerializeField] private GameObject robotModel;
 
-    // Articulation Bodies
-    [SerializeField] private GameObject rootArticulationBodyGameObject;
-    [SerializeField] private ArticulationBody baseAb;
-    
-    // Articulation Controllers
-    public ArticulationChestController chestController;
-    public ArticulationJointController leftJointController;
-    public ArticulationJointController rightJointController;
-    public ArticulationGripperController leftGripperController;
-    public ArticulationGripperController rightGripperController;
-    public ArticulationCameraController cameraController;
+    private ArticulationBody robotBase;
+    private Dictionary<string, ArticulationBody> jointDict;
+
+    // Visulaization vertical offset in the World
+    // This could be used to avoid overlapping with the simulated robot
+    [SerializeField] private float verticalOffset;
 
     void Start() 
     {
-        //Get the vertical placement of the visual in the Scene
-        verticalPosition = rootArticulationBodyGameObject.transform.position.y;
+        // Disable all the robot's physics
+        Collider[] colliders = robotModel.GetComponentsInChildren<Collider>();
+        foreach (Collider collider in colliders)
+        {
+            collider.enabled = false;
+        }
+
+        // Get the base (assumed to be the first joint)
+        robotBase = robotModel.GetComponentInChildren<ArticulationBody>();
+
+        // Get the articulation body chain
+        UrdfJoint[] jointChain = robotModel.GetComponentsInChildren<UrdfJoint>();
+        jointChain = jointChain.Where( 
+           joint => joint.JointType != UrdfJoint.JointTypes.Fixed
+        ).ToArray();
+        int jointStateLength = jointChain.Length;
+
+        // Build a dict to store the joint names and the corresponding articulation body
+        jointDict = new Dictionary<string, ArticulationBody>();
+        for (int i = 0; i < jointStateLength; i++)
+        {
+            jointDict.Add(
+                jointChain[i].jointName, 
+                jointChain[i].GetComponent<ArticulationBody>()
+            );
+        }
     }
 
-    void Update() {}
+    void Update() 
+    {
+        SetPose(
+            robotStateListener.BasePosition, 
+            robotStateListener.BaseOrientationEuler
+        );
+        SetJoints(
+            robotStateListener.JointNames, 
+            robotStateListener.JointPositions
+        );
+    }
 
     // Set Functions for Controlling the Robot Visulaization
-
-    public void SetBase(Vector3 targetPosition, Vector3 targetRotation)
+    public void SetPose(Vector3 targetPosition, Vector3 targetRotation)
     {
-        baseAb = rootArticulationBodyGameObject.GetComponent<ArticulationBody>();
-        if (baseAb != null)
+        // Move the base directly to the given pose
+        robotBase.TeleportRoot(
+            targetPosition + new Vector3(0, verticalOffset, 0),
+            Quaternion.Euler(targetRotation)
+        );
+    }
+
+    public void SetJoints(string[] names, float[] targets)
+    {
+        // check to make sure the length of the list for each is the same
+        Debug.Assert(names.Length != targets.Length, 
+            "The length of the joints' names and targets array are not the same"
+        );
+        
+        // For each joint, set the target
+        for (int i = 0; i < names.Length; i++)
         {
-            // Move the base directly to the given pose
-            baseAb.TeleportRoot(new Vector3(targetPosition.x, verticalPosition, targetPosition.z), Quaternion.Euler(targetRotation));
+            // if the given joint name exists
+            if (jointDict.TryGetValue(names[i], out ArticulationBody joint))
+            {
+                // set joint target
+                if (joint.jointType == ArticulationJointType.RevoluteJoint)
+                {
+                    targets[i] *= Mathf.Rad2Deg;
+                }
+                ArticulationBodyUtils.SetJointTarget(joint, targets[i]);
+            }
         }
     }
-
-    public void SetChest(float target)
-    {
-        chestController.SetPosition(target);
-    }
-
-    public void SetLeftArm(float[] targets)
-    {
-        // Only Set Joints if we recieve all the joint positions, ignore otherwise
-        if (targets.Length == 7)
-        {
-            leftJointController.SetJointTargets(targets);
-        }     
-    }
-    public void SetRightArm(float[] targets)
-    {
-        // Only Set Joints if we recieve all the joint positions, ignore otherwise
-        if (targets.Length == 7)
-        {
-            rightJointController.SetJointTargets(targets);
-        }
-    }
-
-    public void SetLeftGripper(float[] targets)
-    {
-        if (targets.Length == 2)
-        { 
-            leftGripperController.SetGripperJointTarget(targets[0], targets[1]);
-        }
-    }
-
-    public void SetRightGripper(float[] targets)
-    {
-        if (targets.Length == 2)
-        {
-            rightGripperController.SetGripperJointTarget(targets[0], targets[1]);
-        }
-    }
-
-    public void SetCamera(float pitch, float yaw)
-    {
-        cameraController.SetPitchYawPosition(pitch, yaw);
-    }
-
 }

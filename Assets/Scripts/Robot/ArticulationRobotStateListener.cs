@@ -4,60 +4,41 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-
-/// An abstract class that focuses on Listening to the state of the robot,
-/// and interacting with the robot visualization. 
-
+///     A class that listens to the state of the robot,
+///     in the simulation and visulize the it.
 /// </summary>
 public class ArticulationRobotStateListener : RobotStateListener
 {
     [SerializeField] private StateReader reader;
+    [SerializeField] private Localization localization;
 
-    void Start() {
-        StartCoroutine(ReaderInitcialization());
-    }
+    void Start() {}
 
-    //void Update() { }
-
-    IEnumerator ReaderInitcialization()
-    {
-        // Initciallize the StateReader
-        while (reader.jointPositions.Length == 0) 
-        {
-            yield return null;
-        }
-        isReaderInitcialized = true;
-
-        // Checking to See if the StateListener is connected to the Simulated Robot, not Physical
-        Debug.Assert(reader.jointPositions.Length == 23, "Issue with Robot Used, Different then what was exspected! " + reader.jointPositions.Length.ToString() + " joints found");
-    }
+    // void Update() {}
 
     // Reads and Stores the Values from the StateReader
-    public override void ReadState() 
+    protected override void ReadState() 
     {
+        // StateReader not ready
+        if (reader.JointNames == null || reader.JointNames.Length == 0)
+        {
+            return;
+        }
 
-        // Extract the base position from the StateReader
-        basePosition = reader.position;
-        baseOrientationEuler = reader.rotationEuler;
+        // Extract the base position
+        BasePosition = localization.Position;
+        BaseOrientationEuler = localization.RotationEuler;
 
-        // Extract the target joint positions from the StateReader
-        // Reference the StateReader jointnames for what index cooresponds to what joint
-        chestPosition = reader.jointPositions[0];
-        cameraYawJoint = reader.jointPositions[1]; 
-        cameraPitchJoint = reader.jointPositions[2];
-        leftArmJointsPosition = SliceArray(3, 7); 
-        leftArmGripperPosition = SliceArray(10, 2);
-        rightArmJointsPosition = SliceArray(12, 7);
-        rightArmGripperPosition = SliceArray(19, 2);
-
+        // Extract the joint names and positions
+        JointNames = reader.JointNames;
+        JointPositions = reader.JointPositions;
     }
 
     // Extracts a set of elements from an array
     private float[] SliceArray(int startIndex, int numOfElements)
     {
         float[] sliceJoints = new float[numOfElements];  
-        Array.Copy(reader.jointPositions, startIndex, sliceJoints, 0, numOfElements);
+        Array.Copy(reader.JointPositions, startIndex, sliceJoints, 0, numOfElements);
         return sliceJoints;
     }
-
 }
