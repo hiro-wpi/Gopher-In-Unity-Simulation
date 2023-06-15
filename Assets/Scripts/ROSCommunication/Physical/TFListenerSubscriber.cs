@@ -36,7 +36,6 @@ public class TFListenerSubscriber : MonoBehaviour
 
     // Message
     private TFListenerServiceRequest tfListenerServiceRequest;
-    // private TFListenerServiceResponse tfListenerServicerResponse;
 
     // Transform 
     private TransformStampedMsg transformMsg;
@@ -56,10 +55,6 @@ public class TFListenerSubscriber : MonoBehaviour
 
         // Initialize service request
         tfListenerServiceRequest = new TFListenerServiceRequest();
-
-        // position = Vector3.zero;
-        // rotationEuler = Vector3.zero;
-        // rotationQuaternion = new Quaternion();
     }
 
     void Update() {}
@@ -67,12 +62,9 @@ public class TFListenerSubscriber : MonoBehaviour
     // Handles the published transformation msgs from the tfListener Node
     public void tfListenerCallback(TransformStampedMsg msg)
     {
-        // Debug.Log("Here");
-        // Check if the parent and child are the same (should be)
         position = msg.transform.translation.From<FLU>();
         rotationQuaternion = msg.transform.rotation.From<FLU>();
         rotationEuler = msg.transform.rotation.From<FLU>().eulerAngles;
-        // Debug.Log(rotationQuaternion);
     }
 
     // Request Service to Start Sending Transform

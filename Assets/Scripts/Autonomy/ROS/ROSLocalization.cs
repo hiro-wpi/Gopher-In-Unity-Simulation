@@ -7,8 +7,7 @@ using UnityEngine;
 /// </summary>
 public class ROSLocalization : Localization
 {
-    // AMCL results
-    [SerializeField] private AMCLPoseSubscriber amclPoseSubscriber;
+    // Localization Results
     [SerializeField] private TFListenerSubscriber tfSubscriber;
 
     private Vector3 position;
@@ -24,7 +23,6 @@ public class ROSLocalization : Localization
 
     public override void UpdateLocalization()
     {
-        // (Vector3 position, Vector3 rotation) = amclPoseSubscriber.GetPose();
         (position, rotation) = tfSubscriber.GetPose();
         Position = position;
         RotationEuler = rotation;
