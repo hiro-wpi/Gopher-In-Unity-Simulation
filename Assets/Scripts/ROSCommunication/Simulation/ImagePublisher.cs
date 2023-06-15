@@ -30,7 +30,9 @@ public class ImagePublisher : MonoBehaviour
     private ImageMsg image;
     private CameraInfoMsg cameraInfo;
     // request image with GPU readback
+    private CommandBuffer commandBuffer;
     private RenderTexture renderTexture;
+    private RenderTexture tempTexture;
     private AsyncGPUReadbackRequest request;
     private byte[] imageBytes;
 
@@ -41,10 +43,14 @@ public class ImagePublisher : MonoBehaviour
         ros.RegisterPublisher<ImageMsg>(cameraTopicName);
         ros.RegisterPublisher<CameraInfoMsg>(cameraInfoTopicName);
 
+        // Initialize container
+        commandBuffer = new CommandBuffer();
         renderTexture = new RenderTexture(
             width, height, 24, RenderTextureFormat.ARGB32
         );
+        tempTexture = RenderTexture.GetTemporary(renderTexture.descriptor);
         cam.targetTexture = renderTexture;
+
 
         // Initialize image message
         image = new ImageMsg();
@@ -63,7 +69,7 @@ public class ImagePublisher : MonoBehaviour
         cameraInfo.height = (uint) height;
         cameraInfo.width = (uint) width;
         cameraInfo.distortion_model = "plumb_bob";
-
+        // camera parameters
         double cx = cameraInfo.width / 2.0;
         double cy = cameraInfo.height / 2.0;
         double fx = cameraInfo.width / System.Math.Tan(69.4 / 2.0);
@@ -126,13 +132,19 @@ public class ImagePublisher : MonoBehaviour
     }
 
     // Utility function to flip render texture vertically
-    private static void VerticallyFlipRenderTexture(RenderTexture target)
+    private void VerticallyFlipRenderTexture(RenderTexture target)
     {
-        RenderTexture temp = RenderTexture.GetTemporary(target.descriptor);
-        // Blit the target texture to a temporary render texture with a 
+        // Perform flipping
+        tempTexture = RenderTexture.GetTemporary(target.descriptor);
+        // blit the target texture to a temporary render texture with a 
         // vertical flip (scale by -1 in Y direction, offset 1 in Y direction)
-        Graphics.Blit(target, temp, new Vector2(1, -1), new Vector2(0, 1));
-        Graphics.Blit(temp, target);
-        RenderTexture.ReleaseTemporary(temp);
+        commandBuffer.Clear();
+        commandBuffer.Blit(target, tempTexture, new Vector2(1, -1), new Vector2(0, 1));
+        commandBuffer.Blit(tempTexture, target);
+        Graphics.ExecuteCommandBuffer(commandBuffer);
+
+        // Release
+        RenderTexture.ReleaseTemporary(tempTexture);
+        commandBuffer.Release();
     }
 }

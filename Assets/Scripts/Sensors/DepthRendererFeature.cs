@@ -16,16 +16,21 @@ public class DepthRendererFeature : ScriptableRendererFeature
             depthTexture.Init("_CameraDepthTexture");
         }
 
-        public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
+        public override void Configure(
+            CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor
+        )
         {
             descriptor = cameraTextureDescriptor;
             descriptor.colorFormat = RenderTextureFormat.ARGB32;
+
             cmd.GetTemporaryRT(depthTexture.id, descriptor, FilterMode.Point);
             ConfigureTarget(depthTexture.Identifier());
             ConfigureClear(ClearFlag.All, Color.black);
         }
 
-        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+        public override void Execute(
+            ScriptableRenderContext context, ref RenderingData renderingData
+        )
         {
             CommandBuffer cmd = CommandBufferPool.Get("DepthPass");
             using (new ProfilingScope(cmd, new ProfilingSampler("DepthPass")))
@@ -41,25 +46,37 @@ public class DepthRendererFeature : ScriptableRendererFeature
                 context.DrawRenderers(renderingData.cullResults, ref drawSettings, ref filterSettings);
             }
             context.ExecuteCommandBuffer(cmd);
+
+            cmd.Clear();
             CommandBufferPool.Release(cmd);
         }
 
         public override void FrameCleanup(CommandBuffer cmd)
         {
-            cmd.ReleaseTemporaryRT(depthTexture.id);
+            if (depthTexture != RenderTargetHandle.CameraTarget)
+            {
+                cmd.ReleaseTemporaryRT(depthTexture.id);
+                depthTexture = RenderTargetHandle.CameraTarget;
+            }
         }
     }
 
-    DepthRenderPass depthPass;
-    Material depthMaterial;
+    private DepthRenderPass depthPass;
+    private Material depthMaterial;
 
     public override void Create()
     {
+        // Create a pass
         depthMaterial = new Material(Shader.Find("Custom/DepthShader2"));
         depthPass = new DepthRenderPass(depthMaterial);
+
+        // Configures where the render pass should be injected.
+        depthPass.renderPassEvent = RenderPassEvent.AfterRenderingOpaques;
     }
 
-    public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
+    public override void AddRenderPasses(
+        ScriptableRenderer renderer, ref RenderingData renderingData
+    )
     {
         renderer.EnqueuePass(depthPass);
     }
