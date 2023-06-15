@@ -20,19 +20,19 @@ public class TFListenerSubscriber : MonoBehaviour
 
     // Variables required for ROS communication
     [SerializeField] private string tfListenerServiceName = 
-        "tfListener/SetChildAndParentFrames";
+        "tf_listener/set_parent_and_child";
     [SerializeField] private string tfListenerTopicName = 
-        "tfListener/...";
+        "tf_listener/transform";
 
     // Varibles required for the transform
     [SerializeField] private string parentFrame = 
         "/map";
     [SerializeField] private string childFrame = 
-        "/gopher/base_link";
+        "/gopher/chassis_link";
 
-    public Vector3 position { get; private set; }
-    public Vector3 rotationEuler { get; private set; }
-    public Quaternion rotationQuaternion { get; private set; }
+    [SerializeField] private Vector3 position;
+    [SerializeField] private Vector3 rotationEuler;
+    private Quaternion rotationQuaternion;
 
     // Message
     private TFListenerServiceRequest tfListenerServiceRequest;
@@ -40,23 +40,26 @@ public class TFListenerSubscriber : MonoBehaviour
 
     // Transform 
     private TransformStampedMsg transformMsg;
-    private bool isValidTransform;
-
+    [SerializeField] private bool isValidTransform;
 
     void Start()
     {
         // Get ROS connection static instance
         ros = ROSConnection.GetOrCreateInstance();
+        // Connect to the ROS Service
         ros.RegisterRosService<TFListenerServiceRequest, TFListenerServiceResponse>(
             tfListenerServiceName
         );
 
+        // Connect to the ROS Topic
         ros.Subscribe<TransformStampedMsg>(tfListenerTopicName, tfListenerCallback);
 
         // Initialize service request
         tfListenerServiceRequest = new TFListenerServiceRequest();
 
-        SetFramesCommand();
+        // position = Vector3.zero;
+        // rotationEuler = Vector3.zero;
+        // rotationQuaternion = new Quaternion();
     }
 
     void Update() {}
@@ -64,25 +67,12 @@ public class TFListenerSubscriber : MonoBehaviour
     // Handles the published transformation msgs from the tfListener Node
     public void tfListenerCallback(TransformStampedMsg msg)
     {
-        if(isValidTransform)
-        {
-            // Check if the parent and child are the same (should be)
-            if(parentFrame == msg.header.frame_id & childFrame == msg.child_frame_id)
-            {
-                position = msg.transform.translation.From<FLU>();
-                rotationQuaternion = msg.transform.rotation.From<FLU>();
-                rotationEuler = msg.transform.rotation.From<FLU>().eulerAngles;
-            }
-            else
-            {
-                Debug.LogError("Requested Transformation Frames Does Not Match Recieved Frames. Ignoring Transformation");
-            }
-        }
-        else
-        {
-            Debug.Log("Not a valid transform");
-        }
-            
+        // Debug.Log("Here");
+        // Check if the parent and child are the same (should be)
+        position = msg.transform.translation.From<FLU>();
+        rotationQuaternion = msg.transform.rotation.From<FLU>();
+        rotationEuler = msg.transform.rotation.From<FLU>().eulerAngles;
+        // Debug.Log(rotationQuaternion);
     }
 
     // Request Service to Start Sending Transform
@@ -104,4 +94,10 @@ public class TFListenerSubscriber : MonoBehaviour
     {
         isValidTransform = response.isValidTransform;        
     }
+
+    public (Vector3, Vector3) GetPose()
+    {
+        return (position, rotationEuler);
+    }
+
 }

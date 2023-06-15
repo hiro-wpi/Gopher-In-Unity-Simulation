@@ -46,6 +46,9 @@ GameObject:
   - component: {fileID: 4490393623539869091}
   - component: {fileID: 1226114613}
   - component: {fileID: 732307516}
+  - component: {fileID: 2063852681}
+  - component: {fileID: 2063852683}
+  - component: {fileID: 2063852685}
   m_Layer: 15
   m_Name: Base
   m_TagString: Untagged
@@ -107,8 +110,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0f51295d74820593975dc73806098c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localPlanTopicName: local_plan
-  globalPlanTopicName: global_plan
+  localPlanTopicName: move_base/TrajectoryPlannerROS/local_plan
+  globalPlanTopicName: move_base/NavfnROS/plan
 --- !u!114 &4490393623539869091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,8 +150,67 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71e12d98deba6b57f91ce66c32499a2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poseTopicName: initcialpose
+  poseTopicName: initial_pose
   frameID: map
+--- !u!114 &2063852681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 535451129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da24c4742847e3e18a4a8d515f2ce6c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <TargetPosition>k__BackingField: {x: 0, y: 0, z: 0}
+  <TargetOrientationEuler>k__BackingField: {x: 0, y: 0, z: 0}
+  <IsNavigating>k__BackingField: 0
+  <GlobalWaypoints>k__BackingField: []
+  <LocalWaypoints>k__BackingField: []
+  cancelGoalService: {fileID: 535451134}
+  sendGoalService: {fileID: 535451132}
+  pathPlanner: {fileID: 535451131}
+  poseWithCovarianceStampedPublisher: {fileID: 732307516}
+  twistSubscriber: {fileID: 9012710540990295136}
+  polygonPublisher: {fileID: 1226114613}
+  robot: {fileID: 702946891374405994}
+--- !u!114 &2063852683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 535451129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a72bfbc4a40b1a44784c6ac1a06e3d57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Position>k__BackingField: {x: 0, y: 0, z: 0}
+  <RotationEuler>k__BackingField: {x: 0, y: 0, z: 0}
+  amclPoseSubscriber: {fileID: 4490393623539869091}
+  tfSubscriber: {fileID: 2063852685}
+--- !u!114 &2063852685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 535451129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a9d0eed250cd0a4885793522298e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tfListenerServiceName: tf_listener/set_parent_and_child
+  tfListenerTopicName: tf_listener/transform
+  parentFrame: /map
+  childFrame: /gopher/base_link
+  position: {x: 0, y: 0, z: 0}
+  rotationEuler: {x: 0, y: 0, z: 0}
+  isValidTransform: 0
 --- !u!1 &631462978
 GameObject:
   m_ObjectHideFlags: 0
@@ -158,7 +220,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 631462979}
-  - component: {fileID: 631462980}
   m_Layer: 15
   m_Name: ROS
   m_TagString: Untagged
@@ -183,30 +244,6 @@ Transform:
   m_Father: {fileID: 4408274995126300629}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &631462980
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 631462978}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da24c4742847e3e18a4a8d515f2ce6c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <TargetPosition>k__BackingField: {x: 0, y: 0, z: 0}
-  <TargetOrientationEuler>k__BackingField: {x: 0, y: 0, z: 0}
-  <IsNavigating>k__BackingField: 0
-  <GlobalWaypoints>k__BackingField: []
-  <LocalWaypoints>k__BackingField: []
-  cancelGoalService: {fileID: 535451134}
-  sendGoalService: {fileID: 535451132}
-  pathPlanner: {fileID: 0}
-  poseWithCovarianceStampedPublisher: {fileID: 732307516}
-  twistSubscriber: {fileID: 9012710540990295136}
-  polygonPublisher: {fileID: 1226114613}
-  robot: {fileID: 702946891374405994}
 --- !u!1 &879516990
 GameObject:
   m_ObjectHideFlags: 0
@@ -1390,19 +1427,20 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7725881371920992436}
-  - component: {fileID: 6687171582996424073}
   - component: {fileID: 3859801236347491249}
   - component: {fileID: 4296158096265951438}
   - component: {fileID: 7974711132935201213}
   - component: {fileID: 2643296904155322097}
   - component: {fileID: 654651305978321806}
+  - component: {fileID: 1304358820}
+  - component: {fileID: 1304358821}
   m_Layer: 15
   m_Name: Right Arm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7725881371920992436
 Transform:
   m_ObjectHideFlags: 0
@@ -1418,22 +1456,6 @@ Transform:
   m_Father: {fileID: 4408274995126300629}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6687171582996424073
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 343481418151597648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86c05ae979a12774cb9199e16a57eaf4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jointSpeed: 0.5
-  numberOfWaypoints: 3
-  forwardKinematics: {fileID: 5915472104543767608}
-  inverseKinematics: {fileID: 7628781304563526181}
 --- !u!1818360608 &3859801236347491249
 PositionConstraint:
   m_ObjectHideFlags: 0
@@ -1516,6 +1538,34 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 0
   m_Center: {x: 0, y: -0.2, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &1304358820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343481418151597648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61da94ececb415ff1a3cca734a6c1273, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mobileBaseTransform: {fileID: 702946891374405993}
+  chest: {fileID: 3416078106938707778}
+  planTrajectoryService: {fileID: 1304358821}
+--- !u!114 &1304358821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343481418151597648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 678ac9a654e90d0bd9c05578aa9db104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planTrajectoryServiceName: right_arm/plan_trajectory
 --- !u!1 &404627483431758287
 GameObject:
   m_ObjectHideFlags: 0
@@ -7556,19 +7606,20 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3430922113509506315}
-  - component: {fileID: 1147033194995556153}
   - component: {fileID: 4803222528205093198}
   - component: {fileID: 3079397806337800268}
   - component: {fileID: 8055751572133282946}
   - component: {fileID: 4325522361249530929}
   - component: {fileID: 1056611034991387054}
+  - component: {fileID: 1304358822}
+  - component: {fileID: 1304358823}
   m_Layer: 15
   m_Name: Left Arm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3430922113509506315
 Transform:
   m_ObjectHideFlags: 0
@@ -7584,22 +7635,6 @@ Transform:
   m_Father: {fileID: 4408274995126300629}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1147033194995556153
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 841231625782483514}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86c05ae979a12774cb9199e16a57eaf4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jointSpeed: 0.5
-  numberOfWaypoints: 3
-  forwardKinematics: {fileID: 7354815183373339855}
-  inverseKinematics: {fileID: 7939491165433940371}
 --- !u!1818360608 &4803222528205093198
 PositionConstraint:
   m_ObjectHideFlags: 0
@@ -7682,6 +7717,34 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 0
   m_Center: {x: 0, y: -0.2, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &1304358822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841231625782483514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61da94ececb415ff1a3cca734a6c1273, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mobileBaseTransform: {fileID: 702946891374405993}
+  chest: {fileID: 3416078106938707778}
+  planTrajectoryService: {fileID: 1304358823}
+--- !u!114 &1304358823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841231625782483514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 678ac9a654e90d0bd9c05578aa9db104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planTrajectoryServiceName: left_arm/plan_trajectory
 --- !u!1 &890962698427272579
 GameObject:
   m_ObjectHideFlags: 0
@@ -21052,6 +21115,7 @@ GameObject:
   - component: {fileID: 2726546486847738849}
   - component: {fileID: 2765524930972325134}
   - component: {fileID: 4463948716747119380}
+  - component: {fileID: 1072445878}
   m_Layer: 15
   m_Name: ROS Output
   m_TagString: Untagged
@@ -21087,9 +21151,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globalFrameIds:
-  - map
   - gopher/odom
-  robot: {fileID: 702946891374405994}
+  robot: {fileID: 702946891102146246}
   publishRate: 30
 --- !u!114 &828704671767976744
 MonoBehaviour:
@@ -21115,7 +21178,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6780721534204609730}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 19e2dec7692feefe0a8afa41db96bc22, type: 3}
   m_Name: 
@@ -21130,7 +21193,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6780721534204609730}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3d257473fec65afa39f3226cb602ddfb, type: 3}
   m_Name: 
@@ -21168,7 +21231,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   laserTopicName: gopher/base_scan
   laserLinkId: gopher/laser_link
-  laser: {fileID: 0}
+  laser: {fileID: 1247843086211099820}
+--- !u!114 &1072445878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6780721534204609730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 084a854f5e15d3dd6b424da237c08101, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  iMUTopicName: gopher/imu
+  iMULinkId: gopher/chassis_link
+  iMU: {fileID: 1304358819}
 --- !u!1 &6869341501706853007
 GameObject:
   m_ObjectHideFlags: 0
@@ -21346,7 +21424,7 @@ Camera:
   m_FOVAxisMode: 0
   m_SensorSize: {x: 3.66, y: 2.67}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 1.93
+  m_FocalLength: 1.9299998
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -23097,18 +23175,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   updateRate: 10
   robot: {fileID: 702946891374405994}
-  durationTime: 0
-  position: {x: 0, y: 0, z: 0}
-  rotationEuler: {x: 0, y: 0, z: 0}
-  linearVelocity: {x: 0, y: 0, z: 0}
-  angularVelocity: {x: 0, y: 0, z: 0}
-  jointNames: []
-  jointPositions: []
-  jointVelocities: []
-  jointForces: []
-  extraObjects: []
-  objectPositions: []
-  objectRotations: []
+  <DurationTime>k__BackingField: 0
+  <Position>k__BackingField: {x: 0, y: 0, z: 0}
+  <RotationEuler>k__BackingField: {x: 0, y: 0, z: 0}
+  <LinearVelocity>k__BackingField: {x: 0, y: 0, z: 0}
+  <AngularVelocity>k__BackingField: {x: 0, y: 0, z: 0}
+  <JointNames>k__BackingField: []
+  <JointPositions>k__BackingField: []
+  <JointVelocities>k__BackingField: []
+  <JointForces>k__BackingField: []
 --- !u!114 &2115671143108962010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23166,8 +23241,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Position>k__BackingField: {x: 0, y: 0, z: 0}
-  <Rotation>k__BackingField: {x: 0, y: 0, z: 0}
-  updateRate: 10
+  <RotationEuler>k__BackingField: {x: 0, y: 0, z: 0}
   robot: {fileID: 702946891374405994}
   positionErrorStd: 0.2
   rotationErrorStd: 0.2
@@ -23375,7 +23449,7 @@ MonoBehaviour:
   jointController: {fileID: 7628781303651052181}
   gripperController: {fileID: 7939491165433940368}
   inverseKinematics: {fileID: 7939491165433940371}
-  autoManipulation: {fileID: 1147033194995556153}
+  autoManipulation: {fileID: 0}
   targetSet: 0
   targetPosition: {x: 0, y: 0, z: 0}
   targetRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -23383,7 +23457,7 @@ MonoBehaviour:
   homePositions:
     <Angles>k__BackingField:
     - 0
-    - 2.1
+    - 2.3
     - 0.35
     - 1.570796
     - 1.5707964
@@ -23434,6 +23508,7 @@ GameObject:
   - component: {fileID: 7628781304040955774}
   - component: {fileID: 476914934}
   - component: {fileID: 1247843086211099820}
+  - component: {fileID: 1304358819}
   m_Layer: 15
   m_Name: Base
   m_TagString: Untagged
@@ -23524,6 +23599,27 @@ MonoBehaviour:
   <Directions>k__BackingField: []
   <ObstacleRanges>k__BackingField: []
   <HumanRanges>k__BackingField: []
+--- !u!114 &1304358819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7628781304040955771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 025a4aca93d9dec2493cc15552c7cc3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  robot: {fileID: 702946891374405994}
+  updateRate: 30
+  linearBiasMean: 0.1
+  linearBiasStd: 0.001
+  angularBiasMean: 0.0000075
+  angularBiasStd: 0.0000008
+  <Orientation>k__BackingField: {x: 0, y: 0, z: 0, w: 0}
+  <LinearAcceleration>k__BackingField: {x: 0, y: 0, z: 0}
+  <AngularVelocity>k__BackingField: {x: 0, y: 0, z: 0}
 --- !u!1 &7628781304563526201
 GameObject:
   m_ObjectHideFlags: 0
@@ -23726,7 +23822,7 @@ MonoBehaviour:
   jointController: {fileID: 7628781304563526203}
   gripperController: {fileID: 7628781304563526180}
   inverseKinematics: {fileID: 7628781304563526181}
-  autoManipulation: {fileID: 6687171582996424073}
+  autoManipulation: {fileID: 0}
   targetSet: 0
   targetPosition: {x: 0, y: 0, z: 0}
   targetRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -23734,7 +23830,7 @@ MonoBehaviour:
   homePositions:
     <Angles>k__BackingField:
     - 0
-    - 2.1
+    - 2.3
     - 0.35
     - 1.570796
     - 1.570796
