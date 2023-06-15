@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public class TestDepth : MonoBehaviour
 {
@@ -8,6 +9,9 @@ public class TestDepth : MonoBehaviour
     public Shader redShader;
     private Material redMaterial;
     private CommandBuffer commandBuffer;
+    public RenderTexture renderTexture;
+
+    public RawImage rawImage;
 
     private void OnEnable()
     {
@@ -21,12 +25,15 @@ public class TestDepth : MonoBehaviour
         redMaterial = new Material(redShader);
         commandBuffer = new CommandBuffer { name = "RedShaderEffect" };
 
-        RenderPipelineManager.beginCameraRendering += BeginCameraRendering;
+        renderTexture = new RenderTexture(cam.pixelWidth, cam.pixelHeight, 24);
+        // rawImage.texture = renderTexture;
+
+        RenderPipelineManager.endCameraRendering += BeginCameraRendering;
     }
 
     private void OnDisable()
     {
-        RenderPipelineManager.beginCameraRendering -= BeginCameraRendering;
+        RenderPipelineManager.endCameraRendering -= BeginCameraRendering;
 
         if (redMaterial != null)
         {
@@ -43,8 +50,10 @@ public class TestDepth : MonoBehaviour
     {
         if (camera == cam)
         {
+            Debug.Log("Rendering");
             commandBuffer.Clear();
-            commandBuffer.Blit(camera.targetTexture, camera.targetTexture, redMaterial);
+            commandBuffer.Blit(camera.targetTexture, renderTexture, redMaterial);
+            commandBuffer.Blit(renderTexture, camera.targetTexture);
             context.ExecuteCommandBuffer(commandBuffer);
         }
     }
