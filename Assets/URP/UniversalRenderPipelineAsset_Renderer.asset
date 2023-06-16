@@ -23,19 +23,6 @@ MonoBehaviour:
     DirectLightingStrength: 0.25
     Radius: 0.035
     SampleCount: 6
---- !u!114 &-2384484577655736560
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e83f48f76838454aa40b42db07b1469, type: 3}
-  m_Name: DepthRendererFeature
-  m_EditorClassIdentifier: 
-  m_Active: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53,8 +40,8 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: 3451809670685575135}
   - {fileID: 5542613740546226747}
-  - {fileID: -2384484577655736560}
-  m_RendererFeatureMap: dfc778659b4ae72f3bfa74bcd451eb4c10b76e00e99be8de
+  - {fileID: 6373182054764773741}
+  m_RendererFeatureMap: dfc778659b4ae72f3bfa74bcd451eb4c6d0126ef4f177258
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -154,3 +141,16 @@ MonoBehaviour:
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 0}
       cameraFieldOfView: 60
+--- !u!114 &6373182054764773741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 781597f3d73548c9092d8c45ef2d8edc, type: 3}
+  m_Name: DepthRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1

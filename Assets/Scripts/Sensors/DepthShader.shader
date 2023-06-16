@@ -1,5 +1,7 @@
 Shader "Custom/DepthShader"
 {
+    Properties {}
+
     SubShader
     {
         Tags { "RenderType"="Opaque" "RenderPipeline" = "UniversalPipeline"}
@@ -7,22 +9,51 @@ Shader "Custom/DepthShader"
         Pass
         {
             HLSLPROGRAM
-            #pragma vertex Vert
+            #pragma vertex vert
             #pragma fragment frag
 
             // URP header
+            // The Core.hlsl file contains definitions of frequently used 
+            // HLSL macros and functions
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            // The Blit.hlsl file provides the vertex shader (Vert),
-            // input structure (Attributes) and output strucutre (Varyings)
-            #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
+            // The DeclareDepthTexture.hlsl file contains utilities for 
+            // sampling the Camera depth texture.
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
-            TEXTURE2D(_CameraDepthTexture);
-            SAMPLER(sampler_CameraDepthTexture);
+            struct Attributes
+            {
+                // The vertex positions in object space.
+                float4 positionOS : POSITION;
+            };
+
+            struct Varyings
+            {
+                // The vertex position in screen space
+                float4 positionCS : SV_POSITION;
+                float4 screenPos : TEXCOORD1;
+            };
+
+            Varyings vert(Attributes input)
+            {
+                Varyings output;
+                // The TransformObjectToHClip function transforms vertex positions
+                // from object space to homogenous clip space.
+                output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
+                // Compute coordinates w.r.t. to Screen coords
+                output.screenPos = ComputeScreenPos(output.positionCS);
+                
+                return output;
+            }
 
             half4 frag (Varyings input) : SV_Target
             {
-                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
-                float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, input.texcoord);
+                // Obtain raw depth value
+                float rawDepth = SampleSceneDepth(input.screenPos.xy / input.screenPos.w);
+                // Normalize depth value into [0, 1] by dividing far plane value
+                float depth = Linear01Depth(rawDepth, _ZBufferParams);
+                // Black => far; White => close 
+                depth = 1.0f - depth;
+
                 return half4(depth, depth, depth, 1);
             }
             ENDHLSL
