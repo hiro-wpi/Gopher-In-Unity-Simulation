@@ -19,7 +19,7 @@ public class ROSTransformTreePublisher : MonoBehaviour
     // ROS Connector
     private ROSConnection ros;
     // Variables required for ROS communication
-    public List<string> globalFrameIds = new List<string> { "map", "odom" };
+    public List<string> globalFrameIds = new List<string> { "odom" };
     private const string tfTopic = "/tf";
 
     // Robots
@@ -101,7 +101,9 @@ public class ROSTransformTreePublisher : MonoBehaviour
         {
             var tfGlobalToGlobal = new TransformStampedMsg(
                 new HeaderMsg(Clock.GetCount(), new TimeStamp(Clock.time), globalFrameIds[i - 1]),
-                globalFrameIds[i],
+                // TEMP Fix
+                // globalFrameIds[i],
+                globalFrameIds[i].Substring(globalFrameIds[i].IndexOf('/') + 1),
                 // Initializes to identity transform
                 new TransformMsg()
             );

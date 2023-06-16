@@ -44,6 +44,9 @@ public class ImagePublisher : MonoBehaviour
     private RenderTexture tempTexture;
     private AsyncGPUReadbackRequest request;
 
+    private float publishTime = 0.1f;
+    private float elapsedTime = 0.0f;
+
     void Start()
     {
         // Get ROS connection static instance
@@ -122,6 +125,13 @@ public class ImagePublisher : MonoBehaviour
 
     void Update()
     {
+        elapsedTime += Time.deltaTime;
+        if (elapsedTime < publishTime)
+        {
+            return;
+        }
+        elapsedTime -= Time.deltaTime;
+
         if (request.done)
         {
             if (!request.hasError)
@@ -141,10 +151,9 @@ public class ImagePublisher : MonoBehaviour
                 else
                 {
                     var depth32Texture = new RenderTexture(width, height, 0, RenderTextureFormat.RFloat);
-                    
-                    // Copy the depth image to the 16-bit texture
+                    // Copy the depth image to the 32-bit texture
                     Graphics.Blit(renderTexture, depth32Texture);
-
+                    
                     if (isOpenGL)
                     {
                         VerticallyFlipRenderTexture(depth32Texture);
@@ -158,15 +167,20 @@ public class ImagePublisher : MonoBehaviour
 
                     // Get the data from the request
                     imageBytes = request.GetData<byte>().ToArray();
+                    /*
+                    float[] data = request.GetData<float>().ToArray();
+                    byte[] depthBytes = new byte[data.Length * sizeof(float)];
+                    for (int i = 0; i < depthBytes.Length; i++)
+                    {
+                        depthBytes[i] *= 10; // Convert from meters to millimeters
+                    }
+                    Buffer.BlockCopy(data, 0, depthBytes, 0, depthBytes.Length);
+                    */
 
                     // Set the data of the image message
                     image.data = imageBytes;
-
-                    // Take the first element of every 4 bytes
-                    // depthBytes = imageBytes.Where((x, i) => i % 4 == 0).ToArray();
-                    // image.data = depthBytes;
                 }
-                
+
                 ros.Publish(cameraTopicName, image);
                 ros.Publish(cameraInfoTopicName, cameraInfo);
             }
