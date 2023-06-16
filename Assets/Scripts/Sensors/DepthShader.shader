@@ -51,8 +51,6 @@ Shader "Custom/DepthShader"
                 float rawDepth = SampleSceneDepth(input.screenPos.xy / input.screenPos.w);
                 // Normalize depth value into [0, 1] by dividing far plane value
                 float depth = Linear01Depth(rawDepth, _ZBufferParams);
-                // Black => far; White => close 
-                depth = 1.0f - depth;
 
                 return half4(depth, depth, depth, 1);
             }

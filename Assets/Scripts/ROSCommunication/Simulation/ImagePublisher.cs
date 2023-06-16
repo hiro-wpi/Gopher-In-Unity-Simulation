@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,20 +22,27 @@ public class ImagePublisher : MonoBehaviour
     [SerializeField] private string cameraInfoTopicName = "camera/color/camera_info";
     [SerializeField] private string frameId = "camera";
 
+    // Unity running environment
+    private bool isOpenGL;
+
     // Sensor
     [SerializeField] private Camera cam;
     [SerializeField] private int width = 1280;
     [SerializeField] private int height = 720;
 
+    public enum ImageFormat { ARGB32, Depth }
+    [SerializeField] private ImageFormat format;
+
     // Message
     private ImageMsg image;
     private CameraInfoMsg cameraInfo;
+    private byte[] imageBytes;
+    private byte[] depthBytes;
     // request image with GPU readback
-    private CommandBuffer commandBuffer;
+    private CommandBuffer cmd;
     private RenderTexture renderTexture;
     private RenderTexture tempTexture;
     private AsyncGPUReadbackRequest request;
-    private byte[] imageBytes;
 
     void Start()
     {
@@ -42,15 +50,17 @@ public class ImagePublisher : MonoBehaviour
         ros = ROSConnection.GetOrCreateInstance();
         ros.RegisterPublisher<ImageMsg>(cameraTopicName);
         ros.RegisterPublisher<CameraInfoMsg>(cameraInfoTopicName);
+        
+        // Check Unity running environment
+        isOpenGL = SystemInfo.graphicsDeviceVersion.StartsWith("OpenGL");
 
         // Initialize container
-        commandBuffer = new CommandBuffer();
+        cmd = CommandBufferPool.Get("ImagePublisher");
         renderTexture = new RenderTexture(
             width, height, 24, RenderTextureFormat.ARGB32
         );
         tempTexture = RenderTexture.GetTemporary(renderTexture.descriptor);
         cam.targetTexture = renderTexture;
-
 
         // Initialize image message
         image = new ImageMsg();
@@ -59,9 +69,18 @@ public class ImagePublisher : MonoBehaviour
         );
         image.height = (uint) height;
         image.width = (uint) width;
-        image.encoding = "rgba8";
-        image.step = (uint) width * 4;
+        if (format == ImageFormat.ARGB32)
+        {
+            image.encoding = "rgba8";
+            image.step = (uint) width * 4;
+        }
+        else
+        {
+            image.encoding = "32FC1";
+            image.step = (uint) width;
+        }
         imageBytes = new byte[width * height * 4];
+        depthBytes = new byte[width * height * 2];
 
         // Initialize image info message
         cameraInfo = new CameraInfoMsg();
@@ -72,7 +91,9 @@ public class ImagePublisher : MonoBehaviour
         // camera parameters
         double cx = cameraInfo.width / 2.0;
         double cy = cameraInfo.height / 2.0;
-        double fx = cameraInfo.width / System.Math.Tan(69.4 / 2.0);
+        double fx = cameraInfo.width / (
+            2.0 * Math.Tan(cam.fieldOfView * Math.PI / 360.0)
+        );
         double fy = fx;
         cameraInfo.K = new double[9] {
             fx, 0, cx,
@@ -93,29 +114,66 @@ public class ImagePublisher : MonoBehaviour
         };
     }
 
+    void OnDestroy()
+    {
+        cmd.Release();
+        cmd.Dispose();
+    }
+
     void Update()
     {
         if (request.done)
         {
             if (!request.hasError)
             {
-                // Convert request data to byte array
-                request.GetData<byte>().CopyTo(imageBytes);
-
                 // Update image messages
                 image.header = new HeaderMsg(
                     Clock.GetCount(), new TimeStamp(Clock.time), frameId
                 );
-                image.data = imageBytes;
                 cameraInfo.header = image.header;
 
+                // Convert request data to byte array
+                request.GetData<byte>().CopyTo(imageBytes);
+                if (format == ImageFormat.ARGB32)
+                {
+                    image.data = imageBytes;
+                }
+                else
+                {
+                    var depth32Texture = new RenderTexture(width, height, 0, RenderTextureFormat.RFloat);
+                    
+                    // Copy the depth image to the 16-bit texture
+                    Graphics.Blit(renderTexture, depth32Texture);
+
+                    if (isOpenGL)
+                    {
+                        VerticallyFlipRenderTexture(depth32Texture);
+                    }
+
+                    // Request a new readback from the 16-bit texture
+                    request = AsyncGPUReadback.Request(depth32Texture);
+
+                    // Wait for the request to complete
+                    request.WaitForCompletion();
+
+                    // Get the data from the request
+                    imageBytes = request.GetData<byte>().ToArray();
+
+                    // Set the data of the image message
+                    image.data = imageBytes;
+
+                    // Take the first element of every 4 bytes
+                    // depthBytes = imageBytes.Where((x, i) => i % 4 == 0).ToArray();
+                    // image.data = depthBytes;
+                }
+                
                 ros.Publish(cameraTopicName, image);
                 ros.Publish(cameraInfoTopicName, cameraInfo);
             }
-            
+
             // If the project is run under OpenGL, the image needs to be flipped
             // https://docs.unity3d.com/Manual/SL-PlatformDifferences.html
-            if (SystemInfo.graphicsDeviceVersion.StartsWith("OpenGL"))
+            if (isOpenGL)
             {
                 VerticallyFlipRenderTexture(renderTexture);
             }
@@ -138,13 +196,15 @@ public class ImagePublisher : MonoBehaviour
         tempTexture = RenderTexture.GetTemporary(target.descriptor);
         // blit the target texture to a temporary render texture with a 
         // vertical flip (scale by -1 in Y direction, offset 1 in Y direction)
-        commandBuffer.Clear();
-        commandBuffer.Blit(target, tempTexture, new Vector2(1, -1), new Vector2(0, 1));
-        commandBuffer.Blit(tempTexture, target);
-        Graphics.ExecuteCommandBuffer(commandBuffer);
+        
+        // cmd.Clear();
+        // cmd.Blit(target, tempTexture, new Vector2(1, -1), new Vector2(0, 1));
+        // cmd.Blit(tempTexture, target);
+        // Graphics.ExecuteCommandBuffer(cmd);
+        Graphics.Blit(target, tempTexture, new Vector2(1, -1), new Vector2(0, 1));
+        Graphics.Blit(tempTexture, target);
 
         // Release
         RenderTexture.ReleaseTemporary(tempTexture);
-        commandBuffer.Release();
     }
 }
