@@ -58,13 +58,18 @@ public class JointStatePublisher : MonoBehaviour
         // Initialize message
         for (int i = 0; i < jointStateLength; ++i)
         {
-            names[i] = jointChain[i].jointName;
+            // TEMP Fix
+            // names[i] = jointChain[i].jointName;
+            string name = jointChain[i].jointName;
+            name = name.Substring(name.IndexOf('/') + 1);
+            names[i] = name;
         }
         
         jointState = new JointStateMsg
         {
-            header = new HeaderMsg(Clock.GetCount(), 
-                                   new TimeStamp(Clock.time), frameId),
+            header = new HeaderMsg(
+                0, new TimeStamp(Clock.time), frameId
+            ),
             name = names,
             position = new double[jointStateLength],
             velocity = new double[jointStateLength],
@@ -89,8 +94,7 @@ public class JointStatePublisher : MonoBehaviour
         }
 
         // Update ROS message
-        jointState.header = new HeaderMsg(Clock.GetCount(), 
-                                          new TimeStamp(Clock.time), frameId);
+        jointState.header.Update();
         jointState.position = Array.ConvertAll(positions, x => (double)x);
         jointState.velocity = Array.ConvertAll(velocities, x => (double)x);
         jointState.effort = Array.ConvertAll(forces, x => (double)x);

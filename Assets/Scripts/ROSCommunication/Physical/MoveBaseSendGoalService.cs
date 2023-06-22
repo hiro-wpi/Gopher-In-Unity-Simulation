@@ -34,6 +34,9 @@ public class MoveBaseSendGoalService : MonoBehaviour
 
         // Initialize service request
         goalRequest = new GetPlanRequest();
+        goalRequest.goal.header = new HeaderMsg(
+            0, new TimeStamp(Clock.time), frameID
+        );
     }
 
     void Update() {}
@@ -42,9 +45,7 @@ public class MoveBaseSendGoalService : MonoBehaviour
     public void SendGoalCommandService(Vector3 postion, Vector3 rotation)
     {
         // Only need to specify the goal
-        goalRequest.goal.header = new HeaderMsg(
-            Clock.GetCount(), new TimeStamp(Clock.time), frameID
-        );
+        goalRequest.goal.header.Update();
         goalRequest.goal.pose.position = postion.To<FLU>();
         goalRequest.goal.pose.orientation = Quaternion.Euler(rotation).To<FLU>();
 

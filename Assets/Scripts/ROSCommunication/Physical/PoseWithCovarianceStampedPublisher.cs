@@ -31,7 +31,7 @@ public class PoseWithCovarianceStampedPublisher : MonoBehaviour
         // Initialize message
         poseCommand = new PoseWithCovarianceStampedMsg(
             new HeaderMsg(
-                Clock.GetCount(), new TimeStamp(Clock.time), frameID
+                0, new TimeStamp(Clock.time), frameID
             ),
             new PoseWithCovarianceMsg(
                 new PoseMsg(
@@ -53,9 +53,7 @@ public class PoseWithCovarianceStampedPublisher : MonoBehaviour
     public void PublishPoseStampedCommand(Vector3 position, Vector3 rotation)
     {
         // Publish message
-        poseCommand.header = new HeaderMsg(
-            Clock.GetCount(), new TimeStamp(Clock.time), frameID
-        );
+        poseCommand.header.Update();
 
         // Convert to ROS coordinate
         poseCommand.pose.pose.position = position.To<FLU>();

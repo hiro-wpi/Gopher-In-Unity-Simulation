@@ -33,6 +33,9 @@ public class IMUPublisher : MonoBehaviour
 
         // Initialize messages
         iMUMsg = new();
+        iMUMsg.header = new HeaderMsg(
+            0, new TimeStamp(Clock.time), iMULinkId
+        );
 
         // Using InvokeRepeating to publish messages at a fixed rate,
         // would cause asynchronous messages to be published when
@@ -59,9 +62,7 @@ public class IMUPublisher : MonoBehaviour
         }
 
         // Publish message
-        iMUMsg.header = new HeaderMsg(
-            Clock.GetCount(), new TimeStamp(Clock.time), iMULinkId
-        );
+        iMUMsg.header.Update();
         iMUMsg.orientation = iMU.Orientation.To<FLU>();
         iMUMsg.angular_velocity = iMU.AngularVelocity.To<FLU>();
         iMUMsg.linear_acceleration = iMU.LinearAcceleration.To<FLU>();

@@ -40,7 +40,7 @@ public class LaserScanPublisher : MonoBehaviour
         laserScan = new LaserScanMsg
         {
             header = new HeaderMsg(
-                Clock.GetCount(), new TimeStamp(Clock.time), laserLinkId
+                0, new TimeStamp(Clock.time), laserLinkId
             ),
             angle_min       = angleMin,
             angle_max       = angleMax,
@@ -78,9 +78,7 @@ public class LaserScanPublisher : MonoBehaviour
         }
 
         // Publish message
-        laserScan.header = new HeaderMsg(
-            Clock.GetCount(), new TimeStamp(Clock.time), laserLinkId
-        );
+        laserScan.header.Update();
         laserScan.ranges = laser.ObstacleRanges;
 
         ros.Publish(laserTopicName, laserScan);

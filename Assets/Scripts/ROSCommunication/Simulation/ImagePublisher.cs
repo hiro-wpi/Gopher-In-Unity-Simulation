@@ -10,8 +10,11 @@ using RosMessageTypes.Sensor;
 using RosMessageTypes.Std;
 
 /// <summary>
-///     This script publishes camera view to ROS
+///     This script publishes camera view (RGB/Depth) to ROS
 ///     using Unity Async GPU Readback
+///
+///     As Depth values from Render texture are within [0, 1],
+///     another shader is used to scaled it to original values.
 /// </summary>
 public class ImagePublisher : MonoBehaviour
 {
@@ -35,50 +38,39 @@ public class ImagePublisher : MonoBehaviour
     private CameraInfoMsg cameraInfo;
     private byte[] imageBytes;
     private float[] depthFloats;
-    // request image with GPU readback
-    private CommandBuffer cmd;
-    private RenderTexture renderTexture;
-    private RenderTexture rgbTexture;
-    private RenderTexture depthTexture;
-    private AsyncGPUReadbackRequest request;
     // rate
     [SerializeField] private int publishRate = 10;
     private float publishPeriod;
-    private float elapsedTime = 0.0f;
+    private float timer = 0.0f;
     private bool shouldPublish = false;
+
+    // Request image with GPU readback
+    private CommandBuffer cmd;
+    private AsyncGPUReadbackRequest request;
+    private RenderTexture renderTexture;
+    private RenderTexture tempTexture;
+    private Material depthScaler;
 
     // Unity running environment
     private bool isOpenGL;
 
     void Start()
     {
-        /*
         // Check to make sure the camera type matches the image format
         Debug.Assert((
             (format == ImageFormat.RGB && cam.tag != "DepthCamera") 
             || (format == ImageFormat.Depth && cam.tag == "DepthCamera") 
         ), "Camera type does not match the image format");
-        */
 
         // Get ROS connection static instance
         ros = ROSConnection.GetOrCreateInstance();
         ros.RegisterPublisher<ImageMsg>(cameraTopicName);
         ros.RegisterPublisher<CameraInfoMsg>(cameraInfoTopicName);
 
-        // Initialize container
-        cmd = new CommandBuffer();
-        rgbTexture = new RenderTexture(
-            width, height, 24, RenderTextureFormat.ARGB32
-        );
-        depthTexture = new RenderTexture(
-            width, height, 24, RenderTextureFormat.RFloat
-        );
-        renderTexture = (format == ImageFormat.RGB)? rgbTexture : depthTexture;
-
         // Initialize image message
         image = new ImageMsg();
         image.header = new HeaderMsg(
-            Clock.GetCount(), new TimeStamp(Clock.time), frameId
+            0, new TimeStamp(Clock.time), frameId
         );
         image.height = (uint) height;
         image.width = (uint) width;
@@ -121,6 +113,26 @@ public class ImagePublisher : MonoBehaviour
         // Rate
         publishPeriod = 1.0f / publishRate;
 
+        // Initialize sampler and container for acquiring image messages
+        cmd = new CommandBuffer();
+        if (format == ImageFormat.RGB)
+        {
+            // render texture
+            renderTexture = new RenderTexture(
+                width, height, 0, RenderTextureFormat.ARGB32
+            );
+        }
+        else
+        {
+            // render texture
+            renderTexture = new RenderTexture(
+                width, height, 0, RenderTextureFormat.RFloat
+            );
+            // depth scaler
+            depthScaler = new Material(Shader.Find("Custom/DepthScaler"));
+            depthScaler.SetFloat("_FarClipPlane", cam.farClipPlane);
+        }
+
         // Check Unity running environment
         // If the project is run under OpenGL, the image needs to be flipped
         // https://docs.unity3d.com/Manual/SL-PlatformDifferences.html
@@ -135,12 +147,9 @@ public class ImagePublisher : MonoBehaviour
     void FixedUpdate()
     {
         // Check publish time
-        elapsedTime += Time.fixedDeltaTime;
-        if (elapsedTime >= publishPeriod)
-        {
-            shouldPublish = true;
-            elapsedTime -= publishPeriod;
-        }
+        ROSUtils.CheckPublish(
+            ref shouldPublish, ref timer, Time.fixedDeltaTime, publishPeriod
+        );
     }
 
     void Update()
@@ -168,9 +177,29 @@ public class ImagePublisher : MonoBehaviour
                 // Blit the target texture with a vertical flip 
                 // (scale by -1 in Y direction, offset 1 in Y direction)
                 cmd.Blit(
-                    cam.targetTexture, renderTexture, 
-                    new Vector2(1, -1), new Vector2(0, 1)
+                    cam.targetTexture, 
+                    renderTexture, 
+                    new Vector2(1, -1), 
+                    new Vector2(0, 1)
                 );
+            }
+
+            // If depth, scale back to meter unit
+            if (format == ImageFormat.Depth)
+            {
+                // create a temporary depth render texture
+                tempTexture = RenderTexture.GetTemporary(
+                    renderTexture.descriptor
+                );
+                // scale all values by camera far plane
+                cmd.Blit(
+                    renderTexture,
+                    tempTexture,
+                    depthScaler
+                );
+                cmd.Blit(tempTexture, renderTexture);
+                // Release the temporary render texture
+                RenderTexture.ReleaseTemporary(tempTexture);
             }
 
             Graphics.ExecuteCommandBuffer(cmd);
@@ -182,42 +211,12 @@ public class ImagePublisher : MonoBehaviour
         //  is then disposed of in the following frame.)
         if (request.done && !request.hasError)
         {
-            // Update image messages
-            image.header = new HeaderMsg(
-                Clock.GetCount(), new TimeStamp(Clock.time), frameId
-            );
-            cameraInfo.header = image.header;
+            // Update image messages header
+            image.header.Update();
+            cameraInfo.header.Update();
 
             // Convert request data to byte array
-            // If RGB, copy directly
-            if (format == ImageFormat.RGB)
-            {
-                request.GetData<byte>().CopyTo(imageBytes);
-            }
-            // If depth, scale back to meter unit
-            // and convert to byte array
-            if (format == ImageFormat.Depth)
-            {
-                request.GetData<float>().CopyTo(depthFloats);
-                for (int i = 0; i < depthFloats.Length; i++)
-                {
-                    // If the depth is 0, out of far range
-                    // Set it to infinity (https://ros.org/reps/rep-0117.html)
-                    if (depthFloats[i] == 0)
-                    {
-                        depthFloats[i] = float.PositiveInfinity;
-                    }
-                    // Scale by the camera far plane for meter values
-                    else
-                    {
-                        depthFloats[i] *= cam.farClipPlane;
-                    }
-                }
-                Buffer.BlockCopy(
-                    depthFloats, 0, imageBytes, 0, imageBytes.Length
-                );
-            }
-
+            request.GetData<byte>().CopyTo(imageBytes);
             // Set the data of the image message
             image.data = imageBytes;
 

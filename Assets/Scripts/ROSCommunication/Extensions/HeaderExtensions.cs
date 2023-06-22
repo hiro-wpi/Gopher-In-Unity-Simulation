@@ -1,3 +1,8 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+using Unity.Robotics.Core;
 using RosMessageTypes.Std;
 
 /// <summary>
@@ -11,6 +16,6 @@ public static class HeaderExtensions
     public static void Update(this HeaderMsg header)
     {
         header.seq++;
-        header.stamp = timer.Now();
+        header.stamp = new TimeStamp(Clock.time);
     }
 }

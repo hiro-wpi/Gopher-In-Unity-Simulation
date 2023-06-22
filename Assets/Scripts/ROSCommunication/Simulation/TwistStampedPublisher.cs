@@ -46,8 +46,9 @@ public class TwistStampedPublisher : MonoBehaviour
         // Initialize message
         twistStamped = new TwistStampedMsg
         {
-            header = new HeaderMsg(Clock.GetCount(), 
-                                   new TimeStamp(Clock.time), frameId)
+            header = new HeaderMsg(
+                0, new TimeStamp(Clock.time), frameId
+            )
         };
 
         deltaTime = 1f/publishRate;
@@ -56,8 +57,7 @@ public class TwistStampedPublisher : MonoBehaviour
 
     private void PublishTwistStamped()
     {
-        twistStamped.header = new HeaderMsg(Clock.GetCount(), 
-                                            new TimeStamp(Clock.time), frameId);
+        twistStamped.header.Update();
 
         // Linear
         linearVelocity = (publishedTransform.position - previousPosition)

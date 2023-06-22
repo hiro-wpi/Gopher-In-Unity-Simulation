@@ -35,8 +35,9 @@ public class PoseStampedPublisher : MonoBehaviour
         // Initialize message
         poseStamped = new PoseStampedMsg
         {
-            header = new HeaderMsg(Clock.GetCount(),
-                                   new TimeStamp(Clock.time), frameID)
+            header = new HeaderMsg(
+                0, new TimeStamp(Clock.time), frameID
+            )
         };
 
         InvokeRepeating("PublishPoseStamped", 1f, 1f/publishRate);
@@ -44,8 +45,7 @@ public class PoseStampedPublisher : MonoBehaviour
 
     private void PublishPoseStamped()
     {
-        poseStamped.header = new HeaderMsg(Clock.GetCount(), 
-                                           new TimeStamp(Clock.time), frameID);
+        poseStamped.header.Update();
 
         poseStamped.pose.position = publishedTransform.position.To<FLU>();
         poseStamped.pose.orientation = publishedTransform.rotation.To<FLU>();
