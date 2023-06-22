@@ -13,6 +13,8 @@ public class RGBCamera : MonoBehaviour
 {
     // Camera
     private Camera cam;
+    [SerializeField] private int resolutionWidth = 1280;
+    [SerializeField] private int resolutionHeight = 720;
 
     void Awake()
     {
@@ -25,9 +27,11 @@ public class RGBCamera : MonoBehaviour
 
         // Use a higher precision 1-channel render texture for depth camera
         cam.targetTexture = new RenderTexture(
-            cam.pixelWidth, cam.pixelHeight, 24, RenderTextureFormat.ARGB32
+            resolutionWidth, resolutionHeight, 24, RenderTextureFormat.ARGB32
         );
     }
+
+    void Start() {}
 
     void Update() {}
 }

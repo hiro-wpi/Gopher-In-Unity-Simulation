@@ -24,20 +24,12 @@ Shader "Custom/DepthShader"
             {
                 // The vertex positions in object space.
                 float4 positionOS : POSITION;
-
-                float2 uv : TEXCOORD0;
             };
 
             struct Varyings
             {
                 // The vertex position in screen space
                 float4 positionCS : SV_POSITION;
-                float4 screenPos : TEXCOORD1;
-                float4 viewDir : TEXCOORD2;
-                
-                float3 viewDirVec: TEXCOORD3;
-
-                float2 uv : TEXCOORD0;
             };
 
             Varyings vert(Attributes input)
@@ -46,16 +38,7 @@ Shader "Custom/DepthShader"
                 // The TransformObjectToHClip function transforms vertex positions
                 // from object space to homogenous clip space.
                 output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
-                // Compute coordinates w.r.t. to Screen coords
-                output.screenPos = ComputeScreenPos(output.positionCS);
-                
-
-                float3 positionWS = TransformObjectToWorld(input.positionOS.xyz);
-                output.viewDirVec = _WorldSpaceCameraPos - positionWS;
-
-                // Compute view direction
-                output.viewDir = mul (unity_CameraInvProjection, float4 (input.uv, 1.0, 1.0));
-
+ 
                 return output;
             }
 
@@ -73,8 +56,9 @@ Shader "Custom/DepthShader"
                 // and normalize depth values to [0, 1] range by dividing far plane
                 depth = Linear01Depth(depth, _ZBufferParams);
 
-                // Set the color to black in the proximity to the far clipping plane.
-                if(depth > 0.9999)
+                // Set the color to black in the proximity 
+                // to the near and far clipping plane.
+                if(depth > 0.9999 || depth < 0.0001)
                     return 0;
 
                 return depth;

@@ -15,11 +15,9 @@ public class DepthCamera : MonoBehaviour
 {
     // Camera
     private Camera cam;
-
-    // Render texture
-    [SerializeField] private bool useFloatRenderTexture = true;
+    [SerializeField] private int resolutionWidth = 1280;
+    [SerializeField] private int resolutionHeight = 720;
     
-
     void Awake()
     {
         cam = GetComponent<Camera>();
@@ -30,13 +28,12 @@ public class DepthCamera : MonoBehaviour
         tag = "DepthCamera";
         
         // Use a higher precision 1-channel render texture for depth camera
-        if (useFloatRenderTexture)
-        {
-            cam.targetTexture = new RenderTexture(
-                cam.pixelWidth, cam.pixelHeight, 32, RenderTextureFormat.RFloat
-            );
-        }
+        cam.targetTexture = new RenderTexture(
+            resolutionWidth, resolutionHeight, 32, RenderTextureFormat.RFloat
+        );
     }
+
+    void Start() {}
 
     void Update() {}
 }
