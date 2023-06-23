@@ -135,6 +135,8 @@ public class TestGUI : MonoBehaviour
             autoNavigation.SetToNormalFootprint();
         if (Input.GetKeyDown(KeyCode.K))
             autoNavigation.SetToBaseWithCartFootprint();
+        if (Input.GetKeyDown(KeyCode.L))
+            autoNavigation.SetToBaseWithIVFootprint();
 
         // Set goal
         if (Input.GetMouseButtonDown(0))
