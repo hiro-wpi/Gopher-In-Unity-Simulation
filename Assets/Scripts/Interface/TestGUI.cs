@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 // TODO
 //      Find a better implementation for changing the base footprint.
@@ -26,11 +27,15 @@ public class TestGUI : MonoBehaviour
     private GameObject minimapCameraObject;
     private Camera minimapCamera;
 
+    private GopherControl gopherControl;
+
     // Robot
     public GameObject robot;
     public GameObject robotVisualization;
     // public GameObject robotFollower;
-    public ROSAutoNavigation autoNavigation;
+    private ROSAutoNavigation autoNavigation;
+
+    private DynamicFootprint dynamicFootprint;
     
     // Path visualization
     /*
@@ -45,6 +50,11 @@ public class TestGUI : MonoBehaviour
 
         // planner
         autoNavigation = robot.GetComponentInChildren<ROSAutoNavigation>();
+
+        gopherControl = robot.GetComponentInChildren<GopherControl>();
+        gopherControl.ChangeAutoNavigationActive(true);
+
+        dynamicFootprint = robot.GetComponentInChildren<DynamicFootprint>();
 
         // map render texture
         //      create a live feed of an image that has the same dimentions 
@@ -123,20 +133,20 @@ public class TestGUI : MonoBehaviour
             return;
 
         // Check key input
-        if (Input.GetKeyDown(KeyCode.G))
-            autoNavigation.ResumeNavigation();
-        if (Input.GetKeyDown(KeyCode.H))
-            autoNavigation.PauseNavigation();
-        if (Input.GetKeyDown(KeyCode.T))
-            autoNavigation.StopNavigation();
+        // if (Input.GetKeyDown(KeyCode.G))
+        //     autoNavigation.ResumeNavigation();
+        // if (Input.GetKeyDown(KeyCode.H))
+        //     autoNavigation.PauseNavigation();
+        // if (Input.GetKeyDown(KeyCode.T))
+        //     autoNavigation.StopNavigation();
 
         // Changing Footprint
-        if (Input.GetKeyDown(KeyCode.J))
-            autoNavigation.SetToNormalFootprint();
-        if (Input.GetKeyDown(KeyCode.K))
-            autoNavigation.SetToBaseWithCartFootprint();
-        if (Input.GetKeyDown(KeyCode.L))
-            autoNavigation.SetToBaseWithIVFootprint();
+        // if (Input.GetKeyDown(KeyCode.J))
+        //     dynamicFootprint.SetToNormalFootprint();
+        // if (Input.GetKeyDown(KeyCode.K))
+        //     dynamicFootprint.SetToBaseWithCartFootprint();
+        // if (Input.GetKeyDown(KeyCode.L))
+        //     dynamicFootprint.SetToBaseWithIVFootprint();
 
         // Set goal
         if (Input.GetMouseButtonDown(0))
@@ -150,6 +160,57 @@ public class TestGUI : MonoBehaviour
         DrawPath(autoNavigation.LocalWaypoints, localLineRenderer);
         DrawPath(autoNavigation.GlobalWaypoints, globalLineRenderer);
     }
+
+    // Input Actions
+    // public void OnResumeNavigation(InputAction.CallbackContext context)
+    // {
+    //     if (context.performed)
+    //     {
+    //         autoNavigation.ResumeNavigation();
+    //     }
+    // }
+
+    // public void OnPauseNavigation(InputAction.CallbackContext context)
+    // {
+    //     if (context.performed)
+    //     {
+    //         autoNavigation.PauseNavigation();
+    //     }
+    // }
+
+
+    // public void OnStopNavigation(InputAction.CallbackContext context)
+    // {
+    //     if (context.performed)
+    //     {
+    //         autoNavigation.StopNavigation();
+    //     }
+    // }
+
+    // public void OnSetNormalFootprint(InputAction.CallbackContext context)
+    // {
+    //     if (context.performed)
+    //     {
+    //         dynamicFootprint.SetToNormalFootprint();
+    //     }
+    // }
+
+    // public void OnSetCartFootprint(InputAction.CallbackContext context)
+    // {
+    //     if (context.performed)
+    //     {
+    //         dynamicFootprint.SetToBaseWithCartFootprint();
+    //     }   
+    // }
+
+    // public void OnSetIVFootprint(InputAction.CallbackContext context)
+    // {
+    //     if (context.performed)
+    //     {
+    //         dynamicFootprint.SetToBaseWithIVFootprint();
+    //     }   
+    // }
+
 
     private void SetNavigationGoal(Vector3 point)
     {

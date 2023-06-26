@@ -20,6 +20,7 @@ public class GopherControl : MonoBehaviour
     private InputActionMap leftArmInputMap;
     private InputActionMap rightArmInputMap;
     private InputActionMap cameraInputMap;
+    private InputActionMap autoNavigationMap;
     private InputActionMap[] actionMaps;
 
     // Available control modes
@@ -29,6 +30,7 @@ public class GopherControl : MonoBehaviour
     public Mode ControlMode { get; private set; } = Mode.Base;
     [field: SerializeField]
     public bool MainCameraEnabled { get; private set; } = false;
+    public bool AutoNavigationEnabled { get; private set; } = false;
 
     void OnEnable()
     {
@@ -38,6 +40,7 @@ public class GopherControl : MonoBehaviour
         leftArmInputMap = playerInput.actions.FindActionMap("GopherLeftArm");
         rightArmInputMap = playerInput.actions.FindActionMap("GopherRightArm");
         cameraInputMap = playerInput.actions.FindActionMap("GopherCamera");
+        autoNavigationMap = playerInput.actions.FindActionMap("GopherAutoNavigation");
         // store it the same as Mode for easy enable/disable later
         actionMaps = new InputActionMap[] {
             baseInputMap, chestInputMap, leftArmInputMap, rightArmInputMap
@@ -45,6 +48,9 @@ public class GopherControl : MonoBehaviour
 
         // Default to base mode
         SetMode(Mode.Base);
+        
+        // For Testing, Enable AutoNavigation
+        // ChangeAutoNavigationActive(true);
     }
 
     // Setting Mode
@@ -75,6 +81,19 @@ public class GopherControl : MonoBehaviour
         else
         {
             cameraInputMap.Disable();
+        }
+    }
+
+    public void ChangeAutoNavigationActive(bool active)
+    {
+        AutoNavigationEnabled = active;
+        if (active)
+        {
+            autoNavigationMap.Enable();
+        }
+        else
+        {
+            autoNavigationMap.Disable();
         }
     }
 
