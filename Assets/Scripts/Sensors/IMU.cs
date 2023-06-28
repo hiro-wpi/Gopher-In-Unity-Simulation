@@ -12,9 +12,8 @@ public class IMU : MonoBehaviour
     private Rigidbody rb;
 
     // Parameter
-    [SerializeField] private int updateRate = 30;
-    private float scanTime;
-    private float elapsedTime = 0f;
+    [SerializeField] private int updateRate = 10;
+    private Timer timer;
 
     // Noise
     [SerializeField] private float linearBiasMean = 0.1f;
@@ -48,18 +47,18 @@ public class IMU : MonoBehaviour
         }
 
         // update rate
-        scanTime = 1.0f / updateRate;
+        timer = new Timer(updateRate);
     }
 
     void FixedUpdate()
     {
         // Time reached check
-        elapsedTime += Time.fixedDeltaTime;
-        if (elapsedTime < scanTime)
+        timer.UpdateTimer(Time.fixedDeltaTime);
+        if (!timer.ShouldProcess)
         {
             return;
         }
-        elapsedTime -= scanTime;
+        timer.ShouldProcess = false;
 
         // Orientation
         Orientation = robot.transform.rotation;

@@ -18,21 +18,20 @@ public class TwistStampedPublisher : MonoBehaviour
     // ROS Connector
     private ROSConnection ros;
     // Variables required for ROS communication
-    public string twistStampedTopicName = "model_twist";
+    [SerializeField] private string twistStampedTopicName = "model_twist";
+    [SerializeField] private string frameID = "model_twist";
 
+    // Rigidbody
+    [SerializeField] private Rigidbody rb;
     // Transform
-    public Transform publishedTransform;
-    private Vector3 previousPosition;
-    private Vector3 previousRotation;
     private Vector3 linearVelocity;
     private Vector3 angularVelocity;
 
     // Message
     private TwistStampedMsg twistStamped;
-    private string frameId = "model_twist";
-    public float publishRate = 10f;
-    private float deltaTime;
-
+    // rate
+    [SerializeField] private int publishRate = 10;
+    private Timer timer;
 
     void Start()
     {
@@ -40,19 +39,27 @@ public class TwistStampedPublisher : MonoBehaviour
         ros = ROSConnection.GetOrCreateInstance();
         ros.RegisterPublisher<TwistStampedMsg>(twistStampedTopicName);
 
-        previousPosition = publishedTransform.position;
-        previousRotation = publishedTransform.rotation.eulerAngles;
-
         // Initialize message
         twistStamped = new TwistStampedMsg
         {
             header = new HeaderMsg(
-                0, new TimeStamp(Clock.time), frameId
+                0, new TimeStamp(Clock.time), frameID
             )
         };
 
-        deltaTime = 1f/publishRate;
-        InvokeRepeating("PublishTwistStamped", 1f, deltaTime);
+        // Rate
+        timer = new Timer(publishRate);
+    }
+
+    void FixedUpdate()
+    {
+        timer.UpdateTimer(Time.fixedDeltaTime);
+
+        if (timer.ShouldProcess)
+        {
+            PublishTwistStamped();
+            timer.ShouldProcess = false;
+        }
     }
 
     private void PublishTwistStamped()
@@ -60,19 +67,13 @@ public class TwistStampedPublisher : MonoBehaviour
         twistStamped.header.Update();
 
         // Linear
-        linearVelocity = (publishedTransform.position - previousPosition)
-                         /deltaTime;
-        linearVelocity = publishedTransform.InverseTransformDirection(linearVelocity);
-        previousPosition = publishedTransform.position;
+        linearVelocity = rb.velocity;
+        linearVelocity = rb.transform.InverseTransformDirection(linearVelocity);
 
         // Angular
-        angularVelocity = (publishedTransform.rotation.eulerAngles - previousRotation)
-                          /deltaTime * Mathf.Deg2Rad;
-        angularVelocity = publishedTransform.InverseTransformDirection(angularVelocity);
-        // Using Vector3 euler angles instead of Quatenion to compute angular velocity
-        // Need to adjust the result
+        angularVelocity = rb.angularVelocity;
+        angularVelocity = rb.transform.InverseTransformDirection(angularVelocity);
         angularVelocity = -angularVelocity;
-        previousRotation = publishedTransform.rotation.eulerAngles;
 
         twistStamped.twist.linear = linearVelocity.To<FLU>();
         twistStamped.twist.angular = angularVelocity.To<FLU>();

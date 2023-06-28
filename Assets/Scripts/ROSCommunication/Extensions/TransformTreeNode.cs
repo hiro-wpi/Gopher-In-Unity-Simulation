@@ -2,45 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using Unity.Robotics.Core;
 using Unity.Robotics.UrdfImporter;
-using RosMessageTypes.Geometry;
 
 /// <summary>
 ///     This script provides a tf node class.
 /// </summary>
 class TransformTreeNode
 {
-    public readonly GameObject SceneObject;
+    public readonly GameObject NodeObject;
     public readonly List<TransformTreeNode> Children;
-    public Transform Transform => SceneObject.transform;
-    public string name => SceneObject.name;
+
+    public Transform Transform => NodeObject.transform;
+    public string Name => NodeObject.name;
     public bool IsALeafNode => Children.Count == 0;
 
-    public TransformTreeNode(GameObject sceneObject)
+    public TransformTreeNode(GameObject nodeObject)
     {
-        SceneObject = sceneObject;
+        NodeObject = nodeObject;
+
         Children = new List<TransformTreeNode>();
         PopulateChildNodes(this);
     }
 
-    public static TransformStampedMsg ToTransformStamped(TransformTreeNode node)
+    private static void PopulateChildNodes(TransformTreeNode tfNode)
     {
-        return node.Transform.ToROSTransformStamped(Clock.time);
-    }
-
-    static void PopulateChildNodes(TransformTreeNode tfNode)
-    {
-        var parentTransform = tfNode.Transform;
-        for (var childIndex = 0; childIndex < parentTransform.childCount; ++childIndex)
+        Transform parentTransform = tfNode.Transform;
+        for (int childIndex = 0; childIndex < parentTransform.childCount; ++childIndex)
         {
-            var childTransform = parentTransform.GetChild(childIndex);
-            var childGO = childTransform.gameObject;
+            Transform childTransform = parentTransform.GetChild(childIndex);
+            GameObject childGO = childTransform.gameObject;
 
-            // If game object has a URDFLink attached, it's a link in the transform tree
+            // If game object has a URDFLink attached,
+            // it's a link in the transform tree
             if (childGO.TryGetComponent(out UrdfLink _))
             {
-                var childNode = new TransformTreeNode(childGO);
+                TransformTreeNode childNode = new(childGO);
                 tfNode.Children.Add(childNode);
             }
         }

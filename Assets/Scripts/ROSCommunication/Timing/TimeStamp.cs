@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+
 using RosMessageTypes.BuiltinInterfaces;
 
 namespace Unity.Robotics.Core
@@ -23,7 +26,7 @@ namespace Unity.Robotics.Core
             NanoSeconds = (uint)nsec;
         }
 
-        // (From a ROS2 Time message)
+        // (From a ROS Time message)
         TimeStamp(uint sec, uint nsec)
         {
             Seconds = sec;

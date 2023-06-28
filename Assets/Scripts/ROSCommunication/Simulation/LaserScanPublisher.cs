@@ -23,6 +23,9 @@ public class LaserScanPublisher : MonoBehaviour
 
     // Message
     private LaserScanMsg laserScan;
+    // rate
+    [SerializeField] private int publishRate = 10;
+    private Timer timer;
 
     void Start()
     {
@@ -53,17 +56,17 @@ public class LaserScanPublisher : MonoBehaviour
             intensities     = intensities
         };
 
-        // Using InvokeRepeating to publish messages at a fixed rate,
-        // would cause asynchronous scan messages to be published when
-        // the robot is moving (current tf + last scan result).
-        // InvokeRepeating("PublishScan", 1f, 1f/publishRate);
-
-        // Use event based publishing to publish messages instead.
-        // The publish rate is controlled by the laser update rate.
+        // Use event based publishing to publish messages.
+        // The publish rate is controlled by both 
+        // the laser update rate, and the self publish rate.
         laser.ScanFinishedEvent += PublishScan;
+        timer = new Timer(publishRate);
     }
 
-    void Update() {}
+    void FixedUpdate() 
+    {
+        timer.UpdateTimer(Time.fixedDeltaTime);
+    }
 
     void OnDestroy()
     {
@@ -72,10 +75,11 @@ public class LaserScanPublisher : MonoBehaviour
 
     private void PublishScan()
     {
-        if (!this.isActiveAndEnabled)
+        if (!timer.ShouldProcess)
         {
             return;
         }
+        timer.ShouldProcess = false;
 
         // Publish message
         laserScan.header.Update();

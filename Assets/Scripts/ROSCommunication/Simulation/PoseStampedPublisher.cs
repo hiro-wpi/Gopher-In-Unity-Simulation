@@ -16,15 +16,17 @@ public class PoseStampedPublisher : MonoBehaviour
     // ROS Connector
     private ROSConnection ros;
     // Variables required for ROS communication
-    public string poseStampedTopicName = "model_pose";
-    
+    [SerializeField] private string poseStampedTopicName = "model_pose";
+    [SerializeField] private string frameID = "model_pose";
+
     // Transform
-    public Transform publishedTransform;
+    [SerializeField] private Transform publishedTransform;
 
     // Message
     private PoseStampedMsg poseStamped;
-    private string frameID = "model_pose";
-    public float publishRate = 10f;
+    // rate
+    [SerializeField] private int publishRate = 10;
+    private Timer timer;
 
     void Start()
     {
@@ -40,7 +42,19 @@ public class PoseStampedPublisher : MonoBehaviour
             )
         };
 
-        InvokeRepeating("PublishPoseStamped", 1f, 1f/publishRate);
+        // Rate
+        timer = new Timer(publishRate);
+    }
+
+    void FixedUpdate()
+    {
+        timer.UpdateTimer(Time.fixedDeltaTime);
+
+        if (timer.ShouldProcess)
+        {
+            PublishPoseStamped();
+            timer.ShouldProcess = false;
+        }
     }
 
     private void PublishPoseStamped()

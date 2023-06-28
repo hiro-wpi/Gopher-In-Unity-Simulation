@@ -24,6 +24,9 @@ public class IMUPublisher : MonoBehaviour
 
     // Message
     private ImuMsg iMUMsg;
+    // rate
+    [SerializeField] private int publishRate = 10;
+    private Timer timer;
 
     void Start()
     {
@@ -37,17 +40,17 @@ public class IMUPublisher : MonoBehaviour
             0, new TimeStamp(Clock.time), iMULinkId
         );
 
-        // Using InvokeRepeating to publish messages at a fixed rate,
-        // would cause asynchronous messages to be published when
-        // the robot is moving (current tf + last data result).
-        // InvokeRepeating("Publish", 1f, 1f/publishRate);
-
-        // Use event based publishing to publish messages instead.
-        // The publish rate is controlled by the laser update rate.
+        // Use event based publishing to publish messages.
+        // The publish rate is controlled by both 
+        // the laser update rate, and the self publish rate.
         iMU.DataUpdatedEvent += Publish;
+        timer = new Timer(publishRate);
     }
 
-    void Update(){}
+    void FixedUpdate()
+    {
+        timer.UpdateTimer(Time.fixedDeltaTime);
+    }
 
     void OnDestroy()
     {
@@ -56,10 +59,11 @@ public class IMUPublisher : MonoBehaviour
 
     private void Publish()
     {
-        if (!this.isActiveAndEnabled)
+        if (!timer.ShouldProcess)
         {
             return;
         }
+        timer.ShouldProcess = false;
 
         // Publish message
         iMUMsg.header.Update();

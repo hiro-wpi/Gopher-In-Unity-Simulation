@@ -21,8 +21,7 @@ public class Laser : MonoBehaviour
 
     // Scan parameters
     [SerializeField] private int updateRate = 10;
-    private float scanTime;
-    private float elapsedTime = 0f;
+    private Timer timer;
     [SerializeField] private int samples = 180;
     [SerializeField] private float angleMin = -1.5708f;
     [SerializeField] private float angleMax = 1.5708f;
@@ -117,7 +116,7 @@ public class Laser : MonoBehaviour
         }
 
         // Update rate
-        scanTime = 1f / updateRate;
+        timer = new Timer(updateRate);
     }
 
     void OnEnable()
@@ -139,13 +138,13 @@ public class Laser : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Time reached + Job finished check
-        elapsedTime += Time.fixedDeltaTime;
-        if (elapsedTime < scanTime || !ProcessHitsJobHandle.IsCompleted)
+        // Time reached check
+        timer.UpdateTimer(Time.fixedDeltaTime);
+        if (!timer.ShouldProcess || !ProcessHitsJobHandle.IsCompleted)
         {
             return;
         }
-        elapsedTime -= scanTime;
+        timer.ShouldProcess = false;
 
         // Schedule jobs to send raycast commands
         raycastCommands = new(samples, Allocator.TempJob);
@@ -223,7 +222,7 @@ public class Laser : MonoBehaviour
                     laserGameObject.transform.position, 
                     ranges[i] * rotation, 
                     color, 
-                    scanTime
+                    1f / updateRate
                 );
             }
         }

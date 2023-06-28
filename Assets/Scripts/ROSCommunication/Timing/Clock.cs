@@ -104,11 +104,5 @@ namespace Unity.Robotics.Core
             Mode = originalMode;
             return t;
         }
-
-        public static uint GetCount()
-        {
-            count++;
-            return count;
-        }
     }
 }

@@ -8,28 +8,26 @@ using RosMessageTypes.Geometry;
 
 /// <summary>
 ///     This script subscribes to twist command
-///     and use robot controller to 
+///     and use base controller to move the base
 /// </summary>
 public class TwistSubscriber : MonoBehaviour
 {
     // ROS Connector
     private ROSConnection ros;
     // Variables required for ROS communication
-    public string twistTopicName = "cmd_vel";
+    [SerializeField] private string twistTopicName = "cmd_vel";
 
     // public ArticulationWheelController wheelController;
-    public ArticulationBaseController baseController;
+    [SerializeField] private ArticulationBaseController baseController;
     private Vector3 targetLinearSpeed;
     private Vector3 targetAngularSpeed;
-
-    private bool pause = false;
-    
     
     void Start()
     {
         // Get ROS connection static instance
         ros = ROSConnection.GetOrCreateInstance();
 
+        // Init
         targetLinearSpeed = new Vector3();
         targetAngularSpeed = new Vector3();
         
@@ -38,13 +36,6 @@ public class TwistSubscriber : MonoBehaviour
     
     void FixedUpdate()
     {
-        // wheelController.SetRobotSpeedStep(targetLinearSpeed, targetAngularSpeed);
-
-        if(pause)
-        {
-            return;
-        }
-
         baseController.SetVelocity(targetLinearSpeed, targetAngularSpeed);
     }
 
@@ -53,25 +44,4 @@ public class TwistSubscriber : MonoBehaviour
         targetLinearSpeed = twist.linear.From<FLU>();
         targetAngularSpeed = twist.angular.From<FLU>();
     }
-
-    // Pause or resume listening to the cmd_vel topic, and setting the base controller velocity
-    public void Pause(bool stop = true)
-    {
-        pause = stop;
-        if(pause)
-        {
-            baseController.SetVelocity(Vector3.zero, Vector3.zero);
-        }
-    }
-
-    // void FixedUpdate()
-    // {
-    //     wheelController.SetRobotSpeedStep(targetLinearSpeed, targetAngularSpeed);
-    // }
-
-    // private void UpdateVelocity(TwistMsg twist)
-    // {
-    //     targetLinearSpeed = twist.linear.From<FLU>().z;
-    //     targetAngularSpeed = twist.angular.From<FLU>().y;
-    // }
 }

@@ -13,7 +13,7 @@ public class StateReader : MonoBehaviour
 {
     [SerializeField] private int updateRate = 10;
     private float deltaTime;
-    private float elapsedTime = 0f;
+    private Timer timer;
 
     // Robot
     [SerializeField] private GameObject robot;
@@ -72,17 +72,17 @@ public class StateReader : MonoBehaviour
             JointNames[i] = jointChain[i].jointName;
         }
 
-        // Update period
-        deltaTime = 1f / updateRate;
+        // Rate
+        timer = new Timer(updateRate);
     }
 
     void FixedUpdate() 
     {
-        elapsedTime += Time.fixedDeltaTime;
-        if (elapsedTime >= deltaTime)
+        timer.UpdateTimer(Time.fixedDeltaTime);
+        if (timer.ShouldProcess)
         {
             ReadState();
-            elapsedTime -= Time.fixedDeltaTime;
+            timer.ShouldProcess = false;
         }
     }
 

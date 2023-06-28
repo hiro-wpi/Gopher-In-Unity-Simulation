@@ -19,11 +19,11 @@ public class JointStatePublisher : MonoBehaviour
     // ROS Connector
     private ROSConnection ros;
     // Variables required for ROS communication
-    public string jointStateTopicName = "joint_states";
-    public string frameId = "base_link";
+    [SerializeField] private string jointStateTopicName = "joint_states";
+    [SerializeField] private string frameId = "base_link";
 
     // Joints
-    public GameObject jointRoot;
+    [SerializeField] private GameObject jointRoot;
     private UrdfJoint[] jointChain;
     private int jointStateLength;
     string[] names;
@@ -32,8 +32,10 @@ public class JointStatePublisher : MonoBehaviour
     float[] forces;
 
     // Message
-    private JointStateMsg jointState; 
-    public float publishRate = 10f;
+    private JointStateMsg jointState;
+    // rate
+    [SerializeField] private int publishRate = 10;
+    private Timer timer;
 
     void Start()
     {
@@ -45,9 +47,9 @@ public class JointStatePublisher : MonoBehaviour
         // Use UrdfJoint because ArticulationBody provides
         // link names but not joint names
         jointChain = jointRoot.GetComponentsInChildren<UrdfJoint>();
-        jointChain = jointChain.Where(joint => 
-                        (joint.JointType != UrdfJoint.JointTypes.Fixed)).ToArray();
-
+        jointChain = jointChain.Where(
+            joint => (joint.JointType != UrdfJoint.JointTypes.Fixed)
+        ).ToArray();
         jointStateLength = jointChain.Length;
         
         positions = new float[jointStateLength];
@@ -58,6 +60,8 @@ public class JointStatePublisher : MonoBehaviour
         // Initialize message
         for (int i = 0; i < jointStateLength; ++i)
         {
+            names[i] = jointChain[i].jointName;
+
             // TEMP Fix
             // names[i] = jointChain[i].jointName;
             string name = jointChain[i].jointName;
@@ -76,11 +80,19 @@ public class JointStatePublisher : MonoBehaviour
             effort = new double[jointStateLength]
         };
 
-        InvokeRepeating("PublishJointStates", 1f, 1f/publishRate);
+        // Rate
+        timer = new Timer(publishRate);
     }
 
-    void Update()
+    void FixedUpdate() 
     {
+        timer.UpdateTimer(Time.fixedDeltaTime);
+
+        if (timer.ShouldProcess)
+        {
+            PublishJointStates();
+            timer.ShouldProcess = false;
+        }
     }
 
     private void PublishJointStates()

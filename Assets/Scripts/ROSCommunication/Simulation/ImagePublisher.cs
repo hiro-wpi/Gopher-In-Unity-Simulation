@@ -40,9 +40,7 @@ public class ImagePublisher : MonoBehaviour
     private float[] depthFloats;
     // rate
     [SerializeField] private int publishRate = 10;
-    private float publishPeriod;
-    private float timer = 0.0f;
-    private bool shouldPublish = false;
+    private Timer timer;
 
     // Request image with GPU readback
     private CommandBuffer cmd;
@@ -111,7 +109,7 @@ public class ImagePublisher : MonoBehaviour
         };
         
         // Rate
-        publishPeriod = 1.0f / publishRate;
+        timer = new Timer(publishRate);
 
         // Initialize sampler and container for acquiring image messages
         cmd = new CommandBuffer();
@@ -146,10 +144,7 @@ public class ImagePublisher : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Check publish time
-        ROSUtils.CheckPublish(
-            ref shouldPublish, ref timer, Time.fixedDeltaTime, publishPeriod
-        );
+        timer.UpdateTimer(Time.fixedDeltaTime);
     }
 
     void Update()
@@ -160,9 +155,9 @@ public class ImagePublisher : MonoBehaviour
         }
 
         // If publish time is reached => new request
-        if (shouldPublish && request.done)
+        if (timer.ShouldProcess && request.done)
         {
-            shouldPublish = false;
+            timer.ShouldProcess = false;
 
             // Request to read camera target texture
             cmd.Clear();

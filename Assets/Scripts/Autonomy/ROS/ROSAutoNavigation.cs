@@ -31,8 +31,6 @@ public class ROSAutoNavigation : AutoNavigation
     private bool isTwistSubscriberPaused = false;
     private bool isInitcialPosePublished = false;
 
-
-
     private bool updateWaypoints = true;
 
     void Start()
@@ -47,7 +45,7 @@ public class ROSAutoNavigation : AutoNavigation
         yield return new WaitForFixedUpdate();
 
         // Pause Twist Subscriber
-        twistSubscriber.Pause(true);
+        twistSubscriber.enabled = true;
         isTwistSubscriberPaused = true;
     }
 
@@ -142,7 +140,7 @@ public class ROSAutoNavigation : AutoNavigation
     private void UpdateNav(bool isNav)
     {
         IsNavigating = isNav;
-        twistSubscriber.Pause(!isNav);
+        twistSubscriber.enabled = isNav;
     }
 
     // Update the footprint of the robot used in the navigation stack by the DWA local planner

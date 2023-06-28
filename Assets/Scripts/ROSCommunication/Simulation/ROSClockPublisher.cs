@@ -1,82 +1,80 @@
-using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+
+using Unity.Robotics.Core;
 using Unity.Robotics.ROSTCPConnector;
 using RosMessageTypes.BuiltinInterfaces;
 using RosMessageTypes.Rosgraph;
-using Unity.Robotics.Core;
 
 /// <summary>
 ///     This script publishes simulation time
-///     TODO - Change to use InvokeRepeat()
 /// </summary>
 public class ROSClockPublisher : MonoBehaviour
 {
-    [SerializeField]
-    Clock.ClockMode m_ClockMode;
+    // ROS Connector
+    private ROSConnection ros;
 
-    [SerializeField, HideInInspector]
-    Clock.ClockMode m_LastSetClockMode;
-    
-    [SerializeField] 
-    double m_PublishRateHz = 100f;
+    // Clock mode
+    [SerializeField, ReadOnly] private Clock.ClockMode clockMode;
 
-    double m_LastPublishTimeSeconds;
+    // Message
+    private TimeMsg timeMsg;
+    // rate
+    [SerializeField] private int publishRate = 50;
+    private Timer timer;
 
-    ROSConnection m_ROS;
-
-    double PublishPeriodSeconds => 1.0f / m_PublishRateHz;
-
-    bool ShouldPublishMessage => Clock.FrameStartTimeInSeconds - PublishPeriodSeconds > m_LastPublishTimeSeconds;
-
+    // Only one Clock is allowed
     void OnValidate()
     {
         var clocks = FindObjectsOfType<ROSClockPublisher>();
         if (clocks.Length > 1)
         {
-            Debug.LogWarning("Found too many clock publishers in the scene, there should only be one!");
+            Debug.LogWarning(
+                "There should only be one clock publishers in the scene" + 
+                "Using the last one found."
+            );
+            for (int i = 0; i < clocks.Length - 1; i++)
+            {
+                clocks[i].enabled = false;
+            }
         }
-
-        if (Application.isPlaying && m_LastSetClockMode != m_ClockMode)
-        {
-            Debug.LogWarning("Can't change ClockMode during simulation! Setting it back...");
-            m_ClockMode = m_LastSetClockMode;
-        }
-        
-        SetClockMode(m_ClockMode);
     }
 
-    void SetClockMode(Clock.ClockMode mode)
-    {
-        Clock.Mode = mode;
-        m_LastSetClockMode = mode;
-    }
-
-    // Start is called before the first frame update
     void Start()
     {
-        SetClockMode(m_ClockMode);
-        m_ROS = ROSConnection.GetOrCreateInstance();
-        m_ROS.RegisterPublisher<ClockMsg>("clock");
+        // Get ROS connection static instance
+        ros = ROSConnection.GetOrCreateInstance();
+        ros.RegisterPublisher<ClockMsg>("clock");
+
+        Clock.Mode = clockMode;
+
+        // Initialize message
+        timeMsg = new TimeMsg();
+
+        // Rate
+        timer = new Timer(publishRate);
     }
 
-    void PublishMessage()
+    void FixedUpdate()
     {
-        var publishTime = Clock.time;
+        timer.UpdateTimer(Time.fixedDeltaTime);
+        if (timer.ShouldProcess)
+        {
+            PublishClock();
+            timer.ShouldProcess = false;
+        }
+    }
+
+    private void PublishClock()
+    {
         TimeStamp timeStamp = new TimeStamp(Clock.time);
-        var clockMsg = new TimeMsg
+        timeMsg = new TimeMsg
         {
             sec = timeStamp.Seconds,
             nanosec = timeStamp.NanoSeconds
         };
-        m_LastPublishTimeSeconds = publishTime;
-        m_ROS.Publish("clock", clockMsg);
-    }
 
-    void Update()
-    {
-        if (ShouldPublishMessage)
-        {
-            PublishMessage();
-        }
+        ros.Publish("clock", timeMsg);
     }
 }
