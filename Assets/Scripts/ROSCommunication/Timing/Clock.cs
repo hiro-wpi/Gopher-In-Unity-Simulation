@@ -34,8 +34,6 @@ namespace Unity.Robotics.Core
 
         public static double TimeSinceFrameStart => Now - FrameStartTimeInSeconds;
 
-        private static uint count = 0;
-
         public static double FrameStartTimeInSeconds
         {
             get
