@@ -39,9 +39,6 @@ public abstract class ChestController : MonoBehaviour
         speedFraction = Mathf.Clamp(
             fraction * speedFractionMultiplier, -1.0f, 1.0f
         );
-        Debug.Log("ChestController << SetSpeedFraction Function");
-        // Debug.Log(speedFraction);
-
     }
 
     // Position control

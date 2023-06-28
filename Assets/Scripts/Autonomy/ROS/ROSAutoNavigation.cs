@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
 ///     Autonomy for 2D navigation.
@@ -23,7 +24,6 @@ public class ROSAutoNavigation : AutoNavigation
     [SerializeField] private PoseWithCovarianceStampedPublisher poseWithCovarianceStampedPublisher;
 
     [SerializeField] private TwistSubscriber twistSubscriber;
-    [SerializeField] private PolygonPublisher polygonPublisher;
 
     [SerializeField] private GameObject robot;
 
@@ -59,6 +59,30 @@ public class ROSAutoNavigation : AutoNavigation
         isInitcialPosePublished = true;
     }
 
+    // TEMP TO BE REMOVED
+    public void OnResumeNavigation(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            ResumeNavigation();
+        }
+    }
+
+    public void OnPauseNavigation(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            PauseNavigation();
+        }
+    }
+
+    public void OnStopNavigation(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            StopNavigation();
+        }
+    }
 
     void Update()
     {
@@ -136,68 +160,11 @@ public class ROSAutoNavigation : AutoNavigation
         updateWaypoints = false;
     }
 
+    // TEMP
     // Update the navigation status of the robot, and pause listening to the twist subsriber
     private void UpdateNav(bool isNav)
     {
         IsNavigating = isNav;
         twistSubscriber.enabled = isNav;
-    }
-
-    // Update the footprint of the robot used in the navigation stack by the DWA local planner
-    public void UpdateFootprint(Vector3[] poly)
-    {
-        polygonPublisher.PublishPolygon(poly);
-    }
-
-    public void SetToNormalFootprint()
-    {   /*** 
-            WRT ROS it is:
-            
-            footprint:  [-0.2f, -0.32f, 0.0f]
-                        [-0.2f,  0.32f, 0.0f]
-                        [ 0.3f,  0.32f, 0.0f]
-                        [ 0.3f, -0.32f, 0.0f]
-
-            WRT Unity it should be:
-        
-            footprint:  [ 0.32f,  0.0f, -0.2f]
-                        [-0.32f,  0.0f, -0.2f]
-                        [-0.32f,  0.0f,  0.3f]
-                        [ 0.32f,  0.0f,  0.3f]
-        
-        ***/
-        Vector3[] polygon = {   new Vector3( 0.32f,  0.0f, -0.2f),
-                                new Vector3(-0.32f,  0.0f, -0.2f),
-                                new Vector3(-0.32f,  0.0f,  0.3f),
-                                new Vector3( 0.32f,  0.0f,  0.3f)};
-
-        UpdateFootprint(polygon);
-
-    }
-
-    public void SetToBaseWithCartFootprint()
-    {   /*** 
-            WRT ROS it is:
-            
-            footprint:  [-0.2f, -0.32f, 0.0f]
-                        [-0.2f,  0.32f, 0.0f]
-                        [ 1.5f,  0.32f, 0.0f]
-                        [ 1.5f, -0.32f, 0.0f]
-
-            WRT Unity it should be:
-        
-            footprint:  [ 0.32f,  0.0f, -0.2f]
-                        [-0.32f,  0.0f, -0.2f]
-                        [-0.32f,  0.0f,  1.5f]
-                        [ 0.32f,  0.0f,  1.5f]
-        
-        ***/
-        Vector3[] polygon = {   new Vector3( 0.32f,  0.0f, -0.2f),
-                                new Vector3(-0.32f,  0.0f, -0.2f),
-                                new Vector3(-0.32f,  0.0f,  1.5f),
-                                new Vector3( 0.32f,  0.0f,  1.5f)};
-
-        UpdateFootprint(polygon);
-
     }
 }
