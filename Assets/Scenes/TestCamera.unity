@@ -547,7 +547,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8340433699515969850, guid: 1967807ff55d0acfda395f110fd952d7, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8340433699774272202, guid: 1967807ff55d0acfda395f110fd952d7, type: 3}
       propertyPath: m_ParentAnchorPosition.x
@@ -1659,7 +1659,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 884424131}
-  - component: {fileID: 884424132}
   m_Layer: 15
   m_Name: Arm
   m_TagString: Untagged
@@ -1682,20 +1681,6 @@ Transform:
   m_Father: {fileID: 58020472}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &884424132
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 884424130}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 507ffa6a004cf7b508b4fcd81bfe0bfd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  armController: {fileID: 349255012}
-  topicName: move_group/display_planned_path
 --- !u!1001 &886616567
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2447,7 +2432,7 @@ BoxCollider:
   m_GameObject: {fileID: 3411828209967484080}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 5, y: 5, z: 0.09999996}
   m_Center: {x: 0, y: 0, z: -0.04999998}
