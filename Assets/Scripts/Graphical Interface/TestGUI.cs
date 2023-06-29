@@ -27,7 +27,7 @@ public class TestGUI : MonoBehaviour
     private GameObject minimapCameraObject;
     private Camera minimapCamera;
 
-    private GopherControl gopherControl;
+    private GopherControlManager gopherControl;
 
     // Robot
     public GameObject robot;
@@ -50,10 +50,7 @@ public class TestGUI : MonoBehaviour
 
         // planner
         autoNavigation = robot.GetComponentInChildren<ROSAutoNavigation>();
-
-        gopherControl = robot.GetComponentInChildren<GopherControl>();
-        gopherControl.ChangeAutoNavigationActive(true);
-
+        gopherControl = robot.GetComponentInChildren<GopherControlManager>();
         dynamicFootprint = robot.GetComponentInChildren<DynamicFootprint>();
 
         // map render texture

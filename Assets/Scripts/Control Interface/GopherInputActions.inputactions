@@ -212,6 +212,60 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ResumeNavigation",
+                    "type": "Button",
+                    "id": "e1a68454-b5e7-4518-9194-c27fbf705e9d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PauseNavigation",
+                    "type": "Button",
+                    "id": "04e9b7be-7349-4141-a934-477035ab9e31",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "StopNavigation",
+                    "type": "Button",
+                    "id": "fb61336b-3e20-4654-b2a4-7f434e023231",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SetNormalFootprint",
+                    "type": "Button",
+                    "id": "1376da46-5edb-485e-a5d3-0a9ae5d87b42",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SetCartFootprint",
+                    "type": "Button",
+                    "id": "55089e8c-1c9d-43a9-befd-6209b07debab",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SetIVFootprint",
+                    "type": "Button",
+                    "id": "60067940-a3fc-42e1-aa72-a8ec143f8aae",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -454,6 +508,72 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "BaseModeChange",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9e0adec2-dd54-4e6f-941f-4d7a15a8892c",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "ResumeNavigation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3ebee3ef-481e-420b-8d93-4fac944fed0e",
+                    "path": "<Keyboard>/h",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "PauseNavigation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "57d40764-7e87-427c-9f45-8ef4af8f3c22",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "StopNavigation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1ed4a5d4-8ee0-43f9-9b9c-6612d9f3a250",
+                    "path": "<Keyboard>/j",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "SetNormalFootprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2e7ee58c-bc9a-494b-bba4-a4601ea1410c",
+                    "path": "<Keyboard>/k",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "SetCartFootprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "32c4b0c2-589e-4ac2-80cf-38ee92ad1a6d",
+                    "path": "<Keyboard>/l",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "SetIVFootprint",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -2433,134 +2553,6 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "MainCameraHome",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "GopherAutoNavigation",
-            "id": "cf7a7da0-a44e-4e9d-9b4d-3c6c62335d07",
-            "actions": [
-                {
-                    "name": "ResumeNavigation",
-                    "type": "Button",
-                    "id": "becbd393-0981-4055-9bae-1dd812597c2b",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "PauseNavigation",
-                    "type": "Button",
-                    "id": "8b22a896-7b71-430b-80ef-f42057f59179",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "StopNavigation",
-                    "type": "Button",
-                    "id": "66f84fbf-18c9-40fa-93c8-b79124ee5b11",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "SetNormalFootprint",
-                    "type": "Button",
-                    "id": "e5868d04-0849-4534-ba7d-1651446754d1",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "SetCartFootprint",
-                    "type": "Button",
-                    "id": "05eb3257-e96f-4f8f-b08c-8741b3ead052",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "SetIVFootprint",
-                    "type": "Button",
-                    "id": "3314c722-1de1-4a21-9bce-096314bafed8",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "164c0898-51c3-487b-9d47-3d92aa424f11",
-                    "path": "<Keyboard>/g",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "ResumeNavigation",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2dab2ebf-4d5c-4472-9a60-1343d6f24435",
-                    "path": "<Keyboard>/t",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "StopNavigation",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "302d3c47-fd12-490c-a6c5-3cafee3f9ef4",
-                    "path": "<Keyboard>/h",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "PauseNavigation",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "66a88b72-6128-4c3b-915c-eaaa3c85ad50",
-                    "path": "<Keyboard>/j",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "SetNormalFootprint",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "d9c126a4-8a48-49e1-a1c2-ab6be0d2a83e",
-                    "path": "<Keyboard>/k",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "SetCartFootprint",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "56640076-abcd-4d00-bb95-68fb82af711f",
-                    "path": "<Keyboard>/l",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "SetIVFootprint",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

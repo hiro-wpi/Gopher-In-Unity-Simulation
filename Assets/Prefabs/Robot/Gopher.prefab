@@ -160,7 +160,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 535451129}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: da24c4742847e3e18a4a8d515f2ce6c9, type: 3}
   m_Name: 
@@ -209,7 +209,7 @@ MonoBehaviour:
   childFrame: /gopher/base_link
   position: {x: 0, y: 0, z: 0}
   rotationEuler: {x: 0, y: 0, z: 0}
-  isValidTransform: 0
+  <IsValidTransform>k__BackingField: 0
 --- !u!114 &2063852684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14794,7 +14794,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8300320178575503715}
   - component: {fileID: 9012710540990295136}
-  - component: {fileID: 6954345732392209542}
   m_Layer: 15
   m_Name: ROS Input
   m_TagString: Untagged
@@ -14824,27 +14823,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3519214686838685179}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e3c70d4a760e69013ae012cfb66325a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   twistTopicName: gopher/cmd_vel
   baseController: {fileID: 7628781304040955774}
---- !u!114 &6954345732392209542
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3519214686838685179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542ba5db1492f4c1d85909132fb5ff88, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cameraVelocityTopicName: cam/cmd_vel
-  cameraController: {fileID: 77500013760736259}
 --- !u!1 &3539479451528013225
 GameObject:
   m_ObjectHideFlags: 0
@@ -20883,7 +20868,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseController: {fileID: 7628781304040955774}
-  autoNavigation: {fileID: 0}
+  autoNavigation: {fileID: 2063852681}
 --- !u!1 &6720452277528072361
 GameObject:
   m_ObjectHideFlags: 0
@@ -21166,7 +21151,6 @@ MonoBehaviour:
   globalFrameIds:
   - gopher/odom
   robot: {fileID: 702946891102146246}
-  publishRate: 30
 --- !u!114 &828704671767976744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21180,10 +21164,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraTopicName: camera/color/image_raw/compressed
-  imageCamera: {fileID: 702946891817530016}
-  resolutionWidth: 1280
-  resolutionHeight: 720
-  qualityLevel: 50
+  cameraInfoTopicName: camera/color/camera_info
+  frameId: camera_link
+  cam: {fileID: 0}
+  width: 1280
+  height: 720
+  format: 0
+  publishRate: 10
 --- !u!114 &1569239457840547957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21197,6 +21184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poseStampedTopicName: model_pose
+  frameID: model_pose
   publishedTransform: {fileID: 702946891374405993}
   publishRate: 10
 --- !u!114 &2726546486847738849
@@ -21212,7 +21200,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   twistStampedTopicName: model_twist
-  publishedTransform: {fileID: 702946891374405993}
+  frameID: model_twist
+  rb: {fileID: 0}
   publishRate: 10
 --- !u!114 &2765524930972325134
 MonoBehaviour:
@@ -21245,6 +21234,7 @@ MonoBehaviour:
   laserTopicName: gopher/base_scan
   laserLinkId: gopher/laser_link
   laser: {fileID: 1247843086211099820}
+  publishRate: 10
 --- !u!114 &1072445878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21260,6 +21250,7 @@ MonoBehaviour:
   iMUTopicName: gopher/imu
   iMULinkId: gopher/chassis_link
   iMU: {fileID: 1304358819}
+  publishRate: 10
 --- !u!1 &6869341501706853007
 GameObject:
   m_ObjectHideFlags: 0
@@ -23602,7 +23593,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   laserGameObject: {fileID: 702946891660878700}
   enableHumanDetection: 1
-  debugVisualization: 1
+  debugVisualization: 0
   updateRate: 10
   samples: 90
   angleMin: -1.5708
@@ -25883,8 +25874,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2063852681}
         m_TargetAssemblyTypeName: ROSAutoNavigation, Assembly-CSharp
-        m_MethodName: OnResumeNavigation
-        m_Mode: 0
+        m_MethodName: ResumeNavigation
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -25893,14 +25884,14 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: becbd393-0981-4055-9bae-1dd812597c2b
-    m_ActionName: GopherAutoNavigation/ResumeNavigation[/Keyboard/g]
+    m_ActionId: e1a68454-b5e7-4518-9194-c27fbf705e9d
+    m_ActionName: GopherBase/ResumeNavigation[/Keyboard/g]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2063852681}
         m_TargetAssemblyTypeName: ROSAutoNavigation, Assembly-CSharp
-        m_MethodName: OnPauseNavigation
-        m_Mode: 0
+        m_MethodName: PauseNavigation
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -25909,14 +25900,14 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: 8b22a896-7b71-430b-80ef-f42057f59179
-    m_ActionName: GopherAutoNavigation/PauseNavigation[/Keyboard/h]
+    m_ActionId: 04e9b7be-7349-4141-a934-477035ab9e31
+    m_ActionName: GopherBase/PauseNavigation[/Keyboard/h]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2063852681}
         m_TargetAssemblyTypeName: ROSAutoNavigation, Assembly-CSharp
-        m_MethodName: OnStopNavigation
-        m_Mode: 0
+        m_MethodName: StopNavigation
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -25925,14 +25916,14 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: 66f84fbf-18c9-40fa-93c8-b79124ee5b11
-    m_ActionName: GopherAutoNavigation/StopNavigation[/Keyboard/t]
+    m_ActionId: fb61336b-3e20-4654-b2a4-7f434e023231
+    m_ActionName: GopherBase/StopNavigation[/Keyboard/t]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2063852684}
         m_TargetAssemblyTypeName: DynamicFootprint, Assembly-CSharp
-        m_MethodName: OnSetNormalFootprint
-        m_Mode: 0
+        m_MethodName: SetToNormalFootprint
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -25941,14 +25932,14 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: e5868d04-0849-4534-ba7d-1651446754d1
-    m_ActionName: GopherAutoNavigation/SetNormalFootprint[/Keyboard/j]
+    m_ActionId: 1376da46-5edb-485e-a5d3-0a9ae5d87b42
+    m_ActionName: GopherBase/SetNormalFootprint[/Keyboard/j]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2063852684}
         m_TargetAssemblyTypeName: DynamicFootprint, Assembly-CSharp
-        m_MethodName: OnSetCartFootprint
-        m_Mode: 0
+        m_MethodName: SetToBaseWithCartFootprint
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -25957,14 +25948,14 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: 05eb3257-e96f-4f8f-b08c-8741b3ead052
-    m_ActionName: GopherAutoNavigation/SetCartFootprint[/Keyboard/k]
+    m_ActionId: 55089e8c-1c9d-43a9-befd-6209b07debab
+    m_ActionName: GopherBase/SetCartFootprint[/Keyboard/k]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2063852684}
         m_TargetAssemblyTypeName: DynamicFootprint, Assembly-CSharp
-        m_MethodName: OnSetIVFootprint
-        m_Mode: 0
+        m_MethodName: SetToBaseWithIVFootprint
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -25973,8 +25964,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: 3314c722-1de1-4a21-9bce-096314bafed8
-    m_ActionName: GopherAutoNavigation/SetIVFootprint[/Keyboard/l]
+    m_ActionId: 60067940-a3fc-42e1-aa72-a8ec143f8aae
+    m_ActionName: GopherBase/SetIVFootprint[/Keyboard/l]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard
   m_DefaultActionMap: GopherMode
@@ -26339,7 +26330,6 @@ MonoBehaviour:
   playerInput: {fileID: 7078970156635072719}
   <ControlMode>k__BackingField: 0
   <MainCameraEnabled>k__BackingField: 0
-  AutoNavigationEnabled: 1
 --- !u!1 &8101480441308134436
 GameObject:
   m_ObjectHideFlags: 0
@@ -27009,9 +26999,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c735693273d7191d9b372a59209c9ada, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ClockMode: 0
-  m_LastSetClockMode: 0
-  m_PublishRateHz: 100
+  clockMode: 0
+  publishRate: 50
 --- !u!1 &8340715769983329584
 GameObject:
   m_ObjectHideFlags: 0

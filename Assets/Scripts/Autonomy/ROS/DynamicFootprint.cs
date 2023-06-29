@@ -13,7 +13,10 @@ public class DynamicFootprint : MonoBehaviour
     [SerializeField] private Transform robotTF;
     [SerializeField] private PolygonPublisher polygonPublisher;
     private float robotFootprintRadius = 0.45f;
+    
+    void Start() {}
 
+    void Update() {}
 
     // TEMP TO BE REMOVED
     public void OnSetNormalFootprint(InputAction.CallbackContext context)

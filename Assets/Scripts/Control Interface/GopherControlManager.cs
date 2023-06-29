@@ -10,7 +10,7 @@ using UnityEngine.InputSystem;
 ///     For now, only one component is controlled 
 ///     at a time when using keyboard.
 /// </summary>
-public class GopherControl : MonoBehaviour
+public class GopherControlManager : MonoBehaviour
 {
     // Unity input & action maps
     // Enable / Disable to receive input or not
@@ -20,8 +20,7 @@ public class GopherControl : MonoBehaviour
     private InputActionMap leftArmInputMap;
     private InputActionMap rightArmInputMap;
     private InputActionMap cameraInputMap;
-    private InputActionMap autoNavigationMap;
-    private InputActionMap[] actionMaps;
+    private InputActionMap[] simultaneousActionMaps;
 
     // Available control modes
     public enum Mode { Base, Chest, LeftArm, RightArm }
@@ -30,51 +29,44 @@ public class GopherControl : MonoBehaviour
     public Mode ControlMode { get; private set; } = Mode.Base;
     [field: SerializeField]
     public bool MainCameraEnabled { get; private set; } = false;
-    public bool AutoNavigationEnabled { get; private set; } = false;
 
     void OnEnable()
     {
         // Set up input action maps
-        baseInputMap = playerInput.actions.FindActionMap("GopherBase");
-        chestInputMap = playerInput.actions.FindActionMap("GopherChest");
-        leftArmInputMap = playerInput.actions.FindActionMap("GopherLeftArm");
-        rightArmInputMap = playerInput.actions.FindActionMap("GopherRightArm");
-        cameraInputMap = playerInput.actions.FindActionMap("GopherCamera");
-        autoNavigationMap = playerInput.actions.FindActionMap("GopherAutoNavigation");
+        InputActionAsset action = playerInput.actions;
+        baseInputMap = action.FindActionMap("GopherBase");
+        chestInputMap = action.FindActionMap("GopherChest");
+        leftArmInputMap = action.FindActionMap("GopherLeftArm");
+        rightArmInputMap = action.FindActionMap("GopherRightArm");
+        cameraInputMap = action.FindActionMap("GopherCamera");
         // store it the same as Mode for easy enable/disable later
-        actionMaps = new InputActionMap[] {
+        simultaneousActionMaps = new InputActionMap[] {
             baseInputMap, chestInputMap, leftArmInputMap, rightArmInputMap
         };
 
         // Default to base mode
         SetMode(Mode.Base);
-        
-        // For Testing, Enable AutoNavigation
-        // ChangeAutoNavigationActive(true);
     }
 
     // Setting Mode
     public void SetMode(Mode mode)
     {
         ControlMode = mode;
-        SetActionMap(ControlMode);
-    }
 
-    private void SetActionMap(Mode mode)
-    {
         // Only one mode can be active at a time
         // Disable all action maps and enable the selected one
-        foreach (InputActionMap map in actionMaps)
+        foreach (InputActionMap map in simultaneousActionMaps)
         {
             map.Disable();
         }
-        actionMaps[(int)mode].Enable();
+
+        simultaneousActionMaps[(int)mode].Enable();
     }
 
-    public void ChangeMainCameraActive(bool active)
+    public void ChangeMainCameraActive()
     {
-        MainCameraEnabled = active;
-        if (active)
+        MainCameraEnabled = !MainCameraEnabled;
+        if (MainCameraEnabled)
         {
             cameraInputMap.Enable();
         }
@@ -84,20 +76,7 @@ public class GopherControl : MonoBehaviour
         }
     }
 
-    public void ChangeAutoNavigationActive(bool active)
-    {
-        AutoNavigationEnabled = active;
-        if (active)
-        {
-            autoNavigationMap.Enable();
-        }
-        else
-        {
-            autoNavigationMap.Disable();
-        }
-    }
-
-    // Control Mode - switch to mode
+    // Control Mode - Unity Input System
     public void OnBase(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -134,7 +113,7 @@ public class GopherControl : MonoBehaviour
     {
         if (context.performed)
         {
-            ChangeMainCameraActive(!MainCameraEnabled);
+            ChangeMainCameraActive();
         }
     }
 }

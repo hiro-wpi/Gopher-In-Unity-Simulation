@@ -66,7 +66,7 @@ public class GraphicalInterface : MonoBehaviour
     public GameObject controlModeLeftDisplay;
     public GameObject controlModeRightDisplay;
     public GameObject controlModeBaseDisplay;
-    private GopherControl gopherControl;
+    private GopherControlManager gopherControl;
     // camera control selection
     public GameObject headCameraViewingDisplay;
     public GameObject leftCameraViewingDisplay;
@@ -341,8 +341,9 @@ public class GraphicalInterface : MonoBehaviour
         steeringWheel.transform.rotation = Quaternion.Euler(0, 0, angularSpeed);
     }
 
-    private void UpdateControlMode(bool cameraControlEnabled, 
-                                   GopherControl.Mode controlMode)
+    private void UpdateControlMode(
+        bool cameraControlEnabled, GopherControlManager.Mode controlMode
+    )
     {
         // Camera
         controlModeCameraDisplay.SetActive(cameraControlEnabled);
@@ -354,13 +355,13 @@ public class GraphicalInterface : MonoBehaviour
 
         switch (controlMode)
         {
-            case GopherControl.Mode.LeftArm:
+            case GopherControlManager.Mode.LeftArm:
                 controlModeLeftDisplay.SetActive(true);
                 break;
-            case GopherControl.Mode.RightArm:
+            case GopherControlManager.Mode.RightArm:
                 controlModeRightDisplay.SetActive(true);
                 break;
-            case GopherControl.Mode.Base:
+            case GopherControlManager.Mode.Base:
                 controlModeBaseDisplay.SetActive(true);
                 break;
             default:
@@ -429,7 +430,7 @@ public class GraphicalInterface : MonoBehaviour
         }
     }
 
-    private void UpdateHelpDisplay(GopherControl.Mode controlMode)
+    private void UpdateHelpDisplay(GopherControlManager.Mode controlMode)
     {
         helpDisplayText.text = "Switch Control\n" + "  Key ← ↓ →\n"
                              + "Switch Camera\n" + "  Num (0+) 8 4 5 6\n"
@@ -437,14 +438,14 @@ public class GraphicalInterface : MonoBehaviour
                              + "Camera Centering\n" + "  Mouse middle button\n";
         switch (controlMode)
         {
-            case GopherControl.Mode.LeftArm:
-            case GopherControl.Mode.RightArm:
+            case GopherControlManager.Mode.LeftArm:
+            case GopherControlManager.Mode.RightArm:
                 helpDisplayText.text += "Joint Position Control\n" + "  WA/SD/QE\n"
                                       + "Joint Rotation Control\n" + "  IK/JL/UO\n"
                                       + "Preset\n" + "  F1 F2 F3 F4 F5\n"
                                       + "Gripper Close/Open\n" + "  Space\n";
                 break;
-            case GopherControl.Mode.Base:
+            case GopherControlManager.Mode.Base:
                 helpDisplayText.text += "Base Control\n" + "  WA/SD\n";
                 break;
             default:
@@ -480,7 +481,7 @@ public class GraphicalInterface : MonoBehaviour
         laser = robot.GetComponentInChildren<Laser>();
         localization = robot.GetComponentInChildren<FakeLocalization>();
         stateReader = robot.GetComponentInChildren<StateReader>();
-        gopherControl = robot.GetComponentInChildren<GopherControl>();
+        gopherControl = robot.GetComponentInChildren<GopherControlManager>();
         autoNavigation = robot.GetComponentInChildren<UnityAutoNavigation>();
         // Get IK and End effector reference transform for
         // switching IK reference frame based on camera view
@@ -671,7 +672,7 @@ public class GraphicalInterface : MonoBehaviour
             mapCamera.enabled = true;
             cameraDisplay.GetComponent<RawImage>().texture = mapRendertexture;
             // disable main camera control to have the mouse back
-            gopherControl.ChangeMainCameraActive(false);
+            gopherControl.ChangeMainCameraActive();
             Cursor.lockState = CursorLockMode.Confined;
             // Time.timeScale = 0f; // Can not stop due to auto path finding
             Time.timeScale = 0.5f;

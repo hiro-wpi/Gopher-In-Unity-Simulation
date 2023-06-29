@@ -139,7 +139,7 @@ public class ImagePublisher : MonoBehaviour
 
     void OnDestroy()
     {
-        cmd.Release();
+        cmd?.Release();
     }
 
     void FixedUpdate()
