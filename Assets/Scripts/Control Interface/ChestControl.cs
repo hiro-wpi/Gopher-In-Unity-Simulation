@@ -8,15 +8,44 @@ using UnityEngine;
 /// </summary>
 public class ChestControl : MonoBehaviour
 {
-    public ChestController chestController;
+    [SerializeField] private ChestController chestController;
     private float driveDirection;
 
-    void Start() {}
+    // Simulating input lagging (for simulation only)
+    [SerializeField] private float simulationInputLagMean = 100f;  // ms
+    [SerializeField] private float simulationInputLagStd = 25f;  // ms
+
+    void Start() 
+    {
+        // No need to simulate input lagging if controlling the real robot
+        if (chestController is PhysicalChestController)
+        {
+            simulationInputLagMean = 0;
+            simulationInputLagStd = 0;
+        }
+    }
+
+    void Update() {}
 
     // Moves the base up and down - "velocity" controller
     public void OnTranslate(InputAction.CallbackContext context)
     {
         driveDirection = context.ReadValue<float>();
+        // Set velocity
+        StartCoroutine(DelayAndSetSpeedCoroutine(driveDirection));
+    }
+
+    IEnumerator DelayAndSetSpeedCoroutine(float driveDirection)
+    {
+        // Simulate input lagging
+        if (simulationInputLagMean > 0)
+        {
+            float delay = Utils.GenerateGaussianRandom(
+                simulationInputLagMean, simulationInputLagStd
+            ) / 1000f;
+            yield return new WaitForSeconds(delay);
+        }
+        // Set velocity
         chestController.SetSpeedFraction(driveDirection);
     }
 

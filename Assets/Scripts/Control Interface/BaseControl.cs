@@ -12,12 +12,24 @@ public class BaseControl : MonoBehaviour
     [SerializeField] private BaseController baseController;
     [SerializeField] private AutoNavigation autoNavigation;
 
+    // Simulating input lagging (for simulation only)
+    [SerializeField] private float simulationInputLagMean = 100f;  // ms
+    [SerializeField] private float simulationInputLagStd = 25f;  // ms
+
     // Container for the speed vector
     private Vector2 inputVelocity;
     private Vector3 linearVelocity = Vector3.zero;
     private Vector3 angularVelocity = Vector3.zero;
 
-    void Start() {}
+    void Start() 
+    {
+        // No need to simulate input lagging if controlling the real robot
+        if (baseController is PhysicalBaseController)
+        {
+            simulationInputLagMean = 0;
+            simulationInputLagStd = 0;
+        }
+    }
 
     // Change mode
     public void OnModeChange(InputAction.CallbackContext context)
@@ -35,6 +47,20 @@ public class BaseControl : MonoBehaviour
         inputVelocity = context.ReadValue<Vector2>();
         linearVelocity = new Vector3(0f, 0f, inputVelocity.y);
         angularVelocity = new Vector3(0f, -inputVelocity.x, 0f);
+        // Set velocity
+        StartCoroutine(DelayAndSetVelocityCoroutine(inputVelocity));
+    }
+
+    IEnumerator DelayAndSetVelocityCoroutine(Vector2 inputVelocity)
+    {
+        // Simulate input lagging
+        if (simulationInputLagMean > 0)
+        {
+            float delay = Utils.GenerateGaussianRandom(
+                simulationInputLagMean, simulationInputLagStd
+            ) / 1000f;
+            yield return new WaitForSeconds(delay);
+        }
         // Set velocity
         baseController.SetVelocity(linearVelocity, angularVelocity);
     }
