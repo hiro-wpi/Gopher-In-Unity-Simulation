@@ -38,11 +38,17 @@ public class ArticulationBaseController : BaseController
             return;
         }
 
-        wheelController.SetRobotSpeedStep(linearVelocity.z, angularVelocity.y);
+        // Velocity smoothing process is done 
+        // in the BaseController parent class
+        wheelController.SetRobotSpeedStep(
+            linearVelocity.z, 
+            angularVelocity.y
+        );
     }
 
     public override void SetVelocity(Vector3 linear, Vector3 angular)
     {
+        // Speed limit
         base.SetVelocity(linear, angular);
 
         // Extra speed limit

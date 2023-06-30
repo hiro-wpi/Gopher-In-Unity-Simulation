@@ -50,6 +50,7 @@ GameObject:
   - component: {fileID: 2063852683}
   - component: {fileID: 2063852685}
   - component: {fileID: 2063852684}
+  - component: {fileID: 4908771270974871908}
   m_Layer: 15
   m_Name: Base
   m_TagString: Untagged
@@ -174,7 +175,7 @@ MonoBehaviour:
   sendGoalService: {fileID: 535451132}
   pathPlanner: {fileID: 535451131}
   poseWithCovarianceStampedPublisher: {fileID: 732307516}
-  twistSubscriber: {fileID: 9012710540990295136}
+  twistSubscriber: {fileID: 0}
   robot: {fileID: 702946891374405994}
 --- !u!114 &2063852683
 MonoBehaviour:
@@ -224,6 +225,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   robotTF: {fileID: 702946891374405993}
   polygonPublisher: {fileID: 1226114613}
+--- !u!114 &4908771270974871908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 535451129}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3c70d4a760e69013ae012cfb66325a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  twistTopicName: gopher/cmd_vel
+  baseController: {fileID: 7628781304040955774}
 --- !u!1 &631462978
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,7 +254,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &631462979
 Transform:
   m_ObjectHideFlags: 0
@@ -255,7 +270,7 @@ Transform:
   - {fileID: 535451130}
   - {fileID: 4423686978361916943}
   m_Father: {fileID: 4408274995126300629}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &879516990
 GameObject:
@@ -275,7 +290,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &879516991
 Transform:
   m_ObjectHideFlags: 0
@@ -289,7 +304,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4408274995126300629}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &879516992
 MonoBehaviour:
@@ -1453,7 +1468,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7725881371920992436
 Transform:
   m_ObjectHideFlags: 0
@@ -1467,7 +1482,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4408274995126300629}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1818360608 &3859801236347491249
 PositionConstraint:
@@ -7632,7 +7647,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3430922113509506315
 Transform:
   m_ObjectHideFlags: 0
@@ -7646,7 +7661,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4408274995126300629}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1818360608 &4803222528205093198
 PositionConstraint:
@@ -8419,7 +8434,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7939491166111700102}
+  m_Father: {fileID: 7648847307957554384}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3631924278391485127
@@ -8461,12 +8476,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1323147685918735149}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7939491166111700102}
+  m_Father: {fileID: 7648847307957554384}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8344181040400090631
@@ -10045,8 +10060,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7648847307957554384}
+  - component: {fileID: 7607378101559091467}
   m_Layer: 15
-  m_Name: Interface
+  m_Name: Control Interface
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10064,11 +10080,829 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7939491166111700102}
-  - {fileID: 7527544419884785351}
+  - {fileID: 4378321293572077601}
+  - {fileID: 5577046924742887734}
+  - {fileID: 7689681377892514334}
+  - {fileID: 5331904740357475460}
+  - {fileID: 4627371199840828529}
+  - {fileID: 8901774930463466180}
   m_Father: {fileID: 702946892021830366}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7607378101559091467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2049427360232556568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 851aeea8af3984540a48cb2015af3819, type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 600733299625841090}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnBase
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 80308657-5f5d-4398-8be0-47d80a897838
+    m_ActionName: GopherMode/BaseControl[/Keyboard/downArrow]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 600733299625841090}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnChest
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b4b4bb60-3f80-4727-ae1f-101cc9391d08
+    m_ActionName: GopherMode/ChestControl[/Keyboard/upArrow]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 600733299625841090}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnLeftArm
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 472398c1-6086-45f6-bb0f-5eb507731393
+    m_ActionName: GopherMode/LeftArmControl[/Keyboard/leftArrow]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 600733299625841090}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnRightArm
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: e367deee-f97f-463f-8442-61ccb7a8ad03
+    m_ActionName: GopherMode/RigthArmControl[/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 600733299625841090}
+        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
+        m_MethodName: OnMainCamera
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 2c840e34-f16b-4b8b-a090-b28e43c1bdce
+    m_ActionName: GopherMode/MainCameraControl[/Keyboard/numpadPlus]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5115408564277940411}
+        m_TargetAssemblyTypeName: BaseControl, Assembly-CSharp
+        m_MethodName: OnModeChange
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 4f7db4f4-f1ab-40d5-8fc5-7a8733681431
+    m_ActionName: GopherBase/BaseModeChange[/Keyboard/shift]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5115408564277940411}
+        m_TargetAssemblyTypeName: BaseControl, Assembly-CSharp
+        m_MethodName: OnTranslate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b813c13d-5871-4748-a7ba-d891e284a06d
+    m_ActionName: GopherBase/BaseTranslate[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5115408564277940411}
+        m_TargetAssemblyTypeName: BaseControl, Assembly-CSharp
+        m_MethodName: OnTarget
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 4beb0d2b-0b4e-4551-a796-5d7ce905d21d
+    m_ActionName: GopherBase/BaseTarget[/Keyboard/g]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5115408564277940411}
+        m_TargetAssemblyTypeName: BaseControl, Assembly-CSharp
+        m_MethodName: EmergencyStop
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 31548b02-6874-49bf-aa80-0a0fee20b580
+    m_ActionName: GopherBase/BaseEmergencyStop[/Keyboard/leftCtrl,/Keyboard/z]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5115408564277940411}
+        m_TargetAssemblyTypeName: BaseControl, Assembly-CSharp
+        m_MethodName: EmergencyStopResume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 94bb3135-6f45-490a-8213-cd0fff8836fc
+    m_ActionName: GopherBase/BaseEmergencyStopResume[/Keyboard/leftCtrl,/Keyboard/y]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8344181040400090631}
+        m_TargetAssemblyTypeName: ChestControl, Assembly-CSharp
+        m_MethodName: OnTranslate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 31aeaf0e-90af-4825-bf63-1eb35e8ada19
+    m_ActionName: GopherChest/ChestTranslate[/Keyboard/s,/Keyboard/w]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8344181040400090631}
+        m_TargetAssemblyTypeName: ChestControl, Assembly-CSharp
+        m_MethodName: OnHome
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 347f5e81-73bb-4588-bdc7-029aebdd5cea
+    m_ActionName: GopherChest/ChestHome[/Keyboard/f1]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8344181040400090631}
+        m_TargetAssemblyTypeName: ChestControl, Assembly-CSharp
+        m_MethodName: OnPreset1
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 2c8ca640-1e99-4d03-9a47-fbb5f2c94f20
+    m_ActionName: GopherChest/ChestPreset1[/Keyboard/f2]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8344181040400090631}
+        m_TargetAssemblyTypeName: ChestControl, Assembly-CSharp
+        m_MethodName: OnPreset2
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 49190d96-9d86-4c87-8c77-4e5a9d30ae3a
+    m_ActionName: GopherChest/ChestPreset2[/Keyboard/f3]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8344181040400090631}
+        m_TargetAssemblyTypeName: ChestControl, Assembly-CSharp
+        m_MethodName: OnPreset3
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 1e168655-ed95-4bf3-975e-376e0995c277
+    m_ActionName: GopherChest/ChestPreset3[/Keyboard/f4]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8344181040400090631}
+        m_TargetAssemblyTypeName: ChestControl, Assembly-CSharp
+        m_MethodName: EmergencyStop
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b62f66cb-0978-453b-9d9d-33c5a5a2333c
+    m_ActionName: GopherChest/ChestEmergencyStop[/Keyboard/leftCtrl,/Keyboard/z]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8344181040400090631}
+        m_TargetAssemblyTypeName: ChestControl, Assembly-CSharp
+        m_MethodName: EmergencyStopResume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 9c39bd16-5f74-4575-b3a9-7627e4f1fad9
+    m_ActionName: GopherChest/ChestEmergencyStopResume[/Keyboard/leftCtrl,/Keyboard/y]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8447311433636287976}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnModeChange
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: a4bcc49b-ba42-4fa4-b30c-f984720435f9
+    m_ActionName: GopherLeftArm/ArmModeChange[/Keyboard/shift]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8447311433636287976}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnTranslate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 059997ec-26d4-48dc-ae0f-f23385d4480f
+    m_ActionName: GopherLeftArm/ArmTranslate[/Keyboard/e,/Keyboard/q,/Keyboard/a,/Keyboard/d,/Keyboard/w,/Keyboard/s]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8447311433636287976}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnRotate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 3e21e4fa-fea6-4ce9-a98c-47757ea56652
+    m_ActionName: GopherLeftArm/ArmRotate[/Keyboard/l,/Keyboard/j,/Keyboard/i,/Keyboard/k,/Keyboard/o,/Keyboard/u]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8447311433636287976}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnGrasp
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 229e9be2-7621-4eb5-b035-b01987eba0d8
+    m_ActionName: GopherLeftArm/ArmGrasp[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8447311433636287976}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnTarget
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 5ad910c7-abd4-4273-ae21-744eb9f9f045
+    m_ActionName: GopherLeftArm/ArmTarget[/Keyboard/t]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8447311433636287976}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnHome
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: d66280e0-8a45-4afc-b3f8-caf788b5776c
+    m_ActionName: GopherLeftArm/ArmHome[/Keyboard/f1]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8447311433636287976}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnPreset1
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: ffe4d87b-7868-4423-aacc-8cbbc60e81d3
+    m_ActionName: GopherLeftArm/ArmPreset1[/Keyboard/f2]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8447311433636287976}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnPreset2
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 416c6f9c-53c6-4382-83c4-043d6097b062
+    m_ActionName: GopherLeftArm/ArmPreset2[/Keyboard/f3]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8447311433636287976}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnPreset3
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: ca1273a3-010f-4aa6-a875-2b4181f0c07e
+    m_ActionName: GopherLeftArm/ArmPreset3[/Keyboard/f4]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8447311433636287976}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnPreset4
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b1b5bbae-75e7-48bd-a9ed-ef5d9676b5f1
+    m_ActionName: GopherLeftArm/ArmPreset4[/Keyboard/f5]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8447311433636287976}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: EmergencyStop
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 841ca2d5-8610-4230-816c-127bdee1075d
+    m_ActionName: GopherLeftArm/ArmEmergencyStop[/Keyboard/leftCtrl,/Keyboard/z]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8447311433636287976}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: EmergencyStopResume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 1da7ff09-e8e2-46e5-adad-d9ddf839d215
+    m_ActionName: GopherLeftArm/ArmEmergencyStopResume[/Keyboard/leftCtrl,/Keyboard/y]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6703508411491720707}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnModeChange
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 2fa16bfb-0635-4162-8df9-8d6bff8f596c
+    m_ActionName: GopherRightArm/ArmModeChange[/Keyboard/shift]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6703508411491720707}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnTranslate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 20bae72f-d04c-431d-8bda-42cdb53df030
+    m_ActionName: GopherRightArm/ArmTranslate[/Keyboard/e,/Keyboard/q,/Keyboard/a,/Keyboard/d,/Keyboard/w,/Keyboard/s]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6703508411491720707}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnRotate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 1350d216-f323-41f2-b2c8-52a570bf756d
+    m_ActionName: GopherRightArm/ArmRotate[/Keyboard/l,/Keyboard/j,/Keyboard/i,/Keyboard/k,/Keyboard/o,/Keyboard/u]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6703508411491720707}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnGrasp
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: f8f8832c-fed3-465c-b39b-7726f067ce15
+    m_ActionName: GopherRightArm/ArmGrasp[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6703508411491720707}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnTarget
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: cb4a4966-23c1-42fe-a368-73c2e7f425d7
+    m_ActionName: GopherRightArm/ArmTarget[/Keyboard/t]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6703508411491720707}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnHome
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: eadc3136-5232-439d-80a4-1968c6686790
+    m_ActionName: GopherRightArm/ArmHome[/Keyboard/f1]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6703508411491720707}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnPreset1
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 3b1e5c62-ccae-46db-a91d-6991cb37e079
+    m_ActionName: GopherRightArm/ArmPreset1[/Keyboard/f2]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6703508411491720707}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnPreset2
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: f08c37cf-6a08-4e84-a4d6-29cb025709e7
+    m_ActionName: GopherRightArm/ArmPreset2[/Keyboard/f3]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6703508411491720707}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnPreset3
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 3c8f71fb-626d-48e3-851f-c9a9876398c8
+    m_ActionName: GopherRightArm/ArmPreset3[/Keyboard/f4]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6703508411491720707}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnPreset4
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 15889170-c108-4146-87ac-fbad87fab1e1
+    m_ActionName: GopherRightArm/ArmPreset4[/Keyboard/f5]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6703508411491720707}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: EmergencyStop
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: fa7b6d97-28c4-47ff-83f1-64b981612b1c
+    m_ActionName: GopherRightArm/ArmEmergencyStop[/Keyboard/leftCtrl,/Keyboard/z]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6703508411491720707}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: EmergencyStopResume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: cca86978-5643-4059-bcf6-f47d739d289a
+    m_ActionName: GopherRightArm/ArmEmergencyStopResume[/Keyboard/leftCtrl,/Keyboard/y]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3631924278391485127}
+        m_TargetAssemblyTypeName: CameraControl, Assembly-CSharp
+        m_MethodName: OnRotate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b760ddef-94f8-49b6-ab88-8589808859f3
+    m_ActionName: GopherCamera/MainCameraRotate[/Mouse/delta]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3631924278391485127}
+        m_TargetAssemblyTypeName: CameraControl, Assembly-CSharp
+        m_MethodName: OnHome
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 98ad36a7-3580-469b-8556-3246d84fd6d3
+    m_ActionName: GopherCamera/MainCameraHome[/Mouse/middleButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2063852681}
+        m_TargetAssemblyTypeName: ROSAutoNavigation, Assembly-CSharp
+        m_MethodName: ResumeNavigation
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: e1a68454-b5e7-4518-9194-c27fbf705e9d
+    m_ActionName: GopherBase/ResumeNavigation[/Keyboard/g]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2063852681}
+        m_TargetAssemblyTypeName: ROSAutoNavigation, Assembly-CSharp
+        m_MethodName: PauseNavigation
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 04e9b7be-7349-4141-a934-477035ab9e31
+    m_ActionName: GopherBase/PauseNavigation[/Keyboard/h]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2063852681}
+        m_TargetAssemblyTypeName: ROSAutoNavigation, Assembly-CSharp
+        m_MethodName: StopNavigation
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: fb61336b-3e20-4654-b2a4-7f434e023231
+    m_ActionName: GopherBase/StopNavigation[/Keyboard/t]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2063852684}
+        m_TargetAssemblyTypeName: DynamicFootprint, Assembly-CSharp
+        m_MethodName: SetToNormalFootprint
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 1376da46-5edb-485e-a5d3-0a9ae5d87b42
+    m_ActionName: GopherBase/SetNormalFootprint[/Keyboard/j]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2063852684}
+        m_TargetAssemblyTypeName: DynamicFootprint, Assembly-CSharp
+        m_MethodName: SetToBaseWithCartFootprint
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 55089e8c-1c9d-43a9-befd-6209b07debab
+    m_ActionName: GopherBase/SetCartFootprint[/Keyboard/k]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2063852684}
+        m_TargetAssemblyTypeName: DynamicFootprint, Assembly-CSharp
+        m_MethodName: SetToBaseWithIVFootprint
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 60067940-a3fc-42e1-aa72-a8ec143f8aae
+    m_ActionName: GopherBase/SetIVFootprint[/Keyboard/l]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: Keyboard
+  m_DefaultActionMap: GopherMode
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &2052428653152802528
 GameObject:
   m_ObjectHideFlags: 0
@@ -11323,7 +12157,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4408274995126300629}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2758480110320510084
 MonoBehaviour:
@@ -13135,7 +13969,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7939491166111700102}
+  m_Father: {fileID: 7648847307957554384}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6703508411491720707
@@ -14790,52 +15624,6 @@ Transform:
   m_Father: {fileID: 3175818853264214501}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &3519214686838685179
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8300320178575503715}
-  - component: {fileID: 9012710540990295136}
-  m_Layer: 15
-  m_Name: ROS Input
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8300320178575503715
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3519214686838685179}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7527544419884785351}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9012710540990295136
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3519214686838685179}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3c70d4a760e69013ae012cfb66325a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  twistTopicName: gopher/cmd_vel
-  baseController: {fileID: 7628781304040955774}
 --- !u!1 &3539479451528013225
 GameObject:
   m_ObjectHideFlags: 0
@@ -19445,6 +20233,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7527544419884785351}
   - {fileID: 4985359068928457316}
   - {fileID: 3430922113509506315}
   - {fileID: 7725881371920992436}
@@ -20858,7 +21647,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7939491166111700102}
+  m_Father: {fileID: 7648847307957554384}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5115408564277940411
@@ -21142,7 +21931,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7527544419884785351}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2095591850720556844
 MonoBehaviour:
@@ -21151,7 +21940,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6780721534204609730}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77a7a5fce02b78be8923080bd1cacac, type: 3}
   m_Name: 
@@ -25127,858 +25916,6 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!1 &7939491166111700121
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7939491166111700102}
-  - component: {fileID: 7078970156635072719}
-  m_Layer: 15
-  m_Name: Unity Input
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7939491166111700102
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7939491166111700121}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4378321293572077601}
-  - {fileID: 5577046924742887734}
-  - {fileID: 7689681377892514334}
-  - {fileID: 5331904740357475460}
-  - {fileID: 4627371199840828529}
-  - {fileID: 8901774930463466180}
-  m_Father: {fileID: 7648847307957554384}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7078970156635072719
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7939491166111700121}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 851aeea8af3984540a48cb2015af3819, type: 3}
-  m_NotificationBehavior: 2
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents:
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 600733299625841090}
-        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
-        m_MethodName: OnBase
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 80308657-5f5d-4398-8be0-47d80a897838
-    m_ActionName: GopherMode/BaseControl[/Keyboard/downArrow]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 600733299625841090}
-        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
-        m_MethodName: OnChest
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: b4b4bb60-3f80-4727-ae1f-101cc9391d08
-    m_ActionName: GopherMode/ChestControl[/Keyboard/upArrow]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 600733299625841090}
-        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
-        m_MethodName: OnLeftArm
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 472398c1-6086-45f6-bb0f-5eb507731393
-    m_ActionName: GopherMode/LeftArmControl[/Keyboard/leftArrow]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 600733299625841090}
-        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
-        m_MethodName: OnRightArm
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: e367deee-f97f-463f-8442-61ccb7a8ad03
-    m_ActionName: GopherMode/RigthArmControl[/Keyboard/rightArrow]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 600733299625841090}
-        m_TargetAssemblyTypeName: GopherControl, Assembly-CSharp
-        m_MethodName: OnMainCamera
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 2c840e34-f16b-4b8b-a090-b28e43c1bdce
-    m_ActionName: GopherMode/MainCameraControl[/Keyboard/numpadPlus]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5115408564277940411}
-        m_TargetAssemblyTypeName: BaseControl, Assembly-CSharp
-        m_MethodName: OnModeChange
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 4f7db4f4-f1ab-40d5-8fc5-7a8733681431
-    m_ActionName: GopherBase/BaseModeChange[/Keyboard/shift]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5115408564277940411}
-        m_TargetAssemblyTypeName: BaseControl, Assembly-CSharp
-        m_MethodName: OnTranslate
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: b813c13d-5871-4748-a7ba-d891e284a06d
-    m_ActionName: GopherBase/BaseTranslate[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5115408564277940411}
-        m_TargetAssemblyTypeName: BaseControl, Assembly-CSharp
-        m_MethodName: OnTarget
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 4beb0d2b-0b4e-4551-a796-5d7ce905d21d
-    m_ActionName: GopherBase/BaseTarget[/Keyboard/g]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5115408564277940411}
-        m_TargetAssemblyTypeName: BaseControl, Assembly-CSharp
-        m_MethodName: EmergencyStop
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 31548b02-6874-49bf-aa80-0a0fee20b580
-    m_ActionName: GopherBase/BaseEmergencyStop[/Keyboard/leftCtrl,/Keyboard/z]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5115408564277940411}
-        m_TargetAssemblyTypeName: BaseControl, Assembly-CSharp
-        m_MethodName: EmergencyStopResume
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 94bb3135-6f45-490a-8213-cd0fff8836fc
-    m_ActionName: GopherBase/BaseEmergencyStopResume[/Keyboard/leftCtrl,/Keyboard/y]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8344181040400090631}
-        m_TargetAssemblyTypeName: ChestControl, Assembly-CSharp
-        m_MethodName: OnTranslate
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 31aeaf0e-90af-4825-bf63-1eb35e8ada19
-    m_ActionName: GopherChest/ChestTranslate[/Keyboard/s,/Keyboard/w]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8344181040400090631}
-        m_TargetAssemblyTypeName: ChestControl, Assembly-CSharp
-        m_MethodName: OnHome
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 347f5e81-73bb-4588-bdc7-029aebdd5cea
-    m_ActionName: GopherChest/ChestHome[/Keyboard/f1]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8344181040400090631}
-        m_TargetAssemblyTypeName: ChestControl, Assembly-CSharp
-        m_MethodName: OnPreset1
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 2c8ca640-1e99-4d03-9a47-fbb5f2c94f20
-    m_ActionName: GopherChest/ChestPreset1[/Keyboard/f2]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8344181040400090631}
-        m_TargetAssemblyTypeName: ChestControl, Assembly-CSharp
-        m_MethodName: OnPreset2
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 49190d96-9d86-4c87-8c77-4e5a9d30ae3a
-    m_ActionName: GopherChest/ChestPreset2[/Keyboard/f3]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8344181040400090631}
-        m_TargetAssemblyTypeName: ChestControl, Assembly-CSharp
-        m_MethodName: OnPreset3
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 1e168655-ed95-4bf3-975e-376e0995c277
-    m_ActionName: GopherChest/ChestPreset3[/Keyboard/f4]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8344181040400090631}
-        m_TargetAssemblyTypeName: ChestControl, Assembly-CSharp
-        m_MethodName: EmergencyStop
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: b62f66cb-0978-453b-9d9d-33c5a5a2333c
-    m_ActionName: GopherChest/ChestEmergencyStop[/Keyboard/leftCtrl,/Keyboard/z]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8344181040400090631}
-        m_TargetAssemblyTypeName: ChestControl, Assembly-CSharp
-        m_MethodName: EmergencyStopResume
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 9c39bd16-5f74-4575-b3a9-7627e4f1fad9
-    m_ActionName: GopherChest/ChestEmergencyStopResume[/Keyboard/leftCtrl,/Keyboard/y]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8447311433636287976}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnModeChange
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: a4bcc49b-ba42-4fa4-b30c-f984720435f9
-    m_ActionName: GopherLeftArm/ArmModeChange[/Keyboard/shift]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8447311433636287976}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnTranslate
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 059997ec-26d4-48dc-ae0f-f23385d4480f
-    m_ActionName: GopherLeftArm/ArmTranslate[/Keyboard/e,/Keyboard/q,/Keyboard/a,/Keyboard/d,/Keyboard/w,/Keyboard/s]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8447311433636287976}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnRotate
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 3e21e4fa-fea6-4ce9-a98c-47757ea56652
-    m_ActionName: GopherLeftArm/ArmRotate[/Keyboard/l,/Keyboard/j,/Keyboard/i,/Keyboard/k,/Keyboard/o,/Keyboard/u]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8447311433636287976}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnGrasp
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 229e9be2-7621-4eb5-b035-b01987eba0d8
-    m_ActionName: GopherLeftArm/ArmGrasp[/Keyboard/space]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8447311433636287976}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnTarget
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 5ad910c7-abd4-4273-ae21-744eb9f9f045
-    m_ActionName: GopherLeftArm/ArmTarget[/Keyboard/t]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8447311433636287976}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnHome
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: d66280e0-8a45-4afc-b3f8-caf788b5776c
-    m_ActionName: GopherLeftArm/ArmHome[/Keyboard/f1]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8447311433636287976}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnPreset1
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: ffe4d87b-7868-4423-aacc-8cbbc60e81d3
-    m_ActionName: GopherLeftArm/ArmPreset1[/Keyboard/f2]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8447311433636287976}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnPreset2
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 416c6f9c-53c6-4382-83c4-043d6097b062
-    m_ActionName: GopherLeftArm/ArmPreset2[/Keyboard/f3]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8447311433636287976}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnPreset3
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: ca1273a3-010f-4aa6-a875-2b4181f0c07e
-    m_ActionName: GopherLeftArm/ArmPreset3[/Keyboard/f4]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8447311433636287976}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnPreset4
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: b1b5bbae-75e7-48bd-a9ed-ef5d9676b5f1
-    m_ActionName: GopherLeftArm/ArmPreset4[/Keyboard/f5]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8447311433636287976}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: EmergencyStop
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 841ca2d5-8610-4230-816c-127bdee1075d
-    m_ActionName: GopherLeftArm/ArmEmergencyStop[/Keyboard/leftCtrl,/Keyboard/z]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8447311433636287976}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: EmergencyStopResume
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 1da7ff09-e8e2-46e5-adad-d9ddf839d215
-    m_ActionName: GopherLeftArm/ArmEmergencyStopResume[/Keyboard/leftCtrl,/Keyboard/y]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6703508411491720707}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnModeChange
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 2fa16bfb-0635-4162-8df9-8d6bff8f596c
-    m_ActionName: GopherRightArm/ArmModeChange[/Keyboard/shift]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6703508411491720707}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnTranslate
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 20bae72f-d04c-431d-8bda-42cdb53df030
-    m_ActionName: GopherRightArm/ArmTranslate[/Keyboard/e,/Keyboard/q,/Keyboard/a,/Keyboard/d,/Keyboard/w,/Keyboard/s]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6703508411491720707}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnRotate
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 1350d216-f323-41f2-b2c8-52a570bf756d
-    m_ActionName: GopherRightArm/ArmRotate[/Keyboard/l,/Keyboard/j,/Keyboard/i,/Keyboard/k,/Keyboard/o,/Keyboard/u]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6703508411491720707}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnGrasp
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: f8f8832c-fed3-465c-b39b-7726f067ce15
-    m_ActionName: GopherRightArm/ArmGrasp[/Keyboard/space]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6703508411491720707}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnTarget
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: cb4a4966-23c1-42fe-a368-73c2e7f425d7
-    m_ActionName: GopherRightArm/ArmTarget[/Keyboard/t]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6703508411491720707}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnHome
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: eadc3136-5232-439d-80a4-1968c6686790
-    m_ActionName: GopherRightArm/ArmHome[/Keyboard/f1]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6703508411491720707}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnPreset1
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 3b1e5c62-ccae-46db-a91d-6991cb37e079
-    m_ActionName: GopherRightArm/ArmPreset1[/Keyboard/f2]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6703508411491720707}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnPreset2
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: f08c37cf-6a08-4e84-a4d6-29cb025709e7
-    m_ActionName: GopherRightArm/ArmPreset2[/Keyboard/f3]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6703508411491720707}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnPreset3
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 3c8f71fb-626d-48e3-851f-c9a9876398c8
-    m_ActionName: GopherRightArm/ArmPreset3[/Keyboard/f4]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6703508411491720707}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: OnPreset4
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 15889170-c108-4146-87ac-fbad87fab1e1
-    m_ActionName: GopherRightArm/ArmPreset4[/Keyboard/f5]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6703508411491720707}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: EmergencyStop
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: fa7b6d97-28c4-47ff-83f1-64b981612b1c
-    m_ActionName: GopherRightArm/ArmEmergencyStop[/Keyboard/leftCtrl,/Keyboard/z]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6703508411491720707}
-        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
-        m_MethodName: EmergencyStopResume
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: cca86978-5643-4059-bcf6-f47d739d289a
-    m_ActionName: GopherRightArm/ArmEmergencyStopResume[/Keyboard/leftCtrl,/Keyboard/y]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3631924278391485127}
-        m_TargetAssemblyTypeName: CameraControl, Assembly-CSharp
-        m_MethodName: OnRotate
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: b760ddef-94f8-49b6-ab88-8589808859f3
-    m_ActionName: GopherCamera/MainCameraRotate[/Mouse/delta]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3631924278391485127}
-        m_TargetAssemblyTypeName: CameraControl, Assembly-CSharp
-        m_MethodName: OnHome
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 98ad36a7-3580-469b-8556-3246d84fd6d3
-    m_ActionName: GopherCamera/MainCameraHome[/Mouse/middleButton]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2063852681}
-        m_TargetAssemblyTypeName: ROSAutoNavigation, Assembly-CSharp
-        m_MethodName: ResumeNavigation
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: e1a68454-b5e7-4518-9194-c27fbf705e9d
-    m_ActionName: GopherBase/ResumeNavigation[/Keyboard/g]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2063852681}
-        m_TargetAssemblyTypeName: ROSAutoNavigation, Assembly-CSharp
-        m_MethodName: PauseNavigation
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 04e9b7be-7349-4141-a934-477035ab9e31
-    m_ActionName: GopherBase/PauseNavigation[/Keyboard/h]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2063852681}
-        m_TargetAssemblyTypeName: ROSAutoNavigation, Assembly-CSharp
-        m_MethodName: StopNavigation
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: fb61336b-3e20-4654-b2a4-7f434e023231
-    m_ActionName: GopherBase/StopNavigation[/Keyboard/t]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2063852684}
-        m_TargetAssemblyTypeName: DynamicFootprint, Assembly-CSharp
-        m_MethodName: SetToNormalFootprint
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 1376da46-5edb-485e-a5d3-0a9ae5d87b42
-    m_ActionName: GopherBase/SetNormalFootprint[/Keyboard/j]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2063852684}
-        m_TargetAssemblyTypeName: DynamicFootprint, Assembly-CSharp
-        m_MethodName: SetToBaseWithCartFootprint
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 55089e8c-1c9d-43a9-befd-6209b07debab
-    m_ActionName: GopherBase/SetCartFootprint[/Keyboard/k]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2063852684}
-        m_TargetAssemblyTypeName: DynamicFootprint, Assembly-CSharp
-        m_MethodName: SetToBaseWithIVFootprint
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 60067940-a3fc-42e1-aa72-a8ec143f8aae
-    m_ActionName: GopherBase/SetIVFootprint[/Keyboard/l]
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: Keyboard
-  m_DefaultActionMap: GopherMode
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!1 &7940471940733236862
 GameObject:
   m_ObjectHideFlags: 0
@@ -26320,7 +26257,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7939491166111700102}
+  m_Father: {fileID: 7648847307957554384}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &600733299625841090
@@ -26335,7 +26272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d5eb0e393ddb08478f5690878bdf012, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerInput: {fileID: 7078970156635072719}
+  playerInput: {fileID: 0}
   <ControlMode>k__BackingField: 0
   <MainCameraEnabled>k__BackingField: 0
 --- !u!1 &8101480441308134436
@@ -26776,7 +26713,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7939491166111700102}
+  m_Father: {fileID: 7648847307957554384}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8447311433636287976
@@ -26979,7 +26916,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7527544419884785351
 Transform:
   m_ObjectHideFlags: 0
@@ -26992,10 +26929,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8300320178575503715}
   - {fileID: 841636302224200969}
-  m_Father: {fileID: 7648847307957554384}
-  m_RootOrder: 1
+  m_Father: {fileID: 4408274995126300629}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6642330066787907051
 MonoBehaviour:
