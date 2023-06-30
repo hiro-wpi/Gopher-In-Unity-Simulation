@@ -12,7 +12,7 @@ public class ChestControl : MonoBehaviour
     private float driveDirection;
 
     // Simulating input lagging (for simulation only)
-    [SerializeField] private float simulationInputLagMean = 100f;  // ms
+    [SerializeField] private float simulationInputLagMean = 175f;  // ms
     [SerializeField] private float simulationInputLagStd = 25f;  // ms
 
     void Start() 
