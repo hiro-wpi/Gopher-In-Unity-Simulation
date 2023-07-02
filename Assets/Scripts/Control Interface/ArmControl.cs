@@ -19,6 +19,9 @@ public class ArmControl : MonoBehaviour
     private Vector3 linearVelocity = Vector3.zero;
     private Vector3 angularVelocity = Vector3.zero;
 
+    public enum ArmControlMode { translation = 0, rotation = 1 }
+    [field: SerializeField] public ArmControlMode controlMode = ArmControlMode.translation;
+
     void Start() 
     {
         // No need to simulate input lagging if controlling the real robot
@@ -55,6 +58,37 @@ public class ArmControl : MonoBehaviour
         angularVelocity = context.ReadValue<Vector3>();
         // Set velocity
         StartCoroutine(DelayAndSetVelocityCoroutine("angular", angularVelocity));
+    }
+
+    // Passes key inputs to translation or rotation
+    public void OnSwitchTranslateRotate(InputAction.CallbackContext context)
+    {
+
+        if(context.performed)
+        {
+            if(controlMode == ArmControlMode.translation)
+            {
+                controlMode = ArmControlMode.rotation;
+            }
+            else if(controlMode == ArmControlMode.rotation)
+            {
+                controlMode = ArmControlMode.translation;
+            }
+        }
+    }
+
+    // Handle switching between translation and rotation if they use the same keys
+    public void OnTranslateRotate(InputAction.CallbackContext context)
+    {
+        if(controlMode == ArmControlMode.translation)
+        {
+            OnTranslate(context);
+        }
+
+        if(controlMode == ArmControlMode.rotation)
+        {
+            OnRotate(context);
+        }
     }
 
     IEnumerator DelayAndSetVelocityCoroutine(string type, Vector3 inputVelocity)

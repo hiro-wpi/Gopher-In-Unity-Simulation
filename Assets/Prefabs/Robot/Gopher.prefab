@@ -10898,9 +10898,125 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 60067940-a3fc-42e1-aa72-a8ec143f8aae
     m_ActionName: GopherBase/SetIVFootprint[/Keyboard/l]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5115408564277940411}
+        m_TargetAssemblyTypeName: BaseControl, Assembly-CSharp
+        m_MethodName: OnTranslate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b4141518-adef-4a8b-a957-8127f556df06
+    m_ActionName: GopherFullSystemControl/Base[/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8447311433636287976}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnTranslateRotate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: d5db3063-10c6-42a4-80ad-c2b577ce39d7
+    m_ActionName: GopherFullSystemControl/LeftArm[/Keyboard/e,/Keyboard/q,/Keyboard/a,/Keyboard/d,/Keyboard/w,/Keyboard/s]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8447311433636287976}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnSwitchTranslateRotate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 8c92c0fe-f243-431b-86dc-ab672313f3a8
+    m_ActionName: GopherFullSystemControl/LeftArmTranslationRotationSwitch[/Keyboard/r]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6703508411491720707}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnTranslateRotate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 8259540f-8f7d-43dd-9c2c-9f6a2d4e4fa7
+    m_ActionName: GopherFullSystemControl/RightArm[/Keyboard/l,/Keyboard/j,/Keyboard/i,/Keyboard/k,/Keyboard/o,/Keyboard/u]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6703508411491720707}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnSwitchTranslateRotate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: ed5c5e07-3cbb-4ee7-a659-2e89a5ec225e
+    m_ActionName: GopherFullSystemControl/RightArmTranslationRotationSwitch[/Keyboard/p]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3631924278391485127}
+        m_TargetAssemblyTypeName: CameraControl, Assembly-CSharp
+        m_MethodName: OnRotate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: a445773c-a625-4d88-8133-e9bd1dc13a10
+    m_ActionName: GopherFullSystemControl/MainCameraRotate[/Mouse/delta]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3631924278391485127}
+        m_TargetAssemblyTypeName: CameraControl, Assembly-CSharp
+        m_MethodName: OnHome
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 43de98e3-3e64-4b18-8180-a11ba350d170
+    m_ActionName: GopherFullSystemControl/MainCameraHome[/Mouse/middleButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 14c26e93-d84c-4619-8345-179d206fa149
+    m_ActionName: GopherFullSystemControl/CameraSwitch
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard
-  m_DefaultActionMap: GopherMode
+  m_DefaultActionMap: GopherFullSystemControl
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!1 &2052428653152802528
@@ -13985,8 +14101,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   armController: {fileID: 1271706237}
-  simulationInputLagMean: 175
+  simulationInputLagMean: 100
   simulationInputLagStd: 25
+  controlMode: 0
 --- !u!1 &3405964029071807552
 GameObject:
   m_ObjectHideFlags: 0
@@ -20220,7 +20337,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4408274995126300629
 Transform:
   m_ObjectHideFlags: 0
@@ -21664,7 +21781,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseController: {fileID: 7628781304040955774}
   autoNavigation: {fileID: 2063852681}
-  simulationInputLagMean: 175
+  simulationInputLagMean: 100
   simulationInputLagStd: 25
 --- !u!1 &6720452277528072361
 GameObject:
@@ -26244,7 +26361,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4378321293572077601
 Transform:
   m_ObjectHideFlags: 0
@@ -26272,7 +26389,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d5eb0e393ddb08478f5690878bdf012, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerInput: {fileID: 0}
+  playerInput: {fileID: 7607378101559091467}
   <ControlMode>k__BackingField: 0
   <MainCameraEnabled>k__BackingField: 0
 --- !u!1 &8101480441308134436
@@ -26729,8 +26846,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   armController: {fileID: 12984549}
-  simulationInputLagMean: 175
+  simulationInputLagMean: 100
   simulationInputLagStd: 25
+  controlMode: 0
 --- !u!1 &8236308610775555650
 GameObject:
   m_ObjectHideFlags: 0
