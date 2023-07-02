@@ -64,7 +64,6 @@ public class ArticulationCameraController : CameraController
         );
         // Switch back to velocity control
         controlMode = ControlMode.Speed;
-        Debug.Log("HomeCameraCoroutine() Finished");
     }
 
     private bool CheckPositionReached(Vector3 position)

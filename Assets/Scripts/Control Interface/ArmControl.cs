@@ -19,6 +19,7 @@ public class ArmControl : MonoBehaviour
     private Vector3 linearVelocity = Vector3.zero;
     private Vector3 angularVelocity = Vector3.zero;
 
+    // Switches Arm Movement Between Rotation and Translation
     public enum ArmControlMode { translation = 0, rotation = 1 }
     [field: SerializeField] public ArmControlMode controlMode = ArmControlMode.translation;
 
@@ -60,8 +61,8 @@ public class ArmControl : MonoBehaviour
         StartCoroutine(DelayAndSetVelocityCoroutine("angular", angularVelocity));
     }
 
-    // Passes key inputs to translation or rotation
-    public void OnSwitchTranslateRotate(InputAction.CallbackContext context)
+    // Switch between Translation and Rotation
+    public void OnSwitch(InputAction.CallbackContext context)
     {
 
         if(context.performed)
@@ -77,7 +78,8 @@ public class ArmControl : MonoBehaviour
         }
     }
 
-    // Handle switching between translation and rotation if they use the same keys
+    // Handles Translation and Rotation of the arm
+    //      Only important if the keys for rotation and translation are the same
     public void OnTranslateRotate(InputAction.CallbackContext context)
     {
         if(controlMode == ArmControlMode.translation)

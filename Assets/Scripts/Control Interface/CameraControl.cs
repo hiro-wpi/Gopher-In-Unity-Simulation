@@ -19,6 +19,9 @@ public class CameraControl : MonoBehaviour
     private Vector3 angularVelocity;
     private Vector2 inputVelocity;
 
+    // Enables and Disables Camera Control
+    private bool isCameraActive = false;
+
     void Start() 
     {
         // No need to simulate input lagging if controlling the real robot
@@ -31,17 +34,40 @@ public class CameraControl : MonoBehaviour
 
     void Update() {}
 
-    public void OnRotate(InputAction.CallbackContext context)
+    public void OnHome(InputAction.CallbackContext context)
     {
-        
-        inputVelocity = context.ReadValue<Vector2>();
-        
-        angularVelocity = new Vector3(0.0f, -inputVelocity.x, inputVelocity.y);
-
-        // Set velocity
-        StartCoroutine(DelayAndSetVelocityCoroutine(angularVelocity));
+        if (context.performed)
+        {
+            cameraController.HomeCamera();
+        }
     }
 
+    public void OnRotate(InputAction.CallbackContext context)
+    {
+        if(isCameraActive)
+        {
+            inputVelocity = context.ReadValue<Vector2>();
+        
+            angularVelocity = new Vector3(0.0f, -inputVelocity.x, inputVelocity.y);
+
+            // Set velocity
+            StartCoroutine(DelayAndSetVelocityCoroutine(angularVelocity));
+        }
+    }
+
+    public void OnToggle(InputAction.CallbackContext context)
+    {
+        // Toggles between enabling and disabling Camera Rotation
+        //      We allow homing of the camera at any time
+        if(context.performed)
+        {
+            isCameraActive = !isCameraActive;
+        }
+
+    }
+
+    
+    
     IEnumerator DelayAndSetVelocityCoroutine(Vector3 angularVelocity)
     {
         // Simulate input lagging
@@ -53,15 +79,6 @@ public class CameraControl : MonoBehaviour
             yield return new WaitForSeconds(delay);
         }
         // Velocity
-        cameraController.SetVelocity(angularVelocity);
-        Debug.Log(angularVelocity);
-    }
-
-    public void OnHome(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            cameraController.HomeCamera();
-        }
+        cameraController.SetVelocity(angularVelocity);        
     }
 }
