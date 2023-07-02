@@ -33,14 +33,16 @@ public class CameraControl : MonoBehaviour
 
     public void OnRotate(InputAction.CallbackContext context)
     {
+        
         inputVelocity = context.ReadValue<Vector2>();
+        
         angularVelocity = new Vector3(0.0f, -inputVelocity.x, inputVelocity.y);
 
         // Set velocity
         StartCoroutine(DelayAndSetVelocityCoroutine(angularVelocity));
     }
 
-    IEnumerator DelayAndSetVelocityCoroutine(Vector2 angularVelocity)
+    IEnumerator DelayAndSetVelocityCoroutine(Vector3 angularVelocity)
     {
         // Simulate input lagging
         if (simulationInputLagMean > 0)
@@ -52,6 +54,7 @@ public class CameraControl : MonoBehaviour
         }
         // Velocity
         cameraController.SetVelocity(angularVelocity);
+        Debug.Log(angularVelocity);
     }
 
     public void OnHome(InputAction.CallbackContext context)
