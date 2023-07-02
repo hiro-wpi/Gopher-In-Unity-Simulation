@@ -224,6 +224,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   robotTF: {fileID: 702946891374405993}
   polygonPublisher: {fileID: 1226114613}
+  leftArmGrasping: {fileID: 4172144274368844524}
+  rightArmGrasping: {fileID: 7340697812366614354}
+  previousPosition: 0
+  previousRotation: 0
 --- !u!1 &631462978
 GameObject:
   m_ObjectHideFlags: 0
@@ -25928,51 +25932,15 @@ MonoBehaviour:
     m_ActionId: 66f84fbf-18c9-40fa-93c8-b79124ee5b11
     m_ActionName: GopherAutoNavigation/StopNavigation[/Keyboard/t]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2063852684}
-        m_TargetAssemblyTypeName: DynamicFootprint, Assembly-CSharp
-        m_MethodName: OnSetNormalFootprint
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: e5868d04-0849-4534-ba7d-1651446754d1
     m_ActionName: GopherAutoNavigation/SetNormalFootprint[/Keyboard/j]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2063852684}
-        m_TargetAssemblyTypeName: DynamicFootprint, Assembly-CSharp
-        m_MethodName: OnSetCartFootprint
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 05eb3257-e96f-4f8f-b08c-8741b3ead052
     m_ActionName: GopherAutoNavigation/SetCartFootprint[/Keyboard/k]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2063852684}
-        m_TargetAssemblyTypeName: DynamicFootprint, Assembly-CSharp
-        m_MethodName: OnSetIVFootprint
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 3314c722-1de1-4a21-9bce-096314bafed8
     m_ActionName: GopherAutoNavigation/SetIVFootprint[/Keyboard/l]
   m_NeverAutoSwitchControlSchemes: 0
@@ -26339,7 +26307,6 @@ MonoBehaviour:
   playerInput: {fileID: 7078970156635072719}
   <ControlMode>k__BackingField: 0
   <MainCameraEnabled>k__BackingField: 0
-  AutoNavigationEnabled: 1
 --- !u!1 &8101480441308134436
 GameObject:
   m_ObjectHideFlags: 0
