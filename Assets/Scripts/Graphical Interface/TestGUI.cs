@@ -159,30 +159,27 @@ public class TestGUI : MonoBehaviour
     }
 
     // Input Actions
-    // public void OnResumeNavigation(InputAction.CallbackContext context)
-    // {
-    //     if (context.performed)
-    //     {
-    //         autoNavigation.ResumeNavigation();
-    //     }
-    // }
-
-    // public void OnPauseNavigation(InputAction.CallbackContext context)
-    // {
-    //     if (context.performed)
-    //     {
-    //         autoNavigation.PauseNavigation();
-    //     }
-    // }
-
-
-    // public void OnStopNavigation(InputAction.CallbackContext context)
-    // {
-    //     if (context.performed)
-    //     {
-    //         autoNavigation.StopNavigation();
-    //     }
-    // }
+    public void OnResumeNavigation(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            autoNavigation.ResumeNavigation();
+        }
+    }
+    public void OnPauseNavigation(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            autoNavigation.PauseNavigation();
+        }
+    }
+    public void OnStopNavigation(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            autoNavigation.StopNavigation();
+        }
+    }
 
     // public void OnSetNormalFootprint(InputAction.CallbackContext context)
     // {

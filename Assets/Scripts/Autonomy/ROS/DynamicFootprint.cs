@@ -10,15 +10,107 @@ using UnityEngine.InputSystem;
 // </summary>
 public class DynamicFootprint : MonoBehaviour
 {
-    [SerializeField] private Transform robotTF;
+    [SerializeField] private Transform robotTF; // robotTF
     [SerializeField] private PolygonPublisher polygonPublisher;
+    [SerializeField] private Grasping leftArmGrasping;
+    [SerializeField] private Grasping rightArmGrasping;
     private float robotFootprintRadius = 0.45f;
-    
-    void Start() {}
 
-    void Update() {}
+    // Handles Looking at Grasped Objects
+    private GameObject graspedObject;
+    private Transform graspedObjectTF;
 
-    // TEMP TO BE REMOVED
+    public float previousPosition = 0.0f;
+    public float previousRotation = 0.0f;
+
+    // Flag for the state of the base
+    private bool usingNormalFootprint = true;
+
+    // Public
+
+    public void Start()
+    {
+        // Init Footprint
+        StartCoroutine(InitFootprint());
+    }
+
+    IEnumerator InitFootprint()
+    {
+        yield return new WaitForFixedUpdate();
+        SetToNormalFootprint();
+        usingNormalFootprint = true;
+    }
+
+    public void Update()
+    {
+
+        if(leftArmGrasping.IsGrasping | rightArmGrasping.IsGrasping)
+        {
+            bool changingFootprint = false;
+
+            // Getting the Grasped Object
+            if(leftArmGrasping.IsGrasping)
+            {
+                graspedObject = leftArmGrasping.GetGraspedObject();
+            }
+            else if(rightArmGrasping.IsGrasping)
+            {
+                graspedObject = rightArmGrasping.GetGraspedObject();
+            }
+
+            // Gets the pos and rot relative to the robot frame
+            (float pos, float rot) = GetGraspedObjectPoseShift(Vector3.zero, Quaternion.identity, graspedObject.transform);
+            
+            // Figures out if the footprint should be changed
+            if(previousPosition == 0.0f | previousRotation == 0.0f)
+            {
+                (previousPosition, previousRotation) = GetGraspedObjectPoseShift(Vector3.zero, Quaternion.identity, graspedObject.transform);
+                changingFootprint = true;
+            }
+            else if(Math.Abs(pos - previousPosition) > 0.05 | Math.Abs(rot - previousRotation) > 10.0f)
+            {
+                previousPosition = pos;
+                previousRotation = rot;
+                changingFootprint =  true;
+            }
+
+            // if the footprint should be changed, update accordingly based on the object
+            if(changingFootprint)
+            {
+                graspedObjectTF = graspedObject.GetComponent<Transform>();
+
+                if(GameObjectHasName(graspedObject, "IV Pole Movable"))
+                {
+                    Vector3[] polygon = GetMedicalIVFootprint(graspedObjectTF);
+                    UpdateFootprint(polygon);
+                    usingNormalFootprint = false;
+                }
+
+                // Change the footprint of the Cart
+                if(GameObjectHasName(graspedObject, "Service Cart Movable"))
+                {
+                    // Debug.Log("Service Cart");
+                    Vector3[] polygon = GetMedicalCartFootprint(graspedObjectTF);
+                    UpdateFootprint(polygon);
+                    usingNormalFootprint = false;
+                }
+            }
+        }
+        else
+        {
+            if(usingNormalFootprint == false)
+            {   
+                // Sets the footprint to normal
+                SetToNormalFootprint();
+                usingNormalFootprint = true;
+
+                // Makes sure that no object is being
+                previousPosition = 0.0f;
+                previousRotation = 0.0f;
+            }
+        }
+    }
+
     public void OnSetNormalFootprint(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -29,7 +121,6 @@ public class DynamicFootprint : MonoBehaviour
 
     public void OnSetCartFootprint(InputAction.CallbackContext context)
     {
-        Debug.Log("OnSetCartFootprint");
         if (context.performed)
         {
             SetToBaseWithCartFootprint();
@@ -38,13 +129,11 @@ public class DynamicFootprint : MonoBehaviour
 
     public void OnSetIVFootprint(InputAction.CallbackContext context)
     {
-        Debug.Log("OnSetIVFootprint");
         if (context.performed)
         {
             SetToBaseWithIVFootprint();
         }   
     }
-
 
     public void UpdateFootprint(Vector3[] poly)
     {
@@ -55,6 +144,7 @@ public class DynamicFootprint : MonoBehaviour
     public void SetToNormalFootprint()
     {   
         Vector3[] polygon = GetRobotFootprint();
+        // Debug.Log(polygon);
         UpdateFootprint(polygon);
     }
 
@@ -87,19 +177,40 @@ public class DynamicFootprint : MonoBehaviour
     }
 
     // Private 
+
+    // Checks to see if the pose of the object shifted
+    private (float, float) GetGraspedObjectPoseShift(Vector3 prevPosition, Quaternion prevRotation, Transform tf)
+    {
+        // Gets the difference in the position
+        Vector3 position = robotTF.InverseTransformPoint(tf.position);
+        float distance = Vector3.Distance(prevPosition, position); 
+
+        // Get the difference in the rotation from a to b
+        Quaternion rotation = (Quaternion.Inverse(robotTF.rotation) * tf.rotation);
+        float diffAngle = Math.Abs(rotation.eulerAngles.y - prevRotation.eulerAngles.y);
+
+        return (distance, diffAngle);
+    }
+
     private Vector3[] GetMedicalCartFootprint(Transform cartTF) 
     {
         Vector3[] points = GetRectangle(0.74f, 1.18f);      // cart wrt cart
-        Vector3[] points_ = new Vector3[points.Length];     // cart wrt robot
+        Vector3[] points_ = new Vector3[points.Length];                 // cart wrt robot
         Vector3[] robotFootprint = GetRobotFootprint();
         // Transform robotTF = robot.GetComponent<Transform>();
+        
+        // Create a temp game object
+        GameObject cart_ = new GameObject();
+        Transform cartTF_ = cart_.GetComponent<Transform>();
+        cartTF_.Translate(new Vector3(cartTF.transform.position.x, 0.0f, cartTF.transform.position.z));
+        cartTF_.Rotate(new Vector3(0.0f, cartTF.transform.rotation.y, 0.0f));
 
         for(int i = 0; i < points.Length; i++)
         {
             // Transform Cart Points from Cart to Robot Coordinates
             //      Local(Cart) to World
             //      World to Local(Robot)
-            points_[i] = robotTF.InverseTransformPoint(cartTF.TransformPoint(points[i]));
+            points_[i] = robotTF.InverseTransformPoint(cartTF_.TransformPoint(points[i]));
         }
         
         // Assume that the polygon of the robot are in robot local coordinates
@@ -109,62 +220,72 @@ public class DynamicFootprint : MonoBehaviour
         Array.Copy(points_, 0, newFootprint, 0, 4);
         Array.Copy(robotFootprint, 1, newFootprint, 4, 7);
 
-        Debug.Log(newFootprint);
+        // Debug.Log(newFootprint);
+
+        // Delete Temp Gameobject
+        Destroy(cart_);
+
         return newFootprint;
     }
 
     private Vector3[] GetMedicalIVFootprint(Transform ivTF) 
     {   
+        // Create a temp game object
+        GameObject iv_ = new GameObject();
+        Transform ivTF_ = iv_.GetComponent<Transform>();
+        ivTF_.Translate(new Vector3(ivTF.transform.position.x, 0.0f, ivTF.transform.position.z));
+        ivTF_.Rotate(new Vector3(0.0f, ivTF.transform.rotation.y, 0.0f));
+
         // Transform                      
         // Transform robotTF = robot.GetComponent<Transform>();
-        Vector3 ivPosition = robotTF.InverseTransformPoint(ivTF.position);  // wrt to robot
+        Vector3 ivPosition = robotTF.InverseTransformPoint(ivTF_.position);  // wrt to robot
 
         // Getting the pair shaped based on the distance
         Vector3[] pearShape = GetPearShape(ivPosition.magnitude, robotFootprintRadius, 0.33f);
         Vector3[] newFootprint = new Vector3[pearShape.Length];
 
+        // Quaternion.FromToRotation(robotTF.forward, 
+        //                         new Vector3(ivPosition.x,
+        //                                 0.00f,
+        //                                 ivPosition.z);
+
         // Rotating the pear
-        Matrix4x4 rotation = Matrix4x4.TRS(
-            Vector3.zero, ivTF.localRotation, Vector3.one
-        );
+        Matrix4x4 rotation = Matrix4x4.TRS(Vector3.zero, 
+                                           ivTF_.localRotation,
+                                           Vector3.one);
 
         for(int i = 0; i < pearShape.Length; i++)
         {
             newFootprint[i] = rotation.MultiplyPoint3x4(pearShape[i]);
         }
 
+        // Delete the temp object
+        Destroy(iv_);
+
         return newFootprint;
+
+
+
+        
     }
 
     private Vector3[] GetRobotFootprint()
     {
         return GetPolygon(8, robotFootprintRadius);
     }
+    // Static 
 
-
-    // Util functions to get different shapes 
-    // Get Rectangle
-    private static Vector3[] GetRectangle(float width, float height) 
-    {
-        // Points are organized counter-clockwise
-        Vector3[] poly = {
-            new Vector3( width/2, 0, -height/2),
-            new Vector3( width/2, 0,  height/2),
-            new Vector3(-width/2, 0,  height/2),
-            new Vector3(-width/2, 0, -height/2)
-        };
-        return poly;
-    }
-
-    // Get Polygon
+        // Get Polygon
     private static Vector3[] GetPolygon(int sides, float apothem)
     {
         // apothem - radius of the incircle of a polygon
         // radius - radius of the circumscribed circle
+
         Vector3[] points = new Vector3[sides];
 
-        // Gets the radius of the circumscribed circle
         float angle = 2 * Mathf.PI / sides;
+
+        // Gets the radius of the circumscribed circle
         float radius = apothem / Mathf.Cos(angle / 2);
 
         // All points of a regular polygon lie on the circumscribed circle
@@ -181,26 +302,25 @@ public class DynamicFootprint : MonoBehaviour
         Array.Copy(points, 2, pointsReorganized, 0, 6);
         Array.Copy(points, 0, pointsReorganized, 6, 2);
 
+
+        // Debug.Log(pointsReorganized[0]);
+
         return pointsReorganized;
     }
         
-    // Get PearShapedPolygon
-    private static Vector3[] GetPearShape(
-        float distance, float baseApothem, float objectApothem
-    )
+        // Get PearShapedPolygon
+    private static Vector3[] GetPearShape(float distance, float baseApothem, float objectApothem)
     {
         // Get circles based on each appthem
-        // assume this to be the larger size
-        Vector3[] baseCircle = GetPolygon(8, baseApothem);   
+        
+        Vector3[] baseCircle = GetPolygon(8, baseApothem);   // assume this to be the larger size
         Vector3[] objectCircle = GetPolygon(8, objectApothem);
         Vector3[] objectCircle_ = new Vector3[objectCircle.Length];
         Vector3[] pearShapedPolygon = new Vector3[10]; 
 
-        Matrix4x4 translation = Matrix4x4.TRS(
-            new Vector3(0f, 0f, distance),
-            Quaternion.identity,
-            Vector3.one
-        );
+        Matrix4x4 translation = Matrix4x4.TRS(new Vector3(0f, 0f, distance),
+                                              Quaternion.identity,
+                                              Vector3.one);
 
         // Translate the object circle by distance d forward
         for(int i = 0; i < 8; i++)
@@ -213,5 +333,31 @@ public class DynamicFootprint : MonoBehaviour
         Array.Copy(objectCircle_, 0, pearShapedPolygon, 7, 3);
 
         return pearShapedPolygon;
+    }
+        // Get Rectangle
+
+    private static Vector3[] GetRectangle(float width, float length) 
+    {
+        // Points are organized counter-clockwise
+        Vector3[] poly = {
+            new Vector3( width/2, 0, -length/2),
+            new Vector3( width/2, 0,  length/2),
+            new Vector3(-width/2, 0,  length/2),
+            new Vector3(-width/2, 0, -length/2)
+        };
+        return poly;
+    }
+
+
+    private static bool GameObjectHasName(GameObject gameobject,  string name)
+    {
+        string objectName = gameobject.name;
+        if(objectName.IndexOf(name) > -1)
+        {
+            return true;
+        }
+        return false;
+
+
     }
 }
