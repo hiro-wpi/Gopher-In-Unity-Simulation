@@ -85,6 +85,33 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "ResumeNavigation",
+                    "type": "Button",
+                    "id": "00db9742-2918-4ebc-823e-188fef4ef1a1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PauseNavigation",
+                    "type": "Button",
+                    "id": "9b792521-1340-485a-b4d3-dec7b1080038",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "StopNavigation",
+                    "type": "Button",
+                    "id": "0d35f2de-d900-45b1-9331-2317b3c1c5e2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -692,6 +719,39 @@
                     "action": "ChestTranslate",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "26b7f705-6b9f-4ae3-863a-d6832d4ec2f4",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "PauseNavigation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f53fd3ec-0720-43f2-b586-a725db9f649b",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "ResumeNavigation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8d5b349a-1786-4aff-81bd-3c8ea8242195",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "StopNavigation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
