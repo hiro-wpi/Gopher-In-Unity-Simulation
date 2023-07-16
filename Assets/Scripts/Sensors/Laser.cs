@@ -33,6 +33,9 @@ public class Laser : MonoBehaviour
         return (updateRate, samples, angleMin, angleMax, rangeMin, rangeMax);
     }
 
+    // Gameobject to ignore
+    public GameObject graspedGameObject = null;
+
     // Scan sending
     private NativeArray<Quaternion> raycastRotations;
     private NativeArray<RaycastCommand> raycastCommands;
@@ -64,15 +67,19 @@ public class Laser : MonoBehaviour
     {
         public NativeArray<RaycastHit> RaycastHits;
         public float MinDistance;
+        // ignore gameobject
+        public GameObject ignoredGameObject;
         // result
         public NativeArray<float> ObstacleDistances;
         public NativeArray<float> HumanDistances;
+
         public void Execute(int i)
         {
             RaycastHit hit = RaycastHits[i];
 
-            // No hit
-            if (hit.distance < MinDistance || hit.distance == 0f)
+            // No hit or is the object we want to ignore
+            if (hit.distance < MinDistance || hit.distance == 0f 
+                || hit.articulationBody.gameObject.name == ignoredGameObject.name)
             {
                 ObstacleDistances[i] = float.PositiveInfinity;
                 HumanDistances[i] = float.PositiveInfinity;
@@ -169,6 +176,7 @@ public class Laser : MonoBehaviour
         {
             RaycastHits = raycastHits,
             MinDistance = rangeMin,
+            ignoredGameObject = null,
             ObstacleDistances = obstacleDistances,
             HumanDistances = humanDistances
         };
