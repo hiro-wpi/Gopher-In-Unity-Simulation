@@ -55,19 +55,18 @@ public class CameraControl : MonoBehaviour
         }
     }
 
-    public void OnToggle(InputAction.CallbackContext context)
+    public void OnToggleOnOff(InputAction.CallbackContext context)
     {
         // Toggles between enabling and disabling Camera Rotation
         //      We allow homing of the camera at any time
         if(context.performed)
         {
+            
             isCameraActive = !isCameraActive;
         }
 
     }
 
-    
-    
     IEnumerator DelayAndSetVelocityCoroutine(Vector3 angularVelocity)
     {
         // Simulate input lagging
