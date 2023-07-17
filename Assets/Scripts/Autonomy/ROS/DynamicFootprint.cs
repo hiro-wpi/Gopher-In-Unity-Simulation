@@ -23,6 +23,10 @@ public class DynamicFootprint : MonoBehaviour
     public float previousPosition = 0.0f;
     public float previousRotation = 0.0f;
 
+    // Filtering For laser
+
+    public Laser laserScanner;
+
     // Flag for the state of the base
     private bool usingNormalFootprint = true;
 
@@ -57,6 +61,9 @@ public class DynamicFootprint : MonoBehaviour
             {
                 graspedObject = rightArmGrasping.GetGraspedObject();
             }
+
+            // Pass the grasped game object to the laser scanner
+            laserScanner.filteredGraspedObject = graspedObject;
 
             // Gets the pos and rot relative to the robot frame
             (float pos, float rot) = GetGraspedObjectPoseShift(Vector3.zero, Quaternion.identity, graspedObject.transform);
@@ -103,6 +110,9 @@ public class DynamicFootprint : MonoBehaviour
                 // Sets the footprint to normal
                 SetToNormalFootprint();
                 usingNormalFootprint = true;
+
+                // Reset the laser scanner
+                laserScanner.filteredGraspedObject = null;
 
                 // Makes sure that no object is being
                 previousPosition = 0.0f;

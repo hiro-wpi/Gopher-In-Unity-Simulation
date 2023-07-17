@@ -161,7 +161,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 535451129}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: da24c4742847e3e18a4a8d515f2ce6c9, type: 3}
   m_Name: 
@@ -175,7 +175,7 @@ MonoBehaviour:
   sendGoalService: {fileID: 535451132}
   pathPlanner: {fileID: 535451131}
   poseWithCovarianceStampedPublisher: {fileID: 732307516}
-  twistSubscriber: {fileID: 0}
+  twistSubscriber: {fileID: 4908771270974871908}
   robot: {fileID: 702946891374405994}
 --- !u!114 &2063852683
 MonoBehaviour:
@@ -225,6 +225,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   robotTF: {fileID: 702946891374405993}
   polygonPublisher: {fileID: 1226114613}
+  leftArmGrasping: {fileID: 4172144274368844524}
+  rightArmGrasping: {fileID: 7340697812366614354}
+  previousPosition: 0
+  previousRotation: 0
+  laserScanner: {fileID: 1247843086211099820}
 --- !u!114 &4908771270974871908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,7 +237,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 535451129}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e3c70d4a760e69013ae012cfb66325a0, type: 3}
   m_Name: 
@@ -254,7 +259,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &631462979
 Transform:
   m_ObjectHideFlags: 0
@@ -19803,7 +19808,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4408274995126300629
 Transform:
   m_ObjectHideFlags: 0
@@ -19935,9 +19940,9 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5972980238589488139}
-        m_TargetAssemblyTypeName: CameraControl, Assembly-CSharp
-        m_MethodName: OnToggleOff
+      - m_Target: {fileID: 911977780096430921}
+        m_TargetAssemblyTypeName: GopherControlManager, Assembly-CSharp
+        m_MethodName: OnBase
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -19951,9 +19956,9 @@ MonoBehaviour:
     m_ActionName: GopherMode/BaseControl[/Keyboard/downArrow]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5972980238589488139}
-        m_TargetAssemblyTypeName: CameraControl, Assembly-CSharp
-        m_MethodName: OnToggleOff
+      - m_Target: {fileID: 911977780096430921}
+        m_TargetAssemblyTypeName: GopherControlManager, Assembly-CSharp
+        m_MethodName: OnChest
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -19967,9 +19972,9 @@ MonoBehaviour:
     m_ActionName: GopherMode/ChestControl[/Keyboard/upArrow]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5972980238589488139}
-        m_TargetAssemblyTypeName: CameraControl, Assembly-CSharp
-        m_MethodName: OnToggleOff
+      - m_Target: {fileID: 911977780096430921}
+        m_TargetAssemblyTypeName: GopherControlManager, Assembly-CSharp
+        m_MethodName: OnLeftArm
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -19983,9 +19988,9 @@ MonoBehaviour:
     m_ActionName: GopherMode/LeftArmControl[/Keyboard/leftArrow]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5972980238589488139}
-        m_TargetAssemblyTypeName: CameraControl, Assembly-CSharp
-        m_MethodName: OnToggleOff
+      - m_Target: {fileID: 911977780096430921}
+        m_TargetAssemblyTypeName: GopherControlManager, Assembly-CSharp
+        m_MethodName: OnRightArm
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -20002,18 +20007,6 @@ MonoBehaviour:
       - m_Target: {fileID: 911977780096430921}
         m_TargetAssemblyTypeName: GopherControlManager, Assembly-CSharp
         m_MethodName: OnMainCamera
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 5972980238589488139}
-        m_TargetAssemblyTypeName: CameraControl, Assembly-CSharp
-        m_MethodName: OnToggleOnOff
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -22218,7 +22211,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6780721534204609730}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e77a7a5fce02b78be8923080bd1cacac, type: 3}
   m_Name: 
@@ -23364,6 +23357,38 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 0d35f2de-d900-45b1-9331-2317b3c1c5e2
     m_ActionName: GopherControl/StopNavigation[/Keyboard/c]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7892052488438994903}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnGrasp
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: bbf69b83-370c-4e76-9e31-d300f25fce82
+    m_ActionName: GopherControl/LeftArmGrasp[/Keyboard/f]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7063809901726800192}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnGrasp
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b7cf5c03-7286-4dff-bfe3-b06aaa22ec86
+    m_ActionName: GopherControl/RightArmGrasp[/Keyboard/semicolon]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard
   m_DefaultActionMap: GopherControl
@@ -24591,6 +24616,7 @@ MonoBehaviour:
   angleMax: 3.141593
   rangeMin: 0.1
   rangeMax: 5
+  filteredGraspedObject: {fileID: 0}
   <Directions>k__BackingField: []
   <ObstacleRanges>k__BackingField: []
   <HumanRanges>k__BackingField: []
@@ -24982,6 +25008,7 @@ MonoBehaviour:
   angleMax: 1.5708
   rangeMin: 0.1
   rangeMax: 5
+  filteredGraspedObject: {fileID: 0}
   <Directions>k__BackingField: []
   <ObstacleRanges>k__BackingField: []
   <HumanRanges>k__BackingField: []
@@ -27455,7 +27482,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7527544419884785351
 Transform:
   m_ObjectHideFlags: 0

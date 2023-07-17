@@ -24,6 +24,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "LeftArmGrasp",
+                    "type": "Button",
+                    "id": "bbf69b83-370c-4e76-9e31-d300f25fce82",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "LeftArmSwitch",
                     "type": "Button",
                     "id": "8c92c0fe-f243-431b-86dc-ab672313f3a8",
@@ -40,6 +49,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "RightArmGrasp",
+                    "type": "Button",
+                    "id": "b7cf5c03-7286-4dff-bfe3-b06aaa22ec86",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "RightArmSwitch",
@@ -646,7 +664,7 @@
                 {
                     "name": "",
                     "id": "58c9d7db-688b-4cee-9179-44595558da04",
-                    "path": "<Mouse>/leftButton",
+                    "path": "<Keyboard>/numpadPlus",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -750,6 +768,28 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "StopNavigation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "44787081-1cbe-45f9-bc57-cf6c0771ff84",
+                    "path": "<Keyboard>/semicolon",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightArmGrasp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d1d76076-6ca1-44b6-babf-dcc17fc90399",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftArmGrasp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

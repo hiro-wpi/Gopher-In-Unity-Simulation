@@ -34,7 +34,7 @@ public class Laser : MonoBehaviour
     }
 
     // Gameobject to ignore
-    public GameObject graspedGameObject = null;
+    public GameObject filteredGraspedObject = null;
 
     // Scan sending
     private NativeArray<Quaternion> raycastRotations;
@@ -68,7 +68,7 @@ public class Laser : MonoBehaviour
         public NativeArray<RaycastHit> RaycastHits;
         public float MinDistance;
         // ignore gameobject
-        public GameObject ignoredGameObject;
+        // public NativeArray<char> ignoredGameObjectName;
         // result
         public NativeArray<float> ObstacleDistances;
         public NativeArray<float> HumanDistances;
@@ -77,9 +77,14 @@ public class Laser : MonoBehaviour
         {
             RaycastHit hit = RaycastHits[i];
 
+            // if(hit.collider.attachedArticulationBody != null)
+            // {
+            //     Debug.Log("Yes");
+            //     // || IsNameEqual(hit.articulationBody.gameObject.name)
+            // }
+
             // No hit or is the object we want to ignore
-            if (hit.distance < MinDistance || hit.distance == 0f 
-                || hit.articulationBody.gameObject.name == ignoredGameObject.name)
+            if (hit.distance < MinDistance || hit.distance == 0f)
             {
                 ObstacleDistances[i] = float.PositiveInfinity;
                 HumanDistances[i] = float.PositiveInfinity;
@@ -90,6 +95,14 @@ public class Laser : MonoBehaviour
                 ObstacleDistances[i] = hit.distance;
             }
         }
+
+        // private bool IsNameEqual(string gameObjectName)
+        // {
+        //     // Convert NativeArry to sting
+        //     string ignoredName = new string(ignoredGameObjectName.ToArray());
+        //     // Compare the game object name with the ignored name
+        //     return gameObjectName == ignoredName;
+        // }
     };
 
     // Results
@@ -176,7 +189,7 @@ public class Laser : MonoBehaviour
         {
             RaycastHits = raycastHits,
             MinDistance = rangeMin,
-            ignoredGameObject = null,
+            // ignoredGameObjectName = new NativeArray<char>("".ToCharArray(), Allocator.TempJob),
             ObstacleDistances = obstacleDistances,
             HumanDistances = humanDistances
         };
@@ -200,6 +213,27 @@ public class Laser : MonoBehaviour
                     humanDistances[i] = hit.distance;
                 }
             }
+        }
+
+        // filtering the raycast for dynamic footprint
+        // Used in cart pushing task
+
+        if (filteredGraspedObject != null)
+        {
+            for (int i = 0; i < samples; ++i)
+            {
+                RaycastHit hit = raycastHits[i];
+                if (hit.collider != null)
+                {
+                   if (hit.collider.transform.IsChildOf(filteredGraspedObject.transform))
+                    {
+                        obstacleDistances[i] = float.PositiveInfinity;
+                        humanDistances[i] = float.PositiveInfinity;
+                    } 
+                }
+                
+            }
+
         }
         raycastHits.Dispose();
 
