@@ -205,22 +205,14 @@ public class DynamicFootprint : MonoBehaviour
     private Vector3[] GetMedicalCartFootprint(Transform cartTF) 
     {
         Vector3[] points = GetRectangle(0.74f, 1.18f);      // cart wrt cart
-        Vector3[] points_ = new Vector3[points.Length];                 // cart wrt robot
+        Vector3[] points_ = new Vector3[points.Length];     // cart wrt robot
         Vector3[] robotFootprint = GetRobotFootprint();
-        // Transform robotTF = robot.GetComponent<Transform>();
         
-        // Create a temp game object
-        GameObject cart_ = new GameObject();
-        Transform cartTF_ = cart_.GetComponent<Transform>();
-        cartTF_.Translate(new Vector3(cartTF.transform.position.x, 0.0f, cartTF.transform.position.z));
-        cartTF_.Rotate(new Vector3(0.0f, cartTF.transform.rotation.y, 0.0f));
 
         for(int i = 0; i < points.Length; i++)
         {
             // Transform Cart Points from Cart to Robot Coordinates
-            //      Local(Cart) to World
-            //      World to Local(Robot)
-            points_[i] = robotTF.InverseTransformPoint(cartTF_.TransformPoint(points[i]));
+            points_[i] = robotTF.InverseTransformPoint(cartTF.TransformPoint(points[i]));
         }
         
         // Assume that the polygon of the robot are in robot local coordinates
@@ -229,11 +221,6 @@ public class DynamicFootprint : MonoBehaviour
         // Combine
         Array.Copy(points_, 0, newFootprint, 0, 4);
         Array.Copy(robotFootprint, 1, newFootprint, 4, 7);
-
-        // Debug.Log(newFootprint);
-
-        // Delete Temp Gameobject
-        Destroy(cart_);
 
         return newFootprint;
     }
