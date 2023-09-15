@@ -66,7 +66,7 @@ public class GraphicalInterface : MonoBehaviour
     public GameObject controlModeLeftDisplay;
     public GameObject controlModeRightDisplay;
     public GameObject controlModeBaseDisplay;
-    private GopherControlManager gopherControl;
+    // private GopherControlManager gopherControl;
     // camera control selection
     public GameObject headCameraViewingDisplay;
     public GameObject leftCameraViewingDisplay;
@@ -318,7 +318,8 @@ public class GraphicalInterface : MonoBehaviour
         // battery 
         UpdateBattery(stateReader.DurationTime);
         // control mode
-        UpdateControlMode(gopherControl.MainCameraEnabled, gopherControl.ControlMode);
+        // TODO Redo the control mode display
+        // UpdateControlMode(gopherControl.MainCameraEnabled, gopherControl.ControlMode);
         UpdateCameraViewing(cameraIndex);
         // location
         UpdateLocalization(localization.Position, localization.RotationEuler);
@@ -481,7 +482,7 @@ public class GraphicalInterface : MonoBehaviour
         laser = robot.GetComponentInChildren<Laser>();
         localization = robot.GetComponentInChildren<FakeLocalization>();
         stateReader = robot.GetComponentInChildren<StateReader>();
-        gopherControl = robot.GetComponentInChildren<GopherControlManager>();
+        // gopherControl = robot.GetComponentInChildren<GopherControlManager>();
         autoNavigation = robot.GetComponentInChildren<UnityAutoNavigation>();
         // Get IK and End effector reference transform for
         // switching IK reference frame based on camera view
@@ -672,7 +673,7 @@ public class GraphicalInterface : MonoBehaviour
             mapCamera.enabled = true;
             cameraDisplay.GetComponent<RawImage>().texture = mapRendertexture;
             // disable main camera control to have the mouse back
-            gopherControl.ChangeMainCameraActive();
+            // gopherControl.ChangeMainCameraActive();
             Cursor.lockState = CursorLockMode.Confined;
             // Time.timeScale = 0f; // Can not stop due to auto path finding
             Time.timeScale = 0.5f;

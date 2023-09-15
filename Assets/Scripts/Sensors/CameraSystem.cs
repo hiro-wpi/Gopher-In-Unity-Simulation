@@ -12,7 +12,7 @@ public class CameraSystem : MonoBehaviour
     [SerializeField] private int frameRate;
     private CameraFrameRate[] cameraFrameRates;
 
-    void Start()
+    void Awake()
     {
         Debug.Assert(Cameras.Length == cameraNames.Length);
 
@@ -35,6 +35,8 @@ public class CameraSystem : MonoBehaviour
             fr.SetFrameRate(frameRate);
         }
     }
+
+    void Start() {}
 
     void Update() {}
 
