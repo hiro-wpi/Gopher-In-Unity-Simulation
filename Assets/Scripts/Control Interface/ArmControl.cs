@@ -55,8 +55,14 @@ public class ArmControl : MonoBehaviour
 
     public void OnRotate(InputAction.CallbackContext context)
     {
-        // Read input
+        // Rotation uses the same keys as translation
+        // Need to convert axis
         angularVelocity = context.ReadValue<Vector3>();
+        angularVelocity = new Vector3(
+            angularVelocity.z, 
+            -angularVelocity.x, 
+            -angularVelocity.y
+        );
         // Set velocity
         StartCoroutine(DelayAndSetVelocityCoroutine("angular", angularVelocity));
     }

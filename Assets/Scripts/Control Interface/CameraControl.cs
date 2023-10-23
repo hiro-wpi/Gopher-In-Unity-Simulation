@@ -20,7 +20,7 @@ public class CameraControl : MonoBehaviour
     private Vector2 inputVelocity;
 
     // Enables and Disables Camera Control
-    private bool isCameraActive = false;
+    [ReadOnly, SerializeField] private bool isCameraActive = false;
 
     void Start() 
     {
@@ -47,7 +47,6 @@ public class CameraControl : MonoBehaviour
         if(isCameraActive)
         {
             inputVelocity = context.ReadValue<Vector2>();
-        
             angularVelocity = new Vector3(0.0f, -inputVelocity.x, inputVelocity.y);
 
             // Set velocity
@@ -55,13 +54,12 @@ public class CameraControl : MonoBehaviour
         }
     }
 
-    public void OnToggleOnOff(InputAction.CallbackContext context)
+    public void OnToggle(InputAction.CallbackContext context)
     {
         // Toggles between enabling and disabling Camera Rotation
         //      We allow homing of the camera at any time
         if(context.performed)
         {
-            
             isCameraActive = !isCameraActive;
         }
 

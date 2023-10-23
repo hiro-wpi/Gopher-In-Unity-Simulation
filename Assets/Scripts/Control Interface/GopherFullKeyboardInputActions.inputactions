@@ -69,6 +69,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "CameraToggle",
+                    "type": "Button",
+                    "id": "93132cf5-11bb-488b-b17a-466c3bf10258",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "CameraRotate",
                     "type": "Value",
                     "id": "a445773c-a625-4d88-8133-e9bd1dc13a10",
@@ -87,15 +96,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "CameraToggle",
-                    "type": "Button",
-                    "id": "45bc8b50-1c88-4ec8-8836-ec9421502642",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "ChestTranslate",
                     "type": "Value",
                     "id": "d420d0ed-b421-4bd9-88ce-a50996ab3613",
@@ -103,33 +103,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
-                },
-                {
-                    "name": "ResumeNavigation",
-                    "type": "Button",
-                    "id": "00db9742-2918-4ebc-823e-188fef4ef1a1",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "PauseNavigation",
-                    "type": "Button",
-                    "id": "9b792521-1340-485a-b4d3-dec7b1080038",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "StopNavigation",
-                    "type": "Button",
-                    "id": "0d35f2de-d900-45b1-9331-2317b3c1c5e2",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -662,17 +635,6 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "",
-                    "id": "58c9d7db-688b-4cee-9179-44595558da04",
-                    "path": "<Keyboard>/numpadPlus",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "CameraToggle",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
                     "name": "1D Axis",
                     "id": "64e06d6d-ed64-4f1e-9685-675c8b7b5c7f",
                     "path": "1DAxis",
@@ -740,39 +702,6 @@
                 },
                 {
                     "name": "",
-                    "id": "26b7f705-6b9f-4ae3-863a-d6832d4ec2f4",
-                    "path": "<Keyboard>/x",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "PauseNavigation",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f53fd3ec-0720-43f2-b586-a725db9f649b",
-                    "path": "<Keyboard>/z",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "ResumeNavigation",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "8d5b349a-1786-4aff-81bd-3c8ea8242195",
-                    "path": "<Keyboard>/c",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "StopNavigation",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "44787081-1cbe-45f9-bc57-cf6c0771ff84",
                     "path": "<Keyboard>/semicolon",
                     "interactions": "",
@@ -790,6 +719,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "LeftArmGrasp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9665e1d1-e404-48a8-b2b9-f8eacadbd47c",
+                    "path": "<Keyboard>/numpadPlus",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "CameraToggle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a60f77fb-dd22-4197-b71b-e6025b82fc0f",
+                    "path": "<Keyboard>/equals",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "CameraToggle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b077eade-0636-4e2b-a62d-4f5a25557119",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "CameraToggle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
