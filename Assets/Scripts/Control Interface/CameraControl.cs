@@ -63,6 +63,12 @@ public class CameraControl : MonoBehaviour
             isCameraActive = !isCameraActive;
         }
 
+        // Stop camera movement
+        if (!isCameraActive)
+        {
+            // Set velocity
+            StartCoroutine(DelayAndSetVelocityCoroutine(Vector3.zero));
+        }
     }
 
     IEnumerator DelayAndSetVelocityCoroutine(Vector3 angularVelocity)
