@@ -120,9 +120,16 @@ public class Laser : MonoBehaviour
     void Start() 
     {
         // Initialize result containers
-        Directions = new float[samples];
         ObstacleRanges = new float[samples];
         HumanRanges = new float[samples];
+
+        // Update rate
+        timer = new Timer(updateRate);
+    }
+
+    void OnEnable()
+    {
+        Directions = new float[samples];
 
         // Calculate angles based on angle limit and number of samples
         raycastRotations = new NativeArray<Quaternion>(samples, Allocator.Persistent);
@@ -135,25 +142,16 @@ public class Laser : MonoBehaviour
             );
         }
 
-        // Update rate
-        timer = new Timer(updateRate);
-    }
-
-    void OnEnable()
-    {
+        // Initialize result containers
         obstacleDistances = new(samples, Allocator.Persistent);
         humanDistances = new(samples, Allocator.Persistent);
     }
 
     void OnDisable()
     {
+        raycastRotations.Dispose();
         obstacleDistances.Dispose();
         humanDistances.Dispose();
-    }
-
-    void OnDestroy()
-    {
-        raycastRotations.Dispose();
     }
 
     void FixedUpdate()
