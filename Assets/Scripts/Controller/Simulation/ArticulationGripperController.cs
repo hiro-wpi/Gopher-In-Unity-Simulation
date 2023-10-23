@@ -107,7 +107,7 @@ public class ArticulationGripperController : MonoBehaviour
     private void CheckGrasping()
     {
         // Check only when gripper is closed 
-        // but object is not yet grasped
+        // and object is not yet grasped
         if (!gripperClosed || grasping.IsGrasping)
         {
             return;
@@ -116,9 +116,8 @@ public class ArticulationGripperController : MonoBehaviour
         // If both fingers in touch with the same graspable object
         if ((leftCollision.CollidingObject != null) && 
             (rightCollision.CollidingObject != null) &&
-            (leftCollision.CollidingObject == rightCollision.CollidingObject) &&           
-            (leftCollision.CollidingObject.tag == "GraspableObject"))
-        {
+            (leftCollision.CollidingObject == rightCollision.CollidingObject)
+        ){
             // Attach object to the tool frame
             grasping.Attach(leftCollision.CollidingObject);
             

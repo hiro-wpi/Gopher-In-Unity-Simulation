@@ -26,6 +26,7 @@ Transform:
   m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0.07, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8549127552375267429}
   m_RootOrder: 1
@@ -41,9 +42,10 @@ GameObject:
   - component: {fileID: 8549127552375267429}
   - component: {fileID: 6001752612915031348}
   - component: {fileID: 7745051092772500761}
+  - component: {fileID: 5848545027667193502}
   m_Layer: 3
   m_Name: Medicine123456
-  m_TagString: GraspableObject
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -58,6 +60,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6679881635608235463}
   - {fileID: 6509697563584173873}
@@ -92,10 +95,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8be4569d092108a47bc0fff0270551b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabPoint: {fileID: 6509697563584173873}
+  graspPoint: {fileID: 0}
   hoverHeight: -0.1
   hoverDirection: 1
   hoverOrientation: 2
+--- !u!114 &5848545027667193502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5220166882937274750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65b0e2ac607bc7e4ab2004f21d124290, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AttachTransform: {fileID: 0}
 --- !u!1001 &6573300016384371244
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -170,11 +186,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 258053e02f31e57499ca439cc03c0284, type: 3}
   m_PrefabInstance: {fileID: 6573300016384371244}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &6679881635608235463 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 258053e02f31e57499ca439cc03c0284, type: 3}
-  m_PrefabInstance: {fileID: 6573300016384371244}
-  m_PrefabAsset: {fileID: 0}
 --- !u!65 &7868142897464975625
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -188,3 +199,8 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.02999996, y: 0.05999994, z: 0.06}
   m_Center: {x: 0, y: 0, z: 0.03}
+--- !u!4 &6679881635608235463 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 258053e02f31e57499ca439cc03c0284, type: 3}
+  m_PrefabInstance: {fileID: 6573300016384371244}
+  m_PrefabAsset: {fileID: 0}

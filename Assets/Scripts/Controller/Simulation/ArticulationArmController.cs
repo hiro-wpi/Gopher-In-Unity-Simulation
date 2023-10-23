@@ -239,7 +239,7 @@ public class ArticulationArmController : ArmController
     {
         float[] flippedAngles = new float[angles.Length];
         // Joint 1 is not flipped, but 180 degree offset
-        flippedAngles[0] = angles[0] + Mathf.PI;
+        flippedAngles[0] = -angles[0] + Mathf.PI;
         // Other joints are flipped to negative
         for (int i = 1; i < angles.Length; ++i)
         {

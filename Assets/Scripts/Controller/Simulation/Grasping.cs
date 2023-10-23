@@ -8,9 +8,8 @@ using UnityEngine.AI;
 ///     This script is used to fix the Unity physic
 ///     for complicated grasping.
 ///
-///     The graspable objects will be attached 
-//      to the endeffector fingers once they 
-///     get in touch with the two pads of it.
+///     The graspable objects will be "attached"
+///     to the endeffector tool transform.
 /// </summary>
 public class Grasping : MonoBehaviour
 {
@@ -22,15 +21,58 @@ public class Grasping : MonoBehaviour
     [SerializeField] private ArticulationBody endEffector;
 
     // Grasping object
-    private GameObject graspableObject;
+    private GameObject graspedObject;
     private GameObject objectOriginalParent;
-    private float objectMass = 0.0f;
-    private RigidbodyConstraints objectConstrains;
-    private NavMeshObstacle[] navMeshObstacles;
+    private Transform target;
+
+    // Rigidbody settings
+    private Rigidbody objectRb;
+    private float objectMass = -1.0f;
+    private bool wasKinematic;
+    private bool usedGravity;
+    private float oldDrag;
+    private float oldAngularDrag;
 
     void Start() {}
 
-    void Update() {}
+    void FixedUpdate() 
+    {
+        // If grasping, update the position of the object
+        if (!IsGrasping || objectRb == null)
+        {
+            return;
+        }
+
+        // Update the position of the object
+        ObjectVelocityTrackingUpdate();
+    }
+
+    private void ObjectVelocityTrackingUpdate()
+    {
+        // Do linear velocity tracking
+        // delta
+        var positionDelta = endEffector.transform.position - target.position;
+        // velocitysss
+        objectRb.velocity = positionDelta / Time.fixedDeltaTime;
+
+        // Do angular velocity tracking
+        // delta
+        var rotationDelta = endEffector.transform.rotation * Quaternion.Inverse(
+            target.rotation
+        );
+        rotationDelta.ToAngleAxis(out var angle, out var rotationAxis);
+        // velocity
+        if (angle > 180f)
+        {
+            angle -= 360f;
+        }
+        if (Mathf.Abs(angle) > Mathf.Epsilon)
+        {
+            objectRb.angularVelocity = (
+                rotationAxis * (angle * Mathf.Deg2Rad)
+            ) / Time.fixedDeltaTime;
+        }
+    }
 
     // Getters
     public GameObject GetEndEffector()
@@ -38,87 +80,90 @@ public class Grasping : MonoBehaviour
         return endEffector.gameObject;
     }
 
+    public GameObject GetGraspedObject()
+    {
+        return graspedObject;
+    }
+
     public float GetGraspedObjectMass()
     {
         return objectMass;
-    }
-
-    public GameObject GetGraspedObject()
-    {
-        return graspableObject;
     }
 
     // Attach and detach object
     public void Attach(GameObject gameObject)
     {
         // Check validity
-        if (IsGrasping || graspableObject == gameObject || gameObject == null)
-        {
+        Graspable graspable = gameObject?.GetComponent<Graspable>();
+        Rigidbody rb = gameObject?.GetComponent<Rigidbody>();
+        if (graspable == null
+            || rb == null
+            || IsGrasping
+            || graspedObject == gameObject
+        ){
             return;
         }
 
-        // Valid object to grasp
+        // Valid, grasp it
         IsGrasping = true;
-        graspableObject = gameObject;
+        graspedObject = gameObject;
+        objectRb = rb;
 
-        // Change parent to toolframe
-        objectOriginalParent = graspableObject.transform.parent?.gameObject;
-        graspableObject.transform.parent = endEffector.transform;
+        // Set up target
+        target = graspable.AttachTransform;
+        target.position = endEffector.transform.position;
+        target.rotation = endEffector.transform.rotation;
 
-        // Get rigidbody mass and remove it
-        Rigidbody rb = graspableObject.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            objectMass = rb.mass;
-            objectConstrains = rb.constraints;
-            Destroy(rb);
-        }
-        else
-        {
-            objectMass = 0.0f;
-        }
+        // Change parent to none
+        objectOriginalParent = graspedObject.transform.parent?.gameObject;
+        graspedObject.transform.parent = null;
 
-        // TEMP - may change once global planner is no longer the Unity one
-        // Activate nav mesh obstacle if any
-        navMeshObstacles = graspableObject.GetComponentsInChildren<NavMeshObstacle>();
-        foreach (NavMeshObstacle obstacle in navMeshObstacles)
-        {
-            obstacle.carving = true;
-        }
-
-        // Remove highligh if any
-        // HighlightUtils.UnhighlightObject(graspableObject);
+        // Set up rigidbody
+        SetupRigidbodyGrasp(objectRb);
     }
 
     public void Detach()
     {
         IsGrasping = false;
         // No grasping object
-        if (graspableObject == null)
+        if (graspedObject == null)
         {
             return;
         }
 
-        // Change back parent
-        graspableObject.transform.parent = objectOriginalParent?.transform;
+        // Change parent rb
+        graspedObject.transform.parent = objectOriginalParent?.transform;
 
-        // Add back rigidbody
-        if (objectMass != 0.0f)
-        {
-            Rigidbody rb = graspableObject.AddComponent<Rigidbody>();
-            rb.mass = objectMass;
-            rb.constraints = objectConstrains;
-            objectMass = 0.0f;
-            objectConstrains = RigidbodyConstraints.None;
-        }
+        // Set rigidbody back
+        SetupRigidbodyDrop(objectRb);
 
-        // TEMP - may change once global planner is no longer the Unity one
-        // Inactivate nav mesh obstacle if any
-        foreach (NavMeshObstacle obstacle in navMeshObstacles)
-        {
-            obstacle.carving = false;
-        }
+        target = null;
+        graspedObject = null;
+        objectRb = null;
+    }
 
-        graspableObject = null;
+    private void SetupRigidbodyGrasp(Rigidbody rigidbody)
+    {
+        // Keep current Rigidbody settings
+        objectMass = rigidbody.mass;
+        wasKinematic = rigidbody.isKinematic;
+        usedGravity = rigidbody.useGravity;
+        oldDrag = rigidbody.drag;
+        oldAngularDrag = rigidbody.angularDrag;
+
+        // New setting
+        rigidbody.isKinematic = false;
+        rigidbody.useGravity = false;
+        rigidbody.drag = 0f;
+        rigidbody.angularDrag = 0f;
+    }
+
+    private void SetupRigidbodyDrop(Rigidbody rigidbody)
+    {
+        // Restore Rigidbody settings
+        rigidbody.isKinematic = wasKinematic;
+        rigidbody.useGravity = usedGravity;
+        rigidbody.drag = oldDrag;
+        rigidbody.angularDrag = oldAngularDrag;
     }
 }
