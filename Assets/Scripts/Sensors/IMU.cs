@@ -13,7 +13,7 @@ public class IMU : MonoBehaviour
 
     // Parameter
     [SerializeField] private int updateRate = 10;
-    private Timer timer;
+    private Timer timer = new Timer(10);
 
     // Noise
     [SerializeField] private float linearBiasMean = 0.1f;

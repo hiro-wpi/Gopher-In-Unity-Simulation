@@ -13,7 +13,7 @@ public class CameraFrameRate : MonoBehaviour
 {
     [SerializeField] private Camera cam;
     [SerializeField] private int targetFrameRate = 30;
-    private Timer timer;
+    private Timer timer = new Timer(30);
 
     [field:SerializeField] public bool Rendering { get; set; }
 

@@ -34,7 +34,7 @@ public class ROSTransformTreePublisher : MonoBehaviour
     private TFMessageMsg tfMessage = new TFMessageMsg();
     // rate
     private int publishRate = 30;
-    private Timer timer;
+    private Timer timer = new Timer(30);
 
     void Start()
     {

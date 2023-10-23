@@ -22,7 +22,7 @@ public class ROSClockPublisher : MonoBehaviour
     private TimeMsg timeMsg;
     // rate
     [SerializeField] private int publishRate = 50;
-    private Timer timer;
+    private Timer timer = new Timer(50);
 
     // Only one Clock is allowed
     void OnValidate()

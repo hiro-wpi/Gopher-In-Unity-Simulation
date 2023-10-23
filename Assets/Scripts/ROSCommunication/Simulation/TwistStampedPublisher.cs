@@ -31,7 +31,7 @@ public class TwistStampedPublisher : MonoBehaviour
     private TwistStampedMsg twistStamped;
     // rate
     [SerializeField] private int publishRate = 10;
-    private Timer timer;
+    private Timer timer = new Timer(10);
 
     void Start()
     {

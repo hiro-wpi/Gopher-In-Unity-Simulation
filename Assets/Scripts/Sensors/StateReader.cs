@@ -13,7 +13,7 @@ public class StateReader : MonoBehaviour
 {
     [SerializeField] private int updateRate = 10;
     private float deltaTime;
-    private Timer timer;
+    private Timer timer = new Timer(10);
 
     // Robot
     [SerializeField] private GameObject robot;

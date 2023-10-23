@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 /// <summary>
 ///     A Timer class used to control functions' process rate.
@@ -22,6 +23,8 @@ public class Timer
 
     public Timer(int publishRate, float maxTimerScale = 10.0f)
     {
+        // Rate check
+        Assert.IsTrue(publishRate > 0);
         processPeriod = 1.0f / publishRate;
         this.maxTimerScale = maxTimerScale;
     }

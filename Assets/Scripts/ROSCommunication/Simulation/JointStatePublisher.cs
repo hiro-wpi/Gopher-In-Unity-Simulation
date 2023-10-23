@@ -35,7 +35,7 @@ public class JointStatePublisher : MonoBehaviour
     private JointStateMsg jointState;
     // rate
     [SerializeField] private int publishRate = 10;
-    private Timer timer;
+    private Timer timer = new Timer(10);
 
     void Start()
     {

@@ -40,7 +40,7 @@ public class ImagePublisher : MonoBehaviour
     private float[] depthFloats;
     // rate
     [SerializeField] private int publishRate = 10;
-    private Timer timer;
+    private Timer timer = new Timer(10);
 
     // Request image with GPU readback
     private CommandBuffer cmd;

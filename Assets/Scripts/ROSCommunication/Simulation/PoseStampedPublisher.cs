@@ -26,7 +26,7 @@ public class PoseStampedPublisher : MonoBehaviour
     private PoseStampedMsg poseStamped;
     // rate
     [SerializeField] private int publishRate = 10;
-    private Timer timer;
+    private Timer timer = new Timer(10);
 
     void Start()
     {

@@ -21,7 +21,7 @@ public class Laser : MonoBehaviour
 
     // Scan parameters
     [SerializeField] private int updateRate = 10;
-    private Timer timer;
+    private Timer timer = new Timer(10);
     [SerializeField] private int samples = 180;
     [SerializeField] private float angleMin = -1.5708f;
     [SerializeField] private float angleMax = 1.5708f;
