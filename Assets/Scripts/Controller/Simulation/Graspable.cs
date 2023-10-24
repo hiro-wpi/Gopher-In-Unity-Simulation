@@ -17,7 +17,7 @@ public class Graspable : MonoBehaviour
     void Start() 
     {
         // Create attach point
-        attachGameObject = new GameObject("AttachPoint");
+        attachGameObject = new GameObject("Attach Transform");
         AttachTransform = attachGameObject.transform;
 
         // Initialization

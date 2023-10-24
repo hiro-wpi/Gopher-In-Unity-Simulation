@@ -118,8 +118,9 @@ public class Grasping : MonoBehaviour
         objectOriginalParent = graspedObject.transform.parent?.gameObject;
         graspedObject.transform.parent = null;
 
+        objectMass = objectRb.mass;
         // Set up rigidbody
-        SetupRigidbodyGrasp(objectRb);
+        // SetupRigidbodyGrasp(objectRb);
     }
 
     public void Detach()
@@ -135,7 +136,7 @@ public class Grasping : MonoBehaviour
         graspedObject.transform.parent = objectOriginalParent?.transform;
 
         // Set rigidbody back
-        SetupRigidbodyDrop(objectRb);
+        // SetupRigidbodyDrop(objectRb);
 
         target = null;
         graspedObject = null;
