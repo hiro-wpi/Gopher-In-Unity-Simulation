@@ -53,10 +53,10 @@ public class ArticulationBaseController : BaseController
 
         // Extra speed limit
         targetLinearVelocity = Utils.ClampVector3(
-            linear, -speedLimit[1], speedLimit[0]
+            targetLinearVelocity, -speedLimit[1], speedLimit[0]
         );
         targetAngularVelocity = Utils.ClampVector3(
-            angular, -speedLimit[2], speedLimit[3]
+            targetAngularVelocity, -speedLimit[2], speedLimit[3]
         );
     }
 

@@ -57,11 +57,11 @@ public abstract class BaseController : MonoBehaviour
         targetLinearVelocity = Utils.ClampVector3(
             linear * linearSpeedMultiplier * modeMultiplier[(int)SpeedMode],
             -maxLinearSpeed * backwardMultiplier,
-            maxLinearSpeed 
+            maxLinearSpeed
         );
         targetAngularVelocity = Utils.ClampVector3(
             angular * angularSpeedMultiplier * modeMultiplier[(int)SpeedMode],
-            -maxAngularSpeed ,
+            -maxAngularSpeed,
             maxAngularSpeed
         );
     }
