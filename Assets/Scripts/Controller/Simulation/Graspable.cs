@@ -11,8 +11,12 @@ using UnityEngine;
 /// </summary>
 public class Graspable : MonoBehaviour
 {
+    // Grasp transform
     private GameObject attachGameObject;
     public Transform AttachTransform;
+
+    // Grasping object
+    public Grasping currentGrasping;
 
     void Start() 
     {
@@ -27,4 +31,30 @@ public class Graspable : MonoBehaviour
     }
 
     void Update() {}
+
+    public void SetGrasping(Grasping grasping)
+    {
+        // If nothing is grasping this object
+        if (currentGrasping == null)
+        {
+            currentGrasping = grasping;
+        }
+
+        // If the object is already grasped
+        else
+        {
+            // Clear the previous grasping
+            if (grasping == null)
+            {
+                currentGrasping = null;
+            }
+
+            // Replace the previous grasping
+            else if (grasping != currentGrasping)
+            {
+                currentGrasping.Detach();
+                currentGrasping = grasping;
+            }
+        }
+    }
 }

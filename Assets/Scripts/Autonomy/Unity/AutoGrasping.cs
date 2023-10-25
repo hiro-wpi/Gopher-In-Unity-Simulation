@@ -84,7 +84,6 @@ public class AutoGrasping : MonoBehaviour
         // Auto grasping not avaliable
         if (autoGraspables.Length == 0)
         {
-            Debug.LogWarning("The object is not automatically graspable.");
             return;
         }
 

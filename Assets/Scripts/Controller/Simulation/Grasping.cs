@@ -22,22 +22,15 @@ public class Grasping : MonoBehaviour
 
     // Grasping object
     private GameObject graspedObject;
-    private GameObject objectOriginalParent;
-    private Transform target;
-
-    // Rigidbody settings
     private Rigidbody objectRb;
-    private float objectMass = -1.0f;
-    private bool wasKinematic;
-    private bool usedGravity;
-    private float oldDrag;
-    private float oldAngularDrag;
+    private float objectMass;
+    private Transform target;
 
     void Start() {}
 
     void FixedUpdate() 
     {
-        // If grasping, update the position of the object
+        // If grasping, update the transform of the object
         if (!IsGrasping || objectRb == null)
         {
             return;
@@ -49,13 +42,13 @@ public class Grasping : MonoBehaviour
 
     private void ObjectVelocityTrackingUpdate()
     {
-        // Do linear velocity tracking
+        // Linear velocity tracking
         // delta
         var positionDelta = endEffector.transform.position - target.position;
-        // velocitysss
+        // velocity
         objectRb.velocity = positionDelta / Time.fixedDeltaTime;
 
-        // Do angular velocity tracking
+        // Angular velocity tracking
         // delta
         var rotationDelta = endEffector.transform.rotation * Quaternion.Inverse(
             target.rotation
@@ -85,6 +78,11 @@ public class Grasping : MonoBehaviour
         return graspedObject;
     }
 
+    public GameObject GetGraspTarget()
+    {
+        return target?.gameObject;
+    }
+
     public float GetGraspedObjectMass()
     {
         return objectMass;
@@ -108,19 +106,13 @@ public class Grasping : MonoBehaviour
         IsGrasping = true;
         graspedObject = gameObject;
         objectRb = rb;
+        objectMass = objectRb.mass;
 
         // Set up target
+        graspable.SetGrasping(this);
         target = graspable.AttachTransform;
         target.position = endEffector.transform.position;
         target.rotation = endEffector.transform.rotation;
-
-        // Change parent to none
-        objectOriginalParent = graspedObject.transform.parent?.gameObject;
-        graspedObject.transform.parent = null;
-
-        objectMass = objectRb.mass;
-        // Set up rigidbody
-        // SetupRigidbodyGrasp(objectRb);
     }
 
     public void Detach()
@@ -132,39 +124,10 @@ public class Grasping : MonoBehaviour
             return;
         }
 
-        // Change parent rb
-        graspedObject.transform.parent = objectOriginalParent?.transform;
-
-        // Set rigidbody back
-        // SetupRigidbodyDrop(objectRb);
-
+        graspedObject.GetComponent<Graspable>().SetGrasping(null);
         target = null;
         graspedObject = null;
         objectRb = null;
-    }
-
-    private void SetupRigidbodyGrasp(Rigidbody rigidbody)
-    {
-        // Keep current Rigidbody settings
-        objectMass = rigidbody.mass;
-        wasKinematic = rigidbody.isKinematic;
-        usedGravity = rigidbody.useGravity;
-        oldDrag = rigidbody.drag;
-        oldAngularDrag = rigidbody.angularDrag;
-
-        // New setting
-        rigidbody.isKinematic = false;
-        rigidbody.useGravity = false;
-        rigidbody.drag = 0f;
-        rigidbody.angularDrag = 0f;
-    }
-
-    private void SetupRigidbodyDrop(Rigidbody rigidbody)
-    {
-        // Restore Rigidbody settings
-        rigidbody.isKinematic = wasKinematic;
-        rigidbody.useGravity = usedGravity;
-        rigidbody.drag = oldDrag;
-        rigidbody.angularDrag = oldAngularDrag;
+        objectMass = 0f;
     }
 }

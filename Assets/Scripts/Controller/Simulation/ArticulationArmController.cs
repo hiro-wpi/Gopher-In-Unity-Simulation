@@ -209,12 +209,12 @@ public class ArticulationArmController : ArmController
 
     public override void MoveToPreset(int presetIndex)
     {
-        // Do not allow moving joints to preset when grasping heavy object
-        if (gripperController.GetGraspedObjectMass() > 1.0f)
-        {
-            return;
-        }
-        
+        // // Do not allow moving joints to preset when grasping
+        // if (gripperController.g)
+        // {
+        //     return;
+        // }
+
         // Get preset angles
         float[] angles;
         if (presetIndex == -1)
