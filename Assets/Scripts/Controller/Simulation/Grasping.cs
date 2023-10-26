@@ -24,48 +24,10 @@ public class Grasping : MonoBehaviour
     private GameObject graspedObject;
     private Rigidbody objectRb;
     private float objectMass;
-    private Transform target;
 
     void Start() {}
 
-    void FixedUpdate() 
-    {
-        // If grasping, update the transform of the object
-        if (!IsGrasping || objectRb == null)
-        {
-            return;
-        }
-
-        // Update the position of the object
-        ObjectVelocityTrackingUpdate();
-    }
-
-    private void ObjectVelocityTrackingUpdate()
-    {
-        // Linear velocity tracking
-        // delta
-        var positionDelta = endEffector.transform.position - target.position;
-        // velocity
-        objectRb.velocity = positionDelta / Time.fixedDeltaTime;
-
-        // Angular velocity tracking
-        // delta
-        var rotationDelta = endEffector.transform.rotation * Quaternion.Inverse(
-            target.rotation
-        );
-        rotationDelta.ToAngleAxis(out var angle, out var rotationAxis);
-        // velocity
-        if (angle > 180f)
-        {
-            angle -= 360f;
-        }
-        if (Mathf.Abs(angle) > Mathf.Epsilon)
-        {
-            objectRb.angularVelocity = (
-                rotationAxis * (angle * Mathf.Deg2Rad)
-            ) / Time.fixedDeltaTime;
-        }
-    }
+    void Update() {}
 
     // Getters
     public GameObject GetEndEffector()
@@ -76,11 +38,6 @@ public class Grasping : MonoBehaviour
     public GameObject GetGraspedObject()
     {
         return graspedObject;
-    }
-
-    public GameObject GetGraspTarget()
-    {
-        return target?.gameObject;
     }
 
     public float GetGraspedObjectMass()
@@ -108,11 +65,8 @@ public class Grasping : MonoBehaviour
         objectRb = rb;
         objectMass = objectRb.mass;
 
-        // Set up target
+        // Set up grasping
         graspable.SetGrasping(this);
-        target = graspable.AttachTransform;
-        target.position = endEffector.transform.position;
-        target.rotation = endEffector.transform.rotation;
     }
 
     public void Detach()
@@ -124,8 +78,10 @@ public class Grasping : MonoBehaviour
             return;
         }
 
-        graspedObject.GetComponent<Graspable>().SetGrasping(null);
-        target = null;
+        // Clear grasping
+        Graspable graspable = graspedObject.GetComponent<Graspable>();
+        graspable.ClearGrasping();
+
         graspedObject = null;
         objectRb = null;
         objectMass = 0f;

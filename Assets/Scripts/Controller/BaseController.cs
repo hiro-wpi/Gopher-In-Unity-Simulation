@@ -26,7 +26,7 @@ public abstract class BaseController : MonoBehaviour
 
     // Control mode (different velocities multiplier)
     public enum Mode { Slow = 0, Regular = 1 }
-    [field: SerializeField] public Mode SpeedMode { get; set; } = Mode.Slow;
+    [field: SerializeField] public Mode SpeedMode { get; set; } = Mode.Regular;
     [SerializeField] protected float[] modeMultiplier = { 0.5f, 1.0f };
 
     // Variable to hold velocity
