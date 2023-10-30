@@ -57,7 +57,7 @@ public class Graspable : MonoBehaviour
 
         // Set velocity
         // position
-            rigidBody.velocity = positionDelta / Time.fixedDeltaTime;
+        rigidBody.velocity = positionDelta / Time.fixedDeltaTime;
         // rotation
         rotationDelta.ToAngleAxis(out var angle, out var rotationAxis);
         if (angle > 180f)
