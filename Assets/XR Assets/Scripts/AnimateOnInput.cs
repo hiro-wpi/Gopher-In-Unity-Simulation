@@ -3,13 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[System.Serializable]
-public class AnimationInput
-{
-    public string animationPropertyName;
-    public InputActionProperty action;
-}
-
 public class AnimateOnInput : MonoBehaviour
 {
     public List<AnimationInput> animationInputs;
