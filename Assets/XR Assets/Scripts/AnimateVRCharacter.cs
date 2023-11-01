@@ -19,6 +19,7 @@ public class AnimateVRCharacter : MonoBehaviour
 {
     // Animator
     [SerializeField] private Animator animator;
+    [SerializeField] private bool animateHandsOnly = false;
     
     // Controller input
     [SerializeField] private List<AnimationInput> animationInputs;
@@ -43,6 +44,11 @@ public class AnimateVRCharacter : MonoBehaviour
         {
             float actionValue = item.action.action.ReadValue<float>();
             animator.SetFloat(item.animationPropertyName, actionValue);
+        }
+
+        if (animateHandsOnly)
+        {
+            return;
         }
 
         // Update local velocity and set animator parameters

@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 /// <summary>
 ///    Change animation of the finger movement based on XR controller input.
 /// </summary>
-public class AnimateVRHands : MonoBehaviour
+public class AnimateVRHand : MonoBehaviour
 {
     public InputActionProperty pinchAnimationAction;
     public InputActionProperty gripAnimationAction;
