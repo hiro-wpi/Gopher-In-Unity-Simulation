@@ -21,8 +21,6 @@ public class AnimateVRCharacter : MonoBehaviour
     // Controller input
     [SerializeField] private List<AnimationInput> animationInputs;
     // Transform
-    [Range(0, 1)]
-    [SerializeField, ReadOnly] float velocitySmoother = 0.4f;
     private Vector3 prevPosition;
     private Quaternion prevRotation;
     [SerializeField, ReadOnly] private Vector3 localVelocity;
