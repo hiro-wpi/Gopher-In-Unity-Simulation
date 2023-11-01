@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+///    An IK foot solver that predicts where the feet should be placed
+///    This script is provided by Unity tutorial
+///    https://www.youtube.com/watch?v=acMK93A-FSY
+/// </summary>
 public class IKFootSolver : MonoBehaviour
 {
     public bool isMovingForward;

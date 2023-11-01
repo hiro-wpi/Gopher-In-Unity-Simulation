@@ -1,11 +1,13 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Robotics.ROSTCPConnector.ROSGeometry;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SocialPlatforms;
 
+/// <summary>
+///    Change animation of the VR character 
+///    based on XR controller input and
+///    the movement of the VR tracking objects.
+/// </summary>
 [System.Serializable]
 public class AnimationInput
 {
