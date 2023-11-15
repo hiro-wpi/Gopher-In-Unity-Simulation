@@ -110,6 +110,7 @@ GameObject:
   - component: {fileID: 965990832886511165}
   - component: {fileID: 846706338957513127}
   - component: {fileID: 500468745957387514}
+  - component: {fileID: 3443733155738055293}
   m_Layer: 0
   m_Name: Drawer Upper Left
   m_TagString: Untagged
@@ -412,6 +413,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <IsGrasping>k__BackingField: 0
   endEffector: {fileID: 0}
+--- !u!138 &3443733155738055293
+FixedJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 499679677520633837}
+  m_ConnectedBody: {fileID: 3562887336766137346}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &569471601725793256
 GameObject:
   m_ObjectHideFlags: 0
@@ -1528,6 +1544,7 @@ GameObject:
   - component: {fileID: 6818583156231066500}
   - component: {fileID: 5254668904588942593}
   - component: {fileID: 545579593679940555}
+  - component: {fileID: 8947259392420612961}
   m_Layer: 0
   m_Name: Drawer Lower Left
   m_TagString: Untagged
@@ -1829,6 +1846,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <IsGrasping>k__BackingField: 0
   endEffector: {fileID: 0}
+--- !u!138 &8947259392420612961
+FixedJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1407180844798627028}
+  m_ConnectedBody: {fileID: 4826311430525547013}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &1513558056955290508
 GameObject:
   m_ObjectHideFlags: 0
@@ -1841,6 +1873,7 @@ GameObject:
   - component: {fileID: 2816549213405294188}
   - component: {fileID: 439683676170213057}
   - component: {fileID: 2481267890557017255}
+  - component: {fileID: 856475989631595790}
   m_Layer: 0
   m_Name: Handle.003
   m_TagString: Untagged
@@ -1928,6 +1961,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.33383515, y: 0.017246008, z: 0.053922664}
   m_Center: {x: -0.9535037, y: 0.5587491, z: 0.8334367}
+--- !u!54 &856475989631595790
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1513558056955290508}
+  serializedVersion: 2
+  m_Mass: 0.1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1723535699885037662
 GameObject:
   m_ObjectHideFlags: 0
@@ -1940,6 +1989,7 @@ GameObject:
   - component: {fileID: 5633787862647088320}
   - component: {fileID: 4624236043992021127}
   - component: {fileID: 2123713862413556311}
+  - component: {fileID: 3426108453743608322}
   m_Layer: 0
   m_Name: Handle.002
   m_TagString: Untagged
@@ -2027,6 +2077,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.33383515, y: 0.017243564, z: 0.053922664}
   m_Center: {x: -0.9535037, y: 0.87980163, z: 0.8334367}
+--- !u!54 &3426108453743608322
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1723535699885037662}
+  serializedVersion: 2
+  m_Mass: 0.1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1905276151135502606
 GameObject:
   m_ObjectHideFlags: 0
@@ -2500,6 +2566,7 @@ GameObject:
   - component: {fileID: 8253436616382882096}
   - component: {fileID: 7419348159000646648}
   - component: {fileID: 7266862859238652184}
+  - component: {fileID: 1748448941573005559}
   m_Layer: 0
   m_Name: Left Door
   m_TagString: Untagged
@@ -2742,6 +2809,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <IsGrasping>k__BackingField: 0
   endEffector: {fileID: 0}
+--- !u!138 &1748448941573005559
+FixedJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2441824982564690955}
+  m_ConnectedBody: {fileID: 8903236946635112684}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &2711232609819932609
 GameObject:
   m_ObjectHideFlags: 0
@@ -4342,6 +4424,7 @@ GameObject:
   - component: {fileID: 5289858633731313260}
   - component: {fileID: 957134562268407697}
   - component: {fileID: 3667614310642860252}
+  - component: {fileID: 8903236946635112684}
   m_Layer: 0
   m_Name: Handle.001
   m_TagString: Untagged
@@ -4428,6 +4511,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.029320486, y: 0.333838, z: 0.053922664}
   m_Center: {x: 0.09125568, y: 0.7174537, z: 0.8334367}
+--- !u!54 &8903236946635112684
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4618459108870864972}
+  serializedVersion: 2
+  m_Mass: 0.1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &4621238856752562972
 GameObject:
   m_ObjectHideFlags: 0
@@ -5498,6 +5597,7 @@ GameObject:
   - component: {fileID: 5218197500145109328}
   - component: {fileID: 6795139126086295549}
   - component: {fileID: 3733858202743609096}
+  - component: {fileID: 5459893598187019392}
   m_Layer: 0
   m_Name: Drawer Upper Right
   m_TagString: Untagged
@@ -5800,6 +5900,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <IsGrasping>k__BackingField: 0
   endEffector: {fileID: 0}
+--- !u!138 &5459893598187019392
+FixedJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5625851382178509689}
+  m_ConnectedBody: {fileID: 3426108453743608322}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &5695088924482984496
 GameObject:
   m_ObjectHideFlags: 0
@@ -5909,6 +6024,7 @@ GameObject:
   - component: {fileID: 3577197020994903661}
   - component: {fileID: 420268991446907562}
   - component: {fileID: 7022034533984590363}
+  - component: {fileID: 5594395111540438721}
   m_Layer: 0
   m_Name: Handle.004
   m_TagString: Untagged
@@ -5996,6 +6112,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.33383515, y: 0.0172458, z: 0.053922724}
   m_Center: {x: -0.9535037, y: 0.2376954, z: 0.83343667}
+--- !u!54 &5594395111540438721
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5699957333481845068}
+  serializedVersion: 2
+  m_Mass: 0.1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &5996177535048099382
 GameObject:
   m_ObjectHideFlags: 0
@@ -7152,6 +7284,7 @@ GameObject:
   - component: {fileID: 342970356796228842}
   - component: {fileID: 507192640524650160}
   - component: {fileID: 1202459976173641995}
+  - component: {fileID: 7321656115505824994}
   m_Layer: 0
   m_Name: Right Door
   m_TagString: Untagged
@@ -7394,6 +7527,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <IsGrasping>k__BackingField: 0
   endEffector: {fileID: 0}
+--- !u!138 &7321656115505824994
+FixedJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7671820119512584493}
+  m_ConnectedBody: {fileID: 8204786672676922651}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &7740035966547493903
 GameObject:
   m_ObjectHideFlags: 0
@@ -7407,6 +7555,7 @@ GameObject:
   - component: {fileID: 2953362295300206394}
   - component: {fileID: 2875586305763944483}
   - component: {fileID: 317860562722226963}
+  - component: {fileID: 6222029824933620265}
   m_Layer: 0
   m_Name: Drawer Middle Right
   m_TagString: Untagged
@@ -7709,6 +7858,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <IsGrasping>k__BackingField: 0
   endEffector: {fileID: 0}
+--- !u!138 &6222029824933620265
+FixedJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7740035966547493903}
+  m_ConnectedBody: {fileID: 856475989631595790}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &8014501203680035152
 GameObject:
   m_ObjectHideFlags: 0
@@ -7721,6 +7885,7 @@ GameObject:
   - component: {fileID: 3913298554030714575}
   - component: {fileID: 9025435556318771224}
   - component: {fileID: 2810783746787144052}
+  - component: {fileID: 4826311430525547013}
   m_Layer: 0
   m_Name: Handle.007
   m_TagString: Untagged
@@ -7808,6 +7973,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.33383515, y: 0.0172458, z: 0.053922724}
   m_Center: {x: 0.9535037, y: 0.2376954, z: 0.83343667}
+--- !u!54 &4826311430525547013
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8014501203680035152}
+  serializedVersion: 2
+  m_Mass: 0.1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &8141058008199461231
 GameObject:
   m_ObjectHideFlags: 0
@@ -7821,6 +8002,7 @@ GameObject:
   - component: {fileID: 8128806447184604260}
   - component: {fileID: 4366513114557202626}
   - component: {fileID: 7962710618649911629}
+  - component: {fileID: 1708010772507065879}
   m_Layer: 0
   m_Name: Drawer Middle Left
   m_TagString: Untagged
@@ -8123,6 +8305,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <IsGrasping>k__BackingField: 0
   endEffector: {fileID: 0}
+--- !u!138 &1708010772507065879
+FixedJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8141058008199461231}
+  m_ConnectedBody: {fileID: 3864060004590707925}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &8293813776962283069
 GameObject:
   m_ObjectHideFlags: 0
@@ -8135,6 +8332,7 @@ GameObject:
   - component: {fileID: 7193236302567041375}
   - component: {fileID: 5978567222293492250}
   - component: {fileID: 4888567177243999448}
+  - component: {fileID: 3864060004590707925}
   m_Layer: 0
   m_Name: Handle.006
   m_TagString: Untagged
@@ -8222,6 +8420,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.33383515, y: 0.017246008, z: 0.053922664}
   m_Center: {x: 0.9535037, y: 0.5587491, z: 0.8334367}
+--- !u!54 &3864060004590707925
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8293813776962283069}
+  serializedVersion: 2
+  m_Mass: 0.1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &8563050278780398571
 GameObject:
   m_ObjectHideFlags: 0
@@ -8235,6 +8449,7 @@ GameObject:
   - component: {fileID: 338336743469057955}
   - component: {fileID: 1559259099830983434}
   - component: {fileID: 5827703147186285153}
+  - component: {fileID: 4517679007742044230}
   m_Layer: 0
   m_Name: Drawer Lower Right
   m_TagString: Untagged
@@ -8537,6 +8752,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <IsGrasping>k__BackingField: 0
   endEffector: {fileID: 0}
+--- !u!138 &4517679007742044230
+FixedJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8563050278780398571}
+  m_ConnectedBody: {fileID: 5594395111540438721}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &8595535608822124816
 GameObject:
   m_ObjectHideFlags: 0
@@ -8840,6 +9070,7 @@ GameObject:
   - component: {fileID: 2832346404811557335}
   - component: {fileID: 4017457150214778813}
   - component: {fileID: 117500485063038929}
+  - component: {fileID: 8204786672676922651}
   m_Layer: 0
   m_Name: Handle
   m_TagString: Untagged
@@ -8926,6 +9157,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.029320486, y: 0.333838, z: 0.053922664}
   m_Center: {x: -0.09125568, y: 0.7174537, z: 0.8334367}
+--- !u!54 &8204786672676922651
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9140442074006211167}
+  serializedVersion: 2
+  m_Mass: 0.1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &9168487811723588416
 GameObject:
   m_ObjectHideFlags: 0
@@ -8938,6 +9185,7 @@ GameObject:
   - component: {fileID: 1373238656790311574}
   - component: {fileID: 474441791697642554}
   - component: {fileID: 8018611959228666984}
+  - component: {fileID: 3562887336766137346}
   m_Layer: 0
   m_Name: Handle.005
   m_TagString: Untagged
@@ -9025,6 +9273,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.33383515, y: 0.017243564, z: 0.053922664}
   m_Center: {x: 0.9535037, y: 0.87980163, z: 0.8334367}
+--- !u!54 &3562887336766137346
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9168487811723588416}
+  serializedVersion: 2
+  m_Mass: 0.1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &9188306497732036068
 GameObject:
   m_ObjectHideFlags: 0
