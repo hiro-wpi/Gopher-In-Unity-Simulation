@@ -2,38 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-///    Read the velocity input and orientation from the 
-///    KatVR treadmill
-/// </summary>
 public class TreadmillReader : MonoBehaviour
 {
-    // Scale the velocity input
-    [SerializeField] private Vector2 velocityScale;
+    [SerializeField] private float smoothTime = 0.2f; // Adjust this value for smoother or quicker dampening
+    
+    private Vector2 currentVelocity = new Vector2(0.0f, 0.0f); // Store the current velocity for SmoothDamp
 
-    // Read state
-    [ReadOnly, SerializeField] 
-    private Vector2 velocity;
-    [ReadOnly, SerializeField]
-    private float rotation;
+    [SerializeField] private Vector2 velocityScale = new Vector2(1.0f, 1.0f);
 
-    void Start()
-    {
-        
-    }
+    [SerializeField] private Vector2 velocityXZ = Vector2.zero;
+
+    [SerializeField] private float rotationY = 0.0f;
 
     void Update()
     {
-        // In case need to filter velocity // Vector2.SmoothDamp()
+        var ws = KATNativeSDK.GetWalkStatus();
+
+        Vector2 targetVelocity = new Vector2(ws.moveSpeed.x, ws.moveSpeed.z);
+
+        // Apply smoothing using Vector2.SmoothDamp()
+        velocityXZ = Vector2.SmoothDamp(velocityXZ, targetVelocity, ref currentVelocity, smoothTime);
+
+        // Smooth this
+        // rotationY = ws.bodyRotationRaw.eulerAngles.y;
     }
 
     public Vector2 GetVelocity()
     {
-        return velocity * velocityScale;
+        return velocityXZ * velocityScale;
     }
 
     public float GetRotation()
     {
-        return rotation;
+        return rotationY;
     }
 }
