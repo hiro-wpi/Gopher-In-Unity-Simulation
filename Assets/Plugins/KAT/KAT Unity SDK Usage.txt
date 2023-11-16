@@ -1,0 +1,16 @@
+[Welcome]
+This is KAT universal SDK for unity.With this SDK, you can develop all KAT devices without adapte work.
+All devices follow the same interface which named KATNativeSDK class.
+For simplest usage, just drag the prefab[KATDemoWalker] to your scene and enable openxr support in unity.
+For further development, comments in KATNativeSDK.cs show all SDK features.
+
+[Demos]
+1.Get Devices Demo : This demo shows query all KAT Devices, to get their name, type, and also serial number
+2.Raw Data Data: This demo guides you to get raw data from KATNavieSDK, include connection states, body rotation as quaternion, speed with local direction
+3.Walk Demo: Walk with your KAT Treadmill devices!
+4.C2 Extension And ExtraData Demo: This demo shows how to use extensions such as haptic engine, led in KAT Walk C2, and grant more data like single foot state, speed and etc.
+
+[Legacy Devices]
+Vibration for WalkC, MiniS and terrain function for 3DT need import legacy extension support packages
+1. Vibration For KAT Walk C1 / MiniS : See KATLegacy Class
+2. 3DT Terrain API : See KATTerrainAPI
