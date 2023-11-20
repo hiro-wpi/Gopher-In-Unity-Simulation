@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using Unity.Netcode.Components;
+using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using UnityEngine.XR.Interaction.Toolkit.Inputs;
 
 /// <summary>
@@ -11,23 +13,32 @@ using UnityEngine.XR.Interaction.Toolkit.Inputs;
 public class NetworkVRCharacter : NetworkBehaviour
 {
     [SerializeField] GameObject XROrigin;
+    [SerializeField] GameObject[] XROriginTrackingTargets;
 
     public override void OnNetworkSpawn()
     {
-        DisableNonOwnerInput();
+        if (!IsOwner)
+        {
+            DisableNonOwnerInput();
+        }
     }
 
     private void DisableNonOwnerInput()
     {
-        // TODO there could be better solution
-        if (!IsOwner)
-        {
-            // Disable input
-            XROrigin.SetActive(false);
-
-            // Prevent owner's VR controller assets from being disabled
-            var actionManager = XROrigin.GetComponent<InputActionManager>();
-            actionManager?.EnableInput();
+        // Disable all components in XR origin to stop getting undesired input
+        // Keep only the network related components
+        foreach (
+            var component in XROrigin.GetComponentsInChildren<MonoBehaviour>()
+        ) {
+            if (!(component is NetworkObject) 
+                && !(component is NetworkTransform)
+            ) {
+                component.enabled = false;
+            }
         }
+
+        // Prevent owner's VR controller assets from being disabled
+        var actionManager = XROrigin.GetComponent<InputActionManager>();
+        actionManager?.EnableInput();
     }
 }

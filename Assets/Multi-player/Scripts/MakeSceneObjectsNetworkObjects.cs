@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Netcode.Components;
+using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 
 /// <summary>
 ///    Attach all the game objects in the scene 
@@ -25,7 +26,7 @@ public class MakeSceneObjectsNetworkObjects : MonoBehaviour
             {
                 // Add network components to the game object
                 var netObject = rb.gameObject.AddComponent<NetworkObject>();
-                var netTf = rb.gameObject.AddComponent<NetworkTransform>();
+                var netTf = rb.gameObject.AddComponent<ClientNetworkTransform>();
                 var netRb = rb.gameObject.AddComponent<NetworkRigidbody>();
             }
         }
