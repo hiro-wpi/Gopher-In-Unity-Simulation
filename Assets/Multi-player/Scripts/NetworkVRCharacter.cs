@@ -17,6 +17,16 @@ public class NetworkVRCharacter : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        // Add client transform sync to tracking targets
+        foreach (var target in XROriginTrackingTargets)
+        {
+            var netTf = target.AddComponent<NetworkTransform>();
+            netTf.SyncScaleX = false;
+            netTf.SyncScaleY = false;
+            netTf.SyncScaleZ = false;
+        }
+
+        // Disable non-owner input
         if (!IsOwner)
         {
             DisableNonOwnerInput();
