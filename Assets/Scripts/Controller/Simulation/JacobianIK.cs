@@ -5,13 +5,15 @@ using UnityEngine;
 /// <summary>
 ///     Provide util functions to compute inverse kinematics
 ///     for Kinova Gen3 7-DOF robotic arm
-///     using Newton numeric IK method
+///     using Jacobian numeric IK method
 /// </summary>
-public class NewtonIK : InverseKinematics
+public class JacobianIK : InverseKinematics
 {
     // Parameter
     [SerializeField] private int iterations = 10;
-    
+    [SerializeField] private float positionTolerance = 0.001f;
+    [SerializeField] private float rotationTolerance = 0.02f;
+
     // Damped least squares lambda
     [SerializeField] private float dampedSquaresLambda = 0.01f;
     private ArticulationJacobian jacobian = new(1, 1);
@@ -24,42 +26,50 @@ public class NewtonIK : InverseKinematics
         PsuedoInverse,
         UnstableInverse
     }
-    [SerializeField] private InverseMethod inverseMethod = InverseMethod.Transpose;
+    [SerializeField] 
+    private InverseMethod inverseMethod = InverseMethod.Transpose;
 
     void Start() {}
 
     void Update() {}
 
-    public override (bool, float[]) SolveIK(
+    public override float[] SolveIK(
         float[] jointAngles, Vector3 targetPosition, Quaternion targetRotation
-    )
-    {
+    ) {
         float[] newJointAngles = jointAngles.Clone() as float[];
 
         // Containers
-        Vector3 endEffectorPosition;
-        Quaternion endEffectorRotation;
+        Vector3 eePosition;
+        Quaternion eeRotation;
+        Vector3 positionError;
+        Quaternion rotationError;
 
         // Solve IK iteratively
         for (int e = 0; e < iterations; e++)
         {
-            // calculate error between our current end effector position and the target position
-            forwardKinematics.SolveFK(newJointAngles);
-            (endEffectorPosition, endEffectorRotation) = forwardKinematics.GetPose(
+            // calculate error between our current 
+            // end effector position and the target position
+            forwardKinematics.SolveFK(newJointAngles, updateJacobian: true);
+            (eePosition, eeRotation) = forwardKinematics.GetPose(
                 forwardKinematics.NumJoint
             );
 
-            Vector3 positionError = endEffectorPosition - targetPosition;
-            Quaternion rotationError = endEffectorRotation * Quaternion.Inverse(targetRotation);
+            positionError = eePosition - targetPosition;
+            rotationError = (
+                eeRotation * Quaternion.Inverse(targetRotation)
+            );
 
             // Orientation is stored in the jacobian as a scaled rotation axis
             // Where the axis of rotation is the vector, 
             // and the angle is the length of the vector (in radians)
             // So, use ToAngleAxis to get axis and angle
-            rotationError.ToAngleAxis(out float rotationAngle, out Vector3 rotationAxis);
+            rotationError.ToAngleAxis(
+                out float rotationAngle, out Vector3 rotationAxis
+            );
             // Wrap angle into [-pi, pi]
             // (not exactly sure why this is necessary)
             rotationAngle = Mathf.DeltaAngle(0f, rotationAngle);
+            rotationAngle *= Mathf.Deg2Rad;
 
             // Prevent rotationAxis being NaN crashed the algorithm
             if (Mathf.Abs(rotationAngle) < 1e-3)
@@ -70,7 +80,14 @@ public class NewtonIK : InverseKinematics
             // prioritize the position
             else
             {
-                rotationAxis *= rotationAngle * Mathf.Deg2Rad;
+                rotationAxis *= rotationAngle;
+            }
+
+            // Check convergence
+            if (positionError.magnitude < positionTolerance
+                && Mathf.Abs(rotationAngle) < rotationTolerance
+            ) {
+                break;
             }
 
             // Decay lambda over time
@@ -78,6 +95,7 @@ public class NewtonIK : InverseKinematics
             positionError *= lambda;
             rotationAxis *= lambda;
 
+            // Get solutions
             var errorAngles = CalculateError(positionError, rotationAxis);
             for (int i = 0; i < newJointAngles.Length; i++)
             {
@@ -85,66 +103,22 @@ public class NewtonIK : InverseKinematics
             }
         }
 
-        // Result validation check
-        foreach (float jointAngle in newJointAngles)
-        {
-            if (jointAngle == float.NaN)
-            {
-                return (false, jointAngles);
-            }
-        }
-
-        // Result Convergence check
-        forwardKinematics.SolveFK(newJointAngles);
-        // Check only position
-        (endEffectorPosition, _) = forwardKinematics.GetPose(forwardKinematics.NumJoint);
-        bool converged = (endEffectorPosition - targetPosition).magnitude < 0.1f;
-
         // Return the new joint angles
-        return (converged, newJointAngles);
-    }
-
-    public override float[] SolveVelocityIK(
-        float[] jointAngles, Vector3 positionDelta, Quaternion rotationDelta
-    )
-    {
-        float[] newJointAngles = jointAngles.Clone() as float[];
-
-        // calculate error between our current end effector position and the target position
-        forwardKinematics.SolveFK(newJointAngles);
-
-        // Orientation is stored in the jacobian as a scaled rotation axis
-        // Where the axis of rotation is the vector, and the angle is the length of the vector (in radians)
-        // So, use ToAngleAxis to get axis and angle
-        rotationDelta.ToAngleAxis(out float rotationAngle, out Vector3 rotationAxis);
-
-        // Function returns angle in degrees, so convert to radians
-        rotationAngle = Mathf.Deg2Rad * rotationAngle;
-        // Now scale the rotation axis by the angle
-        rotationAxis *= rotationAngle; // Prioritize the position
-
-        // transform to local
-        positionDelta = BaseTransform.TransformVector(positionDelta);
-        rotationAxis = BaseTransform.TransformVector(rotationAxis);
-
-        var errorAngles = CalculateError(positionDelta, rotationAxis);
-        for (int i = 0; i < newJointAngles.Length; i++)
-            newJointAngles[i] += errorAngles[i];
-
         return newJointAngles;
     }
 
-    private List<float> CalculateError(Vector3 positionError, Vector3 rotationAxis)
-    {
+    private List<float> CalculateError(
+        Vector3 positionError, Vector3 rotationError
+    ) {
         List<float> errorTarget = new List<float>
         {
             positionError.x, positionError.y, positionError.z,
-            rotationAxis.x, rotationAxis.y, rotationAxis.z,
+            rotationError.x, rotationError.y, rotationError.z,
         };
 
         // Switch case for different IK types
-        forwardKinematics.UpdateJacobian();
-        jacobian = forwardKinematics.Jacobian;
+        jacobian = forwardKinematics.GetJacobian();
+
         ArticulationJacobian invJ;
         switch (inverseMethod)
         {
@@ -152,7 +126,9 @@ public class NewtonIK : InverseKinematics
                 invJ = JacobianTools.Transpose(jacobian);
                 break;
             case InverseMethod.DampedLeastSquares:
-                invJ = JacobianTools.DampedLeastSquares(jacobian, dampedSquaresLambda);
+                invJ = JacobianTools.DampedLeastSquares(
+                    jacobian, dampedSquaresLambda
+                );
                 break;
             case InverseMethod.PsuedoInverse:
                 invJ = JacobianTools.PsuedoInverse(jacobian);

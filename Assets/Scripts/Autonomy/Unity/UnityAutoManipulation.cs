@@ -49,9 +49,11 @@ public class UnityAutoManipulation : AutoManipulation
         }
         
         // Solve IK for target position joint angles
-        var (converged, targetJointAngles) = inverseKinematics.SolveIK(
+        var targetJointAngles = inverseKinematics.SolveIK(
             currJointAngles, targetPosition, targetRotation
         );
+        // TODO
+        bool converged = true;
         if (!converged)
         {
             Debug.Log("No valid path to given target.");

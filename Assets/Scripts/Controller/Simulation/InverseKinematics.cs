@@ -8,8 +8,8 @@ using UnityEngine;
 /// </summary>
 public abstract class InverseKinematics : MonoBehaviour
 {
-    // One more transform to adjust the velocity IK coordinate
-    [field:SerializeField] public Transform BaseTransform { get; set; }
+    [field:SerializeField]
+    public Transform BaseTransform { get; private set; }
     // Forward kinematic solver
     [SerializeField] protected ForwardKinematics forwardKinematics;
 
@@ -17,11 +17,7 @@ public abstract class InverseKinematics : MonoBehaviour
 
     // void Update() {}
 
-    public abstract (bool, float[]) SolveIK(
+    public abstract float[] SolveIK(
         float[] jointAngles, Vector3 targetPosition, Quaternion targetRotation
-    );
-
-    public abstract float[] SolveVelocityIK(
-        float[] jointAngles, Vector3 positionError, Quaternion rotationError
     );
 }
