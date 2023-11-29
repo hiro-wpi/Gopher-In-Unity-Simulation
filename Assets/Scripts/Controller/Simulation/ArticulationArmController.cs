@@ -19,9 +19,10 @@ public class ArticulationArmController : ArmController
     [SerializeField] private bool emergencyStop = false;
 
     // Arm component controller
+    [SerializeField] 
+    private ArticulationEndEffectorController endEffectorController;
     [SerializeField] private ArticulationJointController jointController;
     [SerializeField] private ArticulationGripperController gripperController;
-    [SerializeField] private InverseKinematics inverseKinematics;
     [SerializeField] private AutoManipulation autoManipulation;
 
     // Arm control mode
@@ -111,15 +112,11 @@ public class ArticulationArmController : ArmController
         if (linearVelocity != Vector3.zero || angularVelocity != Vector3.zero)
         {
             // Convert to position error and angular error in next timestep
-            Vector3 linearError = - linearVelocity * Time.fixedDeltaTime;
-            Vector3 angularError = - angularVelocity * Time.fixedDeltaTime * Mathf.Rad2Deg;
-            // Solve IK
-            jointAngles = jointController.GetCurrentJointTargets();
-            jointAngles = inverseKinematics.SolveVelocityIK(
-                jointAngles, linearError, Quaternion.Euler(angularError)
-            );
-            // Set joint targets to IK solution
-            jointController.SetJointTargets(jointAngles);
+            Vector3 linearError = linearVelocity * Time.fixedDeltaTime;
+            Vector3 angularError = angularVelocity * Time.fixedDeltaTime;
+
+            endEffectorController.SetTargetDeltaPose(linearError, angularError);
+            endEffectorController.MoveToTargetStep();
         }
     }
 
@@ -174,6 +171,7 @@ public class ArticulationArmController : ArmController
     {
         // Move to given position
         controlMode = ControlMode.Target;
+        endEffectorController.SetJointAsTarget(jointAngles);
         jointController.SetJointTargets(jointAngles, false, SwitchToManualControl);
     }
 
@@ -199,6 +197,7 @@ public class ArticulationArmController : ArmController
         }
         // Move to the position
         controlMode = ControlMode.Target;
+        endEffectorController.SetJointAsTarget(angles);
         jointController.SetJointTargets(angles, true, SwitchToManualControl);
     }
 
@@ -209,12 +208,6 @@ public class ArticulationArmController : ArmController
 
     public override void MoveToPreset(int presetIndex)
     {
-        // // Do not allow moving joints to preset when grasping
-        // if (gripperController.g)
-        // {
-        //     return;
-        // }
-
         // Get preset angles
         float[] angles;
         if (presetIndex == -1)

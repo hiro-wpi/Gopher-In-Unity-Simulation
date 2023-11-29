@@ -20,6 +20,8 @@ public class ArmControl : MonoBehaviour
     private Vector3 angularVelocity = Vector3.zero;
 
     // Switches Arm Movement Between Rotation and Translation
+    // This is used only when the control input
+    // for rotation and translation are the same (OnTranslateRotate())
     public enum ArmControlMode { translation = 0, rotation = 1 }
     [field: SerializeField] public ArmControlMode controlMode = ArmControlMode.translation;
 
@@ -35,7 +37,7 @@ public class ArmControl : MonoBehaviour
 
     void Update() {}
 
-    // Change mode
+    // Change arm controller mode
     public void OnModeChange(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -59,12 +61,14 @@ public class ArmControl : MonoBehaviour
         // Need to convert axis
         angularVelocity = context.ReadValue<Vector3>();
         angularVelocity = new Vector3(
-            angularVelocity.z, 
-            -angularVelocity.x, 
+            -angularVelocity.z,
+            angularVelocity.x,
             -angularVelocity.y
         );
         // Set velocity
-        StartCoroutine(DelayAndSetVelocityCoroutine("angular", angularVelocity));
+        StartCoroutine(
+            DelayAndSetVelocityCoroutine("angular", angularVelocity)
+        );
     }
 
     // Switch between Translation and Rotation
@@ -85,7 +89,7 @@ public class ArmControl : MonoBehaviour
     }
 
     // Handles Translation and Rotation of the arm
-    //      Only important if the keys for rotation and translation are the same
+    // Only important if the keys for rotation and translation are the same
     public void OnTranslateRotate(InputAction.CallbackContext context)
     {
         if(controlMode == ArmControlMode.translation)
@@ -99,6 +103,7 @@ public class ArmControl : MonoBehaviour
         }
     }
 
+    // Delay input to simulate input lagging
     IEnumerator DelayAndSetVelocityCoroutine(string type, Vector3 inputVelocity)
     {
         // Simulate input lagging
