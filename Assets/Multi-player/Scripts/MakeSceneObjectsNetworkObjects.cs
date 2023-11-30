@@ -25,8 +25,8 @@ public class MakeSceneObjectsNetworkObjects : MonoBehaviour
             if (rb.isKinematic == false)
             {
                 // Add network components to the game object
-                var netObject = rb.gameObject.AddComponent<NetworkObject>();
-                var netTf = rb.gameObject.AddComponent<ClientNetworkTransform>();
+                // var netObject = rb.gameObject.AddComponent<NetworkObject>();
+                var netTf = rb.gameObject.AddComponent<NetworkTransform>();
                 var netRb = rb.gameObject.AddComponent<NetworkRigidbody>();
             }
         }
