@@ -3,21 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Netcode.Components;
-using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 
 /// <summary>
-///    Attach all the game objects in the scene 
-///    with non-kinematic rigidbody 
-///    with network objects
+///    Attach all the children game objects with non-kinematic rigidbody
+///    with network transform and netwrok rigidbody components
 /// </summary>
-public class MakeSceneObjectsNetworkObjects : MonoBehaviour
+public class AttachNetworkRigidbody : MonoBehaviour
 {
     void Awake()
     {
+        // Check if a Network Object componenet is attached
+        if (GetComponent<NetworkObject>() == null)
+        {
+            throw new System.Exception(
+                "There should be a NetworkObject component attached"
+            );
+        }
+
         // Get all the rigidbodies in the scene
-        Rigidbody[] rigidbodies = GameObject.FindObjectsOfType(
-            typeof(Rigidbody)
-        ) as Rigidbody[];
+        var rigidbodies = gameObject.GetComponentsInChildren<Rigidbody>();
 
         foreach (Rigidbody rb in rigidbodies)
         {
@@ -25,12 +29,13 @@ public class MakeSceneObjectsNetworkObjects : MonoBehaviour
             if (rb.isKinematic == false)
             {
                 // Add network components to the game object
-                // var netObject = rb.gameObject.AddComponent<NetworkObject>();
                 var netTf = rb.gameObject.AddComponent<NetworkTransform>();
                 var netRb = rb.gameObject.AddComponent<NetworkRigidbody>();
             }
         }
     }
+
+    // void Start() {}
 
     // void Update() {}
 }
