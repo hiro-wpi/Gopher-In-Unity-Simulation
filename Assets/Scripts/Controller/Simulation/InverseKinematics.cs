@@ -5,6 +5,12 @@ using UnityEngine;
 /// <summary>
 ///     Abstract class to provide util functions 
 ///     to compute inverse kinematics
+///     
+///     BaseTransform is the transform of the base of the robot
+///     It should be the same as the base transform of the 
+///     forward kinematics in most cases.
+///     
+///     Note: SolveIK() takes input pose in world frame
 /// </summary>
 public abstract class InverseKinematics : MonoBehaviour
 {
@@ -16,6 +22,9 @@ public abstract class InverseKinematics : MonoBehaviour
     // void Start() {}
 
     // void Update() {}
+
+    // May be useful for some IK methods
+    public virtual void SetJointAnglesAsHome(float[] jointAngles) {}
 
     public abstract float[] SolveIK(
         float[] jointAngles, Vector3 targetPosition, Quaternion targetRotation

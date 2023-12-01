@@ -138,6 +138,45 @@ public static class Utils
     }
 
     // Transform
+    public static (Vector3, Quaternion) LocalToWorldPose(
+        Transform tf, Vector3 position, Quaternion rotation
+    ) {
+        return (tf.TransformPoint(position), tf.rotation * rotation);
+    }
+
+    public static (Vector3, Quaternion) WorldToLocalPose(
+        Transform tf, Vector3 position, Quaternion rotation
+    ) {
+        return (
+            tf.InverseTransformPoint(position),
+            Quaternion.Inverse(tf.rotation) * rotation
+        );
+    }
+
+    public static (Vector3, Quaternion) LocalToWorldPose(
+        Vector3 tfPosition, 
+        Quaternion tfRotation, 
+        Vector3 position, 
+        Quaternion rotation
+    ) {
+        return (
+            tfRotation * position + tfPosition, 
+            tfRotation * rotation
+        );
+    }
+    
+    public static (Vector3, Quaternion) WorldToLocalPose(
+        Vector3 tfPosition, 
+        Quaternion tfRotation, 
+        Vector3 position, 
+        Quaternion rotation
+    ) {
+        return (
+            Quaternion.Inverse(tfRotation) * (position - tfPosition), 
+            Quaternion.Inverse(tfRotation) * rotation
+        );
+    }
+
     public static bool IsPoseClose(
         Transform t1,
         Transform t2,

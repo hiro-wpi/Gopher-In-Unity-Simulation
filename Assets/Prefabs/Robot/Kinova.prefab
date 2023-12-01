@@ -84,7 +84,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1473626234}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &1473626236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4249,7 +4249,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8340433699515969849
 Transform:
   m_ObjectHideFlags: 0
@@ -9972,10 +9972,11 @@ GameObject:
   - component: {fileID: 9097390034347140187}
   - component: {fileID: 5958152946423774376}
   - component: {fileID: 8958830244622965001}
-  - component: {fileID: 489222821906505489}
-  - component: {fileID: 8494137792384241145}
-  - component: {fileID: 9129745423270400610}
   - component: {fileID: 1410587254}
+  - component: {fileID: 8494137792384241145}
+  - component: {fileID: 489222821906505489}
+  - component: {fileID: 9129745423270400610}
+  - component: {fileID: 1410587257}
   m_Layer: 15
   m_Name: Arm
   m_TagString: Untagged
@@ -10049,7 +10050,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <IsGrasping>k__BackingField: 0
   endEffector: {fileID: 8340433700001638760}
---- !u!114 &489222821906505489
+--- !u!114 &1410587254
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10058,16 +10059,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 8494774417088345431}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c4bdf48aad5eb146828cc5681ce4d33, type: 3}
+  m_Script: {fileID: 11500000, guid: 34dbbe6b2fa2e76438b237d9b7aab61a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <BaseTransform>k__BackingField: {fileID: 8340433699515969849}
+  jointController: {fileID: 9097390034347140187}
   forwardKinematics: {fileID: 8494137792384241145}
-  iterations: 10
-  positionTolerance: 0.001
-  rotationTolerance: 0.0175
-  dampedSquaresLambda: 0.01
-  inverseMethod: 1
+  inverseKinematics: {fileID: 1410587257}
+  positionTolerance: 0.1
+  rotationTolerance: 0.2
+  targetPosition: {x: 0, y: 0, z: 0}
+  targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  succeed: 0
+  targetJointAngles: []
+  RelativeTransform: {fileID: 8340433699515969849}
+  visualizeTargetPose: 0
 --- !u!114 &8494137792384241145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10137,6 +10142,25 @@ MonoBehaviour:
   - 2.23
   - 0
   visualize: 0
+--- !u!114 &489222821906505489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8494774417088345431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c4bdf48aad5eb146828cc5681ce4d33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <BaseTransform>k__BackingField: {fileID: 8340433699515969849}
+  forwardKinematics: {fileID: 8494137792384241145}
+  iterations: 10
+  positionTolerance: 0.001
+  rotationTolerance: 0.0175
+  dampedSquaresLambda: 0.01
+  inverseMethod: 1
 --- !u!114 &9129745423270400610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10212,7 +10236,7 @@ MonoBehaviour:
     - -100
     - -100
     - -1.570796
---- !u!114 &1410587254
+--- !u!114 &1410587257
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10221,20 +10245,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8494774417088345431}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34dbbe6b2fa2e76438b237d9b7aab61a, type: 3}
+  m_Script: {fileID: 11500000, guid: a1056068d2603f54aa2ba4b3c5d05e25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jointController: {fileID: 9097390034347140187}
+  <BaseTransform>k__BackingField: {fileID: 8340433699515969849}
   forwardKinematics: {fileID: 8494137792384241145}
-  inverseKinematics: {fileID: 489222821906505489}
-  positionTolerance: 0.01
-  rotationTolerance: 0.05
-  targetPosition: {x: 0, y: 0, z: 0}
-  targetRotation: {x: 0, y: 0, z: 0, w: 0}
-  succeed: 0
-  targetJointAngles: []
-  RelativeTransform: {fileID: 8340433699515969849}
-  visualizeTargetPose: 0
+  infoFileName: kortex_info.yaml
 --- !u!1 &8656373735981736526
 GameObject:
   m_ObjectHideFlags: 0

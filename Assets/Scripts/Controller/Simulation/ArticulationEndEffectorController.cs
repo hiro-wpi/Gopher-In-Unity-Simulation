@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,8 +8,12 @@ using UnityEngine;
 ///     and move the end effector to a given pose 
 ///     using inverse kinematics.
 ///     
-///     SetCurrentPoseAsTarget() should be called first to initialize
-///     the target pose before calling SetTargetDeltaPose()
+///     SetHome() should be called first to initialize the target
+///     pose before calling SetTargetPose() and SetTargetDeltaPose()
+///     
+///     SetTargetPose() takes world pose as input, while 
+///     SetTargetDeltaPose() takes local delta pose w.r.t.
+///     the RelativeTransform as input.
 ///     
 ///     SetTargetPose() and SetTargetDeltaPose() will only update
 ///     the target joint angles. To actually move the end effector,
@@ -23,8 +28,8 @@ public class ArticulationEndEffectorController : MonoBehaviour
 
     // Tolerance (Could be different from the IK solver tolerance)
     // Used to evaluate if the target pose is acceptable
-    [SerializeField] private float positionTolerance = 0.01f;
-    [SerializeField] private float rotationTolerance = 0.05f;
+    [SerializeField] private float positionTolerance = 0.1f;
+    [SerializeField] private float rotationTolerance = 0.2f;
 
     // Target pose is in world frame
     // It gets updated based on local pose
@@ -46,15 +51,17 @@ public class ArticulationEndEffectorController : MonoBehaviour
     // Visualize target pose
     [SerializeField] private bool visualizeTargetPose = false;
 
-    void Start() 
+    void Awake() 
     {
         baseTransform = forwardKinematics.BaseTransform;
     }
 
+    void Start() {}
+
     void FixedUpdate()
     {
-        (targetPosition, targetRotation) = LocalToWorldPose(
-            targetLocalPosition, targetLocalRotation
+        (targetPosition, targetRotation) = Utils.LocalToWorldPose(
+            baseTransform, targetLocalPosition, targetLocalRotation
         );
     }
 
@@ -68,7 +75,7 @@ public class ArticulationEndEffectorController : MonoBehaviour
         }
     }
 
-    public void SetJointAsTarget(float[] jointAngles)
+    public void SetHome(float[] jointAngles)
     {
         // Compute target pose
         float[] currJointAngles = jointAngles.Clone() as float[];
@@ -81,24 +88,29 @@ public class ArticulationEndEffectorController : MonoBehaviour
         succeed = true;
         targetJointAngles = currJointAngles;
         // Update target local pose
-        (targetLocalPosition, targetLocalRotation) = WorldToLocalPose(
-            targetPosition, targetRotation
+        (targetLocalPosition, targetLocalRotation) = Utils.WorldToLocalPose(
+            baseTransform, targetPosition, targetRotation
         );
+
+        // Set home for IK
+        inverseKinematics.SetJointAnglesAsHome(targetJointAngles);
     }
 
     public void SetTargetDeltaPose(Vector3 linearDelta, Vector3 angularDelta) 
     {
-        // No need to run IK if delta are 0
-        if (linearDelta == Vector3.zero && angularDelta == Vector3.zero)
-        {
-            return;
-        }
+        // Update current target pose in world frame
+        (targetPosition, targetRotation) = Utils.LocalToWorldPose(
+            baseTransform, targetLocalPosition, targetLocalRotation
+        );
 
-        // Update target pose w.r.t. relative transform
+        // Compute next target pose 
+        // given delta pose in relative transform
+        // linear
         Vector3 position = (
             targetPosition 
             + RelativeTransform.TransformDirection(linearDelta)
         );
+        // angular
         Quaternion rotation = Quaternion.Euler(
             RelativeTransform.TransformDirection(angularDelta) * Mathf.Rad2Deg
         ) * targetRotation;
@@ -109,47 +121,41 @@ public class ArticulationEndEffectorController : MonoBehaviour
 
     public void SetTargetPose(Vector3 position, Quaternion rotation)
     {
-        // Store previous pose
-        Vector3 prevPosition = targetPosition;
-        Quaternion prevRotation = targetRotation;
-        targetPosition = position;
-        targetRotation = rotation;
-
         // Solve IK
-        SolveIK();
+        SolveIK(position, rotation);
 
-        // Restore if failed
-        if (!succeed)
+        // Updaet target local pose if IK succeed
+        if (succeed)
         {
-            targetPosition = prevPosition;
-            targetRotation = prevRotation;
-        }
-        // Update target local pose if succeed
-        else
-        {
-            (targetLocalPosition, targetLocalRotation) = WorldToLocalPose(
-                targetPosition, targetRotation
-            );
+            (targetLocalPosition, targetLocalRotation) = Utils.
+                WorldToLocalPose(
+                    baseTransform, position, rotation
+                );
         }
     }
 
-    private void SolveIK()
+    private void SolveIK(Vector3 position, Quaternion rotation)
     {
         // Solve IK
         float[] currJointAngles = jointController.GetCurrentJointTargets();
         targetJointAngles = inverseKinematics.SolveIK(
-            currJointAngles, targetPosition, targetRotation
+            currJointAngles, position, rotation
         );
+        if (targetJointAngles == null)
+        {
+            succeed = false;
+            return;
+        }
 
         // Get solution pose
         forwardKinematics.SolveFK(targetJointAngles);
-        var (position, rotation) = forwardKinematics.GetPose(
+        var (solvedPosition, solvedRotation) = forwardKinematics.GetPose(
             forwardKinematics.NumJoint
         );
 
         // Check convergence
-        if ((Vector3.Distance(position, targetPosition) < positionTolerance)
-            && (Quaternion.Angle(rotation, targetRotation) * Mathf.Deg2Rad 
+        if ((Vector3.Distance(solvedPosition, position) < positionTolerance)
+            && (Quaternion.Angle(solvedRotation, rotation) * Mathf.Deg2Rad 
                 < rotationTolerance)
         ) {
             succeed = true;
@@ -164,27 +170,6 @@ public class ArticulationEndEffectorController : MonoBehaviour
     public (Vector3, Quaternion) GetTargetPose()
     {
         return (targetPosition, targetRotation);
-    }
-
-    // Helper
-    private (Vector3, Quaternion) LocalToWorldPose(
-        Vector3 position, Quaternion rotation
-    )
-    {
-        return (
-            baseTransform.TransformPoint(position),
-            baseTransform.rotation * rotation
-        );
-    }
-
-    private (Vector3, Quaternion) WorldToLocalPose(
-        Vector3 position, Quaternion rotation
-    )
-    {
-        return (
-            baseTransform.InverseTransformPoint(position),
-            Quaternion.Inverse(baseTransform.rotation) * rotation
-        );
     }
 
     // Debug

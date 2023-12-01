@@ -108,16 +108,12 @@ public class ArticulationArmController : ArmController
     // Manual real-time control
     private void ProcessManualControl()
     {
-        // End effector position control
-        if (linearVelocity != Vector3.zero || angularVelocity != Vector3.zero)
-        {
-            // Convert to position error and angular error in next timestep
-            Vector3 linearError = linearVelocity * Time.fixedDeltaTime;
-            Vector3 angularError = angularVelocity * Time.fixedDeltaTime;
-
-            endEffectorController.SetTargetDeltaPose(linearError, angularError);
-            endEffectorController.MoveToTargetStep();
-        }
+        // Delta pose as  position and angular error in next timestep
+        endEffectorController.SetTargetDeltaPose(
+            linearVelocity * Time.fixedDeltaTime, 
+            angularVelocity * Time.fixedDeltaTime
+        );
+        endEffectorController.MoveToTargetStep();
     }
 
     // Autonomous mode
@@ -171,7 +167,7 @@ public class ArticulationArmController : ArmController
     {
         // Move to given position
         controlMode = ControlMode.Target;
-        endEffectorController.SetJointAsTarget(jointAngles);
+        endEffectorController.SetHome(jointAngles);
         jointController.SetJointTargets(jointAngles, false, SwitchToManualControl);
     }
 
@@ -197,7 +193,7 @@ public class ArticulationArmController : ArmController
         }
         // Move to the position
         controlMode = ControlMode.Target;
-        endEffectorController.SetJointAsTarget(angles);
+        endEffectorController.SetHome(angles);
         jointController.SetJointTargets(angles, true, SwitchToManualControl);
     }
 
