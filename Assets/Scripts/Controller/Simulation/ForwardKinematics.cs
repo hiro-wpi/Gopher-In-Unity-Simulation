@@ -6,9 +6,11 @@ using UnityEngine;
 /// <summary>
 ///     Provide util functions to compute forward kinematics
 ///     for Kinova Gen3 7-DOF robotic arm
-///     Usage: 
+///
 ///     Call SolveFK(jointAngles) first, or UpdateJacobian() if necessary
 ///     then use Getters GetPose(), GetAllPose(), GetJacobian()
+///     
+///     Note: The result pose will be in world frame
 /// </summary>
 public class ForwardKinematics : MonoBehaviour
 {

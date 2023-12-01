@@ -4,7 +4,6 @@ using UnityEngine;
 
 /// <summary>
 ///     Provide util functions to compute inverse kinematics
-///     for Kinova Gen3 7-DOF robotic arm
 ///     using Jacobian numeric IK method
 /// </summary>
 public class JacobianIK : InverseKinematics
