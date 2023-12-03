@@ -9,28 +9,37 @@ using UnityEngine;
 public class MotionMapping : MonoBehaviour
 {
     // Tracking State
+    // Use StartTracking() and StopTracking() to change the state
     [SerializeField, ReadOnly] private bool tracking = false;
 
     // Control Mode
     //      Full        - Follow both the position and orientation
     //      Position    - Follow only the position
     public enum ControlMode {Full, Position}
+    // Use SetControlMode() to change the mode
     [SerializeField, ReadOnly]
     private ControlMode controlMode = ControlMode.Full;
 
-    // Compensate for the orientation of the input device
-    // or use absolute orientation
+    // Compensate for the orientation of the input device (relative mapping)
+    // or use absolute orientation mapping with an offset
     [SerializeField] private bool compensateOrientation = true;
-
     // Orientation input offset
     // This is used to adjust the orientation of the input device
     // When the orientation compensation is not used
     [SerializeField] private Vector3 orientationOffset = Vector3.zero;
 
-    // The Maximum allowable change in the input, 
+    // The Maximum allowable change in the input,
     // Input will be rejected if it is greater than this value
     [SerializeField] private float maxPositionChangeAllowed = 0.1f;
     [SerializeField] private float maxRotationChangeAllowed = 0.2f;
+    // Unsafe input event
+    // The event gets triggered when the input exceeds the maximum allowable
+    public delegate void UnsafeInputHandler();
+    public event UnsafeInputHandler UnsafeInputEvent;
+
+    // Input and Output
+    // Damping
+
 
     // The input Pose
     private Vector3 inputPosition;
@@ -46,13 +55,9 @@ public class MotionMapping : MonoBehaviour
     private Vector3 compensatedPosition;
     private Quaternion compensatedRotation;
 
-    // Unsafe input event
-    public delegate void UnsafeInputHandler();
-    public event UnsafeInputHandler UnsafeInputEvent;
-
     void Start() {}
 
-    void FixedUpdate() 
+    void Update() 
     {
         if (tracking)
         {
