@@ -3,13 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-// TODO
-// Add damping to the output pose
+/// Motion mapping script that maps the input pose to the output pose
+/// - The mapping could be stopped and resumed in a different input pose
+/// - The mapping could be set to follow only the position 
+/// or both the position and orientation
+/// - The mapping orientation could be set to be relative to the input device
+/// or absolute with an pre-defined offset
+/// 
+/// - The maximum allowable change in the input is for safety concerns
+/// - The input pose is damped / smoothed before output
+/// 
+/// Use SetInputPose() to set the input pose
+/// Use GetOutputPose() to get the output pose
 /// </summary>
 public class MotionMapping : MonoBehaviour
 {
     // Tracking State
     // Use StartTracking() and StopTracking() to change the state
+    // Use IsTracking() to check the state
     [SerializeField, ReadOnly] private bool tracking = false;
 
     // Control Mode
@@ -17,6 +28,7 @@ public class MotionMapping : MonoBehaviour
     //      Position    - Follow only the position
     public enum ControlMode {Full, Position}
     // Use SetControlMode() to change the mode
+    // Use GetControlMode() to check the mode
     [SerializeField, ReadOnly]
     private ControlMode controlMode = ControlMode.Full;
 
@@ -30,8 +42,8 @@ public class MotionMapping : MonoBehaviour
 
     // The Maximum allowable change in the input,
     // Input will be rejected if it is greater than this value
-    [SerializeField] private float maxPositionChangeAllowed = 0.1f;
-    [SerializeField] private float maxRotationChangeAllowed = 0.2f;
+    [SerializeField] private float maxPositionChangeAllowed = 0.4f;
+    [SerializeField] private float maxRotationChangeAllowed = 1.0f;
     // Unsafe input event
     // The event gets triggered when the input exceeds the maximum allowable
     public delegate void UnsafeInputHandler();
@@ -39,17 +51,22 @@ public class MotionMapping : MonoBehaviour
 
     // Input and Output
     // Damping
-
+    [SerializeField] private float positionSmoothDampTime = 0.1f;
+    [SerializeField] private float rotationSmoothDampTime = 0.2f;
+    private Vector3 positionSmoothDampVelocity = Vector3.zero;
+    private Quaternion rotationSmoothDampVelocity = Quaternion.identity;
 
     // The input Pose
-    private Vector3 inputPosition;
-    private Quaternion inputRotation;
+    [SerializeField, ReadOnly]
+    private Vector3 inputPosition = Vector3.zero;
+    [SerializeField, ReadOnly]
+    private Quaternion inputRotation = Quaternion.identity;
     // The output / last pose
-    [SerializeField, ReadOnly] 
+    [SerializeField, ReadOnly]
     private Vector3 outputPosition = Vector3.zero;
     [SerializeField, ReadOnly]
     private Quaternion outputRotation = Quaternion.identity;
-    // compensate pose
+    // to compensate pose
     private Vector3 diffPosition;
     private Quaternion diffRotation;
     private Vector3 compensatedPosition;
@@ -57,7 +74,7 @@ public class MotionMapping : MonoBehaviour
 
     void Start() {}
 
-    void Update() 
+    void FixedUpdate() 
     {
         if (tracking)
         {
@@ -129,9 +146,19 @@ public class MotionMapping : MonoBehaviour
             }
         }
 
-        // Store as the output pose
-        outputPosition = compensatedPosition;
-        outputRotation = compensatedRotation;
+        // Compute the output pose with smoothing
+        outputPosition = Vector3.SmoothDamp(
+            outputPosition, 
+            compensatedPosition, 
+            ref positionSmoothDampVelocity,
+            positionSmoothDampTime
+        );
+        outputRotation = Utils.QuaternionSmoothDamp(
+            outputRotation, 
+            compensatedRotation, 
+            ref rotationSmoothDampVelocity,
+            rotationSmoothDampTime
+        );
     }
 
     // Tracking
