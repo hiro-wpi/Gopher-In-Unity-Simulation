@@ -42,6 +42,10 @@ public class ArticulationEndEffectorController : MonoBehaviour
     private Quaternion targetLocalRotation;
 
     // IK solution
+    // If IK fails, the end effector will stop moving
+    // unless moveWhenIKFailed is set to true
+    // This could be useful when control interface is motion mapping kind
+    [SerializeField] private bool moveWhenIKFailed = false;
     [SerializeField, ReadOnly] private bool succeed;
     [SerializeField, ReadOnly] private float[] targetJointAngles;
 
@@ -69,7 +73,7 @@ public class ArticulationEndEffectorController : MonoBehaviour
     public void MoveToTargetStep()
     {
         // Set joint targets to IK solution
-        if (succeed)
+        if (succeed || moveWhenIKFailed)
         {
             jointController.SetJointTargetsStep(targetJointAngles);
         }
@@ -125,7 +129,7 @@ public class ArticulationEndEffectorController : MonoBehaviour
         SolveIK(position, rotation);
 
         // Updaet target local pose if IK succeed
-        if (succeed)
+        if (succeed || moveWhenIKFailed)
         {
             (targetLocalPosition, targetLocalRotation) = Utils.
                 WorldToLocalPose(
@@ -167,9 +171,21 @@ public class ArticulationEndEffectorController : MonoBehaviour
     }
 
     // Getter
-    public (Vector3, Quaternion) GetTargetPose()
+    // Get the end effector target pose
+    public (Vector3, Quaternion) GetEETargetPose()
     {
         return (targetPosition, targetRotation);
+    }
+
+    // Get the actual end effector pose (from joint targets)
+    public (Vector3, Quaternion) GetJointTargetPose()
+    {
+        forwardKinematics.SolveFK(
+            jointController.GetCurrentJointTargets()
+        );
+        return forwardKinematics.GetPose(
+            forwardKinematics.NumJoint
+        );
     }
 
     // Debug

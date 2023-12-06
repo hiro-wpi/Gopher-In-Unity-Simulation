@@ -12,6 +12,9 @@ public class VRMotionMapping : MonoBehaviour
 {
     // The motion mapping
     [SerializeField] private MotionMapping motionMapping;
+    // Output arm controller
+    [SerializeField] private ArmController armController;
+    [SerializeField] private Transform armBaseFrame;
 
     // Relevant Inputs from the VR Controller        
     // tracking change button
@@ -35,14 +38,27 @@ public class VRMotionMapping : MonoBehaviour
     // Debug purpose
     [SerializeField] private Transform outputTransform;
 
-    void Start() 
+    void Start()
     {
         // Stop motion mapping at the beginning
         motionMapping.StopTracking();
+
+        // TODO: add support to physical robot as well
+        if (armController is ArticulationArmController articulationArm)
+        {
+            articulationArm.SwitchToManualPositionControl();
+        }
     }
 
-    void OnEnable() 
+    void OnEnable()
     {
+        // TODO: add support to physical robot as well
+        // Track the arm controller status
+        if (armController is ArticulationArmController articulationArm)
+        {
+            articulationArm.ManualControlEvent += ResetTracking;
+        }
+
         // Set up the delegate
         changeTrackingStateDelegate = ctx => ChangeTrackingState();
         controlModeSwitchDelegate = ctx => ControlModeSwitch();
@@ -61,6 +77,12 @@ public class VRMotionMapping : MonoBehaviour
 
     void OnDisable()
     {
+        // TODO: add support to physical robot as well
+        if (armController is ArticulationArmController articulationArm)
+        {
+            articulationArm.ManualControlEvent -= ResetTracking;
+        }
+
         trackingButton.action.performed -= changeTrackingStateDelegate;
         modeButton.action.performed -= controlModeSwitchDelegate;
         trackingButton.action.canceled -= stopTrackingDelegate;
@@ -74,12 +96,32 @@ public class VRMotionMapping : MonoBehaviour
             controllerRotation.action.ReadValue<Quaternion>()
         );
 
+        // Get the output pose in local frame
+        var (position, rotation) = motionMapping.GetOutputPose();
+        // Convert to world frame and send it to the controller
+        (position, rotation) = Utils.LocalToWorldPose(
+            armBaseFrame, position, rotation
+        );
+        armController.SetEndEffectorPose(position, rotation);
+
         // For debug purpose
         if (outputTransform != null)
         {
-            (outputTransform.position, outputTransform.rotation) = 
-            motionMapping.GetOutputPose();
+            outputTransform.position = position;
+            outputTransform.rotation = rotation;
         }
+    }
+
+    // Reset tracking event
+    private void ResetTracking()
+    {
+        // Get the desired reset pose in world frame
+        var (position, rotation) = armController.GetEETargetPose();
+        // Convert to local frame and send it to the motion mapping
+        (position, rotation) = Utils.WorldToLocalPose(
+            armBaseFrame, position, rotation
+        );
+        motionMapping.ResetOutputPose(position, rotation);
     }
 
     // Tracking event

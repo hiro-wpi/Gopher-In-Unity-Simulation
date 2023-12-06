@@ -148,14 +148,14 @@ public class MotionMapping : MonoBehaviour
 
         // Compute the output pose with smoothing
         outputPosition = Vector3.SmoothDamp(
-            outputPosition, 
+            outputPosition,
             compensatedPosition, 
             ref positionSmoothDampVelocity,
             positionSmoothDampTime
         );
         outputRotation = Utils.QuaternionSmoothDamp(
-            outputRotation, 
-            compensatedRotation, 
+            outputRotation,
+            compensatedRotation,
             ref rotationSmoothDampVelocity,
             rotationSmoothDampTime
         );
@@ -184,8 +184,7 @@ public class MotionMapping : MonoBehaviour
     {
         // This function should only be called when tracking gets started
         // Or when the mode is switched to Full
-        //
-        // It stores the difference between the current pose and the 
+        // Stores the difference between the current pose and the 
         // last commanded output pose
         // Will be used to compensate for the misalighment
         diffPosition = inputPosition - outputPosition;
@@ -205,6 +204,7 @@ public class MotionMapping : MonoBehaviour
     {
         outputPosition = position;
         outputRotation = rotation;
+        StopTracking();
     }
 
     // Mode change
