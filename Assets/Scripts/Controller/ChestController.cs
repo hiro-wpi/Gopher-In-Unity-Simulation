@@ -19,6 +19,7 @@ public abstract class ChestController : MonoBehaviour
 
     // Arm control mode
     public enum ControlMode { Speed, Position }
+    [SerializeField, ReadOnly]
     protected ControlMode controlMode = ControlMode.Speed;
 
     // Variable to hold speed fraction & target position

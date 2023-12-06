@@ -30,7 +30,9 @@ public class ChestControl : MonoBehaviour
     // Moves the base up and down - "velocity" controller
     public void OnTranslate(InputAction.CallbackContext context)
     {
-        driveDirection = context.ReadValue<float>();
+        driveDirection = context.valueType == typeof(Vector2)
+            ? context.ReadValue<Vector2>().y
+            : context.ReadValue<float>();
         // Set velocity
         StartCoroutine(DelayAndSetSpeedCoroutine(driveDirection));
     }

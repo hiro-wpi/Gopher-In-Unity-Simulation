@@ -36,7 +36,7 @@ public class BaseControl : MonoBehaviour
     {
         if (context.performed)
         {
-            baseController.SwitchMode();
+            baseController.SwitchSpeedMode();
         }
     }
 

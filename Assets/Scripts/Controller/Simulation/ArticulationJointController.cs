@@ -106,7 +106,7 @@ public class ArticulationJointController : MonoBehaviour
         for (int i = 0; i < positions.Length; ++i)
         {
             if ((positions[i] != IGNORE_VAL) && 
-                (Mathf.Abs(currTargets[i] - positions[i]) > 0.00001))
+                (Mathf.Abs(currTargets[i] - positions[i]) > 1e-5f))
             {
                 return false;
             }
@@ -204,7 +204,7 @@ public class ArticulationJointController : MonoBehaviour
         currCoroutine = StartCoroutine(SetJointTrajectoryCoroutine(reached));
     }
 
-    public IEnumerator SetJointTrajectoryCoroutine(Action reached = null)
+    private IEnumerator SetJointTrajectoryCoroutine(Action reached = null)
     {
         currTrajectoryIndex = 0;
         yield return new WaitUntil(() => SetJointTrajectoryStepAndCheck() == true);

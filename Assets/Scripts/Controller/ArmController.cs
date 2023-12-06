@@ -25,11 +25,14 @@ public abstract class ArmController : MonoBehaviour
     [SerializeField] protected float maxAngularSpeed = 0.5f;
 
     // Control mode (Different velocities)
-    public enum Mode { Slow = 0, Regular = 1 }
-    [field: SerializeField] public Mode SpeedMode { get; set; } = Mode.Regular;
+    public enum SpeedMode { Slow = 0, Regular = 1 }
+    [SerializeField, ReadOnly] 
+    protected SpeedMode speedMode = SpeedMode.Regular;
     [SerializeField] protected float[] modeMultiplier = { 0.5f, 1.0f };
 
-    // Variable to hold velocity
+    // Variable to hold position and velocity
+    [SerializeField, ReadOnly] protected Vector3 position;
+    [SerializeField, ReadOnly] protected Quaternion rotation;
     [SerializeField, ReadOnly] protected Vector3 linearVelocity;
     [SerializeField, ReadOnly] protected Vector3 angularVelocity;
     [SerializeField, ReadOnly] protected float gripperPosition;
@@ -46,7 +49,7 @@ public abstract class ArmController : MonoBehaviour
     {
         // Clipping and setting target linear velocity
         linearVelocity = Utils.ClampVector3(
-            linear * linearSpeedMultiplier * modeMultiplier[(int)SpeedMode],
+            linear * linearSpeedMultiplier * modeMultiplier[(int)speedMode],
             -maxLinearSpeed,
             maxLinearSpeed
         );
@@ -56,16 +59,20 @@ public abstract class ArmController : MonoBehaviour
     {
         // Clipping and setting target angular velocity
         angularVelocity = Utils.ClampVector3(
-            angular * angularSpeedMultiplier * modeMultiplier[(int)SpeedMode],
+            angular * angularSpeedMultiplier * modeMultiplier[(int)speedMode],
             -maxAngularSpeed,
             maxAngularSpeed
         );
     }
 
-    public virtual void StopEndEffector()
-    {
-        linearVelocity = Vector3.zero;
-        angularVelocity = Vector3.zero;
+    // Set end effector pose directly
+    // This is different from SetTarget as it does no go through a planner
+    // Used for motion mapping control
+    public virtual void SetEndEffectorPose(
+        Vector3 position, Quaternion rotation
+    ) {
+        this.position = position;
+        this.rotation = rotation;
     }
 
     // Set gripper position
@@ -91,17 +98,22 @@ public abstract class ArmController : MonoBehaviour
 
     public virtual void MoveToTarget() {}
 
-    // Set robot control mode
-    public void SetMode(Mode mode)
+    // Get/Set robot speed mode
+    public SpeedMode GetSpeedMode()
     {
-        SpeedMode = mode;
+        return speedMode;
     }
 
-    // Switch to the next robot control mode
-    public void SwitchMode()
+    public void SetSpeedMode(SpeedMode mode)
     {
-        int numMode = System.Enum.GetNames(typeof(Mode)).Length;
-        SpeedMode = (Mode)(((int)SpeedMode + 1) % numMode);
+        speedMode = mode;
+    }
+
+    // Switch to the next robot speed mode
+    public void SwitchSpeedMode()
+    {
+        int numMode = System.Enum.GetNames(typeof(SpeedMode)).Length;
+        speedMode = (SpeedMode)(((int)speedMode + 1) % numMode);
     }
 
     // Pre-defined positions
@@ -113,4 +125,11 @@ public abstract class ArmController : MonoBehaviour
     public virtual void EmergencyStop() {}
 
     public virtual void EmergencyStopResume() {}
+
+    // Some getter functions
+    // Get the actual end effector pose
+    public abstract (Vector3, Quaternion) GetEEPose();
+
+    // Get the end effector target pose
+    public abstract (Vector3, Quaternion) GetEETargetPose();
 }

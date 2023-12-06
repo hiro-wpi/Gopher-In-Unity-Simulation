@@ -42,7 +42,7 @@ public class ArmControl : MonoBehaviour
     {
         if (context.performed)
         {
-            armController.SwitchMode();
+            armController.SwitchSpeedMode();
         }
     }
 
