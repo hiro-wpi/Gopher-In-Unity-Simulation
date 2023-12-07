@@ -13,42 +13,56 @@ using UnityEngine.XR.Interaction.Toolkit.Inputs;
 public class NetworkVRCharacter : NetworkBehaviour
 {
     [SerializeField] GameObject XROrigin;
-    [SerializeField] GameObject[] XROriginTrackingTargets;
+    // [SerializeField] GameObject[] XROriginTrackingTargets;
 
-    public override void OnNetworkSpawn()
+    // public override void OnNetworkSpawn()
+    // {
+    //     // Add client transform sync to tracking targets
+    //     foreach (var target in XROriginTrackingTargets)
+    //     {
+    //         var netTf = target.AddComponent<ClientNetworkTransform>();
+    //         netTf.SyncScaleX = false;
+    //         netTf.SyncScaleY = false;
+    //         netTf.SyncScaleZ = false;
+    //     }
+
+    //     // Disable non-owner input
+    //     if (!IsOwner)
+    //     {
+    //         DisableNonOwnerInput();
+    //     }
+    // }
+
+    public override void OnNetworkSpawn() => DisableClientInput();
+
+    // private void DisableNonOwnerInput()
+    // {
+    //     // Disable all components in XR origin to stop getting undesired input
+    //     // Keep only the network related components
+    //     foreach (
+    //         var component in XROrigin.GetComponentsInChildren<MonoBehaviour>()
+    //     ) {
+    //         if (!(component is NetworkObject) 
+    //             && !(component is ClientNetworkTransform)
+    //         ) {
+    //             component.enabled = false;
+    //         }
+    //     }
+
+    //     // Prevent owner's VR controller assets from being disabled
+    //     var actionManager = XROrigin.GetComponent<InputActionManager>();
+    //     actionManager?.EnableInput();
+    // }
+
+    private void DisableClientInput()
     {
-        // Add client transform sync to tracking targets
-        foreach (var target in XROriginTrackingTargets)
+        if (IsClient && !IsOwner)
         {
-            var netTf = target.AddComponent<NetworkTransform>();
-            netTf.SyncScaleX = false;
-            netTf.SyncScaleY = false;
-            netTf.SyncScaleZ = false;
-        }
+            XROrigin.SetActive(false);
 
-        // Disable non-owner input
-        if (!IsOwner)
-        {
-            DisableNonOwnerInput();
+            // Prevent controller assets from being disabled
+            InputActionManager actionManager = XROrigin.GetComponent<InputActionManager>();
+            actionManager.EnableInput();
         }
-    }
-
-    private void DisableNonOwnerInput()
-    {
-        // Disable all components in XR origin to stop getting undesired input
-        // Keep only the network related components
-        foreach (
-            var component in XROrigin.GetComponentsInChildren<MonoBehaviour>()
-        ) {
-            if (!(component is NetworkObject) 
-                && !(component is NetworkTransform)
-            ) {
-                component.enabled = false;
-            }
-        }
-
-        // Prevent owner's VR controller assets from being disabled
-        var actionManager = XROrigin.GetComponent<InputActionManager>();
-        actionManager?.EnableInput();
     }
 }
