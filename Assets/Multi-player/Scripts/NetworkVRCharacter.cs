@@ -13,6 +13,7 @@ using UnityEngine.XR.Interaction.Toolkit.Inputs;
 public class NetworkVRCharacter : NetworkBehaviour
 {
     [SerializeField] GameObject XROrigin;
+    [SerializeField] AnimateVRCharacter animateVRCharacter;
     // [SerializeField] GameObject[] XROriginTrackingTargets;
 
     public override void OnNetworkSpawn()
@@ -27,7 +28,7 @@ public class NetworkVRCharacter : NetworkBehaviour
         // }
 
         // Disable non-owner input
-        if (IsClient && !IsOwner)
+        if (!IsOwner)
         {
             DisableNonOwnerInput();
         }
@@ -46,6 +47,11 @@ public class NetworkVRCharacter : NetworkBehaviour
                 component.enabled = false;
             }
         }
+        foreach(var camera in XROrigin.GetComponentsInChildren<Camera>())
+        {
+            camera.enabled = false;
+        }
+        animateVRCharacter.enabled = false;
 
         // Prevent owner's VR controller assets from being disabled
         var actionManager = XROrigin.GetComponent<InputActionManager>();

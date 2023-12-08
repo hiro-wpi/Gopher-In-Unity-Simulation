@@ -31,7 +31,7 @@ public class AnimateVRCharacter : MonoBehaviour
     private Vector3 smoothLocalVelocity;
     private Vector3 smoothLocalAngularVelocity;
 
-    void Strat()
+    void Start()
     {
         prevPosition = transform.position;
         prevRotation = transform.rotation;
