@@ -15,12 +15,13 @@ public class NetworkVRCharacter : NetworkBehaviour
 {
     [SerializeField] GameObject XROrigin;
     [SerializeField] AnimateVRCharacter animateVRCharacter;
-    [SerializeField] private Vector2 placementArea = new Vector2(-10.0f, 10.0f);
     
     // [SerializeField] GameObject[] XROriginTrackingTargets;
 
     public override void OnNetworkSpawn()
     {
+        transform.position = new Vector3(Random.Range(-7.5f, -6.5f), 0.0f, Random.Range(-13.0f, -10.0f));
+
         // // Add client transform sync to tracking targets
         // foreach (var target in XROriginTrackingTargets)
         // {
@@ -63,7 +64,7 @@ public class NetworkVRCharacter : NetworkBehaviour
 
     public void OnSelectGrabbable(SelectEnterEventArgs eventArgs)
     {
-        if (!IsOwner)
+        if (IsOwner)
         {
             NetworkObject networkObjectSelected = eventArgs.interactableObject.transform.GetComponent<NetworkObject>();
             if (networkObjectSelected != null)
