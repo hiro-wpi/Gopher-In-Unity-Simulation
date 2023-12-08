@@ -66,11 +66,16 @@ public class NetworkVRCharacter : NetworkBehaviour
     {
         if (IsOwner)
         {
+            Debug.Log("Ownership requested");
             NetworkObject networkObjectSelected = eventArgs.interactableObject.transform.GetComponent<NetworkObject>();
             if (networkObjectSelected != null)
             {
                 RequestGrabbableOwnershipServerRpc(OwnerClientId, networkObjectSelected);
             }
+        }
+        else 
+        {
+            Debug.Log("Ownership cannot be requested");
         }
     }
 
