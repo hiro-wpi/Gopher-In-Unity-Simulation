@@ -68,6 +68,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   XROrigin: {fileID: 939594236554863246}
   animateVRCharacter: {fileID: 6666432133961632432}
+  placementArea: {x: -10, y: 10}
 --- !u!1001 &1809575867805258481
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -122,6 +123,62 @@ PrefabInstance:
     - target: {fileID: 1447621753121736918, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447621753137320094, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447621753137320094, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447621753137320094, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1809575867747223859}
+    - target: {fileID: 1447621753137320094, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447621753137320094, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnSelectGrabbable
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447621753137320094, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: NetworkVRCharacter, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447621753137320094, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447621753598457498, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447621753598457498, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447621753598457498, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1809575867747223859}
+    - target: {fileID: 1447621753598457498, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447621753598457498, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnSelectGrabbable
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447621753598457498, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: NetworkVRCharacter, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1447621753598457498, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}
@@ -324,36 +381,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1447621754639891409, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}
   m_PrefabInstance: {fileID: 1809575867805258481}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &9174537243722940590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 939594236789451040}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df2868252ab5c4d1da357e8f11f1b524, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 0
-  SyncScaleY: 0
-  SyncScaleZ: 0
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  UseQuaternionSynchronization: 0
-  UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
-  InLocalSpace: 0
-  Interpolate: 1
-  SlerpPosition: 0
 --- !u!114 &6666432133961632432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -423,6 +450,36 @@ MonoBehaviour:
       m_Reference: {fileID: -1758520528963094988, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   localVelocity: {x: 0, y: 0, z: 0}
   localAngularVelocity: {x: 0, y: 0, z: 0}
+--- !u!114 &9174537243722940590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939594236789451040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df2868252ab5c4d1da357e8f11f1b524, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!95 &6656476736597435667 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5006993404000499682, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}

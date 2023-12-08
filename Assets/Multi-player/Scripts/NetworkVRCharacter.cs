@@ -5,6 +5,7 @@ using Unity.Netcode;
 using Unity.Netcode.Components;
 using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using UnityEngine.XR.Interaction.Toolkit.Inputs;
+using UnityEngine.XR.Interaction.Toolkit;
 
 /// <summary>
 ///    Defines a network player.
@@ -14,6 +15,8 @@ public class NetworkVRCharacter : NetworkBehaviour
 {
     [SerializeField] GameObject XROrigin;
     [SerializeField] AnimateVRCharacter animateVRCharacter;
+    [SerializeField] private Vector2 placementArea = new Vector2(-10.0f, 10.0f);
+    
     // [SerializeField] GameObject[] XROriginTrackingTargets;
 
     public override void OnNetworkSpawn()
@@ -56,6 +59,31 @@ public class NetworkVRCharacter : NetworkBehaviour
         // Prevent owner's VR controller assets from being disabled
         var actionManager = XROrigin.GetComponent<InputActionManager>();
         actionManager?.EnableInput();
+    }
+
+    public void OnSelectGrabbable(SelectEnterEventArgs eventArgs)
+    {
+        if (!IsOwner)
+        {
+            NetworkObject networkObjectSelected = eventArgs.interactableObject.transform.GetComponent<NetworkObject>();
+            if (networkObjectSelected != null)
+            {
+                RequestGrabbableOwnershipServerRpc(OwnerClientId, networkObjectSelected);
+            }
+        }
+    }
+
+    [ServerRpc]
+    public void RequestGrabbableOwnershipServerRpc(ulong newOwnerClientId, NetworkObjectReference networkObjectReference)
+    {
+        if (networkObjectReference.TryGet(out NetworkObject networkObject))
+        {
+            networkObject.ChangeOwnership(newOwnerClientId);
+        }
+        else
+        {
+            Debug.Log("Unable to change ownership for clientId {NewOwnerClientId}");
+        }
     }
 
     // public override void OnNetworkSpawn() => DisableClientInput();
