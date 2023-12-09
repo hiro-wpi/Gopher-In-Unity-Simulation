@@ -84,11 +84,11 @@ public class NetworkVRCharacter : NetworkBehaviour
     {
         if (networkObjectReference.TryGet(out NetworkObject networkObject))
         {
-            if (networkObject.IsOwner)
-            {
-                Debug.Log($"Object already owned by {networkObject.OwnerClientId}");
-                return;
-            }
+            // if (networkObject.IsOwner)
+            // {
+            //     Debug.Log($"Object already owned by {networkObject.OwnerClientId}");
+            //     return;
+            // }
 
             Debug.Log($"Server: Object ownership requested by {newOwnerClientId}");
 
