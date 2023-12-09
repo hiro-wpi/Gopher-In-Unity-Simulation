@@ -38,7 +38,7 @@ public class JointSender : NetworkBehaviour
     {
         if (IsOwner)
         {
-            if (Input.GetKeyDown(KeyCode.T)) 
+            if (Input.GetKey(KeyCode.T)) 
             {
                 // Update joint values below
                 jointList.Value = new Joints {
