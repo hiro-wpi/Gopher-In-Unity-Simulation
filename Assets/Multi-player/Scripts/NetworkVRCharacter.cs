@@ -66,7 +66,7 @@ public class NetworkVRCharacter : NetworkBehaviour
     {
         if (IsOwner)
         {
-            Debug.Log("Ownership requested");
+            Debug.Log("Owner: Ownership requested");
             NetworkObject networkObjectSelected = eventArgs.interactableObject.transform.GetComponent<NetworkObject>();
             if (networkObjectSelected != null)
             {
@@ -75,7 +75,7 @@ public class NetworkVRCharacter : NetworkBehaviour
         }
         else 
         {
-            Debug.Log("Ownership cannot be requested");
+            Debug.Log("Not Owner: Ownership cannot be requested");
         }
     }
 
@@ -84,11 +84,20 @@ public class NetworkVRCharacter : NetworkBehaviour
     {
         if (networkObjectReference.TryGet(out NetworkObject networkObject))
         {
+            if (networkObject.IsOwner)
+            {
+                Debug.Log($"Object already owned by {networkObject.OwnerClientId}");
+                return;
+            }
+
+            Debug.Log($"Server: Object ownership requested by {newOwnerClientId}");
+
             networkObject.ChangeOwnership(newOwnerClientId);
+            Debug.Log($"Server: Object ownership changed to {newOwnerClientId}");
         }
         else
         {
-            Debug.Log("Unable to change ownership for clientId {NewOwnerClientId}");
+            Debug.Log("Server: Unable to change ownership");
         }
     }
 
