@@ -62,7 +62,48 @@ public class NetworkVRCharacter : NetworkBehaviour
         actionManager?.EnableInput();
     }
 
-    public void OnSelectGrabbable(SelectEnterEventArgs eventArgs)
+    // This is necessary to have the object's physics enabled in advance
+    public void OnHoverEntered(HoverEnterEventArgs eventArgs)
+    {
+        if (IsOwner)
+        {
+            Debug.Log("Enable physics for potential future interaction");
+            var networkObjectSelected = eventArgs.interactableObject.transform.GetComponent<Rigidbody>();
+            if (networkObjectSelected != null)
+            {
+                Rigidbody rb = networkObjectSelected.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.isKinematic = false;
+                }
+            }
+        }
+        else 
+        {
+            Debug.Log("Not Owner: ???");
+        }
+    }
+
+    public void OnHoverExited(HoverExitEventArgs eventArgs)
+    {
+        if (IsOwner)
+        {
+            Debug.Log("Physics stay how it should be");
+            var networkRigidbody = eventArgs.interactableObject.transform.GetComponent<NetworkRigidbody>();
+            if (networkRigidbody != null)
+            {
+                // Actually calling UpdateOwnershipAuthority() which is private
+                // Call OnGainedOwnership() or OnLostOwnership() instead
+                networkRigidbody.OnGainedOwnership();
+            }
+        }
+        else 
+        {
+            Debug.Log("Not Owner: ???");
+        }
+    }
+
+    public void OnSelectEntered(SelectEnterEventArgs eventArgs)
     {
         if (IsOwner)
         {
@@ -99,6 +140,11 @@ public class NetworkVRCharacter : NetworkBehaviour
         {
             Debug.Log("Server: Unable to change ownership");
         }
+    }
+
+    public void OnSelectExited(SelectExitEventArgs eventArgs)
+    {
+        
     }
 
     // public override void OnNetworkSpawn() => DisableClientInput();
