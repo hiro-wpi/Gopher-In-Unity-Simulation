@@ -14,19 +14,22 @@ using UnityEngine.XR.Interaction.Toolkit;
 /// </summary>
 public class NetworkVRCharacter : NetworkBehaviour
 {
-    [SerializeField] GameObject xROrigin;
-    [SerializeField] AnimateVRCharacter animateVRCharacter;
-    [SerializeField] GameObject characterRigRoot;
+    [SerializeField] private GameObject xROrigin;
+    [SerializeField] private AnimateVRCharacter animateVRCharacter;
+    [SerializeField] private GameObject characterRigRoot;
     
-    [SerializeField] Vector3 spawnPosition = Vector3.zero;
-    [SerializeField] Quaternion spawnRotation = Quaternion.identity;
+    [SerializeField] private Vector3 spawnPositionLower;
+    [SerializeField] private Vector3 spawnPositionUpper;
+
+    [SerializeField] private Quaternion spawnRotation = Quaternion.identity;
 
     public override void OnNetworkSpawn()
     {
         // Spawn in a random position
-        // TODO use the value specified in the Inspector
         transform.position = new Vector3(
-            Random.Range(-7.5f, -6.5f), 0.0f, Random.Range(-13.0f, -10.0f)
+            Random.Range(spawnPositionLower.x, spawnPositionUpper.x), 
+            Random.Range(spawnPositionLower.y, spawnPositionUpper.y), 
+            Random.Range(spawnPositionLower.z, spawnPositionUpper.z)
         );
         transform.rotation = spawnRotation;
 
