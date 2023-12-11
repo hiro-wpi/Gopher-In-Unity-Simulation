@@ -67,7 +67,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   XROrigin: {fileID: 939594236554863246}
-  animateVRCharacter: {fileID: 0}
+  CharacterRigRoot: {fileID: 129322543642781139}
+  animateVRCharacter: {fileID: 939594236789451042}
+  spawnPosition: {x: 0, y: 0, z: 0}
+  spawnRotation: {x: 0, y: 0, z: 0, w: 1}
 --- !u!1001 &1809575867805258481
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -578,6 +581,17 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &939594236789451042 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1447621754639891411, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}
+  m_PrefabInstance: {fileID: 1809575867805258481}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939594236789451040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba4df2eb3180f564892bd56ae4139a9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!95 &6656476736597435667 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5006993404000499682, guid: 6ea00772ee483a34fa06231e8e28c84c, type: 3}

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
@@ -9,32 +10,33 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 /// <summary>
 ///    Defines a network player.
-///    Disables client input for non-owning clients.
+///    Adjust game object's input and visual if not the owner
 /// </summary>
 public class NetworkVRCharacter : NetworkBehaviour
 {
-    [SerializeField] GameObject XROrigin;
+    [SerializeField] GameObject xROrigin;
     [SerializeField] AnimateVRCharacter animateVRCharacter;
+    [SerializeField] GameObject characterRigRoot;
     
-    // [SerializeField] GameObject[] XROriginTrackingTargets;
+    [SerializeField] Vector3 spawnPosition = Vector3.zero;
+    [SerializeField] Quaternion spawnRotation = Quaternion.identity;
 
     public override void OnNetworkSpawn()
     {
-        transform.position = new Vector3(Random.Range(-7.5f, -6.5f), 0.0f, Random.Range(-13.0f, -10.0f));
+        // Spawn in a random position
+        // TODO use the value specified in the Inspector
+        transform.position = new Vector3(
+            Random.Range(-7.5f, -6.5f), 0.0f, Random.Range(-13.0f, -10.0f)
+        );
+        transform.rotation = spawnRotation;
 
-        // // Add client transform sync to tracking targets
-        // foreach (var target in XROriginTrackingTargets)
-        // {
-        //     var netTf = target.AddComponent<ClientNetworkTransform>();
-        //     netTf.SyncScaleX = false;
-        //     netTf.SyncScaleY = false;
-        //     netTf.SyncScaleZ = false;
-        // }
-
-        // Disable non-owner input
         if (!IsOwner)
         {
+            // Disable non-owner input
             DisableNonOwnerInput();
+
+            // Disable camera and fix character visual property
+            AdjustCameraInput();
         }
     }
 
@@ -43,7 +45,7 @@ public class NetworkVRCharacter : NetworkBehaviour
         // Disable all components in XR origin to stop getting undesired input
         // Keep only the network related components
         foreach (
-            var component in XROrigin.GetComponentsInChildren<MonoBehaviour>()
+            var component in xROrigin.GetComponentsInChildren<MonoBehaviour>()
         ) {
             if (!(component is NetworkObject) 
                 && !(component is ClientNetworkTransform)
@@ -51,15 +53,29 @@ public class NetworkVRCharacter : NetworkBehaviour
                 component.enabled = false;
             }
         }
-        foreach(var camera in XROrigin.GetComponentsInChildren<Camera>())
-        {
-            camera.enabled = false;
-        }
         animateVRCharacter.enabled = false;
 
         // Prevent owner's VR controller assets from being disabled
-        var actionManager = XROrigin.GetComponent<InputActionManager>();
+        var actionManager = xROrigin.GetComponent<InputActionManager>();
         actionManager?.EnableInput();
+    }
+
+    private void AdjustCameraInput()
+    {
+        // Disable camera
+        foreach(var camera in xROrigin.GetComponentsInChildren<Camera>())
+        {
+            camera.enabled = false;
+        }
+
+        // Make all the character rig back to the default layer
+        // to allow the owner to see the non-owning players body normaly
+        int defaultLayer = LayerMask.NameToLayer("Default");
+        characterRigRoot.layer = defaultLayer;
+        foreach (Transform child in characterRigRoot.transform)
+        {
+            child.gameObject.layer = defaultLayer;
+        }
     }
 
     // This is necessary to have the object's physics enabled in advance
@@ -68,7 +84,8 @@ public class NetworkVRCharacter : NetworkBehaviour
         if (IsOwner)
         {
             Debug.Log("Enable physics for potential future interaction");
-            var networkObjectSelected = eventArgs.interactableObject.transform.GetComponent<Rigidbody>();
+            var networkObjectSelected = eventArgs.interactableObject.
+                transform.GetComponent<NetworkObject>();
             if (networkObjectSelected != null)
             {
                 Rigidbody rb = networkObjectSelected.GetComponent<Rigidbody>();
@@ -89,7 +106,8 @@ public class NetworkVRCharacter : NetworkBehaviour
         if (IsOwner)
         {
             Debug.Log("Physics stay how it should be");
-            var networkRigidbody = eventArgs.interactableObject.transform.GetComponent<NetworkRigidbody>();
+            var networkRigidbody = eventArgs.interactableObject.
+                transform.GetComponent<NetworkRigidbody>();
             if (networkRigidbody != null)
             {
                 // Actually calling UpdateOwnershipAuthority() which is private
@@ -108,10 +126,13 @@ public class NetworkVRCharacter : NetworkBehaviour
         if (IsOwner)
         {
             Debug.Log("Owner: Ownership requested");
-            NetworkObject networkObjectSelected = eventArgs.interactableObject.transform.GetComponent<NetworkObject>();
+            NetworkObject networkObjectSelected = eventArgs.interactableObject.
+                transform.GetComponent<NetworkObject>();
             if (networkObjectSelected != null)
             {
-                RequestGrabbableOwnershipServerRpc(OwnerClientId, networkObjectSelected);
+                RequestGrabbableOwnershipServerRpc(
+                    OwnerClientId, networkObjectSelected
+                );
             }
         }
         else 
@@ -121,16 +142,11 @@ public class NetworkVRCharacter : NetworkBehaviour
     }
 
     [ServerRpc]
-    public void RequestGrabbableOwnershipServerRpc(ulong newOwnerClientId, NetworkObjectReference networkObjectReference)
-    {
+    public void RequestGrabbableOwnershipServerRpc(
+        ulong newOwnerClientId, NetworkObjectReference networkObjectReference
+    ) {
         if (networkObjectReference.TryGet(out NetworkObject networkObject))
         {
-            // if (networkObject.IsOwner)
-            // {
-            //     Debug.Log($"Object already owned by {networkObject.OwnerClientId}");
-            //     return;
-            // }
-
             Debug.Log($"Server: Object ownership requested by {newOwnerClientId}");
 
             networkObject.ChangeOwnership(newOwnerClientId);
@@ -144,20 +160,6 @@ public class NetworkVRCharacter : NetworkBehaviour
 
     public void OnSelectExited(SelectExitEventArgs eventArgs)
     {
-        
+        // Nothing to do
     }
-
-    // public override void OnNetworkSpawn() => DisableClientInput();
-
-    // private void DisableClientInput()
-    // {
-    //     if (IsClient && !IsOwner)
-    //     {
-    //         XROrigin.SetActive(false);
-
-    //         // Prevent controller assets from being disabled
-    //         InputActionManager actionManager = XROrigin.GetComponent<InputActionManager>();
-    //         actionManager.EnableInput();
-    //     }
-    // }
 }
