@@ -11,8 +11,11 @@ public class JointSender : NetworkBehaviour
         new Joints {
             leftJoint = 10,
             rightJoint = 15,
-        }, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    
+        }, 
+        NetworkVariableReadPermission.Everyone, 
+        NetworkVariableWritePermission.Owner
+    );
+
     // Struct (Joints type) containing joints (float type)
     public struct Joints : INetworkSerializable {
         public float leftJoint;
@@ -38,7 +41,7 @@ public class JointSender : NetworkBehaviour
     {
         if (IsOwner)
         {
-            if (Input.GetKey(KeyCode.T)) 
+            if (Input.GetKey(KeyCode.T))
             {
                 // Update joint values below
                 jointList.Value = new Joints {
