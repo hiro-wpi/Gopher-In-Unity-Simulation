@@ -41,12 +41,22 @@ public class JointSender : NetworkBehaviour
     {
         if (IsOwner)
         {
-            if (Input.GetKey(KeyCode.T))
+            float incrementAmount = 1.0f; // You can adjust this increment/decrement value
+
+            if (Input.GetKey(KeyCode.W))
             {
-                // Update joint values below
+                // Increment joint values while holding 'W'
                 jointList.Value = new Joints {
-                    leftJoint = 12,
-                    rightJoint = 17,
+                    leftJoint = jointList.Value.leftJoint + incrementAmount,
+                    rightJoint = jointList.Value.rightJoint + incrementAmount,
+                };
+            }
+            else if (Input.GetKey(KeyCode.S))
+            {
+                // Decrement joint values while holding 'S'
+                jointList.Value = new Joints {
+                    leftJoint = jointList.Value.leftJoint - incrementAmount,
+                    rightJoint = jointList.Value.rightJoint - incrementAmount,
                 };
             }
         }
