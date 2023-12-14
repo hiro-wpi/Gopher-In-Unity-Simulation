@@ -80,6 +80,7 @@ public class NetworkRobot : NetworkBehaviour
         // if not in the ToKeep list
         if (!IsOwner)
         {
+            // disable scripts
             foreach (Transform plugin in 
                 plugins.GetComponentsInChildren<Transform>())
             {
@@ -88,6 +89,12 @@ public class NetworkRobot : NetworkBehaviour
             foreach (GameObject plugin in pluginsToKeep)
             {
                 plugin.SetActive(true);
+            }
+
+            // disable cameras
+            foreach(var camera in GetComponentsInChildren<Camera>())
+            {
+                camera.enabled = false;
             }
         }
     }
