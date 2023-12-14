@@ -104,7 +104,7 @@ public class NetworkRobot : NetworkBehaviour
             RobotStruct.position = position;
             RobotStruct.rotation = rotation;
             RobotStruct.jointAngles = jointAngles;
-            UpdateJointsServerRpc(RobotStruct);
+            UpdateRobotServerRpc(RobotStruct);
         }
         // Non-owner, update the robot joints based on the value
         else
@@ -164,7 +164,7 @@ public class NetworkRobot : NetworkBehaviour
     }
 
     [ServerRpc]
-    private void UpdateJointsServerRpc(Robot robot)
+    private void UpdateRobotServerRpc(Robot robot)
     {
         // Update server side
         if (!IsOwner)
@@ -174,11 +174,11 @@ public class NetworkRobot : NetworkBehaviour
             jointAngles = robot.jointAngles;
         }
         // Update client side
-        UpdateJointsClientRpc(robot);
+        UpdateRobotClientRpc(robot);
     }
 
     [ClientRpc]
-    private void UpdateJointsClientRpc(Robot robot)
+    private void UpdateRobotClientRpc(Robot robot)
     {
         if (!IsOwner)
         {
