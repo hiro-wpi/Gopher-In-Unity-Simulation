@@ -17,14 +17,18 @@ public class NetworkRobot : NetworkBehaviour
     [SerializeField] private GameObject[] pluginsToKeep;
 
     // Robot
-    [SerializeField] private GameObject robotRoot;
+    [SerializeField] private GameObject articulationRoot;
+    [SerializeField] private ArticulationBody[] articulationBodyToIgnore;
     private ArticulationBody[] articulationChain;
-    private ArticulationDrive[] drives;
 
-    // Joint angles
+    // Network robot status
+    [SerializeField, ReadOnly] private Vector3 position;
+    [SerializeField, ReadOnly] private Quaternion rotation;
     [SerializeField, ReadOnly] private float[] jointAngles = new float[0];
     // Network joint angles struct
-    private struct Joints : INetworkSerializable {
+    private struct Robot : INetworkSerializable {
+        public Vector3 position;
+        public Quaternion rotation;
         public float[] jointAngles;
 
         public void NetworkSerialize<T>(
@@ -33,7 +37,9 @@ public class NetworkRobot : NetworkBehaviour
             serializer.SerializeValue(ref jointAngles);
         }
     }
-    private Joints jointsStruct = new Joints(){ 
+    private Robot RobotStruct = new Robot(){
+        position = Vector3.zero,
+        rotation = Quaternion.identity,
         jointAngles = new float[0]
     };
 
@@ -41,7 +47,7 @@ public class NetworkRobot : NetworkBehaviour
     {
         // Initialization
         InitArticulationBody();
-        ReadJointAngles();
+        ReadRobotStatus();
 
         // Disable plugins if not owner
         DisablePlugins();
@@ -51,17 +57,12 @@ public class NetworkRobot : NetworkBehaviour
     {
         // Initialize articulation body
         // get non-fixed joints
-        articulationChain = robotRoot.
+        articulationChain = articulationRoot.
             GetComponentsInChildren<ArticulationBody>();
-        articulationChain = articulationChain.Where(
-            joint => joint.jointType != ArticulationJointType.FixedJoint
+        articulationChain = articulationChain.Where(joint => 
+            joint.jointType != ArticulationJointType.FixedJoint
+            && !articulationBodyToIgnore.Contains(joint)
         ).ToArray();
-        // get drives
-        drives = new ArticulationDrive[articulationChain.Length];
-        for (int i = 0; i < articulationChain.Length; ++i)
-        {
-            drives[i] = articulationChain[i].xDrive;
-        }
     }
 
     private void DisablePlugins()
@@ -70,9 +71,9 @@ public class NetworkRobot : NetworkBehaviour
         // if not in the ToKeep list
         if (!IsOwner)
         {
-            foreach (Transform plugin in GetComponentsInChildren<Transform>())
+            foreach (Transform plugin in 
+                plugins.GetComponentsInChildren<Transform>())
             {
-                // If the child is not in the ToKeep list
                 plugin.gameObject.SetActive(false);
             }
             foreach (GameObject plugin in pluginsToKeep)
@@ -88,26 +89,48 @@ public class NetworkRobot : NetworkBehaviour
         if (IsOwner)
         {
             // read joint angles from articulation body
-            ReadJointAngles();
-
-            jointsStruct.jointAngles = jointAngles;
-            UpdateJointsServerRpc(jointsStruct);
+            ReadRobotStatus();
+            
+            // sync
+            RobotStruct.position = articulationRoot.transform.position;
+            RobotStruct.rotation = articulationRoot.transform.rotation;
+            RobotStruct.jointAngles = jointAngles;
+            UpdateJointsServerRpc(RobotStruct);
         }
         // Non-owner, update the robot joints based on the value
         else
         {
+            // move robot
+            TeleportRobot();
             // set joint angles to articulation body
             SetJointAngles();
         }
     }
 
-    private void ReadJointAngles()
+    private void ReadRobotStatus()
     {
+        position = articulationRoot.transform.position;
+        rotation = articulationRoot.transform.rotation;
+
         jointAngles = new float[articulationChain.Length];
         for (int i = 0; i < articulationChain.Length; ++i)
         {
             jointAngles[i] = articulationChain[i].jointPosition[0];
         }
+    }
+
+    private void TeleportRobot()
+    {
+        // No need to teleport
+        if (articulationRoot.transform.position == position
+            && articulationRoot.transform.rotation == rotation)
+        {
+            return;
+        }
+        
+        // Teleport robot
+        var root = articulationRoot.GetComponent<ArticulationBody>();
+        root.TeleportRoot(position, rotation);
     }
 
     private void SetJointAngles()
@@ -119,29 +142,40 @@ public class NetworkRobot : NetworkBehaviour
 
         for (int i = 0; i < articulationChain.Length; ++i)
         {
-            drives[i].target = jointAngles[i];
-            articulationChain[i].xDrive = drives[i];
+            // If joint is revolute, convert to degree
+            float target = (
+                articulationChain[i].jointType 
+                == ArticulationJointType.RevoluteJoint
+            ) ? jointAngles[i] * Mathf.Rad2Deg : jointAngles[i];
+
+            ArticulationBodyUtils.SetJointTarget(
+                articulationChain[i], target
+            );
         }
     }
 
     [ServerRpc]
-    private void UpdateJointsServerRpc(Joints joints)
+    private void UpdateJointsServerRpc(Robot robot)
     {
         // Update server side
         if (!IsOwner)
         {
-            jointAngles = joints.jointAngles;
+            position = robot.position;
+            rotation = robot.rotation;
+            jointAngles = robot.jointAngles;
         }
         // Update client side
-        UpdateJointsClientRpc(joints);
+        UpdateJointsClientRpc(robot);
     }
 
     [ClientRpc]
-    private void UpdateJointsClientRpc(Joints joints)
+    private void UpdateJointsClientRpc(Robot robot)
     {
         if (!IsOwner)
         {
-            jointAngles = joints.jointAngles;
+            position = robot.position;
+            rotation = robot.rotation;
+            jointAngles = robot.jointAngles;
         }
     }
 }

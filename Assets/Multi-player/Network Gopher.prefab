@@ -41,7 +41,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5827363592226267417}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
@@ -61,17 +61,23 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5827363592226267417}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ca359218d428364abe0b2d729610ee2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   plugins: {fileID: 6422038745529782839}
   pluginsToKeep:
+  - {fileID: 6422038745529782839}
   - {fileID: 5146436272591301540}
   - {fileID: 1274840336427497780}
   - {fileID: 4107305274765751968}
-  robotRoot: {fileID: 6422038746042083724}
+  articulationRoot: {fileID: 6422038745861576524}
+  articulationBodyToIgnore:
+  - {fileID: 6422038745896527635}
+  - {fileID: 6422038746804707757}
+  position: {x: 0, y: 0, z: 0}
+  rotation: {x: 0, y: 0, z: 0, w: 0}
   jointAngles: []
 --- !u!1001 &5827363591828013286
 PrefabInstance:
@@ -1406,14 +1412,24 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 702946892021830353, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
   m_PrefabInstance: {fileID: 5827363591828013286}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &6422038746042083724 stripped
+--- !u!1 &6422038745861576524 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 702946891374405994, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
+  m_CorrespondingSourceObject: {fileID: 702946891287746474, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
+  m_PrefabInstance: {fileID: 5827363591828013286}
+  m_PrefabAsset: {fileID: 0}
+--- !u!171741748 &6422038745896527635 stripped
+ArticulationBody:
+  m_CorrespondingSourceObject: {fileID: 702946891251394549, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
   m_PrefabInstance: {fileID: 5827363591828013286}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &6422038746042083727 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 702946891374405993, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
+  m_PrefabInstance: {fileID: 5827363591828013286}
+  m_PrefabAsset: {fileID: 0}
+--- !u!171741748 &6422038746804707757 stripped
+ArticulationBody:
+  m_CorrespondingSourceObject: {fileID: 702946891148747083, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
   m_PrefabInstance: {fileID: 5827363591828013286}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &8225163686557898024 stripped
