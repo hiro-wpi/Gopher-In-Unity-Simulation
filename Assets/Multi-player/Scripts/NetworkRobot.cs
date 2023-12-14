@@ -7,7 +7,9 @@ using Unity.Netcode;
 
 /// <summary>
 ///    Defines a network robot
-///    Adjust joints if not owner
+///    
+///    Send robot's position, rotation and joints to the server if owner
+///    Adjust robot's position, rotation and joints if not owner
 /// </summary>
 public class NetworkRobot : NetworkBehaviour
 {
@@ -22,9 +24,13 @@ public class NetworkRobot : NetworkBehaviour
     private ArticulationBody[] articulationChain;
 
     // Network robot status
-    [SerializeField, ReadOnly] private Vector3 position;
-    [SerializeField, ReadOnly] private Quaternion rotation;
-    [SerializeField, ReadOnly] private float[] jointAngles = new float[0];
+    [SerializeField, ReadOnly] 
+    private Vector3 position = Vector3.zero;
+    [SerializeField, ReadOnly] 
+    private Quaternion rotation = Quaternion.identity;
+    [SerializeField, ReadOnly] 
+    private float[] jointAngles = new float[0];
+
     // Network joint angles struct
     private struct Robot : INetworkSerializable {
         public Vector3 position;
@@ -34,10 +40,13 @@ public class NetworkRobot : NetworkBehaviour
         public void NetworkSerialize<T>(
             BufferSerializer<T> serializer) where T : IReaderWriter
         {
+            serializer.SerializeValue(ref position);
+            serializer.SerializeValue(ref rotation);
             serializer.SerializeValue(ref jointAngles);
         }
     }
-    private Robot RobotStruct = new Robot(){
+    private Robot RobotStruct = new Robot() 
+    {
         position = Vector3.zero,
         rotation = Quaternion.identity,
         jointAngles = new float[0]
@@ -90,10 +99,10 @@ public class NetworkRobot : NetworkBehaviour
         {
             // read joint angles from articulation body
             ReadRobotStatus();
-            
+
             // sync
-            RobotStruct.position = articulationRoot.transform.position;
-            RobotStruct.rotation = articulationRoot.transform.rotation;
+            RobotStruct.position = position;
+            RobotStruct.rotation = rotation;
             RobotStruct.jointAngles = jointAngles;
             UpdateJointsServerRpc(RobotStruct);
         }
@@ -127,7 +136,7 @@ public class NetworkRobot : NetworkBehaviour
         {
             return;
         }
-        
+
         // Teleport robot
         var root = articulationRoot.GetComponent<ArticulationBody>();
         root.TeleportRoot(position, rotation);
