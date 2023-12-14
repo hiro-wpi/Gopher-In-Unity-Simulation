@@ -70,7 +70,7 @@ public class NetworkRobot : NetworkBehaviour
         // if not in the ToKeep list
         if (!IsOwner)
         {
-            foreach (Transform plugin in plugins.transform)
+            foreach (Transform plugin in GetComponentsInChildren<Transform>())
             {
                 // If the child is not in the ToKeep list
                 plugin.gameObject.SetActive(false);
@@ -87,13 +87,17 @@ public class NetworkRobot : NetworkBehaviour
         // Owner, update joint angles
         if (IsOwner)
         {
+            // read joint angles from articulation body
             ReadJointAngles();
+
+            jointsStruct.jointAngles = jointAngles;
             UpdateJointsServerRpc(jointsStruct);
         }
         // Non-owner, update the robot joints based on the value
         else
         {
-            SetJointAngles(jointsStruct.jointAngles);
+            // set joint angles to articulation body
+            SetJointAngles();
         }
     }
 
@@ -104,10 +108,9 @@ public class NetworkRobot : NetworkBehaviour
         {
             jointAngles[i] = articulationChain[i].jointPosition[0];
         }
-        jointsStruct.jointAngles = jointAngles;
     }
 
-    private void SetJointAngles(float[] jointAngles)
+    private void SetJointAngles()
     {
         if (jointAngles.Length != articulationChain.Length)
         {
