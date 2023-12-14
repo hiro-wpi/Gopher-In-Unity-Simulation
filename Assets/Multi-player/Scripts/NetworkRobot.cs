@@ -20,31 +20,28 @@ public class NetworkRobot : NetworkBehaviour
     [SerializeField] private GameObject robotRoot;
     private ArticulationBody[] articulationChain;
     private ArticulationDrive[] drives;
-    [SerializeField, ReadOnly] private float[] jointAngles;
 
-    // Robot joint angles Struct
+    // Joint angles
+    [SerializeField, ReadOnly] private float[] jointAngles = new float[0];
+    // Network joint angles struct
     private struct Joints : INetworkSerializable {
         public float[] jointAngles;
+
         public void NetworkSerialize<T>(
             BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref jointAngles);
         }
     }
-    // give read permissions to everyone and
-    // give write permissions to the owner
-    private NetworkVariable<Joints> networkJointAngles = 
-        new NetworkVariable<Joints>(
-            new Joints { jointAngles = new float[0] },
-            NetworkVariableReadPermission.Everyone, 
-            NetworkVariableWritePermission.Owner
-        );
+    private Joints jointsStruct = new Joints(){ 
+        jointAngles = new float[0]
+    };
 
     public override void OnNetworkSpawn()
     {
         // Initialization
         InitArticulationBody();
-        InitJointAngles();
+        ReadJointAngles();
 
         // Disable plugins if not owner
         DisablePlugins();
@@ -65,16 +62,6 @@ public class NetworkRobot : NetworkBehaviour
         {
             drives[i] = articulationChain[i].xDrive;
         }
-    }
-
-    private void InitJointAngles()
-    {
-        // Init joint angles
-        jointAngles = new float[articulationChain.Length];
-        ReadJointAngles();
-        networkJointAngles.Value = new Joints { 
-            jointAngles = jointAngles 
-        };
     }
 
     private void DisablePlugins()
@@ -101,28 +88,26 @@ public class NetworkRobot : NetworkBehaviour
         if (IsOwner)
         {
             ReadJointAngles();
-            networkJointAngles.Value = new Joints { 
-                jointAngles = jointAngles 
-            };
+            UpdateJointsServerRpc(jointsStruct);
         }
-
         // Non-owner, update the robot joints based on the value
         else
         {
-            jointAngles = networkJointAngles.Value.jointAngles;
-            SetJointAngles();
+            SetJointAngles(jointsStruct.jointAngles);
         }
     }
 
     private void ReadJointAngles()
     {
+        jointAngles = new float[articulationChain.Length];
         for (int i = 0; i < articulationChain.Length; ++i)
         {
             jointAngles[i] = articulationChain[i].jointPosition[0];
         }
+        jointsStruct.jointAngles = jointAngles;
     }
 
-    private void SetJointAngles()
+    private void SetJointAngles(float[] jointAngles)
     {
         if (jointAngles.Length != articulationChain.Length)
         {
@@ -133,6 +118,27 @@ public class NetworkRobot : NetworkBehaviour
         {
             drives[i].target = jointAngles[i];
             articulationChain[i].xDrive = drives[i];
+        }
+    }
+
+    [ServerRpc]
+    private void UpdateJointsServerRpc(Joints joints)
+    {
+        // Update server side
+        if (!IsOwner)
+        {
+            jointAngles = joints.jointAngles;
+        }
+        // Update client side
+        UpdateJointsClientRpc(joints);
+    }
+
+    [ClientRpc]
+    private void UpdateJointsClientRpc(Joints joints)
+    {
+        if (!IsOwner)
+        {
+            jointAngles = joints.jointAngles;
         }
     }
 }
