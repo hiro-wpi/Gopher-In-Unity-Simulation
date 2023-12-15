@@ -137,7 +137,96 @@ public static class Utils
         }
     }
 
+    // Quaternion
+    // Edited quaternion helper function
+    // Originated from https://gist.github.com/maxattack/4c7b4de00f5c1b95a33b
+    public static Quaternion QuaternionSmoothDamp(
+        Quaternion current, 
+        Quaternion target, 
+        ref Quaternion currentVelocity, 
+        float smoothTime
+    ) {
+        if (Time.deltaTime == 0) 
+        {
+            return current;
+        }
+        smoothTime = Mathf.Max(0.0001f, smoothTime);
+
+        // Account for double-cover
+        float dir = Quaternion.Dot(current, target) > 0f ? 1f : -1f;
+        // Smooth damp each component separately
+        Vector4 output = new Vector4(
+            Mathf.SmoothDamp(
+                current.x, target.x * dir, ref currentVelocity.x, smoothTime
+            ),
+            Mathf.SmoothDamp(
+                current.y, target.y * dir, ref currentVelocity.y, smoothTime
+            ),
+            Mathf.SmoothDamp(
+                current.z, target.z * dir, ref currentVelocity.z, smoothTime
+            ),
+            Mathf.SmoothDamp(
+                current.w, target.w * dir, ref currentVelocity.w, smoothTime
+            )
+        ).normalized;
+
+        // Ensure currentVelocity is tangent
+        var velocityError = Vector4.Project(
+            new Vector4(
+                currentVelocity.x, 
+                currentVelocity.y, 
+                currentVelocity.z, 
+                currentVelocity.w
+            ), output
+        );
+        currentVelocity.x -= velocityError.x;
+        currentVelocity.y -= velocityError.y;
+        currentVelocity.z -= velocityError.z;
+        currentVelocity.w -= velocityError.w;		
+
+        return new Quaternion(output.x, output.y, output.z, output.w);
+	}
+
     // Transform
+    public static (Vector3, Quaternion) LocalToWorldPose(
+        Transform tf, Vector3 position, Quaternion rotation
+    ) {
+        return (tf.TransformPoint(position), tf.rotation * rotation);
+    }
+
+    public static (Vector3, Quaternion) WorldToLocalPose(
+        Transform tf, Vector3 position, Quaternion rotation
+    ) {
+        return (
+            tf.InverseTransformPoint(position),
+            Quaternion.Inverse(tf.rotation) * rotation
+        );
+    }
+
+    public static (Vector3, Quaternion) LocalToWorldPose(
+        Vector3 tfPosition, 
+        Quaternion tfRotation, 
+        Vector3 position, 
+        Quaternion rotation
+    ) {
+        return (
+            tfRotation * position + tfPosition, 
+            tfRotation * rotation
+        );
+    }
+    
+    public static (Vector3, Quaternion) WorldToLocalPose(
+        Vector3 tfPosition, 
+        Quaternion tfRotation, 
+        Vector3 position, 
+        Quaternion rotation
+    ) {
+        return (
+            Quaternion.Inverse(tfRotation) * (position - tfPosition), 
+            Quaternion.Inverse(tfRotation) * rotation
+        );
+    }
+
     public static bool IsPoseClose(
         Transform t1,
         Transform t2,

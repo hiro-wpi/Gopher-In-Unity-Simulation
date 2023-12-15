@@ -84,7 +84,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1473626234}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &1473626236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -407,8 +407,8 @@ ArticulationBody:
   m_Enabled: 1
   serializedVersion: 3
   m_Mass: 0.02
-  m_ParentAnchorPosition: {x: -0.00000007450581, y: 0.0149998665, z: 0.047500007}
-  m_ParentAnchorRotation: {x: 0.70710677, y: -0.00000003090862, z: -0.70710677, w: 0.00000003090862}
+  m_ParentAnchorPosition: {x: 0.00000004470349, y: 0.0149998665, z: 0.047500156}
+  m_ParentAnchorRotation: {x: 0.7071068, y: -0.000000030908623, z: -0.7071068, w: 0.000000030908623}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0.70710677, y: -0.00000003090862, z: -0.70710677, w: 0.00000003090862}
   m_MatchAnchors: 1
@@ -703,8 +703,8 @@ ArticulationBody:
   m_Enabled: 1
   serializedVersion: 3
   m_Mass: 0.02
-  m_ParentAnchorPosition: {x: 0.000000007450581, y: 0.015000105, z: -0.047500007}
-  m_ParentAnchorRotation: {x: 0, y: 0.70710677, z: 0, w: -0.70710677}
+  m_ParentAnchorPosition: {x: 0.0000003650785, y: 0.015000105, z: -0.047500163}
+  m_ParentAnchorRotation: {x: 0, y: 0.7071068, z: 0, w: -0.7071068}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0.70710677, z: 0, w: -0.70710677}
   m_MatchAnchors: 1
@@ -1290,7 +1290,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3194753401810829243
 Transform:
   m_ObjectHideFlags: 0
@@ -1336,7 +1336,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4837191710025914254}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.024852054, y: 1.307385, z: -2.2098444e-16}
+  m_LocalPosition: {x: 0.024852276, y: 1.307385, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1472,6 +1472,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poseStampedTopicName: model_pose
+  frameID: model_pose
   publishedTransform: {fileID: 8340433699515969849}
   publishRate: 10
 --- !u!114 &6460581699815797057
@@ -1487,7 +1488,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   twistStampedTopicName: model_twist
-  publishedTransform: {fileID: 8340433699515969849}
+  frameID: model_twist
+  rb: {fileID: 0}
   publishRate: 10
 --- !u!114 &5008255265442522793
 MonoBehaviour:
@@ -1515,6 +1517,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6031382349945660846}
   - component: {fileID: 5569500495059354492}
+  - component: {fileID: 270427026}
+  - component: {fileID: 270427027}
   m_Layer: 15
   m_Name: Arm
   m_TagString: Untagged
@@ -1550,6 +1554,97 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   armController: {fileID: 9129745423270400610}
+  simulationInputLagMean: 175
+  simulationInputLagStd: 25
+  controlMode: 0
+--- !u!114 &270427026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5288821519695839958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc0373544e95d7041a8af277b9ddd2a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  motionMapping: {fileID: 270427027}
+  armController: {fileID: 9129745423270400610}
+  trackingButton:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Tracking Button
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: a47f2a25-3a21-4030-aaa7-5efeb65da0e4
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 187161793506945269, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  modeButton:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Mode Button
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 937b525a-3f2f-4026-8db8-0ed626c2c623
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: -39621165287172452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  controllerPosition:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Controller Position
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 81636d1b-1480-4808-86aa-a857f071a235
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: -3326005586356538449, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  controllerRotation:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Controller Rotation
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 5e4ee82b-a0f3-46fb-bce5-806ad6b07efd
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 5101698808175986029, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  trackingMode: 1
+  outputTransform: {fileID: 0}
+--- !u!114 &270427027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5288821519695839958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93e7bce02f4325a48be5bfffe0e26116, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tracking: 0
+  controlMode: 0
+  compensateOrientation: 1
+  orientationOffset: {x: 0, y: 0, z: 0}
+  maxPositionChangeAllowed: 0.2
+  maxRotationChangeAllowed: 3.1415927
+  positionSmoothDampTime: 0.1
+  rotationSmoothDampTime: 0.5
+  inputPosition: {x: 0, y: 0, z: 0}
+  inputRotation: {x: 0, y: 0, z: 0, w: 1}
+  outputPosition: {x: 0, y: 0, z: 0}
+  outputRotation: {x: 0, y: 0, z: 0, w: 1}
 --- !u!1 &5522263508335501630
 GameObject:
   m_ObjectHideFlags: 0
@@ -1729,6 +1824,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5542689260367948424}
   - component: {fileID: 7656179462467515079}
+  - component: {fileID: 133113897}
   m_Layer: 15
   m_Name: Unity Input System
   m_TagString: Untagged
@@ -1894,19 +1990,67 @@ MonoBehaviour:
     m_ActionId: 9c39bd16-5f74-4575-b3a9-7627e4f1fad9
     m_ActionName: GopherChest/ChestEmergencyStopResume[/Keyboard/leftCtrl,/Keyboard/y]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5569500495059354492}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnModeChange
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: a4bcc49b-ba42-4fa4-b30c-f984720435f9
     m_ActionName: GopherLeftArm/ArmModeChange[/Keyboard/shift]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5569500495059354492}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnTranslate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 059997ec-26d4-48dc-ae0f-f23385d4480f
     m_ActionName: GopherLeftArm/ArmTranslate[/Keyboard/e,/Keyboard/q,/Keyboard/a,/Keyboard/d,/Keyboard/w,/Keyboard/s]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5569500495059354492}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnRotate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 3e21e4fa-fea6-4ce9-a98c-47757ea56652
     m_ActionName: GopherLeftArm/ArmRotate[/Keyboard/l,/Keyboard/j,/Keyboard/i,/Keyboard/k,/Keyboard/o,/Keyboard/u]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5569500495059354492}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnGrasp
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 229e9be2-7621-4eb5-b035-b01987eba0d8
     m_ActionName: GopherLeftArm/ArmGrasp[/Keyboard/space]
   - m_PersistentCalls:
@@ -1914,7 +2058,19 @@ MonoBehaviour:
     m_ActionId: 5ad910c7-abd4-4273-ae21-744eb9f9f045
     m_ActionName: GopherLeftArm/ArmTarget[/Keyboard/t]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5569500495059354492}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: OnHome
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: d66280e0-8a45-4afc-b3f8-caf788b5776c
     m_ActionName: GopherLeftArm/ArmHome[/Keyboard/f1]
   - m_PersistentCalls:
@@ -1934,11 +2090,35 @@ MonoBehaviour:
     m_ActionId: b1b5bbae-75e7-48bd-a9ed-ef5d9676b5f1
     m_ActionName: GopherLeftArm/ArmPreset4[/Keyboard/f5]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5569500495059354492}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: EmergencyStop
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 841ca2d5-8610-4230-816c-127bdee1075d
     m_ActionName: GopherLeftArm/ArmEmergencyStop[/Keyboard/leftCtrl,/Keyboard/z]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5569500495059354492}
+        m_TargetAssemblyTypeName: ArmControl, Assembly-CSharp
+        m_MethodName: EmergencyStopResume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 1da7ff09-e8e2-46e5-adad-d9ddf839d215
     m_ActionName: GopherLeftArm/ArmEmergencyStopResume[/Keyboard/leftCtrl,/Keyboard/y]
   - m_PersistentCalls:
@@ -1997,11 +2177,49 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 98ad36a7-3580-469b-8556-3246d84fd6d3
     m_ActionName: GopherCamera/MainCameraHome[/Mouse/middleButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e1a68454-b5e7-4518-9194-c27fbf705e9d
+    m_ActionName: GopherBase/ResumeNavigation[/Keyboard/g]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 04e9b7be-7349-4141-a934-477035ab9e31
+    m_ActionName: GopherBase/PauseNavigation[/Keyboard/h]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: fb61336b-3e20-4654-b2a4-7f434e023231
+    m_ActionName: GopherBase/StopNavigation[/Keyboard/t]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1376da46-5edb-485e-a5d3-0a9ae5d87b42
+    m_ActionName: GopherBase/SetNormalFootprint[/Keyboard/j]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 55089e8c-1c9d-43a9-befd-6209b07debab
+    m_ActionName: GopherBase/SetCartFootprint[/Keyboard/k]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 60067940-a3fc-42e1-aa72-a8ec143f8aae
+    m_ActionName: GopherBase/SetIVFootprint[/Keyboard/l]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: GopherMode
+  m_DefaultActionMap: GopherLeftArm
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &133113897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6671192850833879805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 017c5e3933235514c9520e1dace2a4b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ActionAssets:
+  - {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
 --- !u!1 &6795874920207098918
 GameObject:
   m_ObjectHideFlags: 0
@@ -2064,8 +2282,8 @@ ArticulationBody:
   m_Enabled: 1
   serializedVersion: 3
   m_Mass: 0.005
-  m_ParentAnchorPosition: {x: -1.4729388e-11, y: 0.08261506, z: 0.000000018498007}
-  m_ParentAnchorRotation: {x: 0.50000006, y: 0.50000006, z: 0.5000002, w: 0.5000002}
+  m_ParentAnchorPosition: {x: -0.0000000038349404, y: 0.08261518, z: 0.00000013770432}
+  m_ParentAnchorRotation: {x: 0.5000001, y: 0.5000001, z: 0.5000002, w: 0.5000002}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_MatchAnchors: 1
@@ -2186,9 +2404,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c735693273d7191d9b372a59209c9ada, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ClockMode: 0
-  m_LastSetClockMode: 0
-  m_PublishRateHz: 100
+  clockMode: 0
+  publishRate: 50
 --- !u!1 &7290396487817287480
 GameObject:
   m_ObjectHideFlags: 0
@@ -3320,8 +3537,8 @@ ArticulationBody:
   m_Enabled: 1
   serializedVersion: 3
   m_Mass: 0.9302
-  m_ParentAnchorPosition: {x: -0.006375, y: -0.21038, z: -1.3319252e-23}
-  m_ParentAnchorRotation: {x: 8.326494e-17, y: 3.3477138e-17, z: 1, w: 0.0000017881393}
+  m_ParentAnchorPosition: {x: -0.0063747615, y: -0.21037994, z: -0.000000001862645}
+  m_ParentAnchorRotation: {x: 0, y: 0, z: 1.0000001, w: 0.0000018775463}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0.70710677, w: -0.70710677}
   m_MatchAnchors: 1
@@ -3813,8 +4030,8 @@ ArticulationBody:
   m_Enabled: 1
   serializedVersion: 3
   m_Mass: 0.001
-  m_ParentAnchorPosition: {x: -0.066, y: -0.003049983, z: 0.0275}
-  m_ParentAnchorRotation: {x: 0.7071068, y: 0.7071068, z: 0.00000003090862, w: -0.00000003090862}
+  m_ParentAnchorPosition: {x: -0.06600018, y: -0.003049983, z: 0.02750016}
+  m_ParentAnchorRotation: {x: 0.7071069, y: 0.7071069, z: 0.000000030908616, w: -0.000000030908623}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_MatchAnchors: 1
@@ -4785,8 +5002,8 @@ ArticulationBody:
   m_Enabled: 1
   serializedVersion: 3
   m_Mass: 0.6781
-  m_ParentAnchorPosition: {x: 0.20842998, y: -0.006374985, z: -1.8197973e-23}
-  m_ParentAnchorRotation: {x: -1.1102004e-16, y: -3.186482e-17, z: -0.0000017881393, w: -1}
+  m_ParentAnchorPosition: {x: 0.20842998, y: -0.006375283, z: -0.00000000372529}
+  m_ParentAnchorRotation: {x: -3.866722e-17, y: -3.866722e-17, z: -0.0000018775463, w: -1.0000001}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0.70710677, w: -0.70710677}
   m_MatchAnchors: 1
@@ -5511,8 +5728,8 @@ ArticulationBody:
   m_Enabled: 1
   serializedVersion: 3
   m_Mass: 0.001
-  m_ParentAnchorPosition: {x: 6.851337e-10, y: 0.12000005, z: -2.4608482e-22}
-  m_ParentAnchorRotation: {x: -1.1978855e-21, y: -5.989429e-22, z: 0.7071068, w: 0.7071068}
+  m_ParentAnchorPosition: {x: -0.00000023773345, y: 0.12000005, z: -0.00000000372529}
+  m_ParentAnchorRotation: {x: 0, y: 0, z: 0.7071069, w: 0.7071069}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_MatchAnchors: 1
@@ -6770,8 +6987,8 @@ ArticulationBody:
   m_Enabled: 1
   serializedVersion: 3
   m_Mass: 0.22652
-  m_ParentAnchorPosition: {x: -1.885e-42, y: 2.37e-43, z: -7.1468405e-22}
-  m_ParentAnchorRotation: {x: -0.4998009, y: -0.49980095, z: 0.50019914, w: 0.50019914}
+  m_ParentAnchorPosition: {x: -0.00000017881395, y: 0.000000119209275, z: -0.00000000372529}
+  m_ParentAnchorRotation: {x: -0.49980098, y: -0.49980104, z: 0.50019914, w: 0.50019914}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0.70710677, w: 0.70710677}
   m_MatchAnchors: 1
@@ -7226,8 +7443,8 @@ ArticulationBody:
   m_Enabled: 1
   serializedVersion: 3
   m_Mass: 1.1636
-  m_ParentAnchorPosition: {x: -0.005375, y: -0.12838, z: 7.754818e-26}
-  m_ParentAnchorRotation: {x: -5.5510026e-17, y: 1.06714025e-17, z: -1.0000001, w: -0.0000018179417}
+  m_ParentAnchorPosition: {x: -0.005374909, y: -0.12838, z: -4.656613e-10}
+  m_ParentAnchorRotation: {x: 0, y: 0, z: -1.0000002, w: -0.0000018179417}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_MatchAnchors: 1
@@ -7590,8 +7807,8 @@ ArticulationBody:
   m_Enabled: 1
   serializedVersion: 3
   m_Mass: 0.5
-  m_ParentAnchorPosition: {x: 0.10593003, y: -0.00017502904, z: 1.1126723e-22}
-  m_ParentAnchorRotation: {x: 2.775719e-17, y: 4.819791e-17, z: -0.0000017881393, w: -1}
+  m_ParentAnchorPosition: {x: 0.10593003, y: -0.00017485023, z: -0.00000000372529}
+  m_ParentAnchorRotation: {x: -2.6617646e-17, y: -2.6617646e-17, z: -0.0000018775463, w: -1.0000001}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0.70710677, w: -0.70710677}
   m_MatchAnchors: 1
@@ -8454,8 +8671,8 @@ ArticulationBody:
   m_Enabled: 1
   serializedVersion: 3
   m_Mass: 1.1636
-  m_ParentAnchorPosition: {x: 0.21038, y: -0.006375, z: -4.135903e-24}
-  m_ParentAnchorRotation: {x: -2.4484546e-22, y: -1.4561002e-16, z: -0.0000017881393, w: -1}
+  m_ParentAnchorPosition: {x: 0.21038, y: -0.006375402, z: -0.0000000018626451}
+  m_ParentAnchorRotation: {x: -3.9070315e-17, y: -3.9070315e-17, z: -0.0000018775463, w: -1.0000001}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0.70710677, w: -0.70710677}
   m_MatchAnchors: 1
@@ -8591,8 +8808,8 @@ ArticulationBody:
   m_Enabled: 1
   serializedVersion: 3
   m_Mass: 0.6781
-  m_ParentAnchorPosition: {x: -0.00017506629, y: -0.105929896, z: -3.637333e-23}
-  m_ParentAnchorRotation: {x: 4.107851e-15, y: 8.046813e-21, z: 1, w: 0.0000017881393}
+  m_ParentAnchorPosition: {x: -0.00017482787, y: -0.105929896, z: -0.00000000372529}
+  m_ParentAnchorRotation: {x: 0, y: 0, z: 1.0000001, w: 0.0000018775463}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0.70710677, w: -0.70710677}
   m_MatchAnchors: 1
@@ -8816,8 +9033,8 @@ ArticulationBody:
   m_Enabled: 1
   serializedVersion: 3
   m_Mass: 0.001
-  m_ParentAnchorPosition: {x: -0.056389946, y: -0.0030501236, z: -1.1664901e-21}
-  m_ParentAnchorRotation: {x: 0.70710677, y: 0.70710677, z: 0.00000003090862, w: -0.00000003090862}
+  m_ParentAnchorPosition: {x: -0.056390006, y: -0.0030500044, z: 0.0000000037252907}
+  m_ParentAnchorRotation: {x: 0.7071068, y: 0.7071068, z: 0.000000030908616, w: -0.000000030908623}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0.70710677, w: 0.70710677}
   m_MatchAnchors: 1
@@ -8953,8 +9170,8 @@ ArticulationBody:
   m_Enabled: 1
   serializedVersion: 3
   m_Mass: 0.001
-  m_ParentAnchorPosition: {x: -0.056389946, y: -0.0030501236, z: -1.1664901e-21}
-  m_ParentAnchorRotation: {x: 0.70710677, y: 0.70710677, z: 0.00000003090862, w: -0.00000003090862}
+  m_ParentAnchorPosition: {x: -0.056390006, y: -0.0030500044, z: 0.0000000037252907}
+  m_ParentAnchorRotation: {x: 0.7071068, y: 0.7071068, z: 0.000000030908616, w: -0.000000030908623}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0.70710677, w: 0.70710677}
   m_MatchAnchors: 1
@@ -9408,8 +9625,8 @@ ArticulationBody:
   m_Enabled: 1
   serializedVersion: 3
   m_Mass: 0.001
-  m_ParentAnchorPosition: {x: 0.000000026077032, y: -0.06152506, z: -3.8587892e-22}
-  m_ParentAnchorRotation: {x: -8.2237475e-22, y: 9.744534e-22, z: -0.7071068, w: 0.7071067}
+  m_ParentAnchorPosition: {x: 0.00000020489097, y: -0.06152518, z: -0.00000000372529}
+  m_ParentAnchorRotation: {x: 0, y: 0, z: -0.7071069, w: 0.70710677}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0.70710677, w: 0.70710677}
   m_MatchAnchors: 1
@@ -9546,7 +9763,7 @@ ArticulationBody:
   serializedVersion: 3
   m_Mass: 1.3773
   m_ParentAnchorPosition: {x: 0, y: 0.15643, z: 0}
-  m_ParentAnchorRotation: {x: 0, y: 0, z: -0.70710677, w: -0.70710677}
+  m_ParentAnchorRotation: {x: 0, y: 0, z: -0.7071068, w: -0.7071068}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: 0, z: 0.70710677, w: -0.70710677}
   m_MatchAnchors: 1
@@ -9860,9 +10077,11 @@ GameObject:
   - component: {fileID: 9097390034347140187}
   - component: {fileID: 5958152946423774376}
   - component: {fileID: 8958830244622965001}
-  - component: {fileID: 489222821906505489}
+  - component: {fileID: 1410587254}
   - component: {fileID: 8494137792384241145}
+  - component: {fileID: 489222821906505489}
   - component: {fileID: 9129745423270400610}
+  - component: {fileID: 1410587257}
   m_Layer: 15
   m_Name: Arm
   m_TagString: Untagged
@@ -9878,7 +10097,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8494774417088345431}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9920,9 +10139,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftFinger: {fileID: 5613837793516675062}
   rightFinger: {fileID: 4946672726829633159}
-  grasping: {fileID: 0}
-  baseController: {fileID: 0}
-  wheelSpeedLimitID: grasping limit
+  grasping: {fileID: 8958830244622965001}
+  stableTimeToConsiderGrasping: 0.5
 --- !u!114 &8958830244622965001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9937,7 +10155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <IsGrasping>k__BackingField: 0
   endEffector: {fileID: 8340433700001638760}
---- !u!114 &489222821906505489
+--- !u!114 &1410587254
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9946,14 +10164,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 8494774417088345431}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c4bdf48aad5eb146828cc5681ce4d33, type: 3}
+  m_Script: {fileID: 11500000, guid: 34dbbe6b2fa2e76438b237d9b7aab61a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <BaseTransform>k__BackingField: {fileID: 0}
-  forwardKinematics: {fileID: 0}
-  iterations: 10
-  dampedSquaresLambda: 0.01
-  inverseMethod: 1
+  jointController: {fileID: 9097390034347140187}
+  forwardKinematics: {fileID: 8494137792384241145}
+  inverseKinematics: {fileID: 1410587257}
+  positionTolerance: 0.1
+  rotationTolerance: 0.2
+  targetPosition: {x: 0, y: 0, z: 0}
+  targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  moveWhenIKFailed: 1
+  succeed: 0
+  targetJointAngles: []
+  RelativeTransform: {fileID: 8340433699515969849}
+  visualizeTargetPose: 0
 --- !u!114 &8494137792384241145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9966,6 +10191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e134647524c55c44bc04edd40297f2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <BaseTransform>k__BackingField: {fileID: 8340433699515969849}
   <NumJoint>k__BackingField: 7
   alpha:
   - 3.1415927
@@ -10021,7 +10247,26 @@ MonoBehaviour:
   - 0
   - 2.23
   - 0
-  baseTransform: {fileID: 0}
+  visualize: 0
+--- !u!114 &489222821906505489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8494774417088345431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c4bdf48aad5eb146828cc5681ce4d33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <BaseTransform>k__BackingField: {fileID: 8340433699515969849}
+  forwardKinematics: {fileID: 8494137792384241145}
+  iterations: 10
+  positionTolerance: 0.001
+  rotationTolerance: 0.0175
+  dampedSquaresLambda: 0.01
+  inverseMethod: 1
 --- !u!114 &9129745423270400610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10039,56 +10284,52 @@ MonoBehaviour:
   gripperPositionMultiplier: 1
   maxLinearSpeed: 0.25
   maxAngularSpeed: 0.5
-  <SpeedMode>k__BackingField: 1
+  speedMode: 1
   modeMultiplier:
   - 0.5
   - 1
+  position: {x: 0, y: 0, z: 0}
+  rotation: {x: 0, y: 0, z: 0, w: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
   gripperPosition: 0
   emergencyStop: 0
-  jointController: {fileID: 0}
-  gripperController: {fileID: 0}
-  inverseKinematics: {fileID: 0}
+  endEffectorController: {fileID: 1410587254}
+  jointController: {fileID: 9097390034347140187}
+  gripperController: {fileID: 5958152946423774376}
   autoManipulation: {fileID: 0}
+  controlMode: 0
+  manualControlMode: 1
   targetSet: 0
   targetPosition: {x: 0, y: 0, z: 0}
   targetRotation: {x: 0, y: 0, z: 0, w: 0}
   flipPresetAngles: 0
   homePositions:
     <Angles>k__BackingField:
-    - -1
-    - -1.5707964
-    - -1.5707964
-    - 2.2
     - 0
-    - -1.2
-    - 3.1415927
+    - 0.8
+    - 0
+    - 1.2
+    - 0
+    - -0.42920366
+    - -1.570796
   presets:
   - <Angles>k__BackingField:
-    - 0.7
-    - -1.5707964
-    - -1.5707964
-    - -1.2
     - 0
-    - -1
-    - 1.5707964
+    - 0.8
+    - 0
+    - 1.2
+    - 0
+    - 1.141593
+    - -1.570796
   - <Angles>k__BackingField:
-    - -2.1
-    - -1.9
-    - -1.8
-    - 2
-    - -0.4
-    - -1
-    - 1.5707964
-  - <Angles>k__BackingField:
-    - -100
-    - -100
-    - -100
-    - -100
-    - -100
-    - -100
-    - 3.1415927
+    - 0
+    - 0.8
+    - 0
+    - 1.2
+    - 0
+    - 1.141593
+    - -1.570796
   - <Angles>k__BackingField:
     - -100
     - -100
@@ -10096,7 +10337,30 @@ MonoBehaviour:
     - -100
     - -100
     - -100
-    - 1.5707964
+    - -3.141593
+  - <Angles>k__BackingField:
+    - -100
+    - -100
+    - -100
+    - -100
+    - -100
+    - -100
+    - -1.570796
+--- !u!114 &1410587257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8494774417088345431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1056068d2603f54aa2ba4b3c5d05e25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <BaseTransform>k__BackingField: {fileID: 8340433699515969849}
+  forwardKinematics: {fileID: 8494137792384241145}
+  infoFileName: kortex_info.yaml
 --- !u!1 &8656373735981736526
 GameObject:
   m_ObjectHideFlags: 0

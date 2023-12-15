@@ -192,4 +192,10 @@ public class ArticulationGripperController : MonoBehaviour
             graspingCoroutine = null;
         }
     }
+
+    // Getter
+    public GameObject GetEndEffector()
+    {
+        return grasping.GetEndEffector();
+    }
 }

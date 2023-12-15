@@ -75,9 +75,9 @@ public class GraphicalInterface : MonoBehaviour
     // ik
     private GameObject leftEndEffectorRef; 
     private GameObject rightEndEffectorRef;
-    private NewtonIK leftIKSolver; 
-    private NewtonIK rightIKSolver;
-   
+    private JacobianIK leftIKSolver; 
+    private JacobianIK rightIKSolver;
+
     // localization
     private GameObject map;
     private Vector3 tempMapPosition;
@@ -487,7 +487,7 @@ public class GraphicalInterface : MonoBehaviour
         // Get IK and End effector reference transform for
         // switching IK reference frame based on camera view
         // TODO 1 left first and right next, no better way to tell each apart
-        NewtonIK[] iKSolvers = robot.GetComponentsInChildren<NewtonIK>();
+        JacobianIK[] iKSolvers = robot.GetComponentsInChildren<JacobianIK>();
         leftIKSolver = iKSolvers[0];
         rightIKSolver = iKSolvers[1];
         Grasping[] graspings = robot.GetComponentsInChildren<Grasping>();
@@ -630,18 +630,21 @@ public class GraphicalInterface : MonoBehaviour
         if (cameraIndex == cameraSystem.GetIndex("Head") ||
             cameraIndex == cameraSystem.GetIndex("Back"))
         {
-            leftIKSolver.BaseTransform = robot.transform;
-            rightIKSolver.BaseTransform = robot.transform;
+            // TODO 
+            // leftIKSolver.BaseTransform = robot.transform;
+            // rightIKSolver.BaseTransform = robot.transform;
         }
         else if (cameraIndex == cameraSystem.GetIndex("Left"))
         {
-            leftIKSolver.BaseTransform = leftEndEffectorRef.transform;
-            rightIKSolver.BaseTransform = robot.transform;
+            // TODO 
+            // leftIKSolver.BaseTransform = leftEndEffectorRef.transform;
+            // rightIKSolver.BaseTransform = robot.transform;
         }
         else if (cameraIndex == cameraSystem.GetIndex("Right"))
         {
-            leftIKSolver.BaseTransform = robot.transform;
-            rightIKSolver.BaseTransform = rightEndEffectorRef.transform;
+            // TODO 
+            // leftIKSolver.BaseTransform = robot.transform;
+            // rightIKSolver.BaseTransform = rightEndEffectorRef.transform;
         }
     }
 

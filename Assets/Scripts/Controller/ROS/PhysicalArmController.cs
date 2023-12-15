@@ -66,6 +66,11 @@ public class PhysicalArmController : ArmController
     }
 
     // TODO
+    public override void SetEndEffectorPose(Vector3 position, Quaternion rotation)
+    {
+
+    }
+
     public override void HomeJoints()
     {
         
@@ -88,5 +93,19 @@ public class PhysicalArmController : ArmController
     public override void EmergencyStopResume()
     {
         
+    }
+
+    // TODO
+    // Some getter functions
+    // Get the actual end effector pose
+    public override (Vector3, Quaternion) GetEEPose()
+    {
+        return (Vector3.zero, Quaternion.identity);
+    }
+
+    // Get the end effector target pose
+    public override (Vector3, Quaternion) GetEETargetPose()
+    {
+        return (Vector3.zero, Quaternion.identity);
     }
 }

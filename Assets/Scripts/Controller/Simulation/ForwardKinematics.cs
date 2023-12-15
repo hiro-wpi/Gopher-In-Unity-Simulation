@@ -6,11 +6,18 @@ using UnityEngine;
 /// <summary>
 ///     Provide util functions to compute forward kinematics
 ///     for Kinova Gen3 7-DOF robotic arm
-///     Usage: Call SolveFK(jointAngles) first, 
+///
+///     Call SolveFK(jointAngles) first, or UpdateJacobian() if necessary
 ///     then use Getters GetPose(), GetAllPose(), GetJacobian()
+///     
+///     Note: The result pose will be in world frame
 /// </summary>
 public class ForwardKinematics : MonoBehaviour
 {
+    // Define base transform
+    [field:SerializeField] 
+    public Transform BaseTransform { get; private set; }
+
     [field:SerializeField] public int NumJoint { get; private set; } = 7;
     private float[] angles = new float[] {0, 0, 0, 0, 0, 0, 0, 0};
 
@@ -37,9 +44,9 @@ public class ForwardKinematics : MonoBehaviour
     [SerializeField] private float[] angleUpperLimits = new float[] {
         0, 0,  2.41f, 0,  2.66f, 0,  2.23f, 0
     };
-    
-    // Define base transform
-    [SerializeField] private Transform baseTransform;
+
+    // Debug
+    [SerializeField] private bool visualize = false;
 
     // Homography Matrix
     private Matrix4x4[] T;
@@ -50,9 +57,11 @@ public class ForwardKinematics : MonoBehaviour
     private Vector3[] axis;
 
     // Joint Jacobian
-    public ArticulationJacobian Jacobian { get; private set; }
+    private ArticulationJacobian jacobian;
 
-    void Start()
+    void Start() {}
+
+    void Awake()
     {
         // Initialize joint positions and rotations
         positions = new Vector3[NumJoint + 1];
@@ -60,14 +69,18 @@ public class ForwardKinematics : MonoBehaviour
         axis = new Vector3[NumJoint + 1];
 
         T = new Matrix4x4[NumJoint + 1];
-        Jacobian = new ArticulationJacobian(6, NumJoint);
+        jacobian = new ArticulationJacobian(6, NumJoint);
     }
 
-    public void SolveFK(float[] newAngles)
+    public void SolveFK(float[] newAngles, bool updateJacobian = false)
     {
         UpdateAngles(newAngles);
         UpdateAllTs();
         UpdateAllPose();
+        if (updateJacobian)
+        {
+            UpdateJacobian();
+        }
     }
 
     private void UpdateAngles(float[] newAngles)
@@ -135,11 +148,11 @@ public class ForwardKinematics : MonoBehaviour
     {
         Matrix4x4[] Ts = new Matrix4x4[NumJoint + 1];
         Matrix4x4 TTotal = Matrix4x4.identity;
-        if (baseTransform != null)
+        if (BaseTransform != null)
         {
-            // first T starts from baseTransform
-            Vector3 pos = Utils.ToFLU(baseTransform.position);
-            Quaternion rot = Utils.ToFLU(baseTransform.rotation);
+            // first T starts from BaseTransform
+            Vector3 pos = Utils.ToFLU(BaseTransform.position);
+            Quaternion rot = Utils.ToFLU(BaseTransform.rotation);
             TTotal = Matrix4x4.TRS(pos, rot, Vector3.one);
         }
         
@@ -152,11 +165,11 @@ public class ForwardKinematics : MonoBehaviour
         return Ts;
     }
 
-    public void UpdateJacobian()
+    private void UpdateJacobian()
     {
         // Create a new ArticulationJacobian
         // px, py, pz, rx, ry, rz
-        Jacobian = new ArticulationJacobian(6, NumJoint);
+        jacobian = new ArticulationJacobian(6, NumJoint);
 
         Vector3[] zs = axis;
         Vector3[] ts = positions;
@@ -169,7 +182,7 @@ public class ForwardKinematics : MonoBehaviour
             // So it's just the axis, with default length 1 
             // (meaning a rotation of 1 radian around that axis)
             Vector3 zB = zs[i];
-            JacobianTools.Set(Jacobian, i, zT, zB);
+            JacobianTools.Set(jacobian, i, zT, zB);
         }
     }
 
@@ -184,11 +197,20 @@ public class ForwardKinematics : MonoBehaviour
         return (positions, rotations);
     }
 
+    public ArticulationJacobian GetJacobian()
+    {
+        return jacobian;
+    }
+
     // For debugging
-    /*
     void OnDrawGizmos()
     {
-        if (positions.?Length == 0)
+        if (!visualize)
+        {
+            return;
+        }
+
+        if (positions == null || positions.Length == 0)
         {
             return;
         }
@@ -206,5 +228,4 @@ public class ForwardKinematics : MonoBehaviour
             }
         }
     }
-    */
 }

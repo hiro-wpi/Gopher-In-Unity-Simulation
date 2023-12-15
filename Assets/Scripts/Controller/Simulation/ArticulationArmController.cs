@@ -10,8 +10,8 @@ using UnityEngine;
 ///     Clipping is also applied to the input.
 ///
 ///     Two control modes are used to control the arm
-///     Control: directly control the end effector using IK
-///     Target: send joints to a target positions
+///     Manual: directly control the end effector using IK
+///     Auto: send joints to a target positions autonomously
 /// </summary>
 public class ArticulationArmController : ArmController
 {
@@ -19,14 +19,24 @@ public class ArticulationArmController : ArmController
     [SerializeField] private bool emergencyStop = false;
 
     // Arm component controller
+    [SerializeField] 
+    private ArticulationEndEffectorController endEffectorController;
     [SerializeField] private ArticulationJointController jointController;
     [SerializeField] private ArticulationGripperController gripperController;
-    [SerializeField] private InverseKinematics inverseKinematics;
     [SerializeField] private AutoManipulation autoManipulation;
 
     // Arm control mode
-    private enum ControlMode { Control, Target }
-    private ControlMode controlMode = ControlMode.Control;
+    // manual & auto
+    private enum ControlMode { Manual, Auto }
+    [SerializeField, ReadOnly]
+    private ControlMode controlMode = ControlMode.Manual;
+    // manual control mode
+    public enum ManualControlMode { Position, Velocity }
+    [SerializeField]
+    private ManualControlMode manualControlMode = ManualControlMode.Velocity;
+    // manual control event
+    public delegate void SwitchToManualControlHandler();
+    public event SwitchToManualControlHandler ManualControlEvent;
 
     // Manual IK input - velocity control
     private float[] jointAngles;
@@ -55,15 +65,17 @@ public class ArticulationArmController : ArmController
         }),
         // preset 3 and 4 only change the last joint
         new JointAngles(new float[] {
-            IGNORE_VAL, IGNORE_VAL, IGNORE_VAL, IGNORE_VAL,IGNORE_VAL, IGNORE_VAL, Mathf.PI
+            IGNORE_VAL, IGNORE_VAL, IGNORE_VAL, IGNORE_VAL,
+            IGNORE_VAL, IGNORE_VAL, Mathf.PI
         }),
         new JointAngles(new float[] {
-            IGNORE_VAL, IGNORE_VAL, IGNORE_VAL, IGNORE_VAL,IGNORE_VAL, IGNORE_VAL, Mathf.PI/2
+            IGNORE_VAL, IGNORE_VAL, IGNORE_VAL, IGNORE_VAL,
+            IGNORE_VAL, IGNORE_VAL, Mathf.PI/2
         }),
     };
 
-    void Start() 
-    { 
+    void Start()
+    {
         // Home joints at the beginning
         InitializeJoints();
         gripperController.OpenGripper();
@@ -80,16 +92,35 @@ public class ArticulationArmController : ArmController
         }
 
         // If in manual controlMode
-        if (controlMode == ControlMode.Control)
+        if (controlMode == ControlMode.Manual)
         {
             ProcessManualControl();
         }
     }
 
-    // Control mode
+    // Manual mode
     public void SwitchToManualControl()
     {
-        controlMode = ControlMode.Control;
+        controlMode = ControlMode.Manual;
+
+        // Reset EE target to track the current pose
+        endEffectorController.SetHome(
+            jointController.GetCurrentJointTargets()
+        );
+
+        ManualControlEvent?.Invoke();
+    }
+
+    public void SwitchToManualVelocityControl()
+    {
+        SwitchToManualControl();
+        manualControlMode = ManualControlMode.Velocity;
+    }
+
+    public void SwitchToManualPositionControl()
+    {
+        SwitchToManualControl();
+        manualControlMode = ManualControlMode.Position;
     }
 
     // Gripper
@@ -107,20 +138,19 @@ public class ArticulationArmController : ArmController
     // Manual real-time control
     private void ProcessManualControl()
     {
-        // End effector position control
-        if (linearVelocity != Vector3.zero || angularVelocity != Vector3.zero)
+        // Delta pose as position and angular error in next timestep
+        if (manualControlMode == ManualControlMode.Velocity)
         {
-            // Convert to position error and angular error in next timestep
-            Vector3 linearError = - linearVelocity * Time.fixedDeltaTime;
-            Vector3 angularError = - angularVelocity * Time.fixedDeltaTime * Mathf.Rad2Deg;
-            // Solve IK
-            jointAngles = jointController.GetCurrentJointTargets();
-            jointAngles = inverseKinematics.SolveVelocityIK(
-                jointAngles, linearError, Quaternion.Euler(angularError)
+            endEffectorController.SetTargetDeltaPose(
+                linearVelocity * Time.fixedDeltaTime, 
+                angularVelocity * Time.fixedDeltaTime
             );
-            // Set joint targets to IK solution
-            jointController.SetJointTargets(jointAngles);
         }
+        else if (manualControlMode == ManualControlMode.Position)
+        {
+            endEffectorController.SetTargetPose(position, rotation);
+        }
+        endEffectorController.MoveToTargetStep();
     }
 
     // Autonomous mode
@@ -173,18 +203,22 @@ public class ArticulationArmController : ArmController
     public override void SetJointAngles(float[] jointAngles)
     {
         // Move to given position
-        controlMode = ControlMode.Target;
-        jointController.SetJointTargets(jointAngles, false, SwitchToManualControl);
+        controlMode = ControlMode.Auto;
+        jointController.SetJointTargets(
+            jointAngles, false, SwitchToManualControl
+        );
     }
 
     // Move the joint following a trajectory
     public void SetJointTrajectory(
-        float[] timeSteps, float[][] angles, float[][] velocities, float[][] accelerations
+        float[] timeSteps, float[][] angles, 
+        float[][] velocities, float[][] accelerations
     )
     {
-        controlMode = ControlMode.Target;
+        controlMode = ControlMode.Auto;
         jointController.SetJointTrajectory(
-            timeSteps, angles, velocities, accelerations, SwitchToManualControl
+            timeSteps, angles, 
+            velocities, accelerations, SwitchToManualControl
         );
     }
 
@@ -198,7 +232,7 @@ public class ArticulationArmController : ArmController
             angles = FlipAngles(angles);
         }
         // Move to the position
-        controlMode = ControlMode.Target;
+        controlMode = ControlMode.Auto;
         jointController.SetJointTargets(angles, true, SwitchToManualControl);
     }
 
@@ -209,12 +243,6 @@ public class ArticulationArmController : ArmController
 
     public override void MoveToPreset(int presetIndex)
     {
-        // // Do not allow moving joints to preset when grasping
-        // if (gripperController.g)
-        // {
-        //     return;
-        // }
-
         // Get preset angles
         float[] angles;
         if (presetIndex == -1)
@@ -264,5 +292,19 @@ public class ArticulationArmController : ArmController
     public override void EmergencyStopResume()
     {
         emergencyStop = false;
+    }
+
+    // Some getter functions
+    // Get the actual end effector pose
+    public override (Vector3, Quaternion) GetEEPose()
+    {
+        GameObject ee = gripperController.GetEndEffector();
+        return (ee.transform.position, ee.transform.rotation);
+    }
+
+    // Get the end effector target pose
+    public override (Vector3, Quaternion) GetEETargetPose()
+    {
+        return endEffectorController.GetEETargetPose();
     }
 }

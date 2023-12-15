@@ -1,0 +1,17 @@
+urdf_file_name: "kortex.urdf"
+fixed_frame: "base_link"
+joint_names: [ [ "joint_1", "joint_2", "joint_3", "joint_4", "joint_5", "joint_6", "joint_7", "end_effector" ] ]
+joint_ordering: [ "joint_1", "joint_2", "joint_3", "joint_4", "joint_5", "joint_6", "joint_7" ]
+ee_fixed_joints: [ "tool_frame_joint" ]
+starting_config: [0.0, 0.2619, 3.1415, -2.2619, 0.0, 0.9598, 1.5707]
+collision_file_name: "collision_kortex.yaml"
+collision_nn_file: "kortex_nn"
+path_to_src: "/home/lagenuina/withgripper_ws/src/relaxed_ik/src"
+axis_types: [ [ "z", "z", "z", "z", "z", "z", "z" ] ]
+velocity_limits: [ 1.2218, 1.2218, 1.2218, 1.2218, 1.2218, 1.2218, 1.2218 ]
+joint_limits: [ [-3.14,3.14], [-2.41,2.41], [-3.14,3.14], [-2.66,2.66], [-3.14,3.14], [-2.23,2.23], [-3.14,3.14] ]
+displacements: [ [ [0.0,0.005375,-0.12838], [0.0,-0.21038,-0.006375], [0.0,0.006375,-0.21038], [0.0,-0.20843,-0.006375], [0.0,0.00017505,-0.10593], [0.0,-0.10593,-0.00017505], [0.0,0.0,-0.061525], [0.0,0.0,0.12] ] ]
+disp_offsets: [ [0.0,0.0,0.15643] ]
+rot_offsets: [ [ [3.1416,2.7629e-18,-4.9305e-36], [1.5708,2.1343e-17,-1.1102e-16], [-1.5708,1.2326e-32,-2.9122e-16], [1.5708,-6.6954e-17,-1.6653e-16], [-1.5708,2.2204e-16,-6.373e-17], [1.5708,9.2076e-28,-8.2157e-15], [-1.5708,-5.5511e-17,9.6396e-17], [3.14159265359,1.09937075168e-32,0.0], [0.0,0.0,0.0] ] ]
+joint_types: [ [ "continuous", "revolute", "continuous", "revolute", "continuous", "revolute", "continuous", "fixed" ] ]
+joint_state_define_func_file: "kortex_joint_state_define"

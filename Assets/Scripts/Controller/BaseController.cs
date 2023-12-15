@@ -25,8 +25,9 @@ public abstract class BaseController : MonoBehaviour
     [SerializeField] protected float backwardMultiplier = 0.5f;
 
     // Control mode (different velocities multiplier)
-    public enum Mode { Slow = 0, Regular = 1 }
-    [field: SerializeField] public Mode SpeedMode { get; set; } = Mode.Regular;
+    public enum SpeedMode { Slow = 0, Regular = 1 }
+    [SerializeField, ReadOnly] 
+    protected SpeedMode speedMode = SpeedMode.Regular;
     [SerializeField] protected float[] modeMultiplier = { 0.5f, 1.0f };
 
     // Variable to hold velocity
@@ -55,28 +56,33 @@ public abstract class BaseController : MonoBehaviour
     {
         // Clipping and setting target velocity
         targetLinearVelocity = Utils.ClampVector3(
-            linear * linearSpeedMultiplier * modeMultiplier[(int)SpeedMode],
+            linear * linearSpeedMultiplier * modeMultiplier[(int)speedMode],
             -maxLinearSpeed * backwardMultiplier,
             maxLinearSpeed
         );
         targetAngularVelocity = Utils.ClampVector3(
-            angular * angularSpeedMultiplier * modeMultiplier[(int)SpeedMode],
+            angular * angularSpeedMultiplier * modeMultiplier[(int)speedMode],
             -maxAngularSpeed,
             maxAngularSpeed
         );
     }
 
-    // Set robot control mode
-    public void SetMode(Mode mode)
+    // Get/Set robot control mode
+    public SpeedMode GetSpeedMode()
     {
-        SpeedMode = mode;
+        return speedMode;
     }
 
-    // Switch to the next robot control mode
-    public void SwitchMode()
+    public void SetSpeedMode(SpeedMode mode)
     {
-        int numMode = System.Enum.GetNames(typeof(Mode)).Length;
-        SpeedMode = (Mode)(((int)SpeedMode + 1) % numMode);
+        speedMode = mode;
+    }
+
+    // Switch to the next robot speed mode
+    public void SwitchSpeedMode()
+    {
+        int numMode = System.Enum.GetNames(typeof(SpeedMode)).Length;
+        speedMode = (SpeedMode)(((int)speedMode + 1) % numMode);
     }
 
     // Update both the linear and angular velocity

@@ -1,0 +1,134 @@
+{
+    "name": "GopherXRInputActions",
+    "maps": [
+        {
+            "name": "GopherControl",
+            "id": "113e3e83-4e0f-44de-8e56-18a27ac14e63",
+            "actions": [
+                {
+                    "name": "BaseMove",
+                    "type": "Value",
+                    "id": "b4141518-adef-4a8b-a957-8127f556df06",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "LeftArmHome",
+                    "type": "Button",
+                    "id": "a58d5cb1-604d-47c3-89f3-de6b2dab655c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeftArmGrasp",
+                    "type": "Button",
+                    "id": "bbf69b83-370c-4e76-9e31-d300f25fce82",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RightArmHome",
+                    "type": "Button",
+                    "id": "0bc34f3a-fcd4-49aa-bedc-19272f9121e0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RightArmGrasp",
+                    "type": "Button",
+                    "id": "b7cf5c03-7286-4dff-bfe3-b06aaa22ec86",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ChestTranslate",
+                    "type": "Value",
+                    "id": "f027e104-af5f-4271-ae80-71d1e81f6a1e",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "0fe0aef4-dc77-4d48-9d46-c26ecfdc7ddc",
+                    "path": "<XRController>{LeftHand}/{TriggerButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftArmGrasp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6af2ab1c-d160-4500-86d5-2a4ba8f58a5c",
+                    "path": "<XRController>{LeftHand}/{Primary2DAxis}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "BaseMove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3688c79f-42b5-4fb7-91df-24c6ecaa4c17",
+                    "path": "<XRController>{LeftHand}/{SecondaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftArmHome",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "467e9820-4787-47c0-a58b-7898e0514b03",
+                    "path": "<XRController>{RightHand}/{SecondaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightArmHome",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9b475b5f-7797-46ff-9afe-368749c7a149",
+                    "path": "<XRController>{RightHand}/{TriggerButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightArmGrasp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "76422d7f-3894-438d-a20e-dbeda300460d",
+                    "path": "<XRController>{RightHand}/{Primary2DAxis}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChestTranslate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
