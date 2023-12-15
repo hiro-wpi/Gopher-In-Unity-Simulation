@@ -10,10 +10,10 @@ using UnityEngine.UI;
 public class NetworkManagerUI : MonoBehaviour
 {
     [SerializeField] private Button serverButton;
-    [SerializeField] private Button hostButton;
-    [SerializeField] private Button clientButton;
-    [SerializeField] private Button humanButton;
-    [SerializeField] private Button robotButton;
+    [SerializeField] private Button humanHostButton;
+    [SerializeField] private Button humanClientButton;
+    [SerializeField] private Button robotHostButton;
+    [SerializeField] private Button robotClientButton;
 
     private void Awake()
     {
@@ -23,27 +23,30 @@ public class NetworkManagerUI : MonoBehaviour
             TurnOffUI(false);
         });
 
-        hostButton.onClick.AddListener(() =>
+        humanHostButton.onClick.AddListener(() =>
         {
             NetworkManager.Singleton.StartHost();
-            TurnOffUI(false);
-        });
-
-        clientButton.onClick.AddListener(() =>
-        {
-            NetworkManager.Singleton.StartClient();
-            TurnOffUI(false);
-        });
-
-        // Handling player selection
-        humanButton.onClick.AddListener(() =>
-        {
             PlayerSelection(true);
             TurnOffUI(false);
         });
 
-        robotButton.onClick.AddListener(() =>
+        humanClientButton.onClick.AddListener(() =>
         {
+            NetworkManager.Singleton.StartClient();
+            PlayerSelection(true);
+            TurnOffUI(false);
+        });
+
+        robotHostButton.onClick.AddListener(() =>
+        {
+            NetworkManager.Singleton.StartHost();
+            PlayerSelection(false);
+            TurnOffUI(false);
+        });
+
+        robotClientButton.onClick.AddListener(() =>
+        {
+            NetworkManager.Singleton.StartClient();
             PlayerSelection(false);
             TurnOffUI(false);
         });
@@ -52,10 +55,10 @@ public class NetworkManagerUI : MonoBehaviour
     void TurnOffUI(bool value)
     {
         serverButton.gameObject.SetActive(value);
-        hostButton.gameObject.SetActive(value);
-        clientButton.gameObject.SetActive(value);
-        humanButton.gameObject.SetActive(value);
-        robotButton.gameObject.SetActive(value);
+        humanHostButton.gameObject.SetActive(value);
+        humanClientButton.gameObject.SetActive(value);
+        robotHostButton.gameObject.SetActive(value);
+        robotClientButton.gameObject.SetActive(value);
     }
 
     void PlayerSelection(bool isHuman)

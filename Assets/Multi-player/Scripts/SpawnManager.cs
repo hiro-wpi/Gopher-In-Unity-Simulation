@@ -20,9 +20,12 @@ public class SpawnManager : NetworkBehaviour
             Random.Range(spawnPositionLower.y, spawnPositionUpper.y), 
             Random.Range(spawnPositionLower.z, spawnPositionUpper.z)
         );
+        spawnPosition = Vector3.zero;
 
         // Instantiate the selected prefab at the designated spawn position
         GameObject newPlayer = Instantiate(prefabToSpawn, spawnPosition, spawnRotation);
+
+        // Spawn the selected prefab
         newPlayer.GetComponent<NetworkObject>().Spawn();
     }
 }

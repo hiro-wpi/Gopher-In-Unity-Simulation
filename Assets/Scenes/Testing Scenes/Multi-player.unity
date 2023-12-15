@@ -2527,7 +2527,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SELECT ROBOT
+  m_text: ROBOT (CLIENT)
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -11751,6 +11751,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 639145274}
     m_Modifications:
+    - target: {fileID: 8634891008986581049, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
+      propertyPath: m_text
+      value: HUMAN (CLIENT)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8634891009073615736, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
+      propertyPath: m_Name
+      value: Human (Host)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8634891009615751896, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
+      propertyPath: m_Name
+      value: Human (Client)
+      objectReference: {fileID: 0}
     - target: {fileID: 8634891009703824232, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
       propertyPath: m_Name
       value: Network Manager UI
@@ -11838,6 +11850,10 @@ PrefabInstance:
     - target: {fileID: 8634891009703824235, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8634891010412194723, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
+      propertyPath: m_text
+      value: HUMAN (HOST)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
@@ -13195,7 +13211,7 @@ GameObject:
   - component: {fileID: 991479627}
   - component: {fileID: 991479626}
   m_Layer: 5
-  m_Name: Select Human Button
+  m_Name: Robot (Host)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14894,7 +14910,7 @@ GameObject:
   - component: {fileID: 1125145542}
   - component: {fileID: 1125145541}
   m_Layer: 5
-  m_Name: Select Robot Button
+  m_Name: Robot (Client)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27555,7 +27571,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 2014970508}
-    PlayerPrefab: {fileID: 5827363592226267417, guid: 52a74b3c34ffc6e46bd0627954e62bed, type: 3}
+    PlayerPrefab: {fileID: 0}
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 05bf293dcb08da647ad1938646528fba, type: 2}
@@ -27590,10 +27606,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serverButton: {fileID: 843532325}
-  hostButton: {fileID: 843532324}
-  clientButton: {fileID: 843532323}
-  humanButton: {fileID: 991479626}
-  robotButton: {fileID: 1125145541}
+  humanHostButton: {fileID: 843532324}
+  humanClientButton: {fileID: 843532323}
+  robotHostButton: {fileID: 991479626}
+  robotClientButton: {fileID: 1125145541}
 --- !u!1 &2021497966
 GameObject:
   m_ObjectHideFlags: 0
@@ -28636,7 +28652,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SELECT HUMAN
+  m_text: ROBOT (HOST)
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
