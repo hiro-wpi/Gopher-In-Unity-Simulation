@@ -12,7 +12,8 @@ public class SpawnManager : NetworkBehaviour
     [SerializeField] private Quaternion spawnRotation = Quaternion.identity;
 
 
-    public void SpawnPlayer(bool isHuman) {
+    public void SpawnPlayer(bool isHuman) 
+    {
         GameObject prefabToSpawn = isHuman ? humanPrefab : robotPrefab;
 
         Vector3 spawnPosition = new Vector3(

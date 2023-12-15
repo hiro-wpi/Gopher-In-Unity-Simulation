@@ -31,11 +31,21 @@ public abstract class ArmController : MonoBehaviour
     [SerializeField] protected float[] modeMultiplier = { 0.5f, 1.0f };
 
     // Variable to hold position and velocity
-    [SerializeField, ReadOnly] protected Vector3 position;
-    [SerializeField, ReadOnly] protected Quaternion rotation;
+    [SerializeField, ReadOnly]
+    protected Vector3 position = Vector3.zero;
+    [SerializeField, ReadOnly]
+    protected Quaternion rotation = Quaternion.identity;
     [SerializeField, ReadOnly] protected Vector3 linearVelocity;
     [SerializeField, ReadOnly] protected Vector3 angularVelocity;
     [SerializeField, ReadOnly] protected float gripperPosition;
+
+    void Awake() 
+    {
+        // Unknown bug with SerializeField
+        // Both initialized values of rotation and position upper are ignored
+        position = Vector3.zero;
+        rotation = Quaternion.identity;
+    }
 
     void Start() {}
 
