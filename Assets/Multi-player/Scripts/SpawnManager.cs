@@ -11,7 +11,6 @@ public class SpawnManager : NetworkBehaviour
     [SerializeField] private Vector3 spawnPositionUpper;
     [SerializeField] private Quaternion spawnRotation = Quaternion.identity;
 
-
     public void SpawnPlayer(bool isHuman) 
     {
         Vector3 spawnPosition = new Vector3(
@@ -40,7 +39,7 @@ public class SpawnManager : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void SpawnPlayerServerRpc(
         ulong clientId,
         bool isHuman,
