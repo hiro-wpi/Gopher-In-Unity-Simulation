@@ -94,7 +94,7 @@ public class NetworkRobot : NetworkBehaviour
             // disable cameras
             foreach(var camera in GetComponentsInChildren<Camera>())
             {
-                camera.enabled = false;
+                camera.gameObject.SetActive(false);
             }
         }
     }

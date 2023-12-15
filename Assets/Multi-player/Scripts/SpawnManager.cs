@@ -14,19 +14,49 @@ public class SpawnManager : NetworkBehaviour
 
     public void SpawnPlayer(bool isHuman) 
     {
-        GameObject prefabToSpawn = isHuman ? humanPrefab : robotPrefab;
-
         Vector3 spawnPosition = new Vector3(
             Random.Range(spawnPositionLower.x, spawnPositionUpper.x), 
             Random.Range(spawnPositionLower.y, spawnPositionUpper.y), 
             Random.Range(spawnPositionLower.z, spawnPositionUpper.z)
         );
         spawnPosition = Vector3.zero;
+        spawnRotation = Quaternion.identity;
 
-        // Instantiate the selected prefab at the designated spawn position
-        GameObject newPlayer = Instantiate(prefabToSpawn, spawnPosition, spawnRotation);
+        if (IsServer)
+        {
+            // Select the prefab to instantiate
+            GameObject prefabToSpawn = isHuman ? humanPrefab : robotPrefab;
+            // Instantiate the selected prefab
+            GameObject newPlayer = Instantiate(
+                prefabToSpawn, spawnPosition, spawnRotation
+            );
+
+            // Spawn the selected prefab
+            newPlayer.GetComponent<NetworkObject>().Spawn();
+        }
+        else
+        {
+            SpawnPlayerServerRpc(OwnerClientId, isHuman, spawnPosition, spawnRotation);
+        }
+    }
+
+    [ServerRpc]
+    public void SpawnPlayerServerRpc(
+        ulong clientId,
+        bool isHuman,
+        Vector3 spawnPosition,
+        Quaternion spawnRotation
+    ) {
+        // Select the prefab to instantiate
+        GameObject prefabToSpawn = isHuman ? humanPrefab : robotPrefab;
+        // Instantiate the selected prefab
+        GameObject newPlayer = Instantiate(
+            prefabToSpawn, spawnPosition, spawnRotation
+        );
 
         // Spawn the selected prefab
-        newPlayer.GetComponent<NetworkObject>().Spawn();
+        NetworkObject networkObject = newPlayer.GetComponent<NetworkObject>();
+        networkObject.ChangeOwnership(clientId);
+        networkObject.Spawn();
     }
 }
