@@ -11,6 +11,17 @@ public class SpawnManager : NetworkBehaviour
     [SerializeField] private Vector3 spawnPositionUpper;
     [SerializeField] private Quaternion spawnRotation = Quaternion.identity;
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            SpawnPlayerServerRpc(
+                NetworkManager.Singleton.LocalClientId,
+                true, Vector3.zero, Quaternion.identity
+            );
+        }
+    }
+
     public void SpawnPlayer(bool isHuman) 
     {
         Vector3 spawnPosition = new Vector3(
@@ -35,7 +46,9 @@ public class SpawnManager : NetworkBehaviour
         }
         else
         {
-            SpawnPlayerServerRpc(OwnerClientId, isHuman, spawnPosition, spawnRotation);
+            // SpawnPlayerServerRpc(
+            //     OwnerClientId, isHuman, spawnPosition, spawnRotation
+            // );
         }
     }
 
@@ -55,7 +68,6 @@ public class SpawnManager : NetworkBehaviour
 
         // Spawn the selected prefab
         NetworkObject networkObject = newPlayer.GetComponent<NetworkObject>();
-        networkObject.ChangeOwnership(clientId);
-        networkObject.Spawn();
+        networkObject.SpawnWithOwnership(clientId);
     }
 }
