@@ -1,105 +1,126 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Netcode;
 
 public class NetworkManagerUI : MonoBehaviour
 {
+    [SerializeField] private Button serverButton;
     [SerializeField] private Button hostButton;
     [SerializeField] private Button clientButton;
-    [SerializeField] private Button serverButton;
-    [SerializeField] private Button humanButton;
-    [SerializeField] private Button robotButton;
-
-    private bool isHosting;
-    private bool isClienting;
-    private bool isServering;
+    [SerializeField] private Button serverHumanButton;
+    [SerializeField] private Button serverRobotButton;
+    [SerializeField] private Button hostHumanButton;
+    [SerializeField] private Button hostRobotButton;
+    [SerializeField] private Button clientHumanButton;
+    [SerializeField] private Button clientRobotButton;
 
     private void Awake()
     {
+        serverButton.onClick.AddListener(() =>
+        {
+            EnableServerButtons();
+        });
+
         hostButton.onClick.AddListener(() =>
         {
-            StartHost();
+            EnableHostButtons();
         });
 
         clientButton.onClick.AddListener(() =>
         {
-            StartClient();
+            EnableClientButtons();
         });
 
-        serverButton.onClick.AddListener(() =>
+        serverHumanButton.onClick.AddListener(() =>
         {
-            StartServer();
+            StartServer(true);
         });
 
-        humanButton.onClick.AddListener(() =>
+        serverRobotButton.onClick.AddListener(() =>
         {
-            OnPlayerSelection(true);
+            StartServer(false);
         });
 
-        robotButton.onClick.AddListener(() =>
+        hostHumanButton.onClick.AddListener(() =>
         {
-            OnPlayerSelection(false);
+            StartHost(true);
         });
-    }
 
-    void StartHost()
-    {
-        isHosting = true;
-        hostButton.gameObject.SetActive(false);
-        clientButton.gameObject.SetActive(false);
-        serverButton.gameObject.SetActive(false);
-        humanButton.gameObject.SetActive(true);
-        robotButton.gameObject.SetActive(true);
-    }
-
-    void StartClient()
-    {
-        isClienting = true;
-        hostButton.gameObject.SetActive(false);
-        clientButton.gameObject.SetActive(false);
-        serverButton.gameObject.SetActive(false);
-        humanButton.gameObject.SetActive(true);
-        robotButton.gameObject.SetActive(true);
-    }
-
-    void StartServer()
-    {
-        isServering = true;
-        hostButton.gameObject.SetActive(false);
-        clientButton.gameObject.SetActive(false);
-        serverButton.gameObject.SetActive(false);
-        humanButton.gameObject.SetActive(true);
-        robotButton.gameObject.SetActive(true);
-    }
-
-    void OnPlayerSelection(bool isHuman)
-    {
-        if (isHosting)
+        hostRobotButton.onClick.AddListener(() =>
         {
-            NetworkManager.Singleton.StartHost();
-            isHosting = false;
-        }
-        else if (isClienting)
-        {
-            NetworkManager.Singleton.StartClient();
-            isClienting = false;
-        }
-        else if (isServering)
-        {
-            NetworkManager.Singleton.StartServer();
-            isServering = false;
-        }
+            StartHost(false);
+        });
 
-        TurnOffPlayerSelectionUI();
+        clientHumanButton.onClick.AddListener(() =>
+        {
+            StartClient(true);
+        });
+
+        clientRobotButton.onClick.AddListener(() =>
+        {
+            StartClient(false);
+        });
+
+        // Initial setup
+        SetMainButtonsEnabled(true);
+        SetPlayerSelectionButtonsEnabled(false, false, false, false);
+    }
+
+    void EnableServerButtons()
+    {
+        SetMainButtonsEnabled(false);
+        SetPlayerSelectionButtonsEnabled(true, true, false, false);
+    }
+
+    void EnableHostButtons()
+    {
+        SetMainButtonsEnabled(false);
+        SetPlayerSelectionButtonsEnabled(true, false, true, false);
+    }
+
+    void EnableClientButtons()
+    {
+        SetMainButtonsEnabled(false);
+        SetPlayerSelectionButtonsEnabled(true, false, false, true);
+    }
+
+    void StartServer(bool isHuman)
+    {
+        NetworkManager.Singleton.StartServer();
+        SetPlayerSelectionButtonsEnabled(false, false, false, false);
         SpawnPlayer(isHuman);
     }
 
-    void TurnOffPlayerSelectionUI()
+    void StartHost(bool isHuman)
     {
-        humanButton.gameObject.SetActive(false);
-        robotButton.gameObject.SetActive(false);
+        NetworkManager.Singleton.StartHost();
+        SetPlayerSelectionButtonsEnabled(false, false, false, false);
+        SpawnPlayer(isHuman);
     }
+
+    void StartClient(bool isHuman)
+    {
+        NetworkManager.Singleton.StartClient();
+        SetPlayerSelectionButtonsEnabled(false, false, false, false);
+        SpawnPlayer(isHuman);
+    }
+
+    void SetMainButtonsEnabled(bool isEnabled)
+    {
+        serverButton.gameObject.SetActive(isEnabled);
+        hostButton.gameObject.SetActive(isEnabled);
+        clientButton.gameObject.SetActive(isEnabled);
+    }
+
+void SetPlayerSelectionButtonsEnabled(bool isEnabled, bool showServerButtons, bool showHostButtons, bool showClientButtons)
+{
+    serverHumanButton.gameObject.SetActive(isEnabled && showServerButtons);
+    serverRobotButton.gameObject.SetActive(isEnabled && showServerButtons);
+    hostHumanButton.gameObject.SetActive(isEnabled && showHostButtons);
+    hostRobotButton.gameObject.SetActive(isEnabled && showHostButtons);
+    clientHumanButton.gameObject.SetActive(isEnabled && showClientButtons);
+    clientRobotButton.gameObject.SetActive(isEnabled && showClientButtons);
+}
 
     void SpawnPlayer(bool isHuman)
     {
