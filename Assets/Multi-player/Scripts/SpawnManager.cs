@@ -1,15 +1,13 @@
 using UnityEngine;
 using Unity.Netcode;
 
-public class SpawnManager : NetworkBehaviour 
+public class SpawnManager : NetworkBehaviour
 {
-    public GameObject humanPrefab; // Assign the Human VR character prefab
-    public GameObject robotPrefab; // Assign the Robot VR character prefab
+    public GameObject humanPrefab;
+    public GameObject robotPrefab;
 
-    // Edit
     [SerializeField] private Vector3 spawnPositionLower;
     [SerializeField] private Vector3 spawnPositionUpper;
-    [SerializeField] private Quaternion spawnRotation = Quaternion.identity;
 
     void Update()
     {
@@ -22,33 +20,23 @@ public class SpawnManager : NetworkBehaviour
         }
     }
 
-    public void SpawnPlayer(bool isHuman) 
+    public void SpawnPlayer(bool isHuman)
     {
         Vector3 spawnPosition = new Vector3(
-            Random.Range(spawnPositionLower.x, spawnPositionUpper.x), 
-            Random.Range(spawnPositionLower.y, spawnPositionUpper.y), 
+            Random.Range(spawnPositionLower.x, spawnPositionUpper.x),
+            Random.Range(spawnPositionLower.y, spawnPositionUpper.y),
             Random.Range(spawnPositionLower.z, spawnPositionUpper.z)
         );
-        spawnPosition = Vector3.zero;
-        spawnRotation = Quaternion.identity;
 
         if (IsServer)
         {
-            // Select the prefab to instantiate
             GameObject prefabToSpawn = isHuman ? humanPrefab : robotPrefab;
-            // Instantiate the selected prefab
-            GameObject newPlayer = Instantiate(
-                prefabToSpawn, spawnPosition, spawnRotation
-            );
-
-            // Spawn the selected prefab
+            GameObject newPlayer = Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
             newPlayer.GetComponent<NetworkObject>().Spawn();
         }
         else
         {
-            // SpawnPlayerServerRpc(
-            //     OwnerClientId, isHuman, spawnPosition, spawnRotation
-            // );
+            Debug.LogError("Cannot spawn player on a non-server client.");
         }
     }
 
@@ -58,15 +46,10 @@ public class SpawnManager : NetworkBehaviour
         bool isHuman,
         Vector3 spawnPosition,
         Quaternion spawnRotation
-    ) {
-        // Select the prefab to instantiate
+    )
+    {
         GameObject prefabToSpawn = isHuman ? humanPrefab : robotPrefab;
-        // Instantiate the selected prefab
-        GameObject newPlayer = Instantiate(
-            prefabToSpawn, spawnPosition, spawnRotation
-        );
-
-        // Spawn the selected prefab
+        GameObject newPlayer = Instantiate(prefabToSpawn, spawnPosition, spawnRotation);
         NetworkObject networkObject = newPlayer.GetComponent<NetworkObject>();
         networkObject.SpawnWithOwnership(clientId);
     }

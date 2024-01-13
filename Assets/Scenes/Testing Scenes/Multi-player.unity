@@ -1382,7 +1382,6 @@ MonoBehaviour:
   robotPrefab: {fileID: 5827363592226267417, guid: 52a74b3c34ffc6e46bd0627954e62bed, type: 3}
   spawnPositionLower: {x: -7.5, y: 0, z: -13}
   spawnPositionUpper: {x: -6.5, y: 0, z: -10}
-  spawnRotation: {x: 0, y: 0, z: 0, w: 1}
 --- !u!4 &83389907
 Transform:
   m_ObjectHideFlags: 0
@@ -3094,7 +3093,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ROBOT (CLIENT)
+  m_text: 'HUMAN
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -12818,15 +12819,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8634891008986581049, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
       propertyPath: m_text
-      value: HUMAN (CLIENT)
+      value: CLIENT
       objectReference: {fileID: 0}
     - target: {fileID: 8634891009073615736, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
       propertyPath: m_Name
-      value: Human (Host)
+      value: Host Button
       objectReference: {fileID: 0}
     - target: {fileID: 8634891009615751896, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
       propertyPath: m_Name
-      value: Human (Client)
+      value: Client Button
       objectReference: {fileID: 0}
     - target: {fileID: 8634891009703824232, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
       propertyPath: m_Name
@@ -12918,7 +12919,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8634891010412194723, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
       propertyPath: m_text
-      value: HUMAN (HOST)
+      value: HOST
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
@@ -14303,7 +14304,7 @@ GameObject:
   - component: {fileID: 991479627}
   - component: {fileID: 991479626}
   m_Layer: 5
-  m_Name: Robot (Host)
+  m_Name: Robot Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14316,18 +14317,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 991479624}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2085204989}
-  m_Father: {fileID: 843532322}
-  m_RootOrder: 3
+  m_Father: {fileID: 1565141175}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -250, y: -325}
+  m_AnchoredPosition: {x: 660, y: 165}
   m_SizeDelta: {x: 400, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &991479626
@@ -16041,7 +16042,7 @@ GameObject:
   - component: {fileID: 1125145542}
   - component: {fileID: 1125145541}
   m_Layer: 5
-  m_Name: Robot (Client)
+  m_Name: Human Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16054,18 +16055,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1125145539}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 156842953}
-  m_Father: {fileID: 843532322}
-  m_RootOrder: 4
+  m_Father: {fileID: 1565141175}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -250, y: -405}
+  m_AnchoredPosition: {x: 660, y: 85}
   m_SizeDelta: {x: 400, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1125145541
@@ -23373,6 +23374,44 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3186519773399036492, guid: 077e7680c633c19ff941fb719aeff80b, type: 3}
   m_PrefabInstance: {fileID: 1563734395}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1565141174
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1565141175}
+  m_Layer: 5
+  m_Name: Player Selection Panel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1565141175
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565141174}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 991479625}
+  - {fileID: 1125145540}
+  m_Father: {fileID: 843532322}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1569696902
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29021,11 +29060,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6bdc845365a4f1458288530264eab7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hostButton: {fileID: 843532324}
+  clientButton: {fileID: 843532323}
   serverButton: {fileID: 843532325}
-  humanHostButton: {fileID: 843532324}
-  humanClientButton: {fileID: 843532323}
-  robotHostButton: {fileID: 991479626}
-  robotClientButton: {fileID: 1125145541}
+  playerSelectionPanel: {fileID: 1565141174}
+  humanButton: {fileID: 1125145541}
+  robotButton: {fileID: 991479626}
 --- !u!1 &2021497966
 GameObject:
   m_ObjectHideFlags: 0
@@ -30858,7 +30898,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ROBOT (HOST)
+  m_text: ROBOT
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
