@@ -6,8 +6,10 @@ public class SpawnManager : NetworkBehaviour
     public GameObject humanPrefab;
     public GameObject robotPrefab;
 
-    [SerializeField] private Vector3 spawnPositionLower;
-    [SerializeField] private Vector3 spawnPositionUpper;
+    [SerializeField] private Vector3 humanSpawnPositionLower;
+    [SerializeField] private Vector3 humanSpawnPositionUpper;
+    [SerializeField] private Vector3 robotSpawnPositionLower;
+    [SerializeField] private Vector3 robotSpawnPositionUpper;
 
     void Update()
     {
@@ -22,11 +24,7 @@ public class SpawnManager : NetworkBehaviour
 
     public void SpawnPlayer(bool isHuman)
     {
-        Vector3 spawnPosition = new Vector3(
-            Random.Range(spawnPositionLower.x, spawnPositionUpper.x),
-            Random.Range(spawnPositionLower.y, spawnPositionUpper.y),
-            Random.Range(spawnPositionLower.z, spawnPositionUpper.z)
-        );
+        Vector3 spawnPosition = GetRandomSpawnPosition(isHuman);
 
         if (IsServer)
         {
@@ -38,6 +36,30 @@ public class SpawnManager : NetworkBehaviour
         {
             Debug.LogError("Cannot spawn player on a non-server client.");
         }
+    }
+
+    Vector3 GetRandomSpawnPosition(bool isHuman)
+    {
+        Vector3 spawnPosition;
+
+        if (isHuman)
+        {
+            spawnPosition = new Vector3(
+                Random.Range(humanSpawnPositionLower.x, humanSpawnPositionUpper.x),
+                Random.Range(humanSpawnPositionLower.y, humanSpawnPositionUpper.y),
+                Random.Range(humanSpawnPositionLower.z, humanSpawnPositionUpper.z)
+            );
+        }
+        else
+        {
+            spawnPosition = new Vector3(
+                Random.Range(robotSpawnPositionLower.x, robotSpawnPositionUpper.x),
+                Random.Range(robotSpawnPositionLower.y, robotSpawnPositionUpper.y),
+                Random.Range(robotSpawnPositionLower.z, robotSpawnPositionUpper.z)
+            );
+        }
+
+        return spawnPosition;
     }
 
     [ServerRpc(RequireOwnership = false)]
