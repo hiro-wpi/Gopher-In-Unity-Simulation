@@ -19,6 +19,7 @@ public class NetworkManagerUI : MonoBehaviour
     {
         serverButton.onClick.AddListener(() =>
         {
+            NetworkManager.Singleton.StartServer();
             EnableServerButtons();
         });
 
@@ -29,6 +30,7 @@ public class NetworkManagerUI : MonoBehaviour
 
         clientButton.onClick.AddListener(() =>
         {
+            NetworkManager.Singleton.StartClient();
             EnableClientButtons();
         });
 
@@ -87,7 +89,7 @@ public class NetworkManagerUI : MonoBehaviour
 
     void StartServer(bool isHuman)
     {
-        NetworkManager.Singleton.StartServer();
+        // NetworkManager.Singleton.StartServer();
         SetPlayerSelectionButtonsEnabled(false, false, false, false);
         spawnManager.SpawnPlayer(isHuman);
     }
@@ -101,7 +103,7 @@ public class NetworkManagerUI : MonoBehaviour
 
     void StartClient(bool isHuman)
     {
-        NetworkManager.Singleton.StartClient();
+        // NetworkManager.Singleton.StartClient();
         SetPlayerSelectionButtonsEnabled(false, false, false, false);
         spawnManager.SpawnPlayer(isHuman);
     }
