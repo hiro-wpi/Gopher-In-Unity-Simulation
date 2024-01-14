@@ -11,30 +11,23 @@ public class SpawnManager : NetworkBehaviour
     [SerializeField] private Vector3 robotSpawnPositionLower;
     [SerializeField] private Vector3 robotSpawnPositionUpper;
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            SpawnPlayerServerRpc(
-                NetworkManager.Singleton.LocalClientId,
-                true, Vector3.zero, Quaternion.identity
-            );
-        }
-    }
+    // void Update() {}
 
     public void SpawnPlayer(bool isHuman)
     {
         Vector3 spawnPosition = GetRandomSpawnPosition(isHuman);
-
         if (IsServer)
         {
-            GameObject prefabToSpawn = isHuman ? humanPrefab : robotPrefab;
-            GameObject newPlayer = Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
-            newPlayer.GetComponent<NetworkObject>().Spawn();
+            SpawnPlayerAsServer(isHuman, spawnPosition, Quaternion.identity);
         }
         else
         {
-            Debug.LogError("Cannot spawn player on a non-server client.");
+            SpawnPlayerServerRpc(
+                NetworkManager.Singleton.LocalClientId,
+                isHuman,
+                spawnPosition,
+                Quaternion.identity
+            );
         }
     }
 
@@ -62,8 +55,15 @@ public class SpawnManager : NetworkBehaviour
         return spawnPosition;
     }
 
+    private void SpawnPlayerAsServer(bool isHuman, Vector3 spawnPosition, Quaternion spawnRotation)
+    {
+        GameObject prefabToSpawn = isHuman ? humanPrefab : robotPrefab;
+        GameObject newPlayer = Instantiate(prefabToSpawn, spawnPosition, spawnRotation);
+        newPlayer.GetComponent<NetworkObject>().Spawn();
+    }
+
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnPlayerServerRpc(
+    private void SpawnPlayerServerRpc(
         ulong clientId,
         bool isHuman,
         Vector3 spawnPosition,

@@ -4,6 +4,7 @@ using Unity.Netcode;
 
 public class NetworkManagerUI : MonoBehaviour
 {
+    [SerializeField] private SpawnManager spawnManager;
     [SerializeField] private Button serverButton;
     [SerializeField] private Button hostButton;
     [SerializeField] private Button clientButton;
@@ -88,21 +89,21 @@ public class NetworkManagerUI : MonoBehaviour
     {
         NetworkManager.Singleton.StartServer();
         SetPlayerSelectionButtonsEnabled(false, false, false, false);
-        SpawnPlayer(isHuman);
+        spawnManager.SpawnPlayer(isHuman);
     }
 
     void StartHost(bool isHuman)
     {
         NetworkManager.Singleton.StartHost();
         SetPlayerSelectionButtonsEnabled(false, false, false, false);
-        SpawnPlayer(isHuman);
+        spawnManager.SpawnPlayer(isHuman);
     }
 
     void StartClient(bool isHuman)
     {
         NetworkManager.Singleton.StartClient();
         SetPlayerSelectionButtonsEnabled(false, false, false, false);
-        SpawnPlayer(isHuman);
+        spawnManager.SpawnPlayer(isHuman);
     }
 
     void SetMainButtonsEnabled(bool isEnabled)
@@ -112,27 +113,17 @@ public class NetworkManagerUI : MonoBehaviour
         clientButton.gameObject.SetActive(isEnabled);
     }
 
-void SetPlayerSelectionButtonsEnabled(bool isEnabled, bool showServerButtons, bool showHostButtons, bool showClientButtons)
-{
-    serverHumanButton.gameObject.SetActive(isEnabled && showServerButtons);
-    serverRobotButton.gameObject.SetActive(isEnabled && showServerButtons);
-    hostHumanButton.gameObject.SetActive(isEnabled && showHostButtons);
-    hostRobotButton.gameObject.SetActive(isEnabled && showHostButtons);
-    clientHumanButton.gameObject.SetActive(isEnabled && showClientButtons);
-    clientRobotButton.gameObject.SetActive(isEnabled && showClientButtons);
-}
-
-    void SpawnPlayer(bool isHuman)
-    {
-        SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
-
-        if (spawnManager != null)
-        {
-            spawnManager.SpawnPlayer(isHuman);
-        }
-        else
-        {
-            Debug.LogError("SpawnManager not found! Make sure it's present in the scene.");
-        }
+    void SetPlayerSelectionButtonsEnabled(
+        bool isEnabled,
+        bool showServerButtons,
+        bool showHostButtons,
+        bool showClientButtons
+    ) {
+        serverHumanButton.gameObject.SetActive(isEnabled && showServerButtons);
+        serverRobotButton.gameObject.SetActive(isEnabled && showServerButtons);
+        hostHumanButton.gameObject.SetActive(isEnabled && showHostButtons);
+        hostRobotButton.gameObject.SetActive(isEnabled && showHostButtons);
+        clientHumanButton.gameObject.SetActive(isEnabled && showClientButtons);
+        clientRobotButton.gameObject.SetActive(isEnabled && showClientButtons);
     }
 }
