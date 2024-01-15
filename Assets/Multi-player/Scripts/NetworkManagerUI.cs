@@ -6,126 +6,72 @@ public class NetworkManagerUI : MonoBehaviour
 {
     [SerializeField] private SpawnManager spawnManager;
     [SerializeField] private Button serverButton;
-    [SerializeField] private Button hostButton;
     [SerializeField] private Button clientButton;
-    [SerializeField] private Button serverHumanButton;
     [SerializeField] private Button serverRobotButton;
-    [SerializeField] private Button hostHumanButton;
-    [SerializeField] private Button hostRobotButton;
-    [SerializeField] private Button clientHumanButton;
     [SerializeField] private Button clientRobotButton;
+    [SerializeField] private Button serverHumanButton;
+    [SerializeField] private Button clientHumanButton;
 
     private void Awake()
     {
         serverButton.onClick.AddListener(() =>
         {
             NetworkManager.Singleton.StartServer();
-            EnableServerButtons();
-        });
-
-        hostButton.onClick.AddListener(() =>
-        {
-            EnableHostButtons();
+            ShowButtons(false, true, false);
         });
 
         clientButton.onClick.AddListener(() =>
         {
             NetworkManager.Singleton.StartClient();
-            EnableClientButtons();
+            ShowButtons(false, false, true);
         });
 
         serverHumanButton.onClick.AddListener(() =>
         {
+            ShowButtons(false, false, false);
             StartServer(true);
         });
 
         serverRobotButton.onClick.AddListener(() =>
         {
+            ShowButtons(false, false, false);
             StartServer(false);
-        });
-
-        hostHumanButton.onClick.AddListener(() =>
-        {
-            StartHost(true);
-        });
-
-        hostRobotButton.onClick.AddListener(() =>
-        {
-            StartHost(false);
         });
 
         clientHumanButton.onClick.AddListener(() =>
         {
+            ShowButtons(false, false, false);
             StartClient(true);
         });
 
         clientRobotButton.onClick.AddListener(() =>
         {
+            ShowButtons(false, false, false);
             StartClient(false);
         });
 
         // Initial setup
-        SetMainButtonsEnabled(true);
-        SetPlayerSelectionButtonsEnabled(false, false, false, false);
-    }
-
-    void EnableServerButtons()
-    {
-        SetMainButtonsEnabled(false);
-        SetPlayerSelectionButtonsEnabled(true, true, false, false);
-    }
-
-    void EnableHostButtons()
-    {
-        SetMainButtonsEnabled(false);
-        SetPlayerSelectionButtonsEnabled(true, false, true, false);
-    }
-
-    void EnableClientButtons()
-    {
-        SetMainButtonsEnabled(false);
-        SetPlayerSelectionButtonsEnabled(true, false, false, true);
+        ShowButtons(true, false, false);
     }
 
     void StartServer(bool isHuman)
     {
-        // NetworkManager.Singleton.StartServer();
-        SetPlayerSelectionButtonsEnabled(false, false, false, false);
-        spawnManager.SpawnPlayer(isHuman);
-    }
-
-    void StartHost(bool isHuman)
-    {
-        NetworkManager.Singleton.StartHost();
-        SetPlayerSelectionButtonsEnabled(false, false, false, false);
         spawnManager.SpawnPlayer(isHuman);
     }
 
     void StartClient(bool isHuman)
     {
-        // NetworkManager.Singleton.StartClient();
-        SetPlayerSelectionButtonsEnabled(false, false, false, false);
         spawnManager.SpawnPlayer(isHuman);
     }
 
-    void SetMainButtonsEnabled(bool isEnabled)
+    void ShowButtons(bool showMainButtons, bool showServerButtons, bool showClientButtons)
     {
-        serverButton.gameObject.SetActive(isEnabled);
-        hostButton.gameObject.SetActive(isEnabled);
-        clientButton.gameObject.SetActive(isEnabled);
-    }
+        serverButton.gameObject.SetActive(showMainButtons);
+        clientButton.gameObject.SetActive(showMainButtons);
 
-    void SetPlayerSelectionButtonsEnabled(
-        bool isEnabled,
-        bool showServerButtons,
-        bool showHostButtons,
-        bool showClientButtons
-    ) {
-        serverHumanButton.gameObject.SetActive(isEnabled && showServerButtons);
-        serverRobotButton.gameObject.SetActive(isEnabled && showServerButtons);
-        hostHumanButton.gameObject.SetActive(isEnabled && showHostButtons);
-        hostRobotButton.gameObject.SetActive(isEnabled && showHostButtons);
-        clientHumanButton.gameObject.SetActive(isEnabled && showClientButtons);
-        clientRobotButton.gameObject.SetActive(isEnabled && showClientButtons);
+        serverHumanButton.gameObject.SetActive(showServerButtons);
+        serverRobotButton.gameObject.SetActive(showServerButtons);
+        clientHumanButton.gameObject.SetActive(showClientButtons);
+        clientRobotButton.gameObject.SetActive(showClientButtons);
     }
 }

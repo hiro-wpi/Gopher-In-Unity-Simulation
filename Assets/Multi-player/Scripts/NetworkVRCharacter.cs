@@ -17,22 +17,9 @@ public class NetworkVRCharacter : NetworkBehaviour
     [SerializeField] private GameObject xROrigin;
     [SerializeField] private AnimateVRCharacter animateVRCharacter;
     [SerializeField] private GameObject characterRigRoot;
-    
-    [SerializeField] private Vector3 spawnPositionLower;
-    [SerializeField] private Vector3 spawnPositionUpper;
-
-    [SerializeField] private Quaternion spawnRotation = Quaternion.identity;
 
     public override void OnNetworkSpawn()
     {
-        // // Spawn in a random position
-        // transform.position = new Vector3(
-        //     Random.Range(spawnPositionLower.x, spawnPositionUpper.x), 
-        //     Random.Range(spawnPositionLower.y, spawnPositionUpper.y), 
-        //     Random.Range(spawnPositionLower.z, spawnPositionUpper.z)
-        // );
-        // transform.rotation = spawnRotation;
-
         if (!IsOwner)
         {
             // Disable non-owner input

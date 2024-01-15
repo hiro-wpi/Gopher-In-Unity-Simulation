@@ -1382,7 +1382,7 @@ MonoBehaviour:
   robotPrefab: {fileID: 5827363592226267417, guid: 52a74b3c34ffc6e46bd0627954e62bed, type: 3}
   humanSpawnPositionLower: {x: -7.4, y: 0, z: -11}
   humanSpawnPositionUpper: {x: -6.5, y: 0, z: -9.75}
-  robotSpawnPositionLower: {x: -7.3, y: 0, z: -13.5}
+  robotSpawnPositionLower: {x: -7.3, y: 0, z: -12.5}
   robotSpawnPositionUpper: {x: -6.65, y: 0, z: -12}
 --- !u!4 &83389907
 Transform:
@@ -12682,6 +12682,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 639145274}
     m_Modifications:
+    - target: {fileID: 991479624, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
+      propertyPath: m_Name
+      value: Server Robot Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 1125145539, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
+      propertyPath: m_Name
+      value: Server Human Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 4225363860034808832, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
+      propertyPath: m_Name
+      value: Client Robot Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 4244780638212825845, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
+      propertyPath: m_Name
+      value: Client Human Button
+      objectReference: {fileID: 0}
     - target: {fileID: 8634891009703824232, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
       propertyPath: m_Name
       value: Network Manager UI
@@ -12788,17 +12804,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &843532324 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8634891009073615738, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
-  m_PrefabInstance: {fileID: 843532321}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &843532325 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8634891009571494778, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
@@ -12824,28 +12829,6 @@ MonoBehaviour:
 --- !u!114 &843532327 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8902459946816430101, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
-  m_PrefabInstance: {fileID: 843532321}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &843532328 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4720644659613474108, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
-  m_PrefabInstance: {fileID: 843532321}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &843532329 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5811507391995528844, guid: 216b1edf550ee2d4c921adeeb1dd7361, type: 3}
   m_PrefabInstance: {fileID: 843532321}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
@@ -28637,7 +28620,7 @@ MonoBehaviour:
   m_MaxConnectAttempts: 60
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
-    Address: 192.168.0.103
+    Address: 192.168.0.105
     Port: 7777
     ServerListenAddress: 0.0.0.0
   DebugSimulator:
@@ -28695,14 +28678,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnManager: {fileID: 83389906}
   serverButton: {fileID: 843532325}
-  hostButton: {fileID: 843532324}
   clientButton: {fileID: 843532323}
-  serverHumanButton: {fileID: 1125145541}
   serverRobotButton: {fileID: 991479626}
-  hostHumanButton: {fileID: 843532328}
-  hostRobotButton: {fileID: 843532329}
-  clientHumanButton: {fileID: 843532326}
   clientRobotButton: {fileID: 843532327}
+  serverHumanButton: {fileID: 1125145541}
+  clientHumanButton: {fileID: 843532326}
 --- !u!1 &2021497966
 GameObject:
   m_ObjectHideFlags: 0
