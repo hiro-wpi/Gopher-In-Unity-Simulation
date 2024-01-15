@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -295,6 +295,13 @@ public class ArticulationArmController : ArmController
     }
 
     // Some getter functions
+    // Get the current joint angles
+    // TODO do it in ArmController
+    public float[] GetCurrentJointAngles()
+    {
+        return jointController.GetCurrentJointTargets();
+    }
+
     // Get the actual end effector pose
     public override (Vector3, Quaternion) GetEEPose()
     {
