@@ -16,7 +16,7 @@ public class NetworkInputActions : NetworkBehaviour
     { 
         if (IsOwner && !IsServer)
         {
-            SendInputDataToServer(SerializeActionMapState());
+            SendInputDataServerRpc(SerializeActionMapState());
         }
     }
 
@@ -38,7 +38,7 @@ public class NetworkInputActions : NetworkBehaviour
     }
 
     [ServerRpc]
-    private void SendInputDataToServer(string serializedState)
+    private void SendInputDataServerRpc(string serializedState)
     {
         ProcessInputDataOnServer(serializedState);
     }
