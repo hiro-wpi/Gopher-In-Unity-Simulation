@@ -25,13 +25,13 @@ public class NetworkVRCharacter : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        // Spawn in a random position
-        transform.position = new Vector3(
-            Random.Range(spawnPositionLower.x, spawnPositionUpper.x), 
-            Random.Range(spawnPositionLower.y, spawnPositionUpper.y), 
-            Random.Range(spawnPositionLower.z, spawnPositionUpper.z)
-        );
-        transform.rotation = spawnRotation;
+        // // Spawn in a random position
+        // transform.position = new Vector3(
+        //     Random.Range(spawnPositionLower.x, spawnPositionUpper.x), 
+        //     Random.Range(spawnPositionLower.y, spawnPositionUpper.y), 
+        //     Random.Range(spawnPositionLower.z, spawnPositionUpper.z)
+        // );
+        // transform.rotation = spawnRotation;
 
         if (!IsOwner)
         {
