@@ -28,7 +28,12 @@ public class MotionPlanner : MonoBehaviour
         List<Vector3> pathPositions = new List<Vector3>();
         List<Quaternion> pathQuaternions = new List<Quaternion>();
 
-        
+        Node start = new Node(startPosition, startRotation);
+        Node goal = new Node(goalPosition, goalRotation);
+
+        RRTTree rrt = new RRTTree(start, goal);
+
+        pathPositions = rrt.Search();
 
         return (pathPositions, pathQuaternions);
     }
@@ -37,10 +42,10 @@ public class MotionPlanner : MonoBehaviour
     ///---------------------------------------------Node----------------------------------------------------///
     private class Node
     {
-        Vector3 position;
-        Quaternion rotation;
+        public Vector3 position;
+        public Quaternion rotation;
         
-        Node previousNode = null;
+        public Node previousNode = null;
 
         // Normal Constructors
         public Node()
@@ -94,11 +99,11 @@ public class MotionPlanner : MonoBehaviour
         public List<Node> tree;
         public Node goalNode;
 
-        private int rrtMaxSize = 200;
+        private int rrtMaxSize = 10;
 
         private List<Vector3> actions;
 
-        RRTTree(Node start, Node goal)
+        public RRTTree(Node start, Node goal)
         {
             // Contruct the tree, initcializing it with a node
             tree = new List<Node>{start};
@@ -209,6 +214,29 @@ public class MotionPlanner : MonoBehaviour
         // Is the path from the previous Node to the current Node Collision Free?
         private bool IsPathCollisionFree(Node n)
         {
+            float rayRadius = 0.05f;
+
+            if(n.previousNode == null)
+            {
+                Debug.Log("previousNode == null");
+                return false;
+            }
+
+            Vector3 direction = n.position - n.previousNode.position;
+            // Ray ray = new Ray(n.previousNode.position, direction);
+            float maxDistance = Vector3.Distance(n.position, n.previousNode.position);
+
+            if (Physics.SphereCast(n.previousNode.position, rayRadius, direction, out RaycastHit hit, maxDistance))
+            {
+                // collision detected
+                Debug.Log("Max Distance is " + maxDistance);
+                Debug.Log("Collision detected with " + hit.collider.name);
+                Debug.DrawRay(n.previousNode.position, direction, Color.red, 100f);
+                Debug.Log(n.previousNode.position);
+                return false;
+            }
+
+            // No collision
             return true;
         }
 
@@ -232,8 +260,11 @@ public class MotionPlanner : MonoBehaviour
                 // Get a new pose closest to the sample node that is actionable
                 Node newNode = GetNearestNewNode(nearestNode, sampleNode);
 
+                Debug.Log(newNode.position);
+
                 if(IsPathCollisionFree(newNode))
                 {   
+                    // IsPathCollisionFree(newNode);
                     tree.Add(newNode);
                     if(IsAtGoal(newNode))
                     {
@@ -245,12 +276,8 @@ public class MotionPlanner : MonoBehaviour
             }
 
             // Failed, no path found in our conditions
+            Debug.Log("No Path Found");
             return null;
         }
-
-
     }
-
-    
-
 }
