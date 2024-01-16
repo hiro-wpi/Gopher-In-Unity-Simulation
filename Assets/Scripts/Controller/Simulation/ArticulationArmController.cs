@@ -153,6 +153,14 @@ public class ArticulationArmController : ArmController
         endEffectorController.MoveToTargetStep();
     }
 
+    // Some getter functions
+    // Get the current joint angles
+    // TODO do it in ArmController
+    public float[] GetCurrentJointAngles()
+    {
+        return jointController.GetCurrentJointTargets();
+    }
+
     // Autonomous mode
     public override void SetTarget(Vector3 position, Quaternion rotation)
     {
