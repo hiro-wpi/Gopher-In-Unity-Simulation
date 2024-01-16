@@ -9,13 +9,21 @@ public class SimplePlanner : MonoBehaviour
     [SerializeField] private JacobianIK iK;
     [SerializeField] private ArticulationArmController armController;
 
-    [SerializeField] private float timeStep = 0.5f; // Time step in seconds
-
     [SerializeField] private GameObject startGameObject;
     [SerializeField] private GameObject goalGameObject;
 
     [SerializeField] private GameObject waypointGameObject;
+
+    private int numWaypoints = 10;
+    [SerializeField] private float timeStep; // Time step in seconds
     
+    private float speed = 0.05f; // Speed of the arm in m/s
+    private int waypointDensityPerMeter = 33; // Number of waypoints per meter
+
+    void Start()
+    {
+        // armController.SetJointTargets(new float[] { 0, 0, 0, 0, 0, 0, 0 });
+    }    
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
@@ -29,6 +37,18 @@ public class SimplePlanner : MonoBehaviour
     {
         // Visualize Start and Goal
         VisualizeStartAndGoal(start, goal);
+
+        // Collision Check
+        if (!CheckForCollisionFreePath(start, goal))
+        {
+            Debug.Log("Collision Detected, No Path Found");
+            return;
+        }
+
+        // Calculate time step
+        float distance = Vector3.Distance(start.position, goal.position);
+        timeStep = GetTimeStep(distance, speed, Mathf.RoundToInt(distance*waypointDensityPerMeter));
+
         VisualizeWaypoint(start.position, start.rotation);
 
         // Interpolate between Start and Goal (positions and rotations)
@@ -82,11 +102,36 @@ public class SimplePlanner : MonoBehaviour
         armController.SetJointTrajectory(timeStepsArray, jointAnglesArray, new float[][] { }, new float[][] { });
     }
 
+    private bool CheckForCollisionFreePath(Transform start, Transform goal)
+    {
+        // Check if there is a collision free path between start and goal
+        // If there is a collision free path, return true
+        // If there is no collision free path, return false
+
+        Vector3 direction = goal.position - start.position;
+        // Ray ray = new Ray(n.previousNode.position, direction);
+        float maxDistance = Vector3.Distance(goal.position, start.position);
+
+        if (Physics.Raycast(start.position, direction, out RaycastHit hit, maxDistance))
+        {
+            // collision detected
+            Debug.Log("Max Distance is " + maxDistance);
+            Debug.Log("Collision detected with " + hit.collider.name);
+            Debug.DrawRay(start.position, direction, Color.red, 100f);
+            Debug.Log(start.position);
+            return false;
+        }
+
+        // No collision
+
+        return true;
+    }
+
+
     private List<Vector3> InterpolatePositions(Vector3 start, Vector3 goal)
     {
         List<Vector3> positions = new List<Vector3>();
-        int numWaypoints = 10;
-
+        
         for (int i = 0; i <= numWaypoints; i++)
         {
             float t = i / (float)numWaypoints;
@@ -99,7 +144,6 @@ public class SimplePlanner : MonoBehaviour
     private List<Quaternion> InterpolateRotations(Quaternion start, Quaternion goal)
     {
         List<Quaternion> rotations = new List<Quaternion>();
-        int numWaypoints = 10;
 
         for (int i = 0; i <= numWaypoints; i++)
         {
@@ -134,6 +178,14 @@ public class SimplePlanner : MonoBehaviour
     private void VisualizeWaypoint(Vector3 position, Quaternion rotation)
     {
         Instantiate(waypointGameObject, position, rotation, waypointGameObject.transform.parent);
+    }
+
+    private float GetTimeStep(float distance, float speed, int waypoints)
+    {
+        float time = distance / speed;
+        float timeStep = time / waypoints;
+
+        return timeStep;
     }
 }
 
