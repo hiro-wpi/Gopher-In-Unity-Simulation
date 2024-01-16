@@ -21,8 +21,8 @@ public class SimplePlanner : MonoBehaviour
     private float speed = 0.05f; // Speed of the arm in m/s
     private int waypointDensityPerMeter = 33; // Number of waypoints per meter
 
-    private bool goalReached = false;
-    private bool motionInProgress = false;
+    public bool goalReached = false;
+    public bool motionInProgress = false;
 
     private bool debug = false;
 
@@ -32,14 +32,14 @@ public class SimplePlanner : MonoBehaviour
     }    
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Debug.Log("Planning Trajectory");
-            PlanTrajectory(startTF, goalTF);
-        }
+        // if (Input.GetKeyDown(KeyCode.P))
+        // {
+        //     Debug.Log("Planning Trajectory");
+        //     PlanTrajectory(startTF, goalTF);
+        // }
     }
 
-    private void PlanTrajectory(Transform start, Transform goal)
+    public void PlanTrajectory(Transform start, Transform goal)
     {
         if(motionInProgress)
         {
