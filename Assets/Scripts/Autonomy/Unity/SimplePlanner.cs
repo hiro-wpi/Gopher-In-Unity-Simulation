@@ -70,6 +70,10 @@ public class SimplePlanner : MonoBehaviour
             // Debug.Log(currentTimeStep);
         }
 
+        //Account for the last waypoint not being reached
+        jointAngles.Add(jointAngle);
+        timeSteps.Add(GenerateTimeStep(waypointsPositions.Count));
+
         // Convert jointAngles list and timeSteps list to arrays
         float[][] jointAnglesArray = jointAngles.ToArray();
         float[] timeStepsArray = timeSteps.ToArray();
