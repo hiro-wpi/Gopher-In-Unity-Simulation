@@ -13,25 +13,26 @@ using Unity.Netcode;
 /// </summary>
 public class NetworkInputActions : NetworkBehaviour
 {
-    [SerializeField] private InputActionMap actionMap;
+    [SerializeField] private InputActionAsset inputAction;
 
     public override void OnNetworkSpawn()
     {
-        if (IsOwner)
-        {
-            actionMap.Enable();
-        }
-        else
-        {
-            actionMap.Disable();
-        }
+        // if (IsOwner)
+        // {
+        //     inputAction.Enable();
+        // }
+        // else
+        // {
+        //     inputAction.Disable();
+        // }
     }
 
     void Update()
     { 
-        if (IsOwner && !IsServer)
+        // if (IsOwner && !IsServer)
+        if (!IsServer)
         {
-            SendInputDataServerRpc(SerializeActionMapState());
+            SendInputDataServerRpc(SerializeInputActionsState());
         }
     }
 
@@ -43,10 +44,10 @@ public class NetworkInputActions : NetworkBehaviour
         public bool ReleasedThisFrame;
     }
 
-    private string SerializeActionMapState()
+    private string SerializeInputActionsState()
     {
         var input = new Dictionary<string, object>();
-        foreach (var action in actionMap)
+        foreach (var action in inputAction)
         {
             if (action.type == InputActionType.Button)
             {
@@ -77,7 +78,7 @@ public class NetworkInputActions : NetworkBehaviour
             serializedState
         );
 
-        foreach (var action in actionMap)
+        foreach (var action in inputAction)
         {
             if (state.ContainsKey(action.name))
             {
