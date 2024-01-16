@@ -4,21 +4,27 @@ using UnityEngine;
 
 public class SimplePlanner : MonoBehaviour
 {
-    [SerializeField] private Transform start;
-    [SerializeField] private Transform goal;
+    [SerializeField] private Transform startTF;
+    [SerializeField] private Transform goalTF;
     [SerializeField] private JacobianIK iK;
     [SerializeField] private ArticulationArmController armController;
 
     [SerializeField] private GameObject startGameObject;
     [SerializeField] private GameObject goalGameObject;
-
     [SerializeField] private GameObject waypointGameObject;
+
+    [SerializeField] private GameObject armEE;
 
     private int numWaypoints = 10;
     [SerializeField] private float timeStep; // Time step in seconds
     
     private float speed = 0.05f; // Speed of the arm in m/s
     private int waypointDensityPerMeter = 33; // Number of waypoints per meter
+
+    private bool goalReached = false;
+    private bool motionInProgress = false;
+
+    private bool debug = false;
 
     void Start()
     {
@@ -29,15 +35,24 @@ public class SimplePlanner : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
         {
             Debug.Log("Planning Trajectory");
-            PlanTrajectory();
+            PlanTrajectory(startTF, goalTF);
         }
     }
 
-    private void PlanTrajectory()
+    private void PlanTrajectory(Transform start, Transform goal)
     {
-        // Visualize Start and Goal
-        VisualizeStartAndGoal(start, goal);
+        if(motionInProgress)
+        {
+            Debug.Log("Motion in progress, cannot plan trajectory");
+            return;
+        }
 
+        if(debug)
+        {
+            // Visualize Start and Goal
+            VisualizeStartAndGoal(start, goal);
+        }
+        
         // Collision Check
         if (!CheckForCollisionFreePath(start, goal))
         {
@@ -48,9 +63,7 @@ public class SimplePlanner : MonoBehaviour
         // Calculate time step
         float distance = Vector3.Distance(start.position, goal.position);
         timeStep = GetTimeStep(distance, speed, Mathf.RoundToInt(distance*waypointDensityPerMeter));
-
-        VisualizeWaypoint(start.position, start.rotation);
-
+       
         // Interpolate between Start and Goal (positions and rotations)
         List<Vector3> positions = InterpolatePositions(start.position, goal.position);
         List<Quaternion> rotations = InterpolateRotations(start.rotation, goal.rotation);
@@ -60,12 +73,14 @@ public class SimplePlanner : MonoBehaviour
         List<Vector3> waypointsPositions = GenerateWaypoints(positions);
         List<Quaternion> waypointsRotations = GenerateWaypoints(rotations);
 
-        for (int i = 0; i < waypointsPositions.Count; i++)
+        if(debug)
         {
-            VisualizeWaypoint(waypointsPositions[i], waypointsRotations[i]);
+            for (int i = 0; i < waypointsPositions.Count; i++)
+            {
+                VisualizeWaypoint(waypointsPositions[i], waypointsRotations[i]);
+            }
         }
-
-
+        
         // Initcialize lists to store joint angles and time steps
         List<float[]> jointAngles = new List<float[]>();
         List<float> timeSteps = new List<float>();
@@ -91,15 +106,28 @@ public class SimplePlanner : MonoBehaviour
         }
 
         //Account for the last waypoint not being reached
-        jointAngles.Add(jointAngle);
+        jointAngles.Add(jointAngle); // Last joint angles
         timeSteps.Add(GenerateTimeStep(waypointsPositions.Count));
 
         // Convert jointAngles list and timeSteps list to arrays
         float[][] jointAnglesArray = jointAngles.ToArray();
         float[] timeStepsArray = timeSteps.ToArray();
 
+        // Check if the goal configuration is possible
+        if(!CheckGoalConfiguration(jointAngle, goal))
+        {
+            Debug.Log("Goal Arm Configuration Not Achievable, No Trajectory Sent");
+            return;
+        }
+
         // Call SetJointTrajectory method
+        Debug.Log("Goal Arm Configuration Achievable, sending trajectory to arm controller");
         armController.SetJointTrajectory(timeStepsArray, jointAnglesArray, new float[][] { }, new float[][] { });
+        motionInProgress = true;
+
+        // Check if the goal is reached at the end of the time
+        StartCoroutine(CheckGoalReached(timeStepsArray[timeStepsArray.Length - 1], goal));
+
     }
 
     private bool CheckForCollisionFreePath(Transform start, Transform goal)
@@ -187,5 +215,38 @@ public class SimplePlanner : MonoBehaviour
 
         return timeStep;
     }
+
+    IEnumerator CheckGoalReached(float time, Transform goal)
+    {
+        motionInProgress = true;
+        goalReached = false;
+
+        float timebuffer = 0.2f;
+        yield return new WaitForSeconds(time + timebuffer);
+        // Proper Way for checking if the goal is reached
+            // Use forward kinematics of the robot arm to see if the final pose is reached
+        //Impropper way for checking if the goal is reached
+            // We could also just as easily check the distance between the end effector gameobject tf and the goal
+        
+        motionInProgress = false;
+        float distance = Vector3.Distance(armEE.transform.position, goal.position);
+
+        if (distance < 0.05f)
+        {
+            goalReached = true;
+            Debug.Log("Goal Reached");
+        }
+        else
+        {
+            goalReached = false;
+        }
+        
+    }
+
+    public bool CheckGoalConfiguration(float[] jointAngles, Transform goal)
+    {
+        return iK.CheckGoalReached(jointAngles, goal.position, goal.rotation);
+    }
+
 }
 

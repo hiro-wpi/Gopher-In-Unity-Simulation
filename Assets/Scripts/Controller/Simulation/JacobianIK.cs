@@ -145,4 +145,61 @@ public class JacobianIK : InverseKinematics
         List<float> errorAngles = JacobianTools.Multiply(invJ, errorTarget);
         return errorAngles;
     }
+
+
+    public bool CheckGoalReached(float[] jointAngles, Vector3 targetPosition, Quaternion targetRotation)
+    {
+        // Containers
+        Vector3 eePosition;
+        Quaternion eeRotation;
+        Vector3 positionError;
+        Quaternion rotationError;
+
+        // calculate error between our current 
+        // end effector position and the target position
+        forwardKinematics.SolveFK(jointAngles, updateJacobian: true);
+        (eePosition, eeRotation) = forwardKinematics.GetPose(
+            forwardKinematics.NumJoint
+        );
+
+        positionError = eePosition - targetPosition;
+        rotationError = (
+            eeRotation * Quaternion.Inverse(targetRotation)
+        );
+
+        // Orientation is stored in the jacobian as a scaled rotation axis
+        // Where the axis of rotation is the vector, 
+        // and the angle is the length of the vector (in radians)
+        // So, use ToAngleAxis to get axis and angle
+        rotationError.ToAngleAxis(
+            out float rotationAngle, out Vector3 rotationAxis
+        );
+        // Wrap angle into [-pi, pi]
+        // (not exactly sure why this is necessary)
+        rotationAngle = Mathf.DeltaAngle(0f, rotationAngle);
+        rotationAngle *= Mathf.Deg2Rad;
+
+        // Prevent rotationAxis being NaN crashed the algorithm
+        if (Mathf.Abs(rotationAngle) < 1e-3)
+        {
+            rotationAxis = Vector3.zero;
+        }
+        // Scale the rotation axis by the angle
+        // prioritize the position
+        else
+        {
+            rotationAxis *= rotationAngle;
+        }
+
+        // Check convergence
+        if (positionError.magnitude < positionTolerance
+            && Mathf.Abs(rotationAngle) < rotationTolerance
+        ) {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
