@@ -154,7 +154,7 @@ public class MotionPlanner : MonoBehaviour
         public Node RandomSample()
         {
              // Randomly pass in the goal position or a random point
-            float goalFrequency = 0.5f;
+            float goalFrequency = 0.1f;
             if(Random.Range(0f, 1f) < goalFrequency)
             {
                 // pass in the goal:
