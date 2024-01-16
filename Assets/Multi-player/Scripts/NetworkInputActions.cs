@@ -6,18 +6,41 @@ using UnityEngine.InputSystem;
 using Unity.Netcode;
 
 /// <summary>
-///    Synchronize input actions across network
+///    Synchronize input actions by sending the values to the server
+///    
+///    Notify that the actions are not actually synchronized.
+///    Only the values of the actions are sent to the server.
 /// </summary>
 public class NetworkInputActions : NetworkBehaviour
 {
     [SerializeField] private InputActionMap actionMap;
 
-    private void Update()
+    public override void OnNetworkSpawn()
+    {
+        if (IsOwner)
+        {
+            actionMap.Enable();
+        }
+        else
+        {
+            actionMap.Disable();
+        }
+    }
+
+    void Update()
     { 
         if (IsOwner && !IsServer)
         {
             SendInputDataServerRpc(SerializeActionMapState());
         }
+    }
+
+    [System.Serializable]
+    public struct ButtonInputData
+    {
+        public bool IsPressed;
+        public bool PressedThisFrame;
+        public bool ReleasedThisFrame;
     }
 
     private string SerializeActionMapState()
@@ -27,7 +50,12 @@ public class NetworkInputActions : NetworkBehaviour
         {
             if (action.type == InputActionType.Button)
             {
-                input[action.name] = action.triggered;
+                input[action.name] = new ButtonInputData
+                {
+                    IsPressed = action.IsPressed(),
+                    PressedThisFrame = action.WasPressedThisFrame(),
+                    ReleasedThisFrame = action.WasReleasedThisFrame()
+                };
             }
             else if (action.type == InputActionType.Value)
             {
@@ -53,14 +81,21 @@ public class NetworkInputActions : NetworkBehaviour
         {
             if (state.ContainsKey(action.name))
             {
-                var value = state[action.name];
-                if (action.type == InputActionType.Button && value is bool)
+                Debug.Log(action.name);
+                if (action.type == InputActionType.Button)
                 {
-                    
+                    var buttonData = JsonUtility.FromJson<ButtonInputData>(
+                        state[action.name].ToString()
+                    );
+                    Debug.Log("Button");
+                    Debug.Log(buttonData.IsPressed);
+                    Debug.Log(buttonData.PressedThisFrame);
+                    Debug.Log(buttonData.ReleasedThisFrame);
                 }
                 else if (action.type == InputActionType.Value)
                 {
-                    
+                    Debug.Log("Value");
+                    Debug.Log(state[action.name]);
                 }
             }
         }
