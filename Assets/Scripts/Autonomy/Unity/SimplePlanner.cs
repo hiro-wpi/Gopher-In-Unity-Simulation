@@ -7,13 +7,12 @@ public class SimplePlanner : MonoBehaviour
     [SerializeField] private Transform startTF;
     [SerializeField] private Transform goalTF;
     [SerializeField] private JacobianIK iK;
-    [SerializeField] private ArticulationArmController armController;
-
+    public ArticulationArmController armController;
     [SerializeField] private GameObject startGameObject;
     [SerializeField] private GameObject goalGameObject;
     [SerializeField] private GameObject waypointGameObject;
 
-    [SerializeField] private GameObject armEE;
+    public GameObject armEE;
 
     private int numWaypoints = 10;
     [SerializeField] private float timeStep; // Time step in seconds
@@ -32,11 +31,6 @@ public class SimplePlanner : MonoBehaviour
     }    
     void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.P))
-        // {
-        //     Debug.Log("Planning Trajectory");
-        //     PlanTrajectory(startTF, goalTF);
-        // }
     }
 
     public void PlanTrajectory(Transform start, Transform goal)
@@ -128,6 +122,8 @@ public class SimplePlanner : MonoBehaviour
         // Check if the goal is reached at the end of the time
         StartCoroutine(CheckGoalReached(timeStepsArray[timeStepsArray.Length - 1], goal));
 
+        // // Handle the post action
+        // HandleInstruction(postAction);
     }
 
     private bool CheckForCollisionFreePath(Transform start, Transform goal)
@@ -136,6 +132,8 @@ public class SimplePlanner : MonoBehaviour
         // If there is a collision free path, return true
         // If there is no collision free path, return false
 
+        // ignore collisions with graspable objects
+
         Vector3 direction = goal.position - start.position;
         // Ray ray = new Ray(n.previousNode.position, direction);
         float maxDistance = Vector3.Distance(goal.position, start.position);
@@ -143,8 +141,25 @@ public class SimplePlanner : MonoBehaviour
         if (Physics.Raycast(start.position, direction, out RaycastHit hit, maxDistance))
         {
             // collision detected
+            if (hit.collider.gameObject.CompareTag("GraspableObject"))
+            {
+                Debug.Log("Collision detected with graspable object, ignoring collision");
+                return true;
+            }
+
+            // Robot layer Number
+            int robotLayerNum = 15;
+            
+            // ignoring collision with robot layer
+            if (hit.collider.gameObject.layer == robotLayerNum)
+            {
+                Debug.Log("Collision detected with robot, ignoring collision");
+                return true;
+            }
+
             Debug.Log("Max Distance is " + maxDistance);
             Debug.Log("Collision detected with " + hit.collider.name);
+            Debug.Log("Collision detected with " + hit.collider.gameObject.layer + " type of object");
             Debug.DrawRay(start.position, direction, Color.red, 100f);
             Debug.Log(start.position);
             return false;
@@ -247,6 +262,8 @@ public class SimplePlanner : MonoBehaviour
     {
         return iK.CheckGoalReached(jointAngles, goal.position, goal.rotation);
     }
+
+   
 
 }
 

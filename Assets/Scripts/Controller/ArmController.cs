@@ -132,4 +132,15 @@ public abstract class ArmController : MonoBehaviour
 
     // Get the end effector target pose
     public abstract (Vector3, Quaternion) GetEETargetPose();
+
+    // Open the end effector
+    public void OpenGripper()
+    {
+        SetGripperPosition(0.0f);  // Open the end effector
+    }
+    // Close the end effector
+    public void CloseGripper()
+    {
+        SetGripperPosition(1.0f);  // Close the end effector
+    }
 }
