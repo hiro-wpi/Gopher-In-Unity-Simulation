@@ -4,13 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Unity.Netcode;
+using Unity.Robotics.UrdfImporter;
 
 /// <summary>
 ///    Defines a network robot state that is used to synchronize the robot
 ///    between the server and the clients. (server -> client)
 ///    
-///    Send robot's position, rotation and joints to the server if owner
-///    Adjust robot's position, rotation and joints if not owner
+///    Send robot's position, rotation and joints to the clients
+///    Disable the plugins and colliders on the clients
+///    Disable the camera if not the owner
+///    
+///    Sound is not synchronized yet
 /// </summary>
 public class NetworkRobotState : NetworkBehaviour
 {
@@ -77,7 +81,7 @@ public class NetworkRobotState : NetworkBehaviour
         // and if not in the ToKeep list
         if (!IsServer)
         {
-            // disable scripts
+            // Disable scripts
             foreach (Transform plugin in 
                 plugins.GetComponentsInChildren<Transform>())
             {
@@ -86,6 +90,13 @@ public class NetworkRobotState : NetworkBehaviour
             foreach (GameObject plugin in pluginsToKeep)
             {
                 plugin.SetActive(true);
+            }
+
+            // Disable colliders
+            foreach (var collider in
+                articulationRoot.GetComponentsInChildren<Collider>())
+            {
+                collider.enabled = false;
             }
         }
 
