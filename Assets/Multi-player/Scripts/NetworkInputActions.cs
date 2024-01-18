@@ -3,102 +3,191 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 using Unity.Netcode;
+using Newtonsoft.Json;
+using System.Linq;
+using System;
 
 /// <summary>
 ///    Synchronize input actions by sending the values to the server
 ///    
-///    Notify that the actions are not actually synchronized.
+///    Note that the actions are not actually synchronized.
 ///    Only the values of the actions are sent to the server.
+///    
+///    For the server, the input actions and related values (string)
+///    can be acquired by public function GetInputActionsState().
+///    
+///    Note that the received values are "string" type,
+///    and they are not yet converted to the actual types (they can be "null").
+///    Use public function GetInputActionValueAsType<>() to convert them.
 /// </summary>
 public class NetworkInputActions : NetworkBehaviour
 {
     [SerializeField] private InputActionAsset inputAction;
 
+    private int numActions = 0;
+    private InputAction[] actions = new InputAction[0];
+    private string[] actionValues = new string[0];
+
+    [Serializable]
+    public struct ButtonValue
+    {
+        // Shorten name for network serialization purpose
+        public bool P;  // IsPressed
+        public bool PF;  // WasPressedThisFrame
+        public bool RF;  // WasReleasedThisFrame
+    }
+
+    // Getter for the server
+    public (InputAction[], string[]) GetInputActionsState()
+    {
+        return (actions, actionValues);
+    }
+
+    public T GetInputActionValueAsType<T>(string actionValues)
+    {
+        return JsonConvert.DeserializeObject<T>(actionValues);
+    }
+
     public override void OnNetworkSpawn()
     {
-        // if (IsOwner)
-        // {
-        //     inputAction.Enable();
-        // }
-        // else
-        // {
-        //     inputAction.Disable();
-        // }
+        if (IsOwner)
+        {
+            inputAction.Enable();
+        }
+        else
+        {
+            inputAction.Disable();
+        }
+
+        // This is only needed if 
+        // you are the owner but not the server (send data)
+        // or you are the server but not the owner (receive data)
+        if ((!IsServer && IsOwner) || (IsServer && !IsOwner))
+        {
+            numActions = inputAction.Count<InputAction>();
+            actions = new InputAction[numActions];
+            actionValues = null;
+
+            int i = 0;
+            foreach (var action in inputAction)
+            {
+                actions[i] = action;
+                actionValues[i] = null;
+                i++;
+            }
+        }
+    }
+
+    void Start()
+    {
+        // TODO Testing
+        numActions = inputAction.Count<InputAction>();
+        actions = new InputAction[numActions];
+        actionValues = null;
+
+        int i = 0;
+        foreach (var action in inputAction)
+        {
+            actions[i] = action;
+            actionValues[i] = null;
+            i++;
+        }
     }
 
     void Update()
-    { 
-        // if (IsOwner && !IsServer)
+    {
+        // TODO Testing
         if (!IsServer)
+            SendInputDataServerRpc(SerializeInputActionsState());
+        else
+            Debug.Log(string.Join(";", actionValues));
+
+        // Send data to server
+        if (IsOwner && !IsServer)
         {
             SendInputDataServerRpc(SerializeInputActionsState());
         }
     }
 
-    [System.Serializable]
-    public struct ButtonInputData
-    {
-        public bool IsPressed;
-        public bool PressedThisFrame;
-        public bool ReleasedThisFrame;
-    }
-
     private string SerializeInputActionsState()
     {
-        var input = new Dictionary<string, object>();
+        // Update action values
+        int i = 0;
         foreach (var action in inputAction)
         {
-            if (action.type == InputActionType.Button)
+            actionValues[i] = SerializeInputAction(action);
+            i++;
+        }
+
+        return string.Join(";", actionValues);
+    }
+
+    private string SerializeInputAction(InputAction action)
+    {
+        object actionValue;
+
+        // Button
+        if (action.type == InputActionType.Button)
+        {
+            var buttonValue = new ButtonValue
             {
-                input[action.name] = new ButtonInputData
-                {
-                    IsPressed = action.IsPressed(),
-                    PressedThisFrame = action.WasPressedThisFrame(),
-                    ReleasedThisFrame = action.WasReleasedThisFrame()
-                };
+                P = action.IsPressed(),
+                PF = action.WasPressedThisFrame(),
+                RF = action.WasReleasedThisFrame()
+            };
+
+            // No action in this frame
+            if (!buttonValue.P && !buttonValue.PF && !buttonValue.RF)
+            {
+                actionValue = null;
             }
-            else if (action.type == InputActionType.Value)
+            else
             {
-                input[action.name] = action.ReadValueAsObject();
+                actionValue = buttonValue;
             }
         }
-        return JsonUtility.ToJson(input);
-    }
 
-    [ServerRpc]
-    private void SendInputDataServerRpc(string serializedState)
-    {
-        ProcessInputDataOnServer(serializedState);
-    }
-
-    private void ProcessInputDataOnServer(string serializedState)
-    {
-        var state = JsonUtility.FromJson<Dictionary<string, object>>(
-            serializedState
-        );
-
-        foreach (var action in inputAction)
+        // Value or PassThrough
+        else
         {
-            if (state.ContainsKey(action.name))
+            actionValue = action.ReadValueAsObject();
+        }
+
+        // Serialize the value of the action directly
+        return JsonConvert.SerializeObject(
+            actionValue,
+            // avoid serializing reference loops (Vector2, Vector3, etc.)
+            new JsonSerializerSettings
             {
-                Debug.Log(action.name);
-                if (action.type == InputActionType.Button)
-                {
-                    var buttonData = JsonUtility.FromJson<ButtonInputData>(
-                        state[action.name].ToString()
-                    );
-                    Debug.Log("Button");
-                    Debug.Log(buttonData.IsPressed);
-                    Debug.Log(buttonData.PressedThisFrame);
-                    Debug.Log(buttonData.ReleasedThisFrame);
-                }
-                else if (action.type == InputActionType.Value)
-                {
-                    Debug.Log("Value");
-                    Debug.Log(state[action.name]);
-                }
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             }
+        );
+    }
+
+    // [ServerRpc]
+    // TODO Testing
+    [ServerRpc(RequireOwnership = false)]
+    private void SendInputDataServerRpc(string serializedActionValues)
+    {
+        ProcessInputDataOnServer(serializedActionValues);
+    }
+
+    private void ProcessInputDataOnServer(string serializedActionValues)
+    {
+        // Receive data from client
+        string[] values = serializedActionValues.Split(";");
+        // Validity check
+
+        if (values.Length == numActions)
+        {
+            actionValues = values;
+        }
+        else
+        {
+            Debug.LogError("Invalid number of actions received");
+            return;
         }
     }
 }
