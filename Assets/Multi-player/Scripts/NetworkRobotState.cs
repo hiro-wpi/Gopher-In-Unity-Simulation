@@ -45,10 +45,18 @@ public class NetworkRobotState : NetworkBehaviour
     {
         // Initialization
         InitArticulationBody();
-        ReadRobotStatus();
-
         // Disable plugins depending on the roles
         DisablePlugins();
+
+        // Initialize network variable if is server
+        if (IsServer)
+        {
+            position.Value = articulationRoot.transform.position;
+            rotation.Value = articulationRoot.transform.rotation;
+            jointAngles.Clear();
+        }
+        // visualization array
+        jointAnglesArray = new float[articulationChain.Length];
     }
 
     private void InitArticulationBody()
@@ -159,7 +167,7 @@ public class NetworkRobotState : NetworkBehaviour
             );
 
             // Update joint angles value for visualization
-            jointAnglesArray[i] = articulationChain[i].jointPosition[0];
+            jointAnglesArray[i] = jointAngles[i];
         }
     }
 }
