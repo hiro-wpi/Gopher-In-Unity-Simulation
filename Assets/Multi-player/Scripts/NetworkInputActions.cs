@@ -33,8 +33,8 @@ public class NetworkInputActions : NetworkBehaviour
     {
         // Shorten name for network serialization purpose
         public object V;  // Value
-        public bool PF;  // WasPressedThisFrame
-        public bool RF;  // WasReleasedThisFrame
+        public bool P;  // WasPressedThisFrame
+        public bool R;  // WasReleasedThisFrame
     }
 
     // Getter for the server
@@ -46,7 +46,17 @@ public class NetworkInputActions : NetworkBehaviour
     public (T, bool, bool) GetInputActionValueAsType<T>(string actionValues)
     {
         var value = JsonConvert.DeserializeObject<ActionValue>(actionValues);
-        return ((T)value.V, value.PF, value.RF);
+        if (value.V == null)
+        {
+            return (default(T), value.P, value.R);
+        }
+
+        // Direct casting is somehow not working
+        // var val = (T)value.V;
+        var val = JsonConvert.DeserializeObject<T>(
+            JsonConvert.SerializeObject(value.V)
+        );
+        return (val, value.P, value.R);
     }
 
     public override void OnNetworkSpawn()
@@ -107,12 +117,12 @@ public class NetworkInputActions : NetworkBehaviour
         ActionValue actionValue = new ()
         {
             V = action.ReadValueAsObject(),
-            PF = action.WasPressedThisFrame(),
-            RF = action.WasReleasedThisFrame()
+            P = action.WasPressedThisFrame(),
+            R = action.WasReleasedThisFrame()
         };
 
         // No action in this frame
-        if (actionValue.V == null && !actionValue.PF && !actionValue.RF)
+        if (actionValue.V == null && !actionValue.P && !actionValue.R)
         {
             return "null";
         }
