@@ -6,14 +6,15 @@ using UnityEngine;
 using Unity.Netcode;
 
 /// <summary>
-///    Defines a network robot
+///    Defines a network robot state that is used to synchronize the robot
+///    between the server and the clients. (server -> client)
 ///    
 ///    Send robot's position, rotation and joints to the server if owner
 ///    Adjust robot's position, rotation and joints if not owner
 /// </summary>
-public class NetworkRobot : NetworkBehaviour
+public class NetworkRobotState : NetworkBehaviour
 {
-    // Arictulation scripts under which to disable
+    // Articulation scripts under which to disable
     [SerializeField] private GameObject plugins;
     // Articulation scripts whom should not be disabled
     [SerializeField] private GameObject[] pluginsToKeep;
@@ -25,32 +26,14 @@ public class NetworkRobot : NetworkBehaviour
 
     // Network robot status
     [SerializeField, ReadOnly] 
-    private Vector3 position = Vector3.zero;
+    private NetworkVariable<Vector3> position = 
+        new NetworkVariable<Vector3>(Vector3.zero);
     [SerializeField, ReadOnly] 
-    private Quaternion rotation = Quaternion.identity;
+    private NetworkVariable<Quaternion> rotation = 
+        new NetworkVariable<Quaternion>(Quaternion.identity);
     [SerializeField, ReadOnly] 
-    private float[] jointAngles = new float[0];
-
-    // Network joint angles struct
-    private struct Robot : INetworkSerializable {
-        public Vector3 position;
-        public Quaternion rotation;
-        public float[] jointAngles;
-
-        public void NetworkSerialize<T>(
-            BufferSerializer<T> serializer) where T : IReaderWriter
-        {
-            serializer.SerializeValue(ref position);
-            serializer.SerializeValue(ref rotation);
-            serializer.SerializeValue(ref jointAngles);
-        }
-    }
-    private Robot RobotStruct = new Robot() 
-    {
-        position = Vector3.zero,
-        rotation = Quaternion.identity,
-        jointAngles = new float[0]
-    };
+    private NetworkVariable<float[]> jointAngles = 
+        new NetworkVariable<float[]>(new float[0]);
 
     public override void OnNetworkSpawn()
     {
@@ -58,14 +41,14 @@ public class NetworkRobot : NetworkBehaviour
         InitArticulationBody();
         ReadRobotStatus();
 
-        // Disable plugins if not owner
+        // Disable plugins depending on the roles
         DisablePlugins();
     }
 
     private void InitArticulationBody()
     {
         // Initialize articulation body
-        // get non-fixed joints
+        // get non-fixed joints and non-ignored joints
         articulationChain = articulationRoot.
             GetComponentsInChildren<ArticulationBody>();
         articulationChain = articulationChain.Where(joint => 
@@ -76,9 +59,9 @@ public class NetworkRobot : NetworkBehaviour
 
     private void DisablePlugins()
     {
-        // Disable game object if not the owner and
-        // if not in the ToKeep list
-        if (!IsOwner)
+        // Disable game object control if not the server
+        // and if not in the ToKeep list
+        if (!IsServer)
         {
             // disable scripts
             foreach (Transform plugin in 
@@ -90,7 +73,11 @@ public class NetworkRobot : NetworkBehaviour
             {
                 plugin.SetActive(true);
             }
+        }
 
+        // Disable camera if not the owner
+        if (!IsOwner)
+        {
             // disable cameras
             foreach(var camera in GetComponentsInChildren<Camera>())
             {
@@ -101,19 +88,13 @@ public class NetworkRobot : NetworkBehaviour
 
     void FixedUpdate()
     {
-        // Owner, update joint angles
-        if (IsOwner)
+        // Server, update joint angles
+        if (IsServer)
         {
             // read joint angles from articulation body
             ReadRobotStatus();
-
-            // sync
-            RobotStruct.position = position;
-            RobotStruct.rotation = rotation;
-            RobotStruct.jointAngles = jointAngles;
-            UpdateRobotServerRpc(RobotStruct);
         }
-        // Non-owner, update the robot joints based on the value
+        // Non-server, update the robot joints based on the value
         else
         {
             // move robot
@@ -125,33 +106,33 @@ public class NetworkRobot : NetworkBehaviour
 
     private void ReadRobotStatus()
     {
-        position = articulationRoot.transform.position;
-        rotation = articulationRoot.transform.rotation;
+        position.Value = articulationRoot.transform.position;
+        rotation.Value = articulationRoot.transform.rotation;
 
-        jointAngles = new float[articulationChain.Length];
+        jointAngles.Value = new float[articulationChain.Length];
         for (int i = 0; i < articulationChain.Length; ++i)
         {
-            jointAngles[i] = articulationChain[i].jointPosition[0];
+            jointAngles.Value[i] = articulationChain[i].jointPosition[0];
         }
     }
 
     private void TeleportRobot()
     {
         // No need to teleport
-        if (articulationRoot.transform.position == position
-            && articulationRoot.transform.rotation == rotation)
+        if (articulationRoot.transform.position == position.Value
+            && articulationRoot.transform.rotation == rotation.Value)
         {
             return;
         }
 
         // Teleport robot
         var root = articulationRoot.GetComponent<ArticulationBody>();
-        root.TeleportRoot(position, rotation);
+        root.TeleportRoot(position.Value, rotation.Value);
     }
 
     private void SetJointAngles()
     {
-        if (jointAngles.Length != articulationChain.Length)
+        if (jointAngles.Value.Length != articulationChain.Length)
         {
             return;
         }
@@ -162,36 +143,11 @@ public class NetworkRobot : NetworkBehaviour
             float target = (
                 articulationChain[i].jointType 
                 == ArticulationJointType.RevoluteJoint
-            ) ? jointAngles[i] * Mathf.Rad2Deg : jointAngles[i];
+            ) ? jointAngles.Value[i] * Mathf.Rad2Deg : jointAngles.Value[i];
 
             ArticulationBodyUtils.SetJointTarget(
                 articulationChain[i], target
             );
-        }
-    }
-
-    [ServerRpc]
-    private void UpdateRobotServerRpc(Robot robot)
-    {
-        // Update server side
-        if (!IsOwner)
-        {
-            position = robot.position;
-            rotation = robot.rotation;
-            jointAngles = robot.jointAngles;
-        }
-        // Update client side
-        UpdateRobotClientRpc(robot);
-    }
-
-    [ClientRpc]
-    private void UpdateRobotClientRpc(Robot robot)
-    {
-        if (!IsOwner)
-        {
-            position = robot.position;
-            rotation = robot.rotation;
-            jointAngles = robot.jointAngles;
         }
     }
 }

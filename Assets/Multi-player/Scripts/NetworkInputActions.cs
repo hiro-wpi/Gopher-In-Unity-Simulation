@@ -2,12 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using System.Linq;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Controls;
 using Unity.Netcode;
 using Newtonsoft.Json;
-using System.Linq;
-using System;
 
 /// <summary>
 ///    Synchronize input actions by sending the values to the server
@@ -30,7 +28,7 @@ public class NetworkInputActions : NetworkBehaviour
     private InputAction[] actions = new InputAction[0];
     private string[] actionValues = new string[0];
 
-    [Serializable]
+    [System.Serializable]
     public struct ButtonValue
     {
         // Shorten name for network serialization purpose
@@ -52,6 +50,7 @@ public class NetworkInputActions : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        // Enable input actions only for the owner
         if (IsOwner)
         {
             inputAction.Enable();
@@ -80,30 +79,8 @@ public class NetworkInputActions : NetworkBehaviour
         }
     }
 
-    void Start()
-    {
-        // TODO Testing
-        numActions = inputAction.Count<InputAction>();
-        actions = new InputAction[numActions];
-        actionValues = new string[numActions];
-
-        int i = 0;
-        foreach (var action in inputAction)
-        {
-            actions[i] = action;
-            actionValues[i] = null;
-            i++;
-        }
-    }
-
     void Update()
     {
-        // TODO Testing
-        if (!IsServer)
-            SendInputDataServerRpc(SerializeInputActionsState());
-        else
-            Debug.Log(string.Join(";", actionValues));
-
         // Send data to server
         if (IsOwner && !IsServer)
         {
@@ -166,9 +143,7 @@ public class NetworkInputActions : NetworkBehaviour
         );
     }
 
-    // [ServerRpc]
-    // TODO Testing
-    [ServerRpc(RequireOwnership = false)]
+    [ServerRpc]
     private void SendInputDataServerRpc(string serializedActionValues)
     {
         ProcessInputDataOnServer(serializedActionValues);

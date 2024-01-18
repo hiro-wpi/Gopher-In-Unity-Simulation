@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5827363592226267416}
   - component: {fileID: 5827363592226267423}
   - component: {fileID: 5827363592226267422}
+  - component: {fileID: 5565056600735602601}
   m_Layer: 0
   m_Name: Network Gopher
   m_TagString: Untagged
@@ -77,9 +78,25 @@ MonoBehaviour:
   articulationBodyToIgnore:
   - {fileID: 6422038745896527635}
   - {fileID: 6422038746804707757}
-  position: {x: 0, y: 0, z: 0}
-  rotation: {x: 0, y: 0, z: 0, w: 0}
-  jointAngles: []
+  position:
+    m_InternalValue: {x: 0, y: 0, z: 0}
+  rotation:
+    m_InternalValue: {x: 0, y: 0, z: 0, w: 1}
+  jointAngles:
+    m_InternalValue: []
+--- !u!114 &5565056600735602601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5827363592226267417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b21c47e83bfed749b03ac352db661ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputAction: {fileID: -944628639613478452, guid: 26dc812e62483b6c0bc7fb8c7bb2026d, type: 3}
 --- !u!1001 &5827363591828013286
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -87,6 +104,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5827363592226267416}
     m_Modifications:
+    - target: {fileID: 1384429321, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 192113879969002847, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
       propertyPath: m_ParentAnchorPosition.y
       value: 0.014999986
@@ -954,6 +975,10 @@ PrefabInstance:
     - target: {fileID: 7143722300298670626, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
       propertyPath: m_ParentAnchorRotation.z
       value: -0.7071043
+      objectReference: {fileID: 0}
+    - target: {fileID: 7271146723349179145, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8069837071853804557, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
       propertyPath: m_ParentAnchorPosition.z
