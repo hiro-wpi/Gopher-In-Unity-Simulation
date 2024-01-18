@@ -173,6 +173,10 @@ public class NetworkRobotState : NetworkBehaviour
                 == ArticulationJointType.RevoluteJoint
             ) ? jointAngles[i] * Mathf.Rad2Deg : jointAngles[i];
 
+            // Smoothly move the joint to the target
+            target = Mathf.Lerp(
+                articulationChain[i].jointPosition[0], target, 0.1f
+            );
             ArticulationBodyUtils.SetJointTarget(
                 articulationChain[i], target
             );
