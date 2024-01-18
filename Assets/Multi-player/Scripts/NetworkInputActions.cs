@@ -29,10 +29,10 @@ public class NetworkInputActions : NetworkBehaviour
     private string[] actionValues = new string[0];
 
     [System.Serializable]
-    public struct ButtonValue
+    public struct ActionValue
     {
         // Shorten name for network serialization purpose
-        public bool P;  // IsPressed
+        public object V;  // Value
         public bool PF;  // WasPressedThisFrame
         public bool RF;  // WasReleasedThisFrame
     }
@@ -43,9 +43,10 @@ public class NetworkInputActions : NetworkBehaviour
         return (actions, actionValues);
     }
 
-    public T GetInputActionValueAsType<T>(string actionValues)
+    public (T, bool, bool) GetInputActionValueAsType<T>(string actionValues)
     {
-        return JsonConvert.DeserializeObject<T>(actionValues);
+        var value = JsonConvert.DeserializeObject<ActionValue>(actionValues);
+        return ((T)value.V, value.PF, value.RF);
     }
 
     public override void OnNetworkSpawn()
@@ -103,33 +104,17 @@ public class NetworkInputActions : NetworkBehaviour
 
     private string SerializeInputAction(InputAction action)
     {
-        object actionValue;
-
-        // Button
-        if (action.type == InputActionType.Button)
+        ActionValue actionValue = new ()
         {
-            var buttonValue = new ButtonValue
-            {
-                P = action.IsPressed(),
-                PF = action.WasPressedThisFrame(),
-                RF = action.WasReleasedThisFrame()
-            };
+            V = action.ReadValueAsObject(),
+            PF = action.WasPressedThisFrame(),
+            RF = action.WasReleasedThisFrame()
+        };
 
-            // No action in this frame
-            if (!buttonValue.P && !buttonValue.PF && !buttonValue.RF)
-            {
-                actionValue = null;
-            }
-            else
-            {
-                actionValue = buttonValue;
-            }
-        }
-
-        // Value or PassThrough
-        else
+        // No action in this frame
+        if (actionValue.V == null && !actionValue.PF && !actionValue.RF)
         {
-            actionValue = action.ReadValueAsObject();
+            return "null";
         }
 
         // Serialize the value of the action directly

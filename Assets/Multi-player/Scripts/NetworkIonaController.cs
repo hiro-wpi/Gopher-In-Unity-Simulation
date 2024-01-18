@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 /// <summary>
 ///    
@@ -49,7 +48,7 @@ public class NetworkIonaController : NetworkBehaviour
 
             if (actions[i].name == "BaseMove")
             {
-                var value = ReadValue<Vector2>(actionValues[i]);
+                var (value, PF, RF) = ReadValue<Vector2>(actionValues[i]);
                 var linearVelocity = new Vector3(0f, 0f, value.y);
                 var angularVelocity = new Vector3(0f, -value.x, 0f);
                 baseController.SetVelocity(linearVelocity, angularVelocity);
@@ -57,8 +56,8 @@ public class NetworkIonaController : NetworkBehaviour
 
             else if (actions[i].name == "LeftArmHome")
             {
-                var value = ReadButton(actionValues[i]);
-                if (value.PF)
+                var (value, PF, RF) = ReadValue<bool>(actionValues[i]);
+                if (PF)
                 {
                     leftArmController.HomeJoints();
                 }
@@ -66,8 +65,8 @@ public class NetworkIonaController : NetworkBehaviour
 
             else if (actions[i].name == "LeftArmPreset")
             {
-                var value = ReadButton(actionValues[i]);
-                if (value.PF)
+                var (value, PF, RF) = ReadValue<bool>(actionValues[i]);
+                if (PF)
                 {
                     leftArmController.MoveToPreset(0);
                 }
@@ -75,7 +74,7 @@ public class NetworkIonaController : NetworkBehaviour
 
             else if (actions[i].name == "LeftArmMove")
             {
-                var value = ReadValue<Vector3>(actionValues[i]);
+                var (value, PF, RF) = ReadValue<Vector3>(actionValues[i]);
                 if(leftControlMode == ArmControlMode.translation)
                 {
                     leftArmController.SetLinearVelocity(value);
@@ -91,8 +90,8 @@ public class NetworkIonaController : NetworkBehaviour
 
             else if (actions[i].name == "LeftArmGrasp")
             {
-                var value = ReadButton(actionValues[i]);
-                if (value.PF)
+                var (value, PF, RF) = ReadValue<bool>(actionValues[i]);
+                if (PF)
                 {
                     leftArmController.ChangeGripperStatus();
                 }
@@ -100,8 +99,8 @@ public class NetworkIonaController : NetworkBehaviour
 
             else if (actions[i].name == "LeftArmSwitch")
             {
-                var value = ReadButton(actionValues[i]);
-                if (value.PF)
+                var (value, PF, RF) = ReadValue<bool>(actionValues[i]);
+                if (PF)
                 {
                     if(leftControlMode == ArmControlMode.translation)
                     {
@@ -116,8 +115,8 @@ public class NetworkIonaController : NetworkBehaviour
 
             else if (actions[i].name == "RightArmHome")
             {
-                var value = ReadButton(actionValues[i]);
-                if (value.PF)
+                var (value, PF, RF) = ReadValue<bool>(actionValues[i]);
+                if (PF)
                 {
                     rightArmController.HomeJoints();
                 }
@@ -125,8 +124,8 @@ public class NetworkIonaController : NetworkBehaviour
 
             else if (actions[i].name == "RightArmPreset")
             {
-                var value = ReadButton(actionValues[i]);
-                if (value.PF)
+                var (value, PF, RF) = ReadValue<bool>(actionValues[i]);
+                if (PF)
                 {
                     rightArmController.MoveToPreset(0);
                 }
@@ -134,7 +133,7 @@ public class NetworkIonaController : NetworkBehaviour
 
             else if (actions[i].name == "RightArmMove")
             {
-                var value = ReadValue<Vector3>(actionValues[i]);
+                var (value, PF, RF) = ReadValue<Vector3>(actionValues[i]);
                 if(rightControlMode == ArmControlMode.translation)
                 {
                     rightArmController.SetLinearVelocity(value);
@@ -150,8 +149,8 @@ public class NetworkIonaController : NetworkBehaviour
 
             else if (actions[i].name == "RightArmGrasp")
             {
-                var value = ReadButton(actionValues[i]);
-                if (value.PF)
+                var (value, PF, RF) = ReadValue<bool>(actionValues[i]);
+                if (PF)
                 {
                     rightArmController.ChangeGripperStatus();
                 }
@@ -159,8 +158,8 @@ public class NetworkIonaController : NetworkBehaviour
 
             else if (actions[i].name == "RightArmSwitch")
             {
-                var value = ReadButton(actionValues[i]);
-                if (value.PF)
+                var (value, PF, RF) = ReadValue<bool>(actionValues[i]);
+                if (PF)
                 {
                     if(rightControlMode == ArmControlMode.translation)
                     {
@@ -175,8 +174,8 @@ public class NetworkIonaController : NetworkBehaviour
 
             else if (actions[i].name == "CameraToggle")
             {
-                var value = ReadButton(actionValues[i]);
-                if (value.PF)
+                var (value, PF, RF) = ReadValue<bool>(actionValues[i]);
+                if (PF)
                 {
                     isCameraActive = !isCameraActive;
                     if (!isCameraActive)
@@ -193,15 +192,15 @@ public class NetworkIonaController : NetworkBehaviour
                     continue;
                 }
 
-                var value = ReadValue<Vector2>(actionValues[i]);
+                var (value, PF, RF) = ReadValue<Vector2>(actionValues[i]);
                 var velocity = new Vector3(0.0f, -value.x, value.y);
                 cameraController.SetVelocity(velocity);
             }
 
             else if (actions[i].name == "CameraHome")
             {
-                var value = ReadButton(actionValues[i]);
-                if (value.PF)
+                var (value, PF, RF) = ReadValue<bool>(actionValues[i]);
+                if (PF)
                 {
                     cameraController.HomeCamera();
                 }
@@ -209,23 +208,19 @@ public class NetworkIonaController : NetworkBehaviour
 
             else if (actions[i].name == "ChestTranslate")
             {
-                var value = ReadValue<float>(actionValues[i]);
+                var (value, PF, RF) = ReadValue<float>(actionValues[i]);
                 chestController.SetSpeedFraction(value);
             }
         }
     }
 
     // Helper function
-    private T ReadValue<T>(string actionValue)
+    private (T, bool, bool) ReadValue<T>(string actionValue)
     {
-        return inputActions.
-            GetInputActionValueAsType<T>(
-                actionValue
-            );
-    }
-
-    private NetworkInputActions.ButtonValue ReadButton(string actionValue)
-    {
-        return ReadValue<NetworkInputActions.ButtonValue>(actionValue);
+        // Value, WasPressedThisFrame, WasReleasedThisFrame
+        var (value, PF, RF) = inputActions.GetInputActionValueAsType<T>(
+            actionValue
+        );
+        return (value, PF, RF);
     }
 }
