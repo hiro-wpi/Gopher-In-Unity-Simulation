@@ -68,7 +68,7 @@ public class NetworkInputActions : NetworkBehaviour
         {
             numActions = inputAction.Count<InputAction>();
             actions = new InputAction[numActions];
-            actionValues = null;
+            actionValues = new string[numActions];
 
             int i = 0;
             foreach (var action in inputAction)
@@ -85,7 +85,7 @@ public class NetworkInputActions : NetworkBehaviour
         // TODO Testing
         numActions = inputAction.Count<InputAction>();
         actions = new InputAction[numActions];
-        actionValues = null;
+        actionValues = new string[numActions];
 
         int i = 0;
         foreach (var action in inputAction)
