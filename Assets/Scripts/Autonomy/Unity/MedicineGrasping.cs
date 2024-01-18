@@ -85,6 +85,8 @@ public class MedicineGrasping : MonoBehaviour
 
             HandleInstruction(instructions[i]);
 
+            yield return new WaitForSeconds(0.2f);
+
             if(planner.goalReached == false)
             {
                 Debug.Log("Goal not reached, exiting");

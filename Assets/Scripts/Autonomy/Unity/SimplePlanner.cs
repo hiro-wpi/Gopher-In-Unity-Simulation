@@ -244,7 +244,7 @@ public class SimplePlanner : MonoBehaviour
         motionInProgress = true;
         goalReached = false;
 
-        float timebuffer = 0.2f;
+        float timebuffer = 0.05f;
         yield return new WaitForSeconds(time + timebuffer);
         // Proper Way for checking if the goal is reached
             // Use forward kinematics of the robot arm to see if the final pose is reached
