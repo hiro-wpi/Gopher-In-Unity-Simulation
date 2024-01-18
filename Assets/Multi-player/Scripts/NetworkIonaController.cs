@@ -37,10 +37,16 @@ public class NetworkIonaController : NetworkBehaviour
 
     void Update()
     {
-        var (actions, actionValues) = inputActions.GetInputActionsState();
+        // New data not ready yet
+        if (!inputActions.DataReceived)
+        {
+            return;
+        }
 
-        Debug.Log(string.Join(";", actionValues));
-        
+        // Get the input actions and values
+        var (actions, actionValues) = inputActions.GetInputActionsState();
+        inputActions.DataReceived = false;
+
         for (int i = 0; i < actions.Length; i++)
         {
             if (actionValues[i] == "Null" || actionValues[i] == null)
@@ -93,6 +99,7 @@ public class NetworkIonaController : NetworkBehaviour
             else if (actions[i].name == "LeftArmGrasp")
             {
                 var (value, P, R) = ReadValue<bool>(actionValues[i]);
+                Debug.Log(P.ToString() + R.ToString());
                 if (P)
                 {
                     leftArmController.ChangeGripperStatus();

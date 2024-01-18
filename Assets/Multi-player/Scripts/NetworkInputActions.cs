@@ -23,6 +23,9 @@ using Newtonsoft.Json;
 public class NetworkInputActions : NetworkBehaviour
 {
     [SerializeField] private InputActionAsset inputAction;
+    // For server to track if data is received
+    [field: SerializeField, ReadOnly]
+    public bool DataReceived { get; set; } = false;
 
     private int numActions = 0;
     private InputAction[] actions = new InputAction[0];
@@ -145,6 +148,7 @@ public class NetworkInputActions : NetworkBehaviour
         Debug.Log(serializedActionValues);
 
         ProcessInputDataOnServer(serializedActionValues);
+        DataReceived = true;
     }
 
     private void ProcessInputDataOnServer(string serializedActionValues)
