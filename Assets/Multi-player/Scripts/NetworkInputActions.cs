@@ -17,7 +17,7 @@ using Newtonsoft.Json;
 ///    can be acquired by public function GetInputActionsState().
 ///    
 ///    Note that the received values are "string" type,
-///    and they are not yet converted to the actual types (they can be "null").
+///    and they are not yet converted to the actual types (they can be "Null").
 ///    Use public function GetInputActionValueAsType<>() to convert them.
 /// </summary>
 public class NetworkInputActions : NetworkBehaviour
@@ -108,7 +108,8 @@ public class NetworkInputActions : NetworkBehaviour
             actionValues[i] = SerializeInputAction(action);
             i++;
         }
-
+        
+        Debug.Log(string.Join(";", actionValues));
         return string.Join(";", actionValues);
     }
 
@@ -124,7 +125,7 @@ public class NetworkInputActions : NetworkBehaviour
         // No action in this frame
         if (actionValue.V == null && !actionValue.P && !actionValue.R)
         {
-            return "null";
+            return "Null";
         }
 
         // Serialize the value of the action directly
@@ -141,6 +142,8 @@ public class NetworkInputActions : NetworkBehaviour
     [ServerRpc]
     private void SendInputDataServerRpc(string serializedActionValues)
     {
+        Debug.Log(serializedActionValues);
+
         ProcessInputDataOnServer(serializedActionValues);
     }
 

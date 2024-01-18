@@ -38,10 +38,12 @@ public class NetworkIonaController : NetworkBehaviour
     void Update()
     {
         var (actions, actionValues) = inputActions.GetInputActionsState();
+
+        Debug.Log(string.Join(";", actionValues));
         
         for (int i = 0; i < actions.Length; i++)
         {
-            if (actionValues[i] == "null")
+            if (actionValues[i] == "Null" || actionValues[i] == null)
             {
                 continue;
             }
