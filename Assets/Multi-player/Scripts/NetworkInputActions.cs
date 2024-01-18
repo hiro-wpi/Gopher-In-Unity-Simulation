@@ -161,7 +161,7 @@ public class NetworkInputActions : NetworkBehaviour
         }
         else
         {
-            Debug.LogError("Invalid number of actions received");
+            Debug.Log("Invalid number of actions received");
             return;
         }
     }

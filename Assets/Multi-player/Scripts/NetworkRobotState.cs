@@ -31,9 +31,15 @@ public class NetworkRobotState : NetworkBehaviour
     [SerializeField, ReadOnly] 
     private NetworkVariable<Quaternion> rotation = 
         new NetworkVariable<Quaternion>(Quaternion.identity);
-    [SerializeField, ReadOnly] 
-    private NetworkVariable<float[]> jointAngles = 
-        new NetworkVariable<float[]>(new float[0]);
+    [SerializeField, ReadOnly]
+    private NetworkList<float> jointAngles;
+    [SerializeField, ReadOnly]  // for visualization
+    private float[] jointAnglesArray = new float[0];
+
+    void Awake()
+    {
+        jointAngles = new NetworkList<float>(new List<float>());
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -108,11 +114,13 @@ public class NetworkRobotState : NetworkBehaviour
     {
         position.Value = articulationRoot.transform.position;
         rotation.Value = articulationRoot.transform.rotation;
+        jointAngles.Clear();
+        jointAnglesArray = new float[articulationChain.Length];
 
-        jointAngles.Value = new float[articulationChain.Length];
         for (int i = 0; i < articulationChain.Length; ++i)
         {
-            jointAngles.Value[i] = articulationChain[i].jointPosition[0];
+            jointAngles.Add(articulationChain[i].jointPosition[0]);
+            jointAnglesArray[i] = articulationChain[i].jointPosition[0];
         }
     }
 
@@ -132,8 +140,9 @@ public class NetworkRobotState : NetworkBehaviour
 
     private void SetJointAngles()
     {
-        if (jointAngles.Value.Length != articulationChain.Length)
+        if (jointAngles.Count != articulationChain.Length)
         {
+            // Debug.Log("Joint angles count does not match");
             return;
         }
 
@@ -143,11 +152,14 @@ public class NetworkRobotState : NetworkBehaviour
             float target = (
                 articulationChain[i].jointType 
                 == ArticulationJointType.RevoluteJoint
-            ) ? jointAngles.Value[i] * Mathf.Rad2Deg : jointAngles.Value[i];
+            ) ? jointAngles[i] * Mathf.Rad2Deg : jointAngles[i];
 
             ArticulationBodyUtils.SetJointTarget(
                 articulationChain[i], target
             );
+
+            // Update joint angles value for visualization
+            jointAnglesArray[i] = articulationChain[i].jointPosition[0];
         }
     }
 }
