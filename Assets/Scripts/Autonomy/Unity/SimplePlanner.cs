@@ -25,6 +25,8 @@ public class SimplePlanner : MonoBehaviour
 
     private bool debug = false;
 
+    [SerializeField] private 
+
     void Start()
     {
         // armController.SetJointTargets(new float[] { 0, 0, 0, 0, 0, 0, 0 });
@@ -53,6 +55,9 @@ public class SimplePlanner : MonoBehaviour
             Debug.Log("Collision Detected, No Path Found");
             return;
         }
+
+        // Saving a instance of the goal position
+        Vector3 goalPosition = goal.position;
 
         // Calculate time step
         float distance = Vector3.Distance(start.position, goal.position);
@@ -120,7 +125,10 @@ public class SimplePlanner : MonoBehaviour
         motionInProgress = true;
 
         // Check if the goal is reached at the end of the time
-        StartCoroutine(CheckGoalReached(timeStepsArray[timeStepsArray.Length - 1], goal));
+        // Debug.Log(timeStepsArray[timeStepsArray.Length - 1]);
+        // Debug.Log(timeStepsArray.Length - 1);
+        // Debug.Log(timeStepsArray[timeStepsArray.Length - 1]);
+        StartCoroutine(CheckGoalReached(timeStepsArray[timeStepsArray.Length - 1], goalPosition));
 
         // // Handle the post action
         // HandleInstruction(postAction);
@@ -231,7 +239,7 @@ public class SimplePlanner : MonoBehaviour
         return timeStep;
     }
 
-    IEnumerator CheckGoalReached(float time, Transform goal)
+    IEnumerator CheckGoalReached(float time, Vector3 goal)
     {
         motionInProgress = true;
         goalReached = false;
@@ -244,7 +252,7 @@ public class SimplePlanner : MonoBehaviour
             // We could also just as easily check the distance between the end effector gameobject tf and the goal
         
         motionInProgress = false;
-        float distance = Vector3.Distance(armEE.transform.position, goal.position);
+        float distance = Vector3.Distance(armEE.transform.position, goal);
 
         if (distance < 0.05f)
         {
