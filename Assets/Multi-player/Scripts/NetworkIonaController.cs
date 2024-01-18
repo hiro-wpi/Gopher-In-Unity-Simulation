@@ -30,7 +30,7 @@ public class NetworkIonaController : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         // Only non-owner server needs this to control the robot
-        if (IsServer && !IsOwner)
+        if (!IsServer || IsOwner)
         {
             this.enabled = false;
         }
@@ -42,7 +42,7 @@ public class NetworkIonaController : NetworkBehaviour
         
         for (int i = 0; i < actions.Length; i++)
         {
-            if (actionValues[i] == null)
+            if (actionValues[i] == "null")
             {
                 continue;
             }
