@@ -30,9 +30,8 @@ public class MedicineGrasping : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
         {
             Debug.Log("Planning And Executing Trajectory");
-            // PlanTrajectory(startTF, goalTF);
             SetUpWaypoints();
-            StartCoroutine(WaitForMotionToComplete());
+            StartCoroutine(StartAndWaitForMotionToComplete());
         }
         
     }
@@ -40,16 +39,14 @@ public class MedicineGrasping : MonoBehaviour
     // Given our medicine containters and the medince we want to grasp, we need to figure out the waypoints
     public void SetUpWaypoints()
     {
-        foreach(GameObject graspableObject in graspableObjects)
+
+        for(int i = 0; i < graspableObjects.Count; i++)
         {
             // Handle picking up medicine
 
-            Vector3 graspablePosition = graspableObject.transform.position;
-            Vector3 hoverSpotPosition = graspableObject.transform.Find("hoverspot").gameObject.transform.position;
+            Vector3 graspablePosition = graspableObjects[i].transform.position;
+            Vector3 hoverSpotPosition = graspableObjects[i].transform.Find("hoverspot").gameObject.transform.position;
 
-            // waypoints.Add(hoverSpotPosition);
-            // waypoints.Add(graspablePosition);
-            // waypoints.Add(hoverSpotPosition);
             positionWaypoints.Add(hoverSpotPosition);
             positionWaypoints.Add(graspablePosition);
             positionWaypoints.Add(hoverSpotPosition);
@@ -61,16 +58,15 @@ public class MedicineGrasping : MonoBehaviour
 
             // Handle dropping medicine
 
-            Vector3 hoverSpotMedPosition = medicineContainers[0].transform.Find("hoverspot").gameObject.transform.position;
+            Vector3 hoverSpotMedPosition = medicineContainers[i].transform.Find("hoverspot").gameObject.transform.position;
 
-            // waypoints.Add(hoverSpotMedPosition);
             positionWaypoints.Add(hoverSpotMedPosition);
             instructions.Add(2);
 
         }
     }
 
-    IEnumerator WaitForMotionToComplete()
+    IEnumerator StartAndWaitForMotionToComplete()
     {
         // Grab the robot ee position
         Quaternion robotEERotation = planner.armEE.transform.rotation;
@@ -94,10 +90,12 @@ public class MedicineGrasping : MonoBehaviour
             yield return new WaitUntil(() => planner.motionInProgress == false);
 
             // Debug.Log("End Motion");
+            // yield return new WaitForSeconds(1f);
 
             HandleInstruction(instructions[i]);
 
-            yield return new WaitForSeconds(0.2f);
+            // Wait for the robot to finish the action of open or closing the gripper
+            yield return new WaitForSeconds(0.5f);
 
             if(planner.goalReached == false)
             {
