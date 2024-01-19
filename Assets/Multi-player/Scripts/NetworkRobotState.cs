@@ -5,6 +5,7 @@ using UnityEngine;
 
 using Unity.Netcode;
 using Unity.Robotics.UrdfImporter;
+using System;
 
 /// <summary>
 ///    Defines a network robot state that is used to synchronize the robot
@@ -100,6 +101,12 @@ public class NetworkRobotState : NetworkBehaviour
                 plugin.SetActive(true);
             }
 
+            // Disable gravity
+            foreach (var body in 
+                articulationRoot.GetComponentsInChildren<ArticulationBody>())
+            {
+                body.useGravity = false;
+            }
             // Disable colliders
             foreach (var collider in
                 articulationRoot.GetComponentsInChildren<Collider>())
@@ -175,19 +182,20 @@ public class NetworkRobotState : NetworkBehaviour
 
         for (int i = 0; i < articulationChain.Length; ++i)
         {
-            // If joint is revolute, convert to degree
-            float target = (
-                articulationChain[i].jointType 
-                == ArticulationJointType.RevoluteJoint
-            ) ? jointList[i] * Mathf.Rad2Deg : jointList[i];
-
             // Smoothly move the joint to the target
-            target = Mathf.SmoothDamp(
+            float target = Mathf.SmoothDamp(
                 articulationChain[i].jointPosition[0],
-                target,
-                ref smoothVelocities[i], 
+                jointList[i],
+                ref smoothVelocities[i],
                 0.1f
             );
+
+            // If joint is revolute, convert to degree
+            if (articulationChain[i].jointType 
+                == ArticulationJointType.RevoluteJoint)
+            {
+                target *= Mathf.Rad2Deg;
+            }
             ArticulationBodyUtils.SetJointTarget(
                 articulationChain[i], target
             );
