@@ -167,14 +167,16 @@ public class ArticulationJointController : MonoBehaviour
         // where each element represents the target positions at each Time.fixedDeltaTime
         targetPositions = new List<float[]>();
 
-        // For each waypoint/timestep
-        for (int i = 0; i < timeSteps.Length; i++)
+        // For each waypoint/timestep (starting at 1)
+        float prevTime = 0;
+        for (int i = 1; i < timeSteps.Length; i++)
         {
             // For each time frame in this timestep
-            float prevTime = i == 0 ? 0 : timeSteps[i - 1];
+            prevTime = timeSteps[i - 1];
             int frames = Mathf.RoundToInt((timeSteps[i] - prevTime) / Time.fixedDeltaTime);
             for (int frame = 0; frame < frames; frame++)
             {
+
                 // For each joint in this time frame
                 float[] positions = new float[articulationChain.Length];
                 for (int joint = 0; joint < articulationChain.Length; joint++)
@@ -187,7 +189,7 @@ public class ArticulationJointController : MonoBehaviour
                         // + speeds[i][joint] * t 
                         // + 0.5f * accelerations[i][joint] * t * t : 
                         // Only target is given, use linear interpolation
-                        Mathf.Lerp(targets[i == 0 ? 0 : i - 1][joint], targets[i][joint], t);
+                        Mathf.Lerp(targets[i - 1][joint], targets[i][joint], t);
                 }
 
                 // Add the target positions to the list

@@ -105,8 +105,8 @@ public class SimplePlanner : MonoBehaviour
         }
 
         //Account for the last waypoint not being reached
-        jointAngles.Add(jointAngle); // Last joint angles
-        timeSteps.Add(GenerateTimeStep(waypointsPositions.Count));
+        // jointAngles.Add(jointAngle); // Last joint angles
+        // timeSteps.Add(GenerateTimeStep(waypointsPositions.Count));
 
         // Convert jointAngles list and timeSteps list to arrays
         float[][] jointAnglesArray = jointAngles.ToArray();
