@@ -2708,6 +2708,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube Blue (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3741810250894286021, guid: 1ed1935304f1435418f72e7f6fc8bf91, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3741810250894286041, guid: 1ed1935304f1435418f72e7f6fc8bf91, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 2483492280
@@ -12641,6 +12645,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1891974434}
     m_Modifications:
+    - target: {fileID: 1466310802089348012, guid: 1ed1935304f1435418f72e7f6fc8bf91, type: 3}
+      propertyPath: SyncPositionX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1466310802089348012, guid: 1ed1935304f1435418f72e7f6fc8bf91, type: 3}
+      propertyPath: SyncPositionY
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1466310802089348012, guid: 1ed1935304f1435418f72e7f6fc8bf91, type: 3}
+      propertyPath: SyncPositionZ
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1466310802089348012, guid: 1ed1935304f1435418f72e7f6fc8bf91, type: 3}
+      propertyPath: SyncRotAngleX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1466310802089348012, guid: 1ed1935304f1435418f72e7f6fc8bf91, type: 3}
+      propertyPath: SyncRotAngleY
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1466310802089348012, guid: 1ed1935304f1435418f72e7f6fc8bf91, type: 3}
+      propertyPath: SyncRotAngleZ
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3741810250894286016, guid: 1ed1935304f1435418f72e7f6fc8bf91, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -30411,6 +30439,30 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8321826611098903310, guid: 99c73ecdea90ace8689306848cebb794, type: 3}
   m_PrefabInstance: {fileID: 2083789211}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2090315535 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3741810250894286017, guid: 1ed1935304f1435418f72e7f6fc8bf91, type: 3}
+  m_PrefabInstance: {fileID: 837288193}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2090315547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2090315535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8dcb590285cad44f963c5b6ad63c2f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position:
+    m_InternalValue: {x: 0, y: 0, z: 0}
+  rotation:
+    m_InternalValue: {x: 0, y: 0, z: 0, w: 1}
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  interpolationTime: 0.05
 --- !u!1001 &2094244301
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35399,6 +35451,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1891974434}
     m_Modifications:
+    - target: {fileID: 1466310802089348012, guid: 1ed1935304f1435418f72e7f6fc8bf91, type: 3}
+      propertyPath: Interpolate
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3741810250894286016, guid: 1ed1935304f1435418f72e7f6fc8bf91, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -35447,11 +35503,19 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube Blue
       objectReference: {fileID: 0}
+    - target: {fileID: 3741810250894286021, guid: 1ed1935304f1435418f72e7f6fc8bf91, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3741810250894286041, guid: 1ed1935304f1435418f72e7f6fc8bf91, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3001979087
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2338969624951659476, guid: 1ed1935304f1435418f72e7f6fc8bf91, type: 3}
+    - {fileID: 3741810250894286023, guid: 1ed1935304f1435418f72e7f6fc8bf91, type: 3}
+    - {fileID: 3741810250894286022, guid: 1ed1935304f1435418f72e7f6fc8bf91, type: 3}
+    - {fileID: 3741810250894286021, guid: 1ed1935304f1435418f72e7f6fc8bf91, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 1ed1935304f1435418f72e7f6fc8bf91, type: 3}
 --- !u!1001 &3861988512993478902
 PrefabInstance:
