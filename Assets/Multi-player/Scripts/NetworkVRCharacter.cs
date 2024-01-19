@@ -9,6 +9,8 @@ using UnityEngine.XR.Interaction.Toolkit.Inputs;
 using UnityEngine.XR.Interaction.Toolkit;
 
 /// <summary>
+///    Deprecated
+/// 
 ///    Defines a network player.
 ///    Adjust game object's input and visual if not the owner
 /// </summary>

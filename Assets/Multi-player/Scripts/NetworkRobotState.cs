@@ -38,10 +38,18 @@ public class NetworkRobotState : NetworkBehaviour
         new NetworkVariable<Quaternion>(Quaternion.identity);
     [SerializeField, ReadOnly]
     private NetworkList<float> jointList;
-    private float[] smoothVelocities = new float[0];
     // for visualization
     [SerializeField, ReadOnly]
     private float[] jointAngles = new float[0];
+
+    // For smooth following
+    [SerializeField] private bool interpolateBase = true;
+    [SerializeField] private bool interpolateJoint = true;
+    [SerializeField] private float interpolationBaseTime = 0.02f;
+    [SerializeField] private float interpolationJointTime = 0.02f;
+    private Vector3 postionVelocity = Vector3.zero;
+    private Quaternion rotationVelocity = Quaternion.identity;
+    private float[] smoothVelocities = new float[0];
 
     void Awake()
     {
@@ -161,15 +169,40 @@ public class NetworkRobotState : NetworkBehaviour
     private void TeleportRobot()
     {
         // No need to teleport
-        if (articulationRoot.transform.position == position.Value
-            && articulationRoot.transform.rotation == rotation.Value)
-        {
+        if (
+            Vector3.Distance(
+                articulationRoot.transform.position, position.Value
+            ) < 0.001f
+            && Quaternion.Angle(
+                articulationRoot.transform.rotation, rotation.Value
+            ) < 0.01f
+        ) {
             return;
+        }
+
+        Vector3 targetPosition = position.Value;
+        Quaternion targetRotation = rotation.Value;
+
+        // Smoothly move the robot to the target
+        if (interpolateBase)
+        {
+            targetPosition = Vector3.SmoothDamp(
+                articulationRoot.transform.position,
+                position.Value,
+                ref postionVelocity,
+                interpolationBaseTime
+            );
+            targetRotation = Utils.QuaternionSmoothDamp(
+                articulationRoot.transform.rotation,
+                rotation.Value,
+                ref rotationVelocity,
+                interpolationBaseTime
+            );
         }
 
         // Teleport robot
         var root = articulationRoot.GetComponent<ArticulationBody>();
-        root.TeleportRoot(position.Value, rotation.Value);
+        root.TeleportRoot(targetPosition, targetRotation);
     }
 
     private void SetJointAngles()
@@ -182,13 +215,18 @@ public class NetworkRobotState : NetworkBehaviour
 
         for (int i = 0; i < articulationChain.Length; ++i)
         {
+            float target = jointList[i];
+
             // Smoothly move the joint to the target
-            float target = Mathf.SmoothDamp(
-                articulationChain[i].jointPosition[0],
-                jointList[i],
-                ref smoothVelocities[i],
-                0.1f
-            );
+            if (interpolateJoint)
+            {
+                target = Mathf.SmoothDamp(
+                    articulationChain[i].jointPosition[0],
+                    jointList[i],
+                    ref smoothVelocities[i],
+                    interpolationJointTime
+                );
+            }
 
             // If joint is revolute, convert to degree
             if (articulationChain[i].jointType 
