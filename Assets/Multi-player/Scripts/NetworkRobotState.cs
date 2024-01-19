@@ -36,13 +36,15 @@ public class NetworkRobotState : NetworkBehaviour
     private NetworkVariable<Quaternion> rotation = 
         new NetworkVariable<Quaternion>(Quaternion.identity);
     [SerializeField, ReadOnly]
-    private NetworkList<float> jointAngles;
-    [SerializeField, ReadOnly]  // for visualization
-    private float[] jointAnglesArray = new float[0];
+    private NetworkList<float> jointList;
+    private float[] smoothVelocities = new float[0];
+    // for visualization
+    [SerializeField, ReadOnly]
+    private float[] jointAngles = new float[0];
 
     void Awake()
     {
-        jointAngles = new NetworkList<float>(new List<float>());
+        jointList = new NetworkList<float>(new List<float>());
     }
 
     public override void OnNetworkSpawn()
@@ -57,10 +59,16 @@ public class NetworkRobotState : NetworkBehaviour
         {
             position.Value = articulationRoot.transform.position;
             rotation.Value = articulationRoot.transform.rotation;
-            jointAngles.Clear();
+            jointList.Clear();
         }
+        // For smooth following if it is client
+        else
+        {
+            smoothVelocities = new float[articulationChain.Length];
+        }
+
         // visualization array
-        jointAnglesArray = new float[articulationChain.Length];
+        jointAngles = new float[articulationChain.Length];
     }
 
     private void InitArticulationBody()
@@ -133,13 +141,13 @@ public class NetworkRobotState : NetworkBehaviour
     {
         position.Value = articulationRoot.transform.position;
         rotation.Value = articulationRoot.transform.rotation;
-        jointAngles.Clear();
-        jointAnglesArray = new float[articulationChain.Length];
+        jointList.Clear();
+        jointAngles = new float[articulationChain.Length];
 
         for (int i = 0; i < articulationChain.Length; ++i)
         {
-            jointAngles.Add(articulationChain[i].jointPosition[0]);
-            jointAnglesArray[i] = articulationChain[i].jointPosition[0];
+            jointList.Add(articulationChain[i].jointPosition[0]);
+            jointAngles[i] = articulationChain[i].jointPosition[0];
         }
     }
 
@@ -159,7 +167,7 @@ public class NetworkRobotState : NetworkBehaviour
 
     private void SetJointAngles()
     {
-        if (jointAngles.Count != articulationChain.Length)
+        if (jointList.Count != articulationChain.Length)
         {
             // Debug.Log("Joint angles count does not match");
             return;
@@ -171,18 +179,21 @@ public class NetworkRobotState : NetworkBehaviour
             float target = (
                 articulationChain[i].jointType 
                 == ArticulationJointType.RevoluteJoint
-            ) ? jointAngles[i] * Mathf.Rad2Deg : jointAngles[i];
+            ) ? jointList[i] * Mathf.Rad2Deg : jointList[i];
 
             // Smoothly move the joint to the target
-            target = Mathf.Lerp(
-                articulationChain[i].jointPosition[0], target, 0.1f
+            target = Mathf.SmoothDamp(
+                articulationChain[i].jointPosition[0],
+                target,
+                ref smoothVelocities[i], 
+                0.1f
             );
             ArticulationBodyUtils.SetJointTarget(
                 articulationChain[i], target
             );
 
             // Update joint angles value for visualization
-            jointAnglesArray[i] = jointAngles[i];
+            jointAngles[i] = jointList[i];
         }
     }
 }
