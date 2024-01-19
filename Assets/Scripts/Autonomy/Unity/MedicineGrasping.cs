@@ -9,7 +9,9 @@ public class MedicineGrasping : MonoBehaviour
 
     [SerializeField] private List<GameObject> graspableObjects;
     [SerializeField] private List<GameObject> medicineContainers;
-    public List<Transform> waypoints = new List<Transform>();
+    // public List<Transform> waypoints = new List<Transform>();
+    [SerializeField] private List<Vector3> positionWaypoints = new List<Vector3>();
+    [SerializeField] private List<Quaternion> rotationnWaypoints = new List<Quaternion>();
     public List<int> instructions = new List<int>();  // deals with how to manage the interaction with the medicine
         // if 0, then do nothing
         // if 1, then move forward to the object, grasp, and go back to the hover spot
@@ -42,12 +44,16 @@ public class MedicineGrasping : MonoBehaviour
         {
             // Handle picking up medicine
 
-            Transform graspablePosition = graspableObject.transform;
-            Transform hoverSpotPosition = graspableObject.transform.GetChild(0).gameObject.transform;
+            Vector3 graspablePosition = graspableObject.transform.position;
+            Vector3 hoverSpotPosition = graspableObject.transform.Find("hoverspot").gameObject.transform.position;
 
-            waypoints.Add(hoverSpotPosition);
-            waypoints.Add(graspablePosition);
-            waypoints.Add(hoverSpotPosition);
+            // waypoints.Add(hoverSpotPosition);
+            // waypoints.Add(graspablePosition);
+            // waypoints.Add(hoverSpotPosition);
+            positionWaypoints.Add(hoverSpotPosition);
+            positionWaypoints.Add(graspablePosition);
+            positionWaypoints.Add(hoverSpotPosition);
+
 
             instructions.Add(0);
             instructions.Add(1);
@@ -55,9 +61,10 @@ public class MedicineGrasping : MonoBehaviour
 
             // Handle dropping medicine
 
-            Transform hoverSpotMedPosition = medicineContainers[0].transform.Find("hoverspot").gameObject.transform;
+            Vector3 hoverSpotMedPosition = medicineContainers[0].transform.Find("hoverspot").gameObject.transform.position;
 
-            waypoints.Add(hoverSpotMedPosition);
+            // waypoints.Add(hoverSpotMedPosition);
+            positionWaypoints.Add(hoverSpotMedPosition);
             instructions.Add(2);
 
         }
@@ -65,23 +72,28 @@ public class MedicineGrasping : MonoBehaviour
 
     IEnumerator WaitForMotionToComplete()
     {
-        for(int i = 0; i < waypoints.Count; i++)
+        // Grab the robot ee position
+        Quaternion robotEERotation = planner.armEE.transform.rotation;
+
+        for(int i = 0; i < positionWaypoints.Count; i++)
         {
             // Start
             Debug.Log("Starting Motion");
             if(i == 0)
             {
-                planner.PlanTrajectory(GraspableTransform(startTF), GraspableTransform(waypoints[0]));
+                planner.PlanTrajectory(startTF.position, robotEERotation, positionWaypoints[0], robotEERotation);
             }
             else{
-                planner.PlanTrajectory(GraspableTransform(waypoints[i-1]), GraspableTransform(waypoints[i]));
+                planner.PlanTrajectory(positionWaypoints[i-1], robotEERotation, positionWaypoints[i], robotEERotation);
             }
-            Debug.Log("End Motion");
+            
             // wait for the motion planner to start
             yield return new WaitUntil(() => planner.motionInProgress == true);
 
             //wait for motion to be complete before moving on to the next waypoint
             yield return new WaitUntil(() => planner.motionInProgress == false);
+
+            // Debug.Log("End Motion");
 
             HandleInstruction(instructions[i]);
 
