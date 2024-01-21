@@ -45,8 +45,8 @@ public class NetworkRobotState : NetworkBehaviour
     // For smooth following
     [SerializeField] private bool interpolateBase = true;
     [SerializeField] private bool interpolateJoint = true;
-    [SerializeField] private float interpolationBaseTime = 0.02f;
-    [SerializeField] private float interpolationJointTime = 0.02f;
+    [SerializeField] private float interpolationBaseTime = 0.05f;
+    [SerializeField] private float interpolationJointTime = 0.05f;
     private Vector3 postionVelocity = Vector3.zero;
     private Quaternion rotationVelocity = Quaternion.identity;
     private float[] smoothVelocities = new float[0];

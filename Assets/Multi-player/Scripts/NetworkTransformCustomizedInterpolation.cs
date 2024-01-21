@@ -29,7 +29,7 @@ namespace Unity.Netcode.Components
         [SerializeField] private float PositionThreshold = 0.001f;
         [SerializeField] private float RotAngleThreshold = 0.01f;
 
-        [SerializeField] private float interpolationTime = 0.02f;
+        [SerializeField] private float interpolationTime = 0.05f;
         private Vector3 positionVelocity = Vector3.zero;
         private Quaternion rotationVelocity = Quaternion.identity;
 
