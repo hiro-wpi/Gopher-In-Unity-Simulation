@@ -8,14 +8,15 @@ using Unity.Netcode;
 using Newtonsoft.Json;
 
 /// <summary>
-///    Synchronize input actions by sending the values to the server
+///    Synchronize input actions by sending the values to the server.
+///    The actions are not actually synchronized.
+///    Only the values of the actions are sent to the server as Json string.
 ///    
-///    Note that the actions are not actually synchronized.
-///    Only the values of the actions are sent to the server.
-///    
-///    For the server, the input actions and related values (string)
-///    can be acquired by public function GetInputActionsState().
-///    
+///    DataReceived is set to true every time the server receives data.
+///    To get the input actions and related values (string),
+///    Call public function GetInputActionsState(). 
+///    DataReceived will be set to false after calling this function.
+///
 ///    Note that the received values are "string" type,
 ///    and they are not yet converted to the actual types (they can be "Null").
 ///    Use public function GetInputActionValueAsType<>() to convert them.
@@ -43,11 +44,16 @@ public class NetworkInputActions : NetworkBehaviour
     // Getter for the server
     public (InputAction[], string[]) GetInputActionsState()
     {
+        DataReceived = false;
         return (actions, actionValues);
     }
 
     public (T, bool, bool) GetInputActionValueAsType<T>(string actionValues)
     {
+        if (actionValues == "Null")
+        {
+            return (default(T), false, false);
+        }
         var value = JsonConvert.DeserializeObject<ActionValue>(actionValues);
         if (value.V == null)
         {
@@ -112,6 +118,7 @@ public class NetworkInputActions : NetworkBehaviour
             i++;
         }
         
+        // TODO: Debug
         Debug.Log(string.Join(";", actionValues));
         return string.Join(";", actionValues);
     }
@@ -145,6 +152,7 @@ public class NetworkInputActions : NetworkBehaviour
     [ServerRpc]
     private void SendInputDataServerRpc(string serializedActionValues)
     {
+        // TODO: Debug
         Debug.Log(serializedActionValues);
 
         ProcessInputDataOnServer(serializedActionValues);
