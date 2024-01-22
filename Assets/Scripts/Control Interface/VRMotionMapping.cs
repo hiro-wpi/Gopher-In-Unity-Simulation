@@ -91,8 +91,8 @@ public class VRMotionMapping : MonoBehaviour
     void Update()
     {
         if (
-            controllerPosition.action.ReadValueAsObject() == null
-            || controllerRotation.action.ReadValueAsObject() == null
+            controllerPosition.action.ReadValueAsObject() != null
+            && controllerRotation.action.ReadValueAsObject() != null
         ) {
             // Update the input pose
             SetInputPosition(
