@@ -13,6 +13,7 @@ public class IonaKeyboardNetworkController : NetworkBehaviour
     [SerializeField] private NetworkInputActions inputActions;
 
     // Controllers
+    [Header("Robot Controllers")]
     [SerializeField] private BaseController baseController;
     [SerializeField] private ArmController leftArmController;
     [SerializeField] private ArmController rightArmController;
@@ -23,8 +24,11 @@ public class IonaKeyboardNetworkController : NetworkBehaviour
     // This is used only when the control input
     // for rotation and translation are the same (OnTranslateRotate())
     public enum ArmControlMode { translation = 0, rotation = 1 }
-    [field: SerializeField] public ArmControlMode leftControlMode = ArmControlMode.translation;
-    [field: SerializeField] public ArmControlMode rightControlMode = ArmControlMode.translation;
+    [Header("Controller Modes")]
+    [SerializeField, ReadOnly]
+    private ArmControlMode leftControlMode = ArmControlMode.translation;
+    [SerializeField, ReadOnly]
+    private ArmControlMode rightControlMode = ArmControlMode.translation;
     [SerializeField, ReadOnly] private bool isCameraActive = false;
 
     public override void OnNetworkSpawn()

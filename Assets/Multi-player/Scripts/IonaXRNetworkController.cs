@@ -14,6 +14,7 @@ public class IonaXRNetworkController : NetworkBehaviour
     [SerializeField] private NetworkInputActions inputActions;
 
     // Controllers
+    [Header("Robot Controllers")]
     [SerializeField] private BaseController baseController;
     [SerializeField] private ArmController leftArmController;
     [SerializeField] private ArmController rightArmController;
@@ -21,6 +22,7 @@ public class IonaXRNetworkController : NetworkBehaviour
     [SerializeField] private ChestController chestController;
 
     // Motion Mapping
+    [Header("VR Input")]
     [SerializeField] private VRMotionMapping leftVRMotionMapping;
     [SerializeField] private VRMotionMapping rightVRMotionMapping;
 
