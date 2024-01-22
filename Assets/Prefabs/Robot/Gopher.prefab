@@ -384,8 +384,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 632026370}
-  - component: {fileID: 632026372}
-  - component: {fileID: 632026371}
   - component: {fileID: 442020487}
   - component: {fileID: 8933906097521465639}
   m_Layer: 15
@@ -411,38 +409,6 @@ Transform:
   m_Father: {fileID: 4408274995126300629}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &632026372
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 632026369}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c022d0bba37576346bf9c864c68fb33a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &632026371
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 632026369}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8863ad6c2fb46a142b83f2691756573d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  planner: {fileID: 632026372}
-  startTF: {fileID: 858404084}
-  goalTF: {fileID: 1239302450}
-  startNodeGameObject: {fileID: 0}
-  goalNodeGameObject: {fileID: 0}
-  nodeGameObject: {fileID: 1639834943}
-  requestExecution: 0
-  debug: 1
 --- !u!114 &442020487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,7 +429,6 @@ MonoBehaviour:
   goalGameObject: {fileID: 1239302449}
   waypointGameObject: {fileID: 1639834943}
   armEE: {fileID: 8457933098534924371}
-  timeStep: 0
   goalReached: 0
   motionInProgress: 0
 --- !u!114 &8933906097521465639
@@ -482,10 +447,13 @@ MonoBehaviour:
   graspableObjects:
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
   medicineContainers:
   - {fileID: 0}
   - {fileID: 0}
-  waypoints: []
+  - {fileID: 0}
+  positionWaypoints: []
+  rotationnWaypoints: []
   instructions: 
   startTF: {fileID: 7612944751291897102}
 --- !u!1 &733051221
@@ -557,7 +525,6 @@ MonoBehaviour:
   goalNodeGameObject: {fileID: 0}
   nodeGameObject: {fileID: 1639834943}
   requestExecution: 0
-  debug: 1
 --- !u!1 &858404083
 GameObject:
   m_ObjectHideFlags: 0

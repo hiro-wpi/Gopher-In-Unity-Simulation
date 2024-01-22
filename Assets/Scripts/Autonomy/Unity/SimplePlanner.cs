@@ -15,17 +15,14 @@ public class SimplePlanner : MonoBehaviour
     public GameObject armEE;
 
     private int numWaypoints = 10;
-    [SerializeField] private float timeStep; // Time step in seconds
-    
-    private float speed = 0.02f; // Speed of the arm in m/s
+    private float timeStep; // Time step in seconds
+    private float speed = 0.05f; // Speed of the arm in m/s
     private int waypointDensityPerMeter = 33; // Number of waypoints per meter
 
     public bool goalReached = false;
     public bool motionInProgress = false;
 
-    private bool debug = false;
-
-    [SerializeField] private 
+    private bool debugVisual = false;
 
     void Start()
     {
@@ -40,11 +37,11 @@ public class SimplePlanner : MonoBehaviour
     {
         if(motionInProgress)
         {
-            Debug.Log("Motion in progress, cannot plan trajectory");
+            Debug.LogWarning("Motion in progress, cannot plan trajectory");
             return;
         }
 
-        if(debug)
+        if(debugVisual)
         {
             // Visualize Start and Goal
             VisualizeStartAndGoal(startPosition, startRotation, goalPosition, goalRotation);
@@ -53,13 +50,14 @@ public class SimplePlanner : MonoBehaviour
         // Collision Check
         if (!CheckForCollisionFreePath(startPosition, goalPosition))
         {
-            Debug.Log("Collision Detected, No Path Found");
+            Debug.LogWarning("Imminent Collision Detected, No Direct Path Found");
             return;
         }
 
         // Calculate time step
         float distance = Vector3.Distance(startPosition, goalPosition);
-        timeStep = GetTimeStep(distance, speed, Mathf.RoundToInt(distance*waypointDensityPerMeter));
+        numWaypoints = Mathf.RoundToInt(distance*waypointDensityPerMeter);
+        timeStep = GetTimeStep(distance, speed, numWaypoints);
        
         // Interpolate between Start and Goal (positions and rotations)
         List<Vector3> positions = InterpolatePositions(startPosition, goalPosition);
@@ -70,7 +68,7 @@ public class SimplePlanner : MonoBehaviour
         List<Vector3> waypointsPositions = GenerateWaypoints(positions);
         List<Quaternion> waypointsRotations = GenerateWaypoints(rotations);
 
-        if(debug)
+        if(debugVisual)
         {
             for (int i = 0; i < waypointsPositions.Count; i++)
             {
@@ -84,7 +82,7 @@ public class SimplePlanner : MonoBehaviour
         float[] jointAngle = armController.GetCurrentJointAngles();
 
         // Initial joint angles
-        jointAngles.Add(jointAngle);
+        // jointAngles.Add(jointAngle);
 
         // Solve IK for each waypoint
         for (int i = 0; i < waypointsPositions.Count; i++)
@@ -102,10 +100,6 @@ public class SimplePlanner : MonoBehaviour
             // Debug.Log(currentTimeStep);
         }
 
-        //Account for the last waypoint not being reached
-        jointAngles.Add(jointAngle); // Last joint angles
-        timeSteps.Add(GenerateTimeStep(waypointsPositions.Count - 1) + 0.05f);
-
         // Convert jointAngles list and timeSteps list to arrays
         float[][] jointAnglesArray = jointAngles.ToArray();
         float[] timeStepsArray = timeSteps.ToArray();
@@ -118,7 +112,7 @@ public class SimplePlanner : MonoBehaviour
         }
 
         // Call SetJointTrajectory method
-        Debug.Log("Goal Arm Configuration Achievable, sending trajectory to arm controller");
+        // Goal Arm Configuration Achievable, sending trajectory to arm controller;
         armController.SetJointTrajectory(timeStepsArray, jointAnglesArray, new float[][] { }, new float[][] { });
         motionInProgress = true;
 
@@ -142,27 +136,22 @@ public class SimplePlanner : MonoBehaviour
         if (Physics.Raycast(startPosition, direction, out RaycastHit hit, maxDistance))
         {
             // collision detected
+
+            // Filtering Collision With Graspable Objects
             if (hit.collider.gameObject.CompareTag("GraspableObject"))
             {
-                Debug.Log("Collision detected with graspable object, ignoring collision");
                 return true;
             }
 
-            // Robot layer Number
+            // Filtering Collision With the Robot
             int robotLayerNum = 15;
-            
-            // ignoring collision with robot layer
             if (hit.collider.gameObject.layer == robotLayerNum)
             {
-                Debug.Log("Collision detected with robot, ignoring collision");
                 return true;
             }
 
-            Debug.Log("Max Distance is " + maxDistance);
-            Debug.Log("Collision detected with " + hit.collider.name);
-            Debug.Log("Collision detected with " + hit.collider.gameObject.layer + " type of object");
-            Debug.DrawRay(startPosition, direction, Color.red, 100f);
-            Debug.Log(startPosition);
+            // Debug.LogWarning("Collision detected from " + hit.collider.name + " with layer number " + hit.collider.gameObject.layer);
+
             return false;
         }
 
@@ -228,8 +217,6 @@ public class SimplePlanner : MonoBehaviour
     {
         float time = distance / speed;
         float timeStep = time / waypoints;
-
-        Debug.Log("timeStep: " + timeStep);
         return timeStep;
     }
 
@@ -250,16 +237,17 @@ public class SimplePlanner : MonoBehaviour
             // Distance from goal
             float distance = Vector3.Distance(armPosition, goal);
 
-            if (distance < 0.05f)
+            if (distance < 0.01f)
             {
+                // Goal Reached
+
                 // Give it some time to properly stop
                 yield return new WaitForSeconds(timebuffer);
 
                 // Signal that we are done, ready to move on to the next motion
                 goalReached = true;
                 motionInProgress = false;
-                Debug.Log("Goal Reached");
-                Debug.Log("Time Elapsed: " + timeElapsed + ", Time Expected: " + timer);
+
                 yield break;
             }
             

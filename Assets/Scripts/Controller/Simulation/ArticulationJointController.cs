@@ -184,7 +184,7 @@ public class ArticulationJointController : MonoBehaviour
                 float[] positions = new float[articulationChain.Length];
                 for (int joint = 0; joint < articulationChain.Length; joint++)
                 {
-                    float t = (float) frame / frames;
+                    float t = (float) (frame + 1) / frames;
                     // Calculate the target positions 
                     positions[joint] = // (speeds != null && accelerations != null) ?
                         // TODO implement model with speed and acceleration
@@ -198,8 +198,10 @@ public class ArticulationJointController : MonoBehaviour
                 // Add the target positions to the list
                 targetPositions.Add(positions);
             }
+
         }
 
+        
         // Stop current coroutine
         if (currCoroutine != null)
         {

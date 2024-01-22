@@ -22,7 +22,7 @@ public class MotionExecuter : MonoBehaviour
     private bool isHomed = false;
     public bool requestExecution = false;
 
-    public bool debug = true;
+    private bool debugVisual = true;
 
 
     // Start is called before the first frame update
@@ -77,15 +77,13 @@ public class MotionExecuter : MonoBehaviour
     IEnumerator StartUp()
     {
         yield return new WaitForSeconds(3f);
-        // planner = GetComponent<MotionPlanner>();
-        // planner.Initialize();
         isHomed = true;
     }
 
     // Sending in the start and goal, get back the plan
     public (List<Vector3>, List<Quaternion>) GetPlan(Vector3 startPosition, Quaternion startRotation, Vector3 goalPosition, Quaternion goalRotation)
     {
-        if(debug == true)
+        if(debugVisual == true)
         {
             VisualizeStartAndGoal(startPosition, startRotation, goalPosition, goalRotation);
         }
@@ -115,17 +113,6 @@ public class MotionExecuter : MonoBehaviour
         Instantiate(startNodeGameObject, startPosition, startRotation, startNodeGameObject.transform.parent);
         Instantiate(goalNodeGameObject, goalPosition, goalRotation, goalNodeGameObject.transform.parent);
     }
-
-    // Display a set of Nodes relative to any node
-    // public void VisualizeActionNodesFromNode(Node nInit)
-    // {
-    //     List<Node> nodes = localPlanner.GetNodesFromActionList(nInit);
-    //     foreach(Node n in nodes)
-    //     {
-    //         VisualizeNode(n);
-    //         // Debug.Log(localPlanner.actionList.Count);
-    //     }
-    // }
 
     
 }

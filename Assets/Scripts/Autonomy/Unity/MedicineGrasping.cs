@@ -10,9 +10,9 @@ public class MedicineGrasping : MonoBehaviour
     [SerializeField] private List<GameObject> graspableObjects;
     [SerializeField] private List<GameObject> medicineContainers;
     // public List<Transform> waypoints = new List<Transform>();
-    [SerializeField] private List<Vector3> positionWaypoints = new List<Vector3>();
-    [SerializeField] private List<Quaternion> rotationnWaypoints = new List<Quaternion>();
-    public List<int> instructions = new List<int>();  // deals with how to manage the interaction with the medicine
+    private List<Vector3> positionWaypoints = new List<Vector3>();
+    private List<Quaternion> rotationnWaypoints = new List<Quaternion>();
+    private List<int> instructions = new List<int>();  // deals with how to manage the interaction with the medicine
         // if 0, then do nothing
         // if 1, then move forward to the object, grasp, and go back to the hover spot
         // if 2, drop the object
@@ -29,7 +29,7 @@ public class MedicineGrasping : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            Debug.Log("Planning And Executing Trajectory");
+            // Planning and executing the motion
             SetUpWaypoints();
             StartCoroutine(StartAndWaitForMotionToComplete());
         }
@@ -70,18 +70,24 @@ public class MedicineGrasping : MonoBehaviour
     {
         // Grab the robot ee position
         Quaternion robotEERotation = planner.armEE.transform.rotation;
+        
 
         for(int i = 0; i < positionWaypoints.Count; i++)
         {
+            
+            // Set the next goal from our trajectory
+            // Set the start position as current EE position
+            planner.PlanTrajectory(planner.armEE.transform.position, planner.armEE.transform.rotation, positionWaypoints[i], robotEERotation);
+
             // Start
-            Debug.Log("Starting Motion");
-            if(i == 0)
-            {
-                planner.PlanTrajectory(startTF.position, robotEERotation, positionWaypoints[0], robotEERotation);
-            }
-            else{
-                planner.PlanTrajectory(positionWaypoints[i-1], robotEERotation, positionWaypoints[i], robotEERotation);
-            }
+            // Debug.Log("Starting Motion");
+            // if(i == 0)
+            // {
+            //     planner.PlanTrajectory(startTF.position, robotEERotation, positionWaypoints[0], robotEERotation);
+            // }
+            // else{
+            //     planner.PlanTrajectory(planner.armEE.transform.position, robotEERotation, positionWaypoints[i], robotEERotation);
+            // }
             
             // wait for the motion planner to start
             yield return new WaitUntil(() => planner.motionInProgress == true);
@@ -107,25 +113,19 @@ public class MedicineGrasping : MonoBehaviour
 
     public void HandleInstruction(int i)
     {
-        if(i == 0)
-        {
-            // do nothing
-            Debug.Log("Do Nothing");
-        }
-        else if(i == 1)
+        // if (i == 0){} // do nothing
+        if(i == 1)
         {
             // grasp the medicine
-            Debug.Log("Grasp Medicine");
             planner.armController.CloseGripper();
-            
         }
         else if(i == 2)
         {
             // drop the medicine
-            Debug.Log("Drop Medicine");
             planner.armController.OpenGripper();
             
         }
+        else{} // do nothing
     }
 
     private Transform GraspableTransform(Transform objectTransform)
