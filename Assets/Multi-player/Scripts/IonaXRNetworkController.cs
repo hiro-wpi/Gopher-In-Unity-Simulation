@@ -254,8 +254,8 @@ public class IonaXRNetworkController : NetworkBehaviour
                     continue;
                 }
 
-                var (value, P, R) = ReadValue<float>(actionValues[i]);
-                chestController.SetSpeedFraction(value);
+                var (value, P, R) = ReadValue<Vector2>(actionValues[i]);
+                chestController.SetSpeedFraction(value.y);
             }
         }
     }

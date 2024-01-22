@@ -36,7 +36,6 @@ public abstract class ChestController : MonoBehaviour
     // Speed control
     public virtual void SetSpeedFraction(float fraction)
     {
-        
         speedFraction = Mathf.Clamp(
             fraction * speedFractionMultiplier, -1.0f, 1.0f
         );
