@@ -220,7 +220,7 @@ public class ArticulationJointController : MonoBehaviour
             SetJointTargetsStep(targetPositions[currTrajectoryIndex++]);
 
             // introducing a delay for fixedDeltaTime, which is used for setting the "target" position
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
+            yield return new WaitForSeconds(1.5f*Time.fixedDeltaTime);
 
             currTrajectoryIndex++;
         }
