@@ -132,6 +132,9 @@ public class ArticulationJointController : MonoBehaviour
 
     private void SetJointTargetStep(ArticulationBody joint, float target)
     {
+
+        // Sets the target of the joint position to the next timestep position given a speed, 
+        // or the target if it is reachable
         ArticulationBodyUtils.SetJointTargetStep(
             joint, target * Mathf.Rad2Deg, jointMaxSpeed * Mathf.Rad2Deg
         );
@@ -209,7 +212,19 @@ public class ArticulationJointController : MonoBehaviour
     private IEnumerator SetJointTrajectoryCoroutine(Action reached = null)
     {
         currTrajectoryIndex = 0;
-        yield return new WaitUntil(() => SetJointTrajectoryStepAndCheck() == true);
+        // yield return new WaitUntil(() => SetJointTrajectoryStepAndCheck() == true);
+        // reached?.Invoke();
+        while(currTrajectoryIndex < targetPositions.Count)
+        {
+            
+            SetJointTargetsStep(targetPositions[currTrajectoryIndex++]);
+
+            // introducing a delay for fixedDeltaTime, which is used for setting the "target" position
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+
+            currTrajectoryIndex++;
+        }
+
         reached?.Invoke();
     }
 

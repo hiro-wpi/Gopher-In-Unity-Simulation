@@ -259,6 +259,7 @@ public class SimplePlanner : MonoBehaviour
                 goalReached = true;
                 motionInProgress = false;
                 Debug.Log("Goal Reached");
+                Debug.Log("Time Elapsed: " + timeElapsed + ", Time Expected: " + timer);
                 yield break;
             }
             
