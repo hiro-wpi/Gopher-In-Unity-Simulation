@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using UnityEngine.InputSystem;
 using Unity.Netcode;
-using Unity.Robotics.UrdfImporter;
 using System;
 
 /// <summary>
@@ -19,17 +19,25 @@ using System;
 /// </summary>
 public class NetworkRobotState : NetworkBehaviour
 {
-    // Articulation scripts under which to disable
-    [SerializeField] private GameObject plugins;
-    // Articulation scripts whom should not be disabled
-    [SerializeField] private GameObject[] pluginsToKeep;
-
     // Robot
+    [Header("Robot")]
     [SerializeField] private GameObject articulationRoot;
-    [SerializeField] private ArticulationBody[] articulationBodyToIgnore;
-    private ArticulationBody[] articulationChain;
+    [SerializeField] private ArticulationBody[] articulationBodyToIgnore = 
+        new ArticulationBody[0];
+    private ArticulationBody[] articulationChain = new ArticulationBody[0];
+
+    [Header("Non-owner")]
+    // Only owner needs to read the input from input action assets
+    [SerializeField] private InputActionAsset[] inputActionsToDisable = 
+        new InputActionAsset[0];
+
+    [Header("Client")]
+    // Only server needs to actually control the robot
+    [SerializeField] private GameObject pluginsRootToDisable;
+    [SerializeField] private GameObject[] pluginsToKeep = new GameObject[0];
 
     // Network robot status
+    [Header("Network Robot Status")]
     [SerializeField, ReadOnly] 
     private NetworkVariable<Vector3> position = 
         new NetworkVariable<Vector3>(Vector3.zero);
@@ -75,7 +83,6 @@ public class NetworkRobotState : NetworkBehaviour
         {
             smoothVelocities = new float[articulationChain.Length];
         }
-
         // visualization array
         jointAngles = new float[articulationChain.Length];
     }
@@ -83,24 +90,42 @@ public class NetworkRobotState : NetworkBehaviour
     private void InitArticulationBody()
     {
         // Initialize articulation body
-        // get non-fixed joints and non-ignored joints
         articulationChain = articulationRoot.
             GetComponentsInChildren<ArticulationBody>();
-        articulationChain = articulationChain.Where(joint => 
+
+        articulationChain = articulationChain.Where(joint =>
+            // get non-fixed joints
             joint.jointType != ArticulationJointType.FixedJoint
+            // get non-ignored joints
             && !articulationBodyToIgnore.Contains(joint)
         ).ToArray();
     }
 
     private void DisablePlugins()
     {
+        // Disable control interface and cameras if not the owner
+        if (!IsOwner)
+        {
+            // disable input
+            foreach (var input in inputActionsToDisable)
+            {
+                input.Disable();
+            }
+
+            // disable cameras
+            foreach(var camera in GetComponentsInChildren<Camera>())
+            {
+                camera.gameObject.SetActive(false);
+            }
+        }
+
         // Disable game object control if not the server
         // and if not in the ToKeep list
         if (!IsServer)
         {
             // Disable scripts
             foreach (Transform plugin in 
-                plugins.GetComponentsInChildren<Transform>())
+                pluginsRootToDisable.GetComponentsInChildren<Transform>())
             {
                 plugin.gameObject.SetActive(false);
             }
@@ -120,16 +145,6 @@ public class NetworkRobotState : NetworkBehaviour
                 articulationRoot.GetComponentsInChildren<Collider>())
             {
                 collider.enabled = false;
-            }
-        }
-
-        // Disable camera if not the owner
-        if (!IsOwner)
-        {
-            // disable cameras
-            foreach(var camera in GetComponentsInChildren<Camera>())
-            {
-                camera.gameObject.SetActive(false);
             }
         }
     }

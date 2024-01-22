@@ -70,17 +70,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ca359218d428364abe0b2d729610ee2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  plugins: {fileID: 6422038745529782839}
+  articulationRoot: {fileID: 6422038745861576524}
+  articulationBodyToIgnore:
+  - {fileID: 6422038745896527635}
+  - {fileID: 6422038746804707757}
+  inputActionsToDisable:
+  - {fileID: -944628639613478452, guid: 26dc812e62483b6c0bc7fb8c7bb2026d, type: 3}
+  - {fileID: -944628639613478452, guid: dd91c9b36b637f9409b31242f8edde9b, type: 3}
+  pluginsRootToDisable: {fileID: 6422038745529782839}
   pluginsToKeep:
   - {fileID: 6422038745529782839}
   - {fileID: 5146436272591301540}
   - {fileID: 1274840336427497780}
   - {fileID: 4107305274765751968}
   - {fileID: 4107305274737453343}
-  articulationRoot: {fileID: 6422038745861576524}
-  articulationBodyToIgnore:
-  - {fileID: 6422038745896527635}
-  - {fileID: 6422038746804707757}
   position:
     m_InternalValue: {x: 0, y: 0, z: 0}
   rotation:

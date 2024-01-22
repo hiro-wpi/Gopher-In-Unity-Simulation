@@ -222,10 +222,11 @@ public class IonaXRNetworkController : NetworkBehaviour
                 {
                     continue;
                 }
-
+                Debug.Log(actions[i]);
                 var (value, P, R) = ReadValue<bool>(actionValues[i]);
                 if (P)
                 {
+                    Debug.Log(P);
                     rightVRMotionMapping.ControlModeSwitch();
                 }
             }

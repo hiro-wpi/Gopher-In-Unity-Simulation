@@ -118,8 +118,9 @@ public class NetworkInputActions : NetworkBehaviour
             i++;
         }
         
-        // TODO: Debug
-        Debug.Log(string.Join(";", actionValues));
+        // Debug
+        // Debug.Log(string.Join(";", actionValues));
+
         return string.Join(";", actionValues);
     }
 
@@ -152,8 +153,8 @@ public class NetworkInputActions : NetworkBehaviour
     [ServerRpc]
     private void SendInputDataServerRpc(string serializedActionValues)
     {
-        // TODO: Debug
-        Debug.Log(serializedActionValues);
+        // Debug
+        // Debug.Log(serializedActionValues);
 
         ProcessInputDataOnServer(serializedActionValues);
         DataReceived = true;
