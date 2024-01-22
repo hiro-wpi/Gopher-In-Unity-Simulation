@@ -16,7 +16,7 @@ public class SimplePlanner : MonoBehaviour
 
     private int numWaypoints = 10;
     private float timeStep; // Time step in seconds
-    private float speed = 0.05f; // Speed of the arm in m/s
+    private float speed = 0.1f; // Speed of the arm in m/s
     private int waypointDensityPerMeter = 33; // Number of waypoints per meter
 
     public bool goalReached = false;
