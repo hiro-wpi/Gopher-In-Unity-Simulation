@@ -217,10 +217,10 @@ public class ArticulationJointController : MonoBehaviour
         while(currTrajectoryIndex < targetPositions.Count)
         {
             
-            SetJointTargetsStep(targetPositions[currTrajectoryIndex++]);
+            SetJointTargetsStep(targetPositions[currTrajectoryIndex]);
 
             // introducing a delay for fixedDeltaTime, which is used for setting the "target" position
-            yield return new WaitForSeconds(1.5f*Time.fixedDeltaTime);
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
 
             currTrajectoryIndex++;
         }
@@ -277,6 +277,20 @@ public class ArticulationJointController : MonoBehaviour
             targets[i] *= Mathf.Deg2Rad;
         }
         return targets;
+    }
+
+    // Get Current Joint Positions
+    // TODO Not Tested Yet
+    private float[] GetCurrentJointPositions()
+    {
+        // Container
+        float[] positions = new float[articulationChain.Length];
+        // Get each joint position from xDrive
+        for (int i = 0; i < articulationChain.Length; ++i)
+        {
+            positions[i] = articulationChain[i].jointPosition[0] * Mathf.Deg2Rad;
+        }
+        return positions;
     }
 
 

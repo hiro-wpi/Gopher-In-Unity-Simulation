@@ -243,7 +243,7 @@ public class SimplePlanner : MonoBehaviour
         
         Vector3 prevArmPos = armEE.transform.position;
         
-        while(timeElapsed < timer)
+        while(timeElapsed < timer + 5f)
         {
             Vector3 armPosition = armEE.transform.position;
 
