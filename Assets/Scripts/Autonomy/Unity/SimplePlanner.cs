@@ -17,7 +17,7 @@ public class SimplePlanner : MonoBehaviour
     private int numWaypoints = 10;
     [SerializeField] private float timeStep; // Time step in seconds
     
-    private float speed = 0.05f; // Speed of the arm in m/s
+    private float speed = 0.02f; // Speed of the arm in m/s
     private int waypointDensityPerMeter = 33; // Number of waypoints per meter
 
     public bool goalReached = false;
@@ -33,9 +33,10 @@ public class SimplePlanner : MonoBehaviour
     }    
     void Update()
     {
+
     }
 
-    public void PlanTrajectory(Transform start, Transform goal)
+    public void PlanTrajectory(Vector3 startPosition, Quaternion startRotation, Vector3 goalPosition, Quaternion goalRotation)
     {
         if(motionInProgress)
         {
@@ -46,26 +47,23 @@ public class SimplePlanner : MonoBehaviour
         if(debug)
         {
             // Visualize Start and Goal
-            VisualizeStartAndGoal(start, goal);
+            VisualizeStartAndGoal(startPosition, startRotation, goalPosition, goalRotation);
         }
         
         // Collision Check
-        if (!CheckForCollisionFreePath(start, goal))
+        if (!CheckForCollisionFreePath(startPosition, goalPosition))
         {
             Debug.Log("Collision Detected, No Path Found");
             return;
         }
 
-        // Saving a instance of the goal position
-        Vector3 goalPosition = goal.position;
-
         // Calculate time step
-        float distance = Vector3.Distance(start.position, goal.position);
+        float distance = Vector3.Distance(startPosition, goalPosition);
         timeStep = GetTimeStep(distance, speed, Mathf.RoundToInt(distance*waypointDensityPerMeter));
        
         // Interpolate between Start and Goal (positions and rotations)
-        List<Vector3> positions = InterpolatePositions(start.position, goal.position);
-        List<Quaternion> rotations = InterpolateRotations(start.rotation, goal.rotation);
+        List<Vector3> positions = InterpolatePositions(startPosition, goalPosition);
+        List<Quaternion> rotations = InterpolateRotations(startRotation, goalRotation);
 
         
         // Generate an array of waypoints between Start and Goal (positions and rotations)
@@ -105,15 +103,15 @@ public class SimplePlanner : MonoBehaviour
         }
 
         //Account for the last waypoint not being reached
-        // jointAngles.Add(jointAngle); // Last joint angles
-        // timeSteps.Add(GenerateTimeStep(waypointsPositions.Count));
+        jointAngles.Add(jointAngle); // Last joint angles
+        timeSteps.Add(GenerateTimeStep(waypointsPositions.Count - 1) + 0.05f);
 
         // Convert jointAngles list and timeSteps list to arrays
         float[][] jointAnglesArray = jointAngles.ToArray();
         float[] timeStepsArray = timeSteps.ToArray();
 
         // Check if the goal configuration is possible
-        if(!CheckGoalConfiguration(jointAngle, goal))
+        if(!CheckGoalConfiguration(jointAngle, goalPosition, goalRotation))
         {
             Debug.Log("Goal Arm Configuration Not Achievable, No Trajectory Sent");
             return;
@@ -125,16 +123,11 @@ public class SimplePlanner : MonoBehaviour
         motionInProgress = true;
 
         // Check if the goal is reached at the end of the time
-        // Debug.Log(timeStepsArray[timeStepsArray.Length - 1]);
-        // Debug.Log(timeStepsArray.Length - 1);
-        // Debug.Log(timeStepsArray[timeStepsArray.Length - 1]);
         StartCoroutine(CheckGoalReached(timeStepsArray[timeStepsArray.Length - 1], goalPosition));
 
-        // // Handle the post action
-        // HandleInstruction(postAction);
     }
 
-    private bool CheckForCollisionFreePath(Transform start, Transform goal)
+    private bool CheckForCollisionFreePath(Vector3 startPosition, Vector3 goalPosition)
     {
         // Check if there is a collision free path between start and goal
         // If there is a collision free path, return true
@@ -142,11 +135,11 @@ public class SimplePlanner : MonoBehaviour
 
         // ignore collisions with graspable objects
 
-        Vector3 direction = goal.position - start.position;
+        Vector3 direction = goalPosition - startPosition;
         // Ray ray = new Ray(n.previousNode.position, direction);
-        float maxDistance = Vector3.Distance(goal.position, start.position);
+        float maxDistance = Vector3.Distance(goalPosition, startPosition);
 
-        if (Physics.Raycast(start.position, direction, out RaycastHit hit, maxDistance))
+        if (Physics.Raycast(startPosition, direction, out RaycastHit hit, maxDistance))
         {
             // collision detected
             if (hit.collider.gameObject.CompareTag("GraspableObject"))
@@ -168,13 +161,12 @@ public class SimplePlanner : MonoBehaviour
             Debug.Log("Max Distance is " + maxDistance);
             Debug.Log("Collision detected with " + hit.collider.name);
             Debug.Log("Collision detected with " + hit.collider.gameObject.layer + " type of object");
-            Debug.DrawRay(start.position, direction, Color.red, 100f);
-            Debug.Log(start.position);
+            Debug.DrawRay(startPosition, direction, Color.red, 100f);
+            Debug.Log(startPosition);
             return false;
         }
 
         // No collision
-
         return true;
     }
 
@@ -220,10 +212,11 @@ public class SimplePlanner : MonoBehaviour
         return index * timeStep;
     }
 
-    private void VisualizeStartAndGoal(Transform start, Transform goal)
+
+    private void VisualizeStartAndGoal(Vector3 startPosition, Quaternion startRotation, Vector3 goalPosition, Quaternion goalRotation)
     {
-        Instantiate(startGameObject, start.position, start.rotation, startGameObject.transform.parent);
-        Instantiate(goalGameObject, goal.position, goal.rotation, goalGameObject.transform.parent);
+        Instantiate(startGameObject, startPosition, startRotation, startGameObject.transform.parent);
+        Instantiate(goalGameObject, goalPosition, goalRotation, goalGameObject.transform.parent);
     }
 
     private void VisualizeWaypoint(Vector3 position, Quaternion rotation)
@@ -236,39 +229,54 @@ public class SimplePlanner : MonoBehaviour
         float time = distance / speed;
         float timeStep = time / waypoints;
 
+        Debug.Log("timeStep: " + timeStep);
         return timeStep;
     }
 
-    IEnumerator CheckGoalReached(float time, Vector3 goal)
+    IEnumerator CheckGoalReached(float timer, Vector3 goal)
     {
         motionInProgress = true;
         goalReached = false;
-
-        float timebuffer = 0.05f;
-        yield return new WaitForSeconds(time + timebuffer);
-        // Proper Way for checking if the goal is reached
-            // Use forward kinematics of the robot arm to see if the final pose is reached
-        //Impropper way for checking if the goal is reached
-            // We could also just as easily check the distance between the end effector gameobject tf and the goal
+        float timebuffer = 1f;
+        float startTime = Time.time;
+        float timeElapsed = 0f;
         
+        Vector3 prevArmPos = armEE.transform.position;
+        
+        while(timeElapsed < timer)
+        {
+            Vector3 armPosition = armEE.transform.position;
+
+            // Distance from goal
+            float distance = Vector3.Distance(armPosition, goal);
+
+            if (distance < 0.05f)
+            {
+                // Give it some time to properly stop
+                yield return new WaitForSeconds(timebuffer);
+
+                // Signal that we are done, ready to move on to the next motion
+                goalReached = true;
+                motionInProgress = false;
+                Debug.Log("Goal Reached");
+                yield break;
+            }
+            
+            // update timeElapsed
+            timeElapsed = Time.time - startTime;
+
+            yield return null;
+        }
+
+        // failure. We didn't get to the goal in the expected time, or something else occured
+        goalReached = false;
         motionInProgress = false;
-        float distance = Vector3.Distance(armEE.transform.position, goal);
 
-        if (distance < 0.05f)
-        {
-            goalReached = true;
-            Debug.Log("Goal Reached");
-        }
-        else
-        {
-            goalReached = false;
-        }
-        
     }
 
-    public bool CheckGoalConfiguration(float[] jointAngles, Transform goal)
+    public bool CheckGoalConfiguration(float[] jointAngles, Vector3 goalPosition, Quaternion goalRotation)
     {
-        return iK.CheckGoalReached(jointAngles, goal.position, goal.rotation);
+        return iK.CheckGoalReached(jointAngles, goalPosition, goalRotation);
     }
 
    
