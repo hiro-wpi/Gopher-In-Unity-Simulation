@@ -5,8 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Use events performed, canceled
-/// Use isPressed() instead of state machine
+/// 
 /// </summary>
 public class VRMotionMapping : MonoBehaviour
 {
@@ -16,7 +15,7 @@ public class VRMotionMapping : MonoBehaviour
     [SerializeField] private ArmController armController;
     [SerializeField] private Transform armBaseFrame;
 
-    // Relevant Inputs from the VR Controller        
+    // Relevant Inputs from the VR Controller
     // tracking change button
     [SerializeField] private InputActionProperty trackingButton;
     // control mode change button
@@ -33,7 +32,8 @@ public class VRMotionMapping : MonoBehaviour
     //      Hold    - Tracking while the select button is being pressed
     //      Toggle  - Toggle on and off the tracking with the select button
     public enum TrackingMode {Hold, Toggle}
-    [SerializeField] private TrackingMode trackingMode = TrackingMode.Toggle;
+    [SerializeField] 
+    public TrackingMode Mode { get; private set; } = TrackingMode.Toggle;
 
     // Debug purpose
     [SerializeField] private Transform outputTransform;
@@ -69,7 +69,7 @@ public class VRMotionMapping : MonoBehaviour
         trackingButton.action.performed += changeTrackingStateDelegate;
         modeButton.action.performed += controlModeSwitchDelegate;
         // when button realeased
-        if (trackingMode == TrackingMode.Hold)
+        if (Mode == TrackingMode.Hold)
         {
             trackingButton.action.canceled += stopTrackingDelegate;
         }
@@ -90,11 +90,23 @@ public class VRMotionMapping : MonoBehaviour
 
     void Update()
     {
-        // Update the input pose
-        motionMapping.SetInputPose(
-            controllerPosition.action.ReadValue<Vector3>(),
-            controllerRotation.action.ReadValue<Quaternion>()
-        );
+        if (
+            controllerPosition.action.ReadValueAsObject() == null
+            || controllerRotation.action.ReadValueAsObject() == null
+        ) {
+            // Update the input pose
+            SetInputPosition(
+                controllerPosition.action.ReadValue<Vector3>()
+            );
+            SetInputRotation(
+                controllerRotation.action.ReadValue<Quaternion>()
+            );
+        }
+
+        // The following codes is still called even when the tracking input
+        // is not updated, because sometimes the input pose can be set
+        // by other scripts using SetInputPosition, SetInputRotation 
+        // (e.g. XRNetworkController)
 
         // Get the output pose in local frame
         var (position, rotation) = motionMapping.GetOutputPose();
@@ -112,8 +124,18 @@ public class VRMotionMapping : MonoBehaviour
         }
     }
 
+    public void SetInputPosition(Vector3 position)
+    {
+        motionMapping.SetInputPosition(position);
+    }
+
+    public void SetInputRotation(Quaternion rotation)
+    {
+        motionMapping.SetInputRotation(rotation);
+    }
+
     // Reset tracking event
-    private void ResetTracking()
+    public void ResetTracking()
     {
         // Get the desired reset pose in world frame
         var (position, rotation) = armController.GetEETargetPose();
@@ -125,7 +147,7 @@ public class VRMotionMapping : MonoBehaviour
     }
 
     // Tracking event
-    private void ChangeTrackingState()
+    public void ChangeTrackingState()
     {
         if (motionMapping.IsTracking())
         {
@@ -137,13 +159,13 @@ public class VRMotionMapping : MonoBehaviour
         }
     }
 
-    private void StopTracking()
+    public void StopTracking()
     {
         motionMapping.StopTracking();
     }
 
     // Mode event
-    private void ControlModeSwitch()
+    public void ControlModeSwitch()
     {
         if (motionMapping.GetControlMode() == MotionMapping.ControlMode.Full)
         {

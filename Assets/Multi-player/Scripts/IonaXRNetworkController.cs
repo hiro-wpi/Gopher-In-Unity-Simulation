@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Unity.Netcode;
+using UnityEngine.XR;
 
 /// <summary>
-///    
+///     
 /// </summary>
-public class NetworkIonaController : NetworkBehaviour
+public class IonaXRNetworkController : NetworkBehaviour
 {
     // Network Input
     [SerializeField] private NetworkInputActions inputActions;
@@ -19,13 +20,9 @@ public class NetworkIonaController : NetworkBehaviour
     [SerializeField] private CameraController cameraController;
     [SerializeField] private ChestController chestController;
 
-    // Switches Arm Movement Between Rotation and Translation
-    // This is used only when the control input
-    // for rotation and translation are the same (OnTranslateRotate())
-    public enum ArmControlMode { translation = 0, rotation = 1 }
-    [field: SerializeField] public ArmControlMode leftControlMode = ArmControlMode.translation;
-    [field: SerializeField] public ArmControlMode rightControlMode = ArmControlMode.translation;
-    [SerializeField, ReadOnly] private bool isCameraActive = false;
+    // Motion Mapping
+    [SerializeField] private VRMotionMapping leftVRMotionMapping;
+    [SerializeField] private VRMotionMapping rightVRMotionMapping;
 
     public override void OnNetworkSpawn()
     {
@@ -77,41 +74,26 @@ public class NetworkIonaController : NetworkBehaviour
                 }
             }
 
-            else if (actions[i].name == "LeftArmPreset")
+            else if (actions[i].name == "LeftArmTranslate")
             {
                 if (actionValues[i] == "Null")
                 {
-                    continue;
-                }
-
-                var (value, P, R) = ReadValue<bool>(actionValues[i]);
-                if (P)
-                {
-                    leftArmController.MoveToPreset(0);
-                }
-            }
-
-            else if (actions[i].name == "LeftArmMove")
-            {
-                if (actionValues[i] == "Null")
-                {
-                    leftArmController.SetLinearVelocity(Vector3.zero);
-                    leftArmController.SetAngularVelocity(Vector3.zero);
                     continue;
                 }
 
                 var (value, P, R) = ReadValue<Vector3>(actionValues[i]);
-                if(leftControlMode == ArmControlMode.translation)
+                leftVRMotionMapping.SetInputPosition(value);
+            }
+
+            else if (actions[i].name == "LeftArmRotate")
+            {
+                if (actionValues[i] == "Null")
                 {
-                    leftArmController.SetLinearVelocity(value);
+                    continue;
                 }
-                else if(leftControlMode == ArmControlMode.rotation)
-                {
-                    // Rotation uses the same keys as translation
-                    // Need to convert axis
-                    value = new Vector3(-value.z, value.x, -value.y);
-                    leftArmController.SetAngularVelocity(value);
-                }
+
+                var (value, P, R) = ReadValue<Quaternion>(actionValues[i]);
+                leftVRMotionMapping.SetInputRotation(value);
             }
 
             else if (actions[i].name == "LeftArmGrasp")
@@ -122,7 +104,6 @@ public class NetworkIonaController : NetworkBehaviour
                 }
 
                 var (value, P, R) = ReadValue<bool>(actionValues[i]);
-                Debug.Log(P.ToString() + R.ToString());
                 if (P)
                 {
                     leftArmController.ChangeGripperStatus();
@@ -139,14 +120,27 @@ public class NetworkIonaController : NetworkBehaviour
                 var (value, P, R) = ReadValue<bool>(actionValues[i]);
                 if (P)
                 {
-                    if(leftControlMode == ArmControlMode.translation)
-                    {
-                        leftControlMode = ArmControlMode.rotation;
-                    }
-                    else if(leftControlMode == ArmControlMode.rotation)
-                    {
-                        leftControlMode = ArmControlMode.translation;
-                    }
+                    leftVRMotionMapping.ChangeTrackingState();
+                }
+                if (R
+                    && leftVRMotionMapping.Mode == 
+                        VRMotionMapping.TrackingMode.Hold
+                ) {
+                    leftVRMotionMapping.StopTracking();
+                }
+            }
+
+            else if (actions[i].name == "LeftArmPrimaryAction")
+            {
+                if (actionValues[i] == "Null")
+                {
+                    continue;
+                }
+
+                var (value, P, R) = ReadValue<bool>(actionValues[i]);
+                if (P)
+                {
+                    leftVRMotionMapping.ControlModeSwitch();
                 }
             }
 
@@ -164,41 +158,26 @@ public class NetworkIonaController : NetworkBehaviour
                 }
             }
 
-            else if (actions[i].name == "RightArmPreset")
+            else if (actions[i].name == "RightArmTranslate")
             {
                 if (actionValues[i] == "Null")
                 {
-                    continue;
-                }
-
-                var (value, P, R) = ReadValue<bool>(actionValues[i]);
-                if (P)
-                {
-                    rightArmController.MoveToPreset(0);
-                }
-            }
-
-            else if (actions[i].name == "RightArmMove")
-            {
-                if (actionValues[i] == "Null")
-                {
-                    rightArmController.SetLinearVelocity(Vector3.zero);
-                    rightArmController.SetAngularVelocity(Vector3.zero);
                     continue;
                 }
 
                 var (value, P, R) = ReadValue<Vector3>(actionValues[i]);
-                if(rightControlMode == ArmControlMode.translation)
+                rightVRMotionMapping.SetInputPosition(value);
+            }
+
+            else if (actions[i].name == "RightArmRotate")
+            {
+                if (actionValues[i] == "Null")
                 {
-                    rightArmController.SetLinearVelocity(value);
+                    continue;
                 }
-                else if(rightControlMode == ArmControlMode.rotation)
-                {
-                    // Rotation uses the same keys as translation
-                    // Need to convert axis
-                    value = new Vector3(-value.z, value.x, -value.y);
-                    rightArmController.SetAngularVelocity(value);
-                }
+
+                var (value, P, R) = ReadValue<Quaternion>(actionValues[i]);
+                rightVRMotionMapping.SetInputRotation(value);
             }
 
             else if (actions[i].name == "RightArmGrasp")
@@ -225,14 +204,27 @@ public class NetworkIonaController : NetworkBehaviour
                 var (value, P, R) = ReadValue<bool>(actionValues[i]);
                 if (P)
                 {
-                    if(rightControlMode == ArmControlMode.translation)
-                    {
-                        rightControlMode = ArmControlMode.rotation;
-                    }
-                    else if(rightControlMode == ArmControlMode.rotation)
-                    {
-                        rightControlMode = ArmControlMode.translation;
-                    }
+                    rightVRMotionMapping.ChangeTrackingState();
+                }
+                if (R
+                    && rightVRMotionMapping.Mode == 
+                        VRMotionMapping.TrackingMode.Hold
+                ) {
+                    rightVRMotionMapping.StopTracking();
+                }
+            }
+
+            else if (actions[i].name == "RightArmPrimaryAction")
+            {
+                if (actionValues[i] == "Null")
+                {
+                    continue;
+                }
+
+                var (value, P, R) = ReadValue<bool>(actionValues[i]);
+                if (P)
+                {
+                    rightVRMotionMapping.ControlModeSwitch();
                 }
             }
 
@@ -242,46 +234,13 @@ public class NetworkIonaController : NetworkBehaviour
                 {
                     continue;
                 }
-
-                var (value, P, R) = ReadValue<bool>(actionValues[i]);
-                if (P)
-                {
-                    isCameraActive = !isCameraActive;
-                    if (!isCameraActive)
-                    {
-                        cameraController.SetVelocity(Vector3.zero);
-                    }
-                }
             }
 
             else if (actions[i].name == "CameraRotate")
             {
-                if (!isCameraActive)
-                {
-                    continue;
-                }
-                if (actionValues[i] == "Null")
-                {
-                    cameraController.SetVelocity(Vector3.zero);
-                    continue;
-                }
-
-                var (value, P, R) = ReadValue<Vector2>(actionValues[i]);
-                var velocity = new Vector3(0.0f, -value.x, value.y);
-                cameraController.SetVelocity(velocity);
-            }
-
-            else if (actions[i].name == "CameraHome")
-            {
                 if (actionValues[i] == "Null")
                 {
                     continue;
-                }
-
-                var (value, P, R) = ReadValue<bool>(actionValues[i]);
-                if (P)
-                {
-                    cameraController.HomeCamera();
                 }
             }
 

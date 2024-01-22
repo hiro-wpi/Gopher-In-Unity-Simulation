@@ -34,7 +34,7 @@ public class ArticulationArmController : ArmController
     public enum ManualControlMode { Position, Velocity }
     [SerializeField]
     private ManualControlMode manualControlMode = ManualControlMode.Velocity;
-    // manual control event
+    // manual control event (triggered after switching to manual control)
     public delegate void SwitchToManualControlHandler();
     public event SwitchToManualControlHandler ManualControlEvent;
 

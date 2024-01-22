@@ -470,7 +470,7 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings: []
       m_Flags: 0
-    m_Reference: {fileID: 187161793506945269, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+    m_Reference: {fileID: 2024592425206972650, guid: dd91c9b36b637f9409b31242f8edde9b, type: 3}
   modeButton:
     m_UseReference: 1
     m_Action:
@@ -482,7 +482,7 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings: []
       m_Flags: 0
-    m_Reference: {fileID: -39621165287172452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+    m_Reference: {fileID: 8028441739850732188, guid: dd91c9b36b637f9409b31242f8edde9b, type: 3}
   controllerPosition:
     m_UseReference: 1
     m_Action:
@@ -494,7 +494,7 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings: []
       m_Flags: 0
-    m_Reference: {fileID: -3326005586356538449, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+    m_Reference: {fileID: -3695143169737287136, guid: dd91c9b36b637f9409b31242f8edde9b, type: 3}
   controllerRotation:
     m_UseReference: 1
     m_Action:
@@ -506,7 +506,7 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings: []
       m_Flags: 0
-    m_Reference: {fileID: 5101698808175986029, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+    m_Reference: {fileID: -5967080187142855955, guid: dd91c9b36b637f9409b31242f8edde9b, type: 3}
   trackingMode: 1
   outputTransform: {fileID: 0}
 --- !u!1 &1151652191
@@ -602,7 +602,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraController: {fileID: 77500013760736259}
-  simulationInputLagMean: 175
+  simulationInputLagMean: 100
   simulationInputLagStd: 25
   isCameraActive: 0
 --- !u!1 &1384429321
@@ -764,6 +764,66 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: f027e104-af5f-4271-ae80-71d1e81f6a1e
     m_ActionName: GopherControl/ChestTranslate
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 31275576-2892-4126-8c2e-07aab1cb9a0f
+    m_ActionName: GopherControl/LeftArmPreset
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 73c179ed-5962-49e1-abfa-0df7d6954ea3
+    m_ActionName: GopherControl/LeftArmTranslate
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 355a3ea6-5d46-4641-8f6d-de33e99a5cde
+    m_ActionName: GopherControl/LeftArmRotate
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0866fe9e-99ce-4b85-9a84-dca6937981b8
+    m_ActionName: GopherControl/LeftArmSwitch
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b3ae3f24-62da-4669-a574-de6f5753708f
+    m_ActionName: GopherControl/RightArmPreset
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8c3786dd-e7a2-45b3-97e3-e4cc6f862013
+    m_ActionName: GopherControl/RightArmTranslate
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b64d9423-cd6b-4a15-ba0d-e97722559f4a
+    m_ActionName: GopherControl/RightArmRotate
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 64a60df8-610b-4ee6-b6c6-663f6cd5e562
+    m_ActionName: GopherControl/RightArmSwitch
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: d3c5fa2b-4390-4272-ac44-2a4e963cc512
+    m_ActionName: GopherControl/CameraToggle
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2538f950-956c-4161-94ef-bd7855741589
+    m_ActionName: GopherControl/CameraRotate
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6ea90425-9155-48f0-ba86-9b9a69ec18e3
+    m_ActionName: GopherControl/CameraHome
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f8c7e6b4-5584-456c-91d6-dbb0bba874e3
+    m_ActionName: GopherControl/LeftArmPrimaryAction
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 3282e2e4-ebf6-4760-a56e-d165ddb7cb92
+    m_ActionName: GopherControl/LeftArmSecondaryAction
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 124a83f1-aafc-4cfd-9dec-102fae6cba00
+    m_ActionName: GopherControl/RightArmPrimaryAction
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8fd6265e-1b98-4de7-9f6c-be93337d91e8
+    m_ActionName: GopherControl/RightArmSecondaryAction
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: GopherControl
@@ -782,7 +842,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ActionAssets:
-  - {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   - {fileID: -944628639613478452, guid: dd91c9b36b637f9409b31242f8edde9b, type: 3}
 --- !u!1 &1390129918
 GameObject:
@@ -884,7 +943,7 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings: []
       m_Flags: 0
-    m_Reference: {fileID: -6131295136447488360, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+    m_Reference: {fileID: 3919766774445699293, guid: dd91c9b36b637f9409b31242f8edde9b, type: 3}
   modeButton:
     m_UseReference: 1
     m_Action:
@@ -896,7 +955,7 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings: []
       m_Flags: 0
-    m_Reference: {fileID: -7534565195791688367, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+    m_Reference: {fileID: 7486530883216910113, guid: dd91c9b36b637f9409b31242f8edde9b, type: 3}
   controllerPosition:
     m_UseReference: 1
     m_Action:
@@ -908,7 +967,7 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings: []
       m_Flags: 0
-    m_Reference: {fileID: -2024308242397127297, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+    m_Reference: {fileID: 1812875721148112625, guid: dd91c9b36b637f9409b31242f8edde9b, type: 3}
   controllerRotation:
     m_UseReference: 1
     m_Action:
@@ -920,7 +979,7 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings: []
       m_Flags: 0
-    m_Reference: {fileID: 8248158260566104461, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+    m_Reference: {fileID: 4820902197222378920, guid: dd91c9b36b637f9409b31242f8edde9b, type: 3}
   trackingMode: 1
   outputTransform: {fileID: 0}
 --- !u!1 &1863727367
@@ -968,7 +1027,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chestController: {fileID: 8558703757947020726}
-  simulationInputLagMean: 175
+  simulationInputLagMean: 100
   simulationInputLagStd: 25
 --- !u!1 &6415201471601310
 GameObject:

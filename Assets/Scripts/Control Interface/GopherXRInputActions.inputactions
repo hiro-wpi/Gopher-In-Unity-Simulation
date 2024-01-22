@@ -24,9 +24,63 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "LeftArmPreset",
+                    "type": "Button",
+                    "id": "31275576-2892-4126-8c2e-07aab1cb9a0f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeftArmTranslate",
+                    "type": "Value",
+                    "id": "73c179ed-5962-49e1-abfa-0df7d6954ea3",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "LeftArmRotate",
+                    "type": "Value",
+                    "id": "355a3ea6-5d46-4641-8f6d-de33e99a5cde",
+                    "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "LeftArmGrasp",
                     "type": "Button",
                     "id": "bbf69b83-370c-4e76-9e31-d300f25fce82",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeftArmSwitch",
+                    "type": "Button",
+                    "id": "0866fe9e-99ce-4b85-9a84-dca6937981b8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeftArmPrimaryAction",
+                    "type": "Button",
+                    "id": "f8c7e6b4-5584-456c-91d6-dbb0bba874e3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeftArmSecondaryAction",
+                    "type": "Button",
+                    "id": "3282e2e4-ebf6-4760-a56e-d165ddb7cb92",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -42,9 +96,90 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "RightArmPreset",
+                    "type": "Button",
+                    "id": "b3ae3f24-62da-4669-a574-de6f5753708f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RightArmTranslate",
+                    "type": "Value",
+                    "id": "8c3786dd-e7a2-45b3-97e3-e4cc6f862013",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "RightArmRotate",
+                    "type": "Value",
+                    "id": "b64d9423-cd6b-4a15-ba0d-e97722559f4a",
+                    "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "RightArmGrasp",
                     "type": "Button",
                     "id": "b7cf5c03-7286-4dff-bfe3-b06aaa22ec86",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RightArmSwitch",
+                    "type": "Button",
+                    "id": "64a60df8-610b-4ee6-b6c6-663f6cd5e562",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RightArmPrimaryAction",
+                    "type": "Button",
+                    "id": "124a83f1-aafc-4cfd-9dec-102fae6cba00",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RightArmSecondaryAction",
+                    "type": "Button",
+                    "id": "8fd6265e-1b98-4de7-9f6c-be93337d91e8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CameraToggle",
+                    "type": "Button",
+                    "id": "d3c5fa2b-4390-4272-ac44-2a4e963cc512",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CameraRotate",
+                    "type": "Value",
+                    "id": "2538f950-956c-4161-94ef-bd7855741589",
+                    "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "CameraHome",
+                    "type": "Button",
+                    "id": "6ea90425-9155-48f0-ba86-9b9a69ec18e3",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -61,17 +196,6 @@
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "0fe0aef4-dc77-4d48-9d46-c26ecfdc7ddc",
-                    "path": "<XRController>{LeftHand}/{TriggerButton}",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "LeftArmGrasp",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "",
                     "id": "6af2ab1c-d160-4500-86d5-2a4ba8f58a5c",
@@ -107,8 +231,8 @@
                 },
                 {
                     "name": "",
-                    "id": "9b475b5f-7797-46ff-9afe-368749c7a149",
-                    "path": "<XRController>{RightHand}/{TriggerButton}",
+                    "id": "05779817-2e46-4666-852e-9179d8264e95",
+                    "path": "<XRController>{RightHand}/triggerPressed",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -124,6 +248,270 @@
                     "processors": "",
                     "groups": "",
                     "action": "ChestTranslate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "28983457-5ebb-43c0-a248-530c62a98c72",
+                    "path": "<XRHMD>/centerEyeRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraRotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "efa212dd-5e38-4b0b-a038-5031e6aa70c9",
+                    "path": "<XRController>{LeftHand}/gripPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftArmSwitch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e8f896bd-592a-4050-aad3-bd468c53bc36",
+                    "path": "<MetaAimHand>{LeftHand}/indexPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftArmSwitch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Vector 3 Fallback",
+                    "id": "12c467a6-f335-46e6-b14e-234721c51800",
+                    "path": "Vector3Fallback",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftArmTranslate",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "first",
+                    "id": "c3e3c929-3fa6-4362-b5ea-a4bfd8918597",
+                    "path": "<XRController>{LeftHand}/pointerPosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftArmTranslate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "second",
+                    "id": "1d8cc7a9-feee-4d6c-b13b-8d0619dc46e7",
+                    "path": "<XRController>{LeftHand}/devicePosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftArmTranslate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "third",
+                    "id": "d91415e7-6131-4395-87a7-9138a71c827c",
+                    "path": "<XRHandDevice>{LeftHand}/devicePosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftArmTranslate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Quaternion Fallback",
+                    "id": "e500777b-bb69-4b93-bbb4-d43e61990908",
+                    "path": "QuaternionFallback",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftArmRotate",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "first",
+                    "id": "b697d233-c25c-4871-9e48-b147b9371413",
+                    "path": "<XRController>{LeftHand}/pointerRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftArmRotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "second",
+                    "id": "9fa67279-61f2-4506-b7d3-8992b9b69e5e",
+                    "path": "<XRController>{LeftHand}/deviceRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftArmRotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "third",
+                    "id": "50c0f014-850e-407b-bccc-6e6a9ed4e903",
+                    "path": "<XRHandDevice>{LeftHand}/deviceRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftArmRotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Vector 3 Fallback",
+                    "id": "2f34122f-4856-4cd7-b032-a8e762172bff",
+                    "path": "Vector3Fallback",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightArmTranslate",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "first",
+                    "id": "f0b1b00f-c387-410f-b8e8-9144d3379c32",
+                    "path": "<XRController>{RightHand}/pointerPosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightArmTranslate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "second",
+                    "id": "08227ba9-599f-4132-b5fe-dfa5e8ac3137",
+                    "path": "<XRController>{RightHand}/devicePosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightArmTranslate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "third",
+                    "id": "17346b7c-7a16-4364-8a64-681ab6c6aee9",
+                    "path": "<XRHandDevice>{RightHand}/devicePosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightArmTranslate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Quaternion Fallback",
+                    "id": "c93036aa-59bc-417e-a4a5-f89e0c4040ba",
+                    "path": "QuaternionFallback",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightArmRotate",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "first",
+                    "id": "2377116e-3207-42dd-978f-6ba892aa974a",
+                    "path": "<XRController>{RightHand}/pointerRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightArmRotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "second",
+                    "id": "67d27c51-9c6e-47c5-ada0-35420029e53d",
+                    "path": "<XRController>{RightHand}/deviceRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightArmRotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "third",
+                    "id": "64895a4f-1068-4d2a-88a7-9e777e093748",
+                    "path": "<XRHandDevice>{RightHand}/deviceRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightArmRotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "fa057b08-2fd1-4e59-a814-f56578575477",
+                    "path": "<XRController>{LeftHand}/triggerPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftArmGrasp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c233bde3-6174-4a63-8ba1-eec3d0102dde",
+                    "path": "<XRController>{RightHand}/gripPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightArmSwitch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4222f214-fd47-4046-93e0-5c776b7dbb09",
+                    "path": "<MetaAimHand>{RightHand}/indexPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightArmSwitch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8e594532-e30e-4f7a-a1f4-089f02b41053",
+                    "path": "<XRController>{LeftHand}/{PrimaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftArmPrimaryAction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6fb9cbc7-ec74-422b-afb1-3fe539d1b84c",
+                    "path": "<XRController>{RightHand}/{PrimaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightArmPrimaryAction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

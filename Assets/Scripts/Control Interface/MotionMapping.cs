@@ -192,6 +192,16 @@ public class MotionMapping : MonoBehaviour
     }
 
     // Set current tracking input
+    public void SetInputPosition(Vector3 position)
+    {
+        inputPosition = position;
+    }
+
+    public void SetInputRotation(Quaternion rotation)
+    {
+        inputRotation = rotation;
+    }
+
     public void SetInputPose(Vector3 position, Quaternion rotation)
     {
         inputPosition = position;
