@@ -297,7 +297,7 @@ public class ArticulationArmController : ArmController
     // Some getter functions
     // Get the current joint angles
     // TODO do it in ArmController
-    public float[] GetCurrentJointAngles()
+    public override float[] GetJointAngles()
     {
         return jointController.GetCurrentJointTargets();
     }

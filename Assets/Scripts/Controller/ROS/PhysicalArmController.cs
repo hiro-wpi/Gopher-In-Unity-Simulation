@@ -97,6 +97,11 @@ public class PhysicalArmController : ArmController
 
     // TODO
     // Some getter functions
+    public override float[] GetJointAngles()
+    {
+        return new float[0];
+    }
+    
     // Get the actual end effector pose
     public override (Vector3, Quaternion) GetEEPose()
     {

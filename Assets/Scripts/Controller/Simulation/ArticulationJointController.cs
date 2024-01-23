@@ -36,7 +36,9 @@ public class ArticulationJointController : MonoBehaviour
         // Get colliders of all articulation bodies
         // Only consider those that are active by default
         colliders = articulationChain[0].GetComponentsInChildren<Collider>();
-        colliders = colliders.Where(collider => collider.enabled == true).ToArray();
+        colliders = colliders.Where(
+            collider => collider.enabled == true
+        ).ToArray();
     }
 
     void Start() {}
@@ -162,34 +164,40 @@ public class ArticulationJointController : MonoBehaviour
     )
     {
         // Due to the fact that the robot control is actually
-        // just position control, interpolation is needed to 
-        // convert targets, speeds and accelerations values into a single list
-        // where each element represents the target positions at each Time.fixedDeltaTime
+        // just position control, interpolation is needed to convert
+        // targets, speeds and accelerations values into a single list
+        // where each element represents the target positions
+        // at each Time.fixedDeltaTime
         targetPositions = new List<float[]>();
 
-        // For each waypoint/timestep
-        for (int i = 0; i < timeSteps.Length; i++)
+        // For each waypoint/timestep (starting at 1)
+        float prevTime = 0;
+        for (int i = 1; i < timeSteps.Length; i++)
         {
             // For each time frame in this timestep
-            float prevTime = i == 0 ? 0 : timeSteps[i - 1];
-            int frames = Mathf.RoundToInt((timeSteps[i] - prevTime) / Time.fixedDeltaTime);
+            prevTime = timeSteps[i - 1];
+            int frames = Mathf.RoundToInt(
+                (timeSteps[i] - prevTime) / Time.fixedDeltaTime
+            );
             for (int frame = 0; frame < frames; frame++)
             {
+
                 // For each joint in this time frame
                 float[] positions = new float[articulationChain.Length];
                 for (int joint = 0; joint < articulationChain.Length; joint++)
                 {
-                    float t = (float) frame / frames;
+                    float t = (float) (frame + 1) / frames;
                     // Calculate the target positions 
-                    positions[joint] = // (speeds != null && accelerations != null) ?
+                    positions[joint] = 
                         // TODO implement model with speed and acceleration
                         // targets[i][joint] :
                         // + speeds[i][joint] * t 
                         // + 0.5f * accelerations[i][joint] * t * t : 
                         // Only target is given, use linear interpolation
-                        Mathf.Lerp(targets[i == 0 ? 0 : i - 1][joint], targets[i][joint], t);
+                        Mathf.Lerp(
+                            targets[i - 1][joint], targets[i][joint], t
+                        );
                 }
-
                 // Add the target positions to the list
                 targetPositions.Add(positions);
             }
@@ -207,21 +215,16 @@ public class ArticulationJointController : MonoBehaviour
     private IEnumerator SetJointTrajectoryCoroutine(Action reached = null)
     {
         currTrajectoryIndex = 0;
-        yield return new WaitUntil(() => SetJointTrajectoryStepAndCheck() == true);
-        reached?.Invoke();
-    }
-
-    private bool SetJointTrajectoryStepAndCheck()
-    {
-        if (targetPositions.Count == 0)
+        while(currTrajectoryIndex < targetPositions.Count)
         {
-            return true;
+            
+            SetJointTargetsStep(targetPositions[currTrajectoryIndex]);
+            // Introduce a delay for fixedDeltaTime pause between each frame
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+            currTrajectoryIndex++;
         }
-        
-        // Set joint targets of the next frame in the trajectory
-        SetJointTargetsStep(targetPositions[currTrajectoryIndex++]);
-        // Check if done
-        return currTrajectoryIndex == targetPositions.Count;
+
+        reached?.Invoke();
     }
 
     // Stop joints
@@ -261,4 +264,22 @@ public class ArticulationJointController : MonoBehaviour
         }
         return targets;
     }
+
+    // Get Current Joint Positions
+    // TODO Not Tested Yet
+    private float[] GetCurrentJointPositions()
+    {
+        // Container
+        float[] positions = new float[articulationChain.Length];
+        // Get each joint position from xDrive
+        for (int i = 0; i < articulationChain.Length; ++i)
+        {
+            positions[i] = (
+                articulationChain[i].jointPosition[0] * Mathf.Deg2Rad
+            );
+        }
+        return positions;
+    }
+
+
 }

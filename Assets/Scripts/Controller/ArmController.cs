@@ -137,6 +137,9 @@ public abstract class ArmController : MonoBehaviour
     public virtual void EmergencyStopResume() {}
 
     // Some getter functions
+    // Get the current joint angles
+    public abstract float[] GetJointAngles();
+
     // Get the actual end effector pose
     public abstract (Vector3, Quaternion) GetEEPose();
 
