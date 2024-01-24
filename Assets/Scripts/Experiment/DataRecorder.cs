@@ -101,10 +101,11 @@ public class DataRecorder : MonoBehaviour
         collisionReader = robot.GetComponentInChildren<CollisionReader>();
         collisionRecordIndex = -1;
         graspings = robot.GetComponentsInChildren<Grasping>();
-        // from task
-        this.task = task;
-        taskValueToRecordHeader = task.GetTaskValueToRecordHeader();
-        taskStringToRecordHeader = task.GetTaskStringToRecordHeader();
+        // TODO
+        // // from task
+        // this.task = task;
+        // taskValueToRecordHeader = task.GetTaskValueToRecordHeader();
+        // taskStringToRecordHeader = task.GetTaskStringToRecordHeader();
 
         // Headers
         robotValueTextWriter.WriteLine(
@@ -165,8 +166,8 @@ public class DataRecorder : MonoBehaviour
     // Data from task
     void UpdateTaskData()
     {
-        taskValueToRecord = task.GetTaskValueToRecord();
-        taskStringToRecord = task.GetTaskStringToRecord();
+        // taskValueToRecord = task.GetTaskValueToRecord();
+        // taskStringToRecord = task.GetTaskStringToRecord();
     }
 
     // Data from robot

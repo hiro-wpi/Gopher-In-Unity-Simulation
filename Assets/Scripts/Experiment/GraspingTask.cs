@@ -22,7 +22,7 @@ public class GraspingTask : Task
                 return false;
         }
         goals[0].DisableGoalVisualEffect();
-        gUI.ShowPopUpMessage("Current Task Completed!");
+        GUI.ShowPopUpMessage("Current Task Completed!");
         return true;
     }
 
@@ -37,43 +37,42 @@ public class GraspingTask : Task
                 string.Format("{0:0.000}", distance) + " m" + "\n" +
                 "away from the goal.";
     }
-    
 
-    public override string[] GetTaskValueToRecordHeader()
-    {
-        // Header of task objects transform
-        valueToRecordHeader = new string[6 * taskObjects.Length];
-        for (int i = 0; i < taskObjects.Length; ++i)
-        {
-            string objectName = taskObjects[i].name;
-            valueToRecordHeader[6*i+0] = objectName + "_x";
-            valueToRecordHeader[6*i+1] = objectName + "_y";
-            valueToRecordHeader[6*i+2] = objectName + "_z";
-            valueToRecordHeader[6*i+3] = objectName + "_ax";
-            valueToRecordHeader[6*i+4] = objectName + "_ay";
-            valueToRecordHeader[6*i+5] = objectName + "_az";
-        }
+    // public override string[] GetTaskValueToRecordHeader()
+    // {
+    //     // Header of task objects transform
+    //     valueToRecordHeader = new string[6 * taskObjects.Length];
+    //     for (int i = 0; i < taskObjects.Length; ++i)
+    //     {
+    //         string objectName = taskObjects[i].name;
+    //         valueToRecordHeader[6*i+0] = objectName + "_x";
+    //         valueToRecordHeader[6*i+1] = objectName + "_y";
+    //         valueToRecordHeader[6*i+2] = objectName + "_z";
+    //         valueToRecordHeader[6*i+3] = objectName + "_ax";
+    //         valueToRecordHeader[6*i+4] = objectName + "_ay";
+    //         valueToRecordHeader[6*i+5] = objectName + "_az";
+    //     }
 
-        return valueToRecordHeader;
-    }
+    //     return valueToRecordHeader;
+    // }
 
-    public override float[] GetTaskValueToRecord()
-    {
-        // Record task objects transform
-        valueToRecord = new float[6 * taskObjects.Length];
-        for (int i = 0; i < taskObjects.Length; ++i)
-        {
-            Vector3 position = Utils.ToFLU(taskObjects[0].transform.position);
-            Vector3 rotation = Mathf.Deg2Rad * 
-                               Utils.ToFLU(taskObjects[0].transform.rotation).eulerAngles;
-            valueToRecord[6*i+0] = position.x;
-            valueToRecord[6*i+1] = position.y;
-            valueToRecord[6*i+2] = position.z;
-            valueToRecord[6*i+3] = rotation.x;
-            valueToRecord[6*i+4] = rotation.y;
-            valueToRecord[6*i+5] = rotation.z;
-        }
+    // public override float[] GetTaskValueToRecord()
+    // {
+    //     // Record task objects transform
+    //     valueToRecord = new float[6 * taskObjects.Length];
+    //     for (int i = 0; i < taskObjects.Length; ++i)
+    //     {
+    //         Vector3 position = Utils.ToFLU(taskObjects[0].transform.position);
+    //         Vector3 rotation = Mathf.Deg2Rad * 
+    //                            Utils.ToFLU(taskObjects[0].transform.rotation).eulerAngles;
+    //         valueToRecord[6*i+0] = position.x;
+    //         valueToRecord[6*i+1] = position.y;
+    //         valueToRecord[6*i+2] = position.z;
+    //         valueToRecord[6*i+3] = rotation.x;
+    //         valueToRecord[6*i+4] = rotation.y;
+    //         valueToRecord[6*i+5] = rotation.z;
+    //     }
 
-        return valueToRecord;
-    }
+    //     return valueToRecord;
+    // }
 }

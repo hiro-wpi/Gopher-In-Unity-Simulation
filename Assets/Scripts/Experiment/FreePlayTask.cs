@@ -25,8 +25,9 @@ public class FreePlayTask : Task
         if (Input.GetKeyDown(KeyCode.N))
         {
             // Get active cameras
-            Camera[] cameras = gUI.GetCurrentActiveCameras();
+            Camera[] cameras = GUI.GetCurrentActiveCameras();
             // Try all active cameras
+            string output = "";
             foreach(Camera cam in cameras)
             {
                 barCodeScanner.cam = cam;
@@ -35,11 +36,11 @@ public class FreePlayTask : Task
                 if (result != "N/A")
                 {
                     // remove guard pattern for shortening
-                    result = result.Substring(1, result.Length-2);
+                    output = result.Substring(1, result.Length-2);
                     break;
                 }
             }
-            gUI.ShowPopUpMessage("Scan result: " + result, 2.0f);
+            GUI.ShowPopUpMessage("Scan result: " + output, 2.0f);
         }
 
         

@@ -147,7 +147,7 @@ public class ExperimentManager : MonoBehaviour
     {
         if (!dataRecorder.isRecording)
         {
-            string fileName = recordFolder + "/" + currentTask.taskName;
+            string fileName = recordFolder + "/" + currentTask.TaskName;
             dataRecorder.StartRecording(fileName, spawnedRobots, currentTask);
         }
         else
@@ -207,7 +207,7 @@ public class ExperimentManager : MonoBehaviour
         
         // Load new scene and 
         // other game objects (objects, humans, robots, etc.)
-        Debug.Log("Task " + currentTask.taskName + " is loading.");
+        Debug.Log("Task " + currentTask.TaskName + " is loading.");
         StartCoroutine(LoadTaskCoroutine());
         
         // Task flag
@@ -223,7 +223,7 @@ public class ExperimentManager : MonoBehaviour
             DontDestroyOnLoad(this.gameObject);
 
             // MainScene
-            SceneManager.LoadScene(currentTask.sceneName);
+            SceneManager.LoadScene(currentTask.SceneName);
             yield return new WaitForSeconds(0.3f);
 
             // Generate robots
@@ -257,7 +257,7 @@ public class ExperimentManager : MonoBehaviour
                 DontDestroyOnLoad(this.gameObject);
 
                 // MainScene
-                SceneManager.LoadScene(currentTask.sceneName);
+                SceneManager.LoadScene(currentTask.SceneName);
                 yield return new WaitForSeconds(0.3f);
                 // Generate robots
                 spawnedRobots = currentTask.GenerateRobots();
@@ -291,7 +291,7 @@ public class ExperimentManager : MonoBehaviour
         }
 
         // UI
-        gUI = currentTask.gUI;
+        gUI = currentTask.GUI;
         gUI.SetUIActive(true);
         // TODO cUI = currentTask.CUI;
 
@@ -312,11 +312,11 @@ public class ExperimentManager : MonoBehaviour
             experimentMenus.LoadLoading();
         
         // Temp
-        Debug.Log("Reload task " + currentTask.taskName);
+        Debug.Log("Reload task " + currentTask.TaskName);
         // Load scene and 
         // other game objects (objects, humans, robots, etc.)
         StartCoroutine(LoadTaskCoroutine());
-        currentTask.ResetTaskStatus();
+        currentTask.ResetTask();
         taskStarted = false;
     }
 
