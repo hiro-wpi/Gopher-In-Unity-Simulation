@@ -26,7 +26,7 @@ public abstract class Experiment : MonoBehaviour
     protected Vector3[] dynamicObjectSpawnPositions;
     protected Vector3[] dynamicObjectSpawnRotations;
     protected Vector3[][] dynamicObjectTrajectories;
-    
+
     // task object
     public GameObject[] taskObjects;
     protected Vector3[] taskObjectSpawnPositions;
@@ -40,39 +40,44 @@ public abstract class Experiment : MonoBehaviour
     public GraphicalInterface[] graphicalInterfaces;
     public ControlInterface[] controlInterfaces;
 
-    
     // Generate task
     protected virtual T GenerateTask<T>(int levelIndex, int taskIndex, GameObject parent) 
                 where T : Task 
     {
         // Instantiate task
-        GameObject taskObject = new GameObject(levelNames[levelIndex] + "-" + taskNames[taskIndex]);
+        GameObject taskObject = new GameObject(
+            levelNames[levelIndex] + "-" + taskNames[taskIndex]
+        );
         taskObject.transform.parent = parent.transform;
         T task = taskObject.AddComponent<T>();
 
         // General
-        task.sceneName = sceneNames[0];
+        task.SceneName = sceneNames[0];
         if (!useSameScene)
-            task.sceneName = sceneNames[taskIndex];
-        task.taskName = levelNames[levelIndex] + "-" + taskNames[taskIndex];
-        task.taskDescription = taskDescriptions[taskIndex];
-        
+        {
+            task.SceneName = sceneNames[taskIndex];
+        }
+        task.TaskName = levelNames[levelIndex] + "-" + taskNames[taskIndex];
+        task.TaskDescription = taskDescriptions[taskIndex];
+
         // Detailed task information can be specified in derived method
         return task;
     }
-
 
     // Get the total numbe of tasks in this experiment
     public int GetNumTasks()
     {
         return tasks.Length;
     }
+
     // Get a specific task
     public Task GetTask(int taskIndex)
     {
         if (taskIndex > tasks.Length)
+        {
             return null;
-        
+        }
+
         return tasks[taskIndex];
     }
 } 

@@ -291,7 +291,7 @@ public class GraphicalInterface : MonoBehaviour
     private void RecordKey(string key)
     {
         // Record keys but not for checking result
-        currentTask.CheckInput(key, true);
+        currentTask.CheckInput(key);
     }
     
 
@@ -301,7 +301,7 @@ public class GraphicalInterface : MonoBehaviour
         // Change UI according to task
         if (currentTask == null)
             return;
-        taskDescriptionPanelText.text = currentTask.taskDescription;
+        taskDescriptionPanelText.text = currentTask.TaskDescription;
         taskStatusPanelText.text = "Task Duration: " 
                                  + string.Format("{0:0.00}", currentTask.GetTaskDuration()) + " s."
                                  + "\n\n"
@@ -716,7 +716,7 @@ public class GraphicalInterface : MonoBehaviour
     {
         // Record input and let task handle it
         if (currentTask != null)
-            currentTask.CheckInput(input.text, false);
+            currentTask.CheckInput(input.text);
         // Clear input
         input.text = "";
     }

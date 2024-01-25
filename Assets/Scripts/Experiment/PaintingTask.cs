@@ -45,7 +45,7 @@ public class PaintingTask : Task
                 return false;
             }
         
-        gUI.ShowPopUpMessage("Current Task Completed!");
+        GUI.ShowPopUpMessage("Current Task Completed!");
         return true;
     }
 
@@ -69,7 +69,7 @@ public class PaintingTask : Task
 
     public override GameObject[] GenerateTaskObjects()
     {
-        taskObjects = SpawnGameObjectArray(taskObjectSpawnArray);
+        taskObjects = SpawnGameObjectArray(TaskObjectSpawnArray);
 
         // Painter
         paintShooting = taskObjects[0].GetComponentInChildren<PaintShooting>();
@@ -84,7 +84,7 @@ public class PaintingTask : Task
 
     public override GameObject[] GenerateGoalObjects()
     {
-        goalObjects = SpawnGameObjectArray(goalObjectSpawnArray);
+        goalObjects = SpawnGameObjectArray(GoalObjectSpawnArray);
 
         // Paintable
         List<Paintable> paintablesList = new List<Paintable>();

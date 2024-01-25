@@ -26,8 +26,9 @@ public class ReadingTask : Task
         if (Input.GetKeyDown(KeyCode.N))
         {
             // Get active cameras
-            Camera[] cameras = gUI.GetCurrentActiveCameras();
+            Camera[] cameras = GUI.GetCurrentActiveCameras();
             // Try all active cameras
+            string output = "";
             foreach(Camera cam in cameras)
             {
                 barCodeScanner.cam = cam;
@@ -36,22 +37,20 @@ public class ReadingTask : Task
                 if (result != "N/A")
                 {
                     // remove guard pattern for shortening
-                    result = result.Substring(1, result.Length-2);
+                    output = result.Substring(1, result.Length-2);
                     break;
                 }
             }
-            gUI.ShowPopUpMessage("Scan result: " + result, 2.0f);
+            GUI.ShowPopUpMessage("Scan result: " + output, 2.0f);
         }
     }
 
 
-    public override void CheckInput(string input, bool onlyToRecord)
+    public override void CheckInput(string input)
     {
         // Record input
         base.CheckInput(input);
-        if (onlyToRecord)
-            return;
-        
+
         // Check result
         // ignore result with only one digit
         if (input.Length < 2)
@@ -59,15 +58,19 @@ public class ReadingTask : Task
         // check
         userResult = input;
         if (userResult == result)
+        {
             isCorrect = true;
+        }
         else
-            gUI.ShowPopUpMessage("Wrong answer.");
+        {
+            // GUI.ShowPopUpMessage("Wrong answer.");
+        }
     }
     
     public override bool CheckTaskCompletion()
     {
         if (isCorrect)
-            gUI.ShowPopUpMessage("Current Task Completed!");
+            GUI.ShowPopUpMessage("Current Task Completed!");
         return isCorrect;
     }
 
@@ -79,7 +82,7 @@ public class ReadingTask : Task
         return status;
     }
 
-    public override void ResetTaskStatus()
+    public override void ResetTask()
     {
         taskStarted = false;
         isCorrect = false;

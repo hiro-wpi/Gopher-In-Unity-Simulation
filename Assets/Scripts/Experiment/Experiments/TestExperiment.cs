@@ -93,9 +93,9 @@ public class TestExperiment : Experiment
         Task task = tasks[taskIndex];
         
         // General
-        task.sceneName = sceneNames[0];
-        // task.taskName = levelNames[levelIndex] + "-" + taskNames[taskIndex];
-        // task.taskDescription = taskDescriptions[taskIndex];
+        task.SceneName = sceneNames[0];
+        // task.TaskName = levelNames[levelIndex] + "-" + taskNames[taskIndex];
+        // task.TaskDescription = taskDescriptions[taskIndex];
 
         // Detailed spawning info
         // robot
@@ -163,11 +163,11 @@ public class TestExperiment : Experiment
 
         // robot, object, and human spawn array
         task.robotSpawnArray = robotSpawnArray;
-        task.staticObjectSpawnArray = staticObjectSpawnArray;
-        task.dynamicObjectSpawnArray = humanSpawnArray;
+        task.StaticObjectSpawnArray = staticObjectSpawnArray;
+        task.DynamicObjectSpawnArray = humanSpawnArray;
 
         // Interface -> all using the same
-        task.gUI = graphicalInterfaces[0];
+        task.GUI = graphicalInterfaces[0];
         // TODO task.CUI = controlInterfaces[0];
 
         return (T)task;

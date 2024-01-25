@@ -233,13 +233,13 @@ public class ComprehensiveExperiment : Experiment
         }
 
         // General
-        task.sceneName = sceneNames[0];
-        task.taskName = taskType+"."+(taskIndex+1)+"-"+(levelIndex+1);
+        task.SceneName = sceneNames[0];
+        task.TaskName = taskType+"."+(taskIndex+1)+"-"+(levelIndex+1);
         if (taskType == 1)
-            task.taskDescription = taskDescriptions[(taskType-1)*4 + taskIndex] 
+            task.TaskDescription = taskDescriptions[(taskType-1)*4 + taskIndex] 
                                    + " " + nextRoomName;
         else if (taskType == 2)
-            task.taskDescription = taskDescriptions[(taskType-1)*4 + taskIndex];
+            task.TaskDescription = taskDescriptions[(taskType-1)*4 + taskIndex];
 
         // Detailed spawning info
         // robot
@@ -338,7 +338,7 @@ public class ComprehensiveExperiment : Experiment
             {
                 // select a monitor value
                 int valueInd = random.Next(monitorScreens.Length);
-                task.result = monitorValues[valueInd];
+                task.SetResult(monitorValues[valueInd]);
                 // get avaliable locations
                 var (monitorPoss, monitorRots) = HospitalMapUtil.GetMonitorPose(nextRoomName);
                 // select a monitor - manually set
@@ -348,7 +348,7 @@ public class ComprehensiveExperiment : Experiment
                 taskObjectSpawnArray[0] = Task.ToSpawnInfo(monitorScreens[valueInd], 
                                                            monitorPoss[monitorInd], monitorRots[monitorInd], 
                                                            null);
-                task.taskDescription += " (Bed " + (monitorInd+1) + ")";
+                task.TaskDescription += " (Bed " + (monitorInd+1) + ")";
             }
             // 2.2 Medicine Scanning
             else if (taskIndex == 1)
@@ -364,7 +364,7 @@ public class ComprehensiveExperiment : Experiment
 
                 // select a monitor value   
                 int valueInd = random.Next(results.Length);
-                task.result = results[valueInd];
+                task.SetResult(results[valueInd]);
                 // get avaliable locations
                 Vector3[] tablePoss = HospitalMapUtil.GetFreeTableSpace(nextRoomName);
                 // select a table - manually set
@@ -439,13 +439,13 @@ public class ComprehensiveExperiment : Experiment
 
         // robot, object, and human spawn array
         task.robotSpawnArray = robotSpawnArray;
-        task.staticObjectSpawnArray = staticObjectSpawnArray;
-        task.dynamicObjectSpawnArray = humanSpawnArray;
-        task.taskObjectSpawnArray = taskObjectSpawnArray;
-        task.goalObjectSpawnArray = goalObjectSpawnArray;
+        task.StaticObjectSpawnArray = staticObjectSpawnArray;
+        task.DynamicObjectSpawnArray = humanSpawnArray;
+        task.TaskObjectSpawnArray = taskObjectSpawnArray;
+        task.GoalObjectSpawnArray = goalObjectSpawnArray;
 
         // Interface -> all using the same
-        task.gUI = graphicalInterfaces[0];
+        task.GUI = graphicalInterfaces[0];
         // TODO task.CUI = controlInterfaces[0];
 
         return task;
