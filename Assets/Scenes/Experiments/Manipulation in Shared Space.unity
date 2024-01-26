@@ -2245,14 +2245,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TaskName: Manipulation Task in Shared Space
-  TaskDescription: 
+  TaskDescription: Move the expired medicines into the bin while avoiding collisions
+    with the nurse. Prioritize the nurse's tasks over your own.
   SceneName: ManipulationTask
   StaticObjectSpawnArray: []
   DynamicObjectSpawnArray: []
-  TaskObjectSpawnArray: []
-  GoalObjectSpawnArray: []
-  robotSpawnArray: []
-  GUI: {fileID: 0}
+  TaskObjectSpawnArray:
+  - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
+    position: {x: -3.245, y: 0.855, z: -12.575}
+    rotation: {x: -90, y: 0, z: 0}
+    trajectory: []
+  - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
+    position: {x: -3.245, y: 1.105, z: -12.95}
+    rotation: {x: -90, y: 0, z: 0}
+    trajectory: []
+  GoalObjectSpawnArray:
+  - gameObject: {fileID: 4057350141855912022, guid: 9f582b48d920422749e33fcbc2bde462, type: 3}
+    position: {x: -3.255, y: 0.8, z: -13.37}
+    rotation: {x: 0, y: 0, z: 0}
+    trajectory: []
+  robotSpawnArray:
+  - gameObject: {fileID: 702946891374405994, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
+    position: {x: -4.5, y: 0, z: -12.55}
+    rotation: {x: 0, y: 90, z: 0}
+    trajectory: []
+  GUI: {fileID: 279664474}
   CUI: {fileID: 0}
 --- !u!1 &824941344
 GameObject:
