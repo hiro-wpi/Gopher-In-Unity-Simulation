@@ -114,6 +114,7 @@ public class CutscenePlanner : MonoBehaviour
         lookAtTarget(medicineHeadPositions[randomMedicine]);
 
         leftHandTarget.position = Vector3.Lerp(leftHandTarget.position, medicineHandPositions[randomMedicine].position, armMoveSpeed * Time.deltaTime);
+        // leftHandTarget.position = QuadraticInterpolation(leftHandTarget.position, medicineHandPositions[randomMedicine].position, t);
 
         if (isAtDestination(medicineHandPositions[randomMedicine].position))
         {
@@ -184,7 +185,7 @@ public class CutscenePlanner : MonoBehaviour
     {
         float tSquared = t * t;
         Vector3 lerpedPosition = Vector3.Lerp(start, end, t);
-        lerpedPosition.y = Mathf.Lerp(start.y, end.y, 1 - tSquared);
+        lerpedPosition.z = Mathf.Lerp(start.z, end.z, 1 - tSquared);
         return lerpedPosition;
     }
 
