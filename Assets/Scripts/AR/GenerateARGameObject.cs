@@ -1,15 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
+
 
 public static class GenerateARGameObject
 {
-    public static GameObject Generate(GameObject gameObject, string type, Vector3 scale, Color color)
+    public static GameObject Generate(GameObject gameObject, string type, Vector3 scale, Color color, float transparency = 0.25f)
     {
-        
 
         // Create the game object based on the type
         GameObject go;
+
         if(type == "cube")
         {
             go = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -39,41 +41,50 @@ public static class GenerateARGameObject
         
         // Change the color
 
-        Renderer renderer = go.GetComponent<Renderer>();
-        Material material = renderer.material;
-        Color newColor = material.color;
-        newColor.a = 0.1f;
-        material.color = newColor;
-
-        // // Create a new material instance to ensure it's not affecting other objects
-        // Material material = new Material(renderer.material);
-
-        // // Set the rendering mode to Transparent
-        // material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-        // material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-        // material.SetInt("_ZWrite", 0);
-        // material.DisableKeyword("_ALPHATEST_ON");
-        // material.EnableKeyword("_ALPHABLEND_ON");
-        // material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-        // material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
-
-        // // Set the alpha value of the material
-        // Color color = material.color;
-        // color.a = 0.1f;
-        // material.color = color;
-
-        // Assign the modified material to the renderer
-        renderer.material = material;
-
-        // go.GetComponent<Renderer>().material.color = color;
-        // Color newColor = go.GetComponent<Renderer>().material.color;
-        // newColor.a = 0.1f;
-
-        // change the material to be transparent
-        // go.GetComponent<Renderer>().material.SetFloat("_Mode", 2);
-
-        // go.GetComponent<Renderer>().material.color = newColor;
+        ChangeMaterial(go, color, transparency);
 
         return go;
+    }
+
+    // Change the material of the gameobject
+    private static void ChangeMaterial(GameObject obj, Color color, float transparency)
+    {
+        
+        Renderer renderer = obj.GetComponent<Renderer>();
+
+        // Create a new material instance to ensure it's not affecting other objects
+        Material transparentMaterial = loadTransparentMaterial();
+        Material material = new Material(transparentMaterial);
+
+        // Create a transparent red
+        Color newColor = color;
+        newColor.a = transparency;
+
+        // Set the color
+        material.color = newColor;
+        renderer.material = material;
+
+    }
+
+    // Loads the transparent material from the path
+    private static Material loadTransparentMaterial()
+    {
+        string materialPath = "Assets/Materials/General/TransparentWhite.mat"; // Path to your material
+        
+        // Load the material using AssetDatabase
+        Material loadedMaterial = AssetDatabase.LoadAssetAtPath<Material>(materialPath);
+
+        if (loadedMaterial != null)
+        {
+            // Use the loaded material
+            Debug.Log("Material loaded successfully!");
+            return loadedMaterial;
+        }
+        else
+        {
+            // The material was not found
+            Debug.LogError("Failed to load material at path: " + materialPath);
+            return new Material(Shader.Find("Standard"));
+        }
     }
 }
