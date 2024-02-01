@@ -79,12 +79,15 @@ public class AutoGraspable : MonoBehaviour
         if (selectedDirIndex <= 2)
         {
             // assert proper mode
-            Debug.Assert(selectedOriIndex < 3, "Please select proper orientation mode");
+            Debug.Assert(
+                selectedOriIndex < 3, "Please select proper orientation mode"
+            );
 
             // compute offset and rotation direction
             posOffset = Vector3.zero;
             posOffset[selectedDirIndex] = hoverHeight;
-            hoverTransform.position = graspPoint.position + graspPoint.rotation * posOffset;
+            hoverTransform.position = 
+                graspPoint.position + graspPoint.rotation * posOffset;
 
             // compute potential hover rotations and select from them
             rotationDirection = Vector3.zero;
@@ -103,7 +106,10 @@ public class AutoGraspable : MonoBehaviour
                     break;
             }
             Quaternion rot = GetRotationWithMinimumDiffernce(
-                EndEffectorRotation, graspPoint.rotation, rotationDirection, potentialAngles
+                EndEffectorRotation, 
+                graspPoint.rotation, 
+                rotationDirection, 
+                potentialAngles
             );
             hoverTransform.rotation = rot;
             graspTransform.rotation = rot;
@@ -116,8 +122,10 @@ public class AutoGraspable : MonoBehaviour
             // assert proper mode
             selectedDirIndex -= 3;
             selectedOriIndex -= 3;
-            Debug.Assert(selectedOriIndex >= 0 || selectedDirIndex != selectedOriIndex,
-                         "Please select proper orientation mode");
+            Debug.Assert(
+                selectedOriIndex >= 0 || selectedDirIndex != selectedOriIndex,
+                "Please select proper orientation mode"
+            );
 
             // compute offset and rotation direction
             posOffset = Vector3.zero;
@@ -125,12 +133,16 @@ public class AutoGraspable : MonoBehaviour
             rotationDirection = Vector3.zero;
             rotationDirection[selectedDirIndex] = 1;
 
-            // compute multiple hover points with orientation and select from them
+            // compute multiple hover points with orientation
             int numHoverPoints = 10;
             var (minHoverPos, minHoverRot) =
                 GetPosAndRotWithMinimumDistance(
-                    EndEffectorPosition, graspPoint.position, graspPoint.rotation,
-                    rotationDirection, posOffset, numHoverPoints
+                    EndEffectorPosition, 
+                    graspPoint.position, 
+                    graspPoint.rotation,
+                    rotationDirection, 
+                    posOffset, 
+                    numHoverPoints
                 );
             hoverTransform.position = minHoverPos;
             hoverTransform.rotation = minHoverRot;
@@ -152,7 +164,9 @@ public class AutoGraspable : MonoBehaviour
         for (int i = 0; i < angles.Length; ++i)
         {
             Quaternion hoverRot = graspRot * Quaternion.Euler(dir * angles[i]);
-            float angleDifference = Quaternion.Angle(EndEffectorRotation, hoverRot);
+            float angleDifference = Quaternion.Angle(
+                EndEffectorRotation, hoverRot
+            );
             if (angleDifference < minAngleDifference)
             {
                 minHoverRot = hoverRot;
@@ -176,7 +190,9 @@ public class AutoGraspable : MonoBehaviour
         float minDistance = 100f;
         for (int i = 0; i < numHoverPoints; ++i)
         {
-            Quaternion hoverRot = graspRot * Quaternion.Euler(Rotationdir * (i * 360f / numHoverPoints));
+            Quaternion hoverRot = graspRot * Quaternion.Euler(
+                Rotationdir * (i * 360f / numHoverPoints)
+            );
             Vector3 hoverPos = graspPos + hoverRot * forwardDir;
             float distance = (hoverPos - EndEffectorPosition).magnitude;
             if (distance < minDistance)
@@ -194,7 +210,11 @@ public class AutoGraspable : MonoBehaviour
     {
         if (graspPoint == null)
         {
-            Debug.LogWarning("No Grasp Point is given.");
+            Debug.LogWarning(
+                "No Grasping Point is given. "
+                + "Attach a new GameObject to this GameObject."
+                + "and drag it to the Grasping Point field."
+            );
             return;
         }
 
@@ -223,7 +243,8 @@ public class AutoGraspable : MonoBehaviour
             // compute offset and rotation direction
             posOffset = Vector3.zero;
             posOffset[selectedDirIndex] = hoverHeight;
-            Vector3 gizmosHoverPosition = graspPoint.position + graspPoint.rotation * posOffset;
+            Vector3 gizmosHoverPosition = 
+                graspPoint.position + graspPoint.rotation * posOffset;
             DrawSphere(gizmosHoverPosition, 0.04f);
             
             // draw different orientations
@@ -236,17 +257,37 @@ public class AutoGraspable : MonoBehaviour
                     break;
                 case HoverOrientation.TwoOrientations:
                     DrawAxes(gizmosHoverPosition, graspPoint.rotation, 0.15f);
-                    DrawAxes(gizmosHoverPosition,
-                             graspPoint.rotation * Quaternion.Euler(rotationDirection * 180), 0.10f);
+                    DrawAxes(
+                        gizmosHoverPosition,
+                        graspPoint.rotation * Quaternion.Euler(
+                            rotationDirection * 180
+                        ), 
+                        0.10f
+                    );
                     break;
                 case HoverOrientation.FourOrientations:
                     DrawAxes(gizmosHoverPosition, graspPoint.rotation, 0.25f);
-                    DrawAxes(gizmosHoverPosition,
-                             graspPoint.rotation * Quaternion.Euler(rotationDirection * 90), 0.20f);
-                    DrawAxes(gizmosHoverPosition,
-                             graspPoint.rotation * Quaternion.Euler(rotationDirection * 180), 0.15f);
-                    DrawAxes(gizmosHoverPosition,
-                             graspPoint.rotation * Quaternion.Euler(rotationDirection * 270), 0.10f);
+                    DrawAxes(
+                        gizmosHoverPosition,
+                        graspPoint.rotation * Quaternion.Euler(
+                            rotationDirection * 90
+                        ), 
+                        0.20f
+                    );
+                    DrawAxes(
+                        gizmosHoverPosition,
+                        graspPoint.rotation * Quaternion.Euler(
+                            rotationDirection * 180
+                        ), 
+                        0.15f
+                    );
+                    DrawAxes(
+                        gizmosHoverPosition,
+                        graspPoint.rotation * Quaternion.Euler(
+                            rotationDirection * 270
+                        ),
+                        0.10f
+                    );
                     break;
             }
         }
@@ -273,8 +314,9 @@ public class AutoGraspable : MonoBehaviour
             // draw multiple hover points with orientation
             for (int i = 0; i < 8; ++i)
             {
-                Quaternion hoverRot = graspPoint.rotation *
-                                      Quaternion.Euler(rotationDirection * (i * 360f / 8f));
+                Quaternion hoverRot = 
+                    graspPoint.rotation 
+                    * Quaternion.Euler(rotationDirection * (i * 360f / 8f));
                 Vector3 hoverPos = graspPoint.position + hoverRot * posOffset;
                 DrawSphere(hoverPos, 0.04f);
                 DrawAxes(hoverPos, hoverRot, 0.10f);

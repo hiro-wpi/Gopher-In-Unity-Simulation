@@ -3,15 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-///     This script is used to detect graspable objects
-///     and set it as a target of arm control manager
+///     This script is used to set graspable objects
+///     and set it as a target of arm controller
+///     
+///     The target can be automatically set when the object
+///     is in the graspable zone (defined by the collider)
+///     Or the target can be set by calling SetTargetObject()
 /// </summary>
 public class AutoGrasping : MonoBehaviour
 {
     [SerializeField] private ArmController armController;
     [SerializeField] private Grasping grasping;
     private GameObject targetObject;
-    // private Color prevColor;
+
+    [field: SerializeField]
+    public bool ProximityGraspableCheck { get; set; } = true;
 
     // Container for hovering and grasping target
     private Transform targetHoverPoint;
@@ -23,24 +29,60 @@ public class AutoGrasping : MonoBehaviour
 
     void Update() {}
 
+    public void SetTargetObject(GameObject go)
+    {
+        if (go.GetComponent<AutoGraspable>() == null)
+        {
+            Debug.Log("Not a auto graspable object");
+            return;
+        }
+
+        // Cancel the previous target if different and exists
+        if (targetObject != null && targetObject != go)
+        {
+            CancelCurrentTargetObject();
+        }
+        SetTarget(go);
+
+        // For safety
+        ProximityGraspableCheck = false;
+    }
+
     private void OnTriggerEnter(Collider other) 
     {
-        if (other.attachedRigidbody?.gameObject.tag == "GraspableObject")
+        if (!ProximityGraspableCheck)
         {
-            // If a new target is found but still in the old target graspable zone
-            if (targetObject != null && 
-                targetObject != other.attachedRigidbody.gameObject
-            )
+            return;
+        }
+
+        // Collider with other objects
+        GameObject otherObject = other.attachedRigidbody?.gameObject;
+        if (otherObject == null)
+        {
+            return;
+        }
+        if (otherObject.GetComponent<AutoGraspable>() == null)
+        {
+            return;
+        }
+
+        // If a new targetSetTargetObject is found 
+        // but it is still in the old target graspable zone
+        if (targetObject != otherObject)
+        {
+            if (targetObject != null)
             {
                 CancelCurrentTargetObject();
             }
-
-            // Graspbable object sturcture
-            // Target object with Rigidbody -> Model with collider
-            //     |->  gameObject with Graspable related scripts
-            targetObject = other.attachedRigidbody.gameObject;
-            SetTargetObject(targetObject);
         }
+        // If it is the same target
+        else
+        {
+            return;
+        }
+
+        // Graspbable object sturcture
+        SetTarget(otherObject);
     }
 
     private void OnTriggerStay()
@@ -51,12 +93,16 @@ public class AutoGrasping : MonoBehaviour
         }
 
         // Check if the hover point is reached
-        if (Utils.IsPoseClose(
-            targetHoverPoint,
-            grasping.GetEndEffector().transform,
-            0.03f, 0.2f
-        ))
+        if (
+            Utils.IsPoseClose(
+                targetHoverPoint,
+                grasping.GetEndEffector().transform,
+                0.03f, 
+                0.2f
+            )
+        )
         {
+            // Hover point reached
             // Set grasping target
             armController.SetTarget(
                 targetGraspPoint.position, 
@@ -68,33 +114,40 @@ public class AutoGrasping : MonoBehaviour
 
     private void OnTriggerExit(Collider other) 
     {
-        if (other.attachedRigidbody?.gameObject.tag == "GraspableObject" &&
-            other.attachedRigidbody?.gameObject == targetObject)
+        if (!ProximityGraspableCheck)
+        {
+            return;
+        }
+
+        GameObject otherObject = other.attachedRigidbody?.gameObject;
+        if (otherObject == null)
+        {
+            return;
+        }
+        if (
+            otherObject.GetComponent<AutoGraspable>() != null
+            && otherObject == targetObject)
         {
             CancelCurrentTargetObject();
         }
     }
 
-    private void SetTargetObject(GameObject targetObject)
+    private void SetTarget(GameObject go)
     {
         // Get all auto graspable points
+        targetObject = go;
         AutoGraspable[] autoGraspables = 
-            targetObject.GetComponentsInChildren<AutoGraspable>();
-
-        // Auto grasping not avaliable
-        if (autoGraspables.Length == 0)
-        {
-            return;
-        }
+            go.GetComponentsInChildren<AutoGraspable>();
 
         // Found multiple graspable points,
-        // select the one with min distance
+        // select the one with min position distance
         float minDistance = 1000;
         int selectedIndex = 0;
-        for (int i = 0; i < autoGraspables.Length; ++i)
+        for (int i = 1; i < autoGraspables.Length; ++i)
         {
-            float distance = 
-                (autoGraspables[i].GetGraspPosition() - transform.position).magnitude;
+            float distance = (
+                autoGraspables[i].GetGraspPosition() - transform.position
+            ).magnitude;
             if (minDistance > distance)
             {
                 minDistance = distance;
@@ -102,38 +155,23 @@ public class AutoGrasping : MonoBehaviour
             }
         }
 
-        // Set goal
+        // Find hover goal and grasp goal
         (targetHoverPoint, targetGraspPoint) = 
             autoGraspables[selectedIndex].GetHoverAndGrapPoint(
                 grasping.GetEndEffector().transform.position,
                 grasping.GetEndEffector().transform.rotation
             );
 
+        // Set hover target
         armController.SetTarget(
             targetHoverPoint.position, 
             targetHoverPoint.rotation
         );
         checkHoverReached = true;
-
-        /*
-        // Highlight
-        // if this object was alredy highlighted
-        prevColor = HighlightUtils.GetHighlightColor(targetObject);
-        HighlightUtils.HighlightObject(targetObject);
-        */
     }
 
-    private void CancelCurrentTargetObject()
+    public void CancelCurrentTargetObject()
     {
-        /*
-        HighlightUtils.UnhighlightObject(targetObject);
-        if (prevColor != Color.clear)
-        {
-            HighlightUtils.HighlightObject(targetObject, prevColor);
-            prevColor = Color.clear;
-        }
-        */
-
         targetObject = null;
         checkHoverReached = false;
         armController.CancelTarget();

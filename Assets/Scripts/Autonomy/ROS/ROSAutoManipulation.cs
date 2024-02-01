@@ -11,8 +11,7 @@ using UnityEngine;
 public class ROSAutoManipulation : AutoManipulation
 {
     // Offset for the target position and orientation
-    [SerializeField] private Transform mobileBaseTransform;
-    [SerializeField] private ArticulationBody chest;
+    [SerializeField] private Transform baseTransform;
 
     // ROS communication
     [SerializeField] private PlanTrajectoryService planTrajectoryService;
@@ -35,9 +34,8 @@ public class ROSAutoManipulation : AutoManipulation
         }
 
         // Offset the target position and orientation
-        targetPosition = mobileBaseTransform.InverseTransformPoint(targetPosition);
-        targetRotation = Quaternion.Inverse(mobileBaseTransform.rotation) * targetRotation;
-        targetPosition.y -= chest.jointPosition[0];
+        targetPosition = baseTransform.InverseTransformPoint(targetPosition);
+        targetRotation = Quaternion.Inverse(baseTransform.rotation) * targetRotation;
 
         // Send path planning request
         planTrajectoryService.SendPlanTrajectoryRequest(

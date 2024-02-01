@@ -8,8 +8,10 @@ using UnityEngine;
 ///     It supports path planning and sequence of motion.
 ///     
 ///     This autonomy could be achived using
-///     Simple trajectory planner with Newton IK (only for simulation robot) or
-///     packages in ROS (feasible for both simulation and physical robot).
+///     Simple straight-line trajectory planner with Jacobian IK 
+///     (only for simulation robot) 
+///     or motion planning packages (e.g. MoveIt!) in ROS
+///     (feasible for both simulation and physical robot).
 /// </summary>
 public abstract class AutoManipulation : MonoBehaviour
 {

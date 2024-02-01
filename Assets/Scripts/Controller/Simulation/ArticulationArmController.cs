@@ -189,7 +189,7 @@ public class ArticulationArmController : ArmController
     )
     {
         // check validity of the path
-        if (timeSteps.Length <= 1)
+        if (timeSteps == null || timeSteps.Length <= 1)
         {
             Debug.Log("No path found");
             return;
