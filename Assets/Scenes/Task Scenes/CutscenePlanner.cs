@@ -21,9 +21,10 @@ public class CutscenePlanner : MonoBehaviour
     private float minWait = 5.0f;
     private float maxWait = 15.0f;
     private float headTurnSpeed = 2.0f;
-    private float armMoveSpeed = 2.0f; 
+    private float armMoveSpeed = 1.0f; 
     private int randomMedicine = 0;
-    private float t = 0.01f;
+    private Vector3 reachingStartPosition;
+    private float reachingRatio = 0.0f;
 
     private enum CutsceneState
     {
@@ -96,6 +97,9 @@ public class CutscenePlanner : MonoBehaviour
         if (medicineHandPositions.Count > 0)
         {            
             randomMedicine = Random.Range(0, medicineHandPositions.Count - 1);
+            
+            reachingRatio = 0;
+            reachingStartPosition = leftHandTarget.position;
             currentState = CutsceneState.GoingToMedicine;
         }
         else
@@ -113,11 +117,18 @@ public class CutscenePlanner : MonoBehaviour
 
         lookAtTarget(medicineHeadPositions[randomMedicine]);
 
-        leftHandTarget.position = Vector3.Lerp(leftHandTarget.position, medicineHandPositions[randomMedicine].position, armMoveSpeed * Time.deltaTime);
-        // leftHandTarget.position = QuadraticInterpolation(leftHandTarget.position, medicineHandPositions[randomMedicine].position, t);
+        leftHandTarget.position = QuadraticInterpolation(
+            reachingStartPosition, 
+            medicineHandPositions[randomMedicine].position, 
+            reachingRatio
+        );
+        reachingRatio += 1 / armMoveSpeed * Time.deltaTime;
 
         if (isAtDestination(medicineHandPositions[randomMedicine].position))
         {
+            reachingRatio = 0;
+            reachingStartPosition = Vector3.zero;
+
             closeHand();
 
             medicineBottles[randomMedicine].transform.SetParent(leftHandTarget);   
@@ -132,6 +143,9 @@ public class CutscenePlanner : MonoBehaviour
 
         if (holdTimer >= holdDuration)
         {
+            reachingRatio = 0;
+            reachingStartPosition = leftHandTarget.position;
+
             currentState = CutsceneState.GoingToHome;
             holdTimer = 0.0f;
         }
@@ -146,10 +160,18 @@ public class CutscenePlanner : MonoBehaviour
 
         lookAtTarget(medicineHeadPositions[randomMedicine]);
 
-        leftHandTarget.position = Vector3.Lerp(leftHandTarget.position, leftHandHome.position, armMoveSpeed * Time.deltaTime);
+        leftHandTarget.position = QuadraticInterpolation(
+            reachingStartPosition, 
+            leftHandHome.position, 
+            reachingRatio
+        );
+        reachingRatio += 1 / armMoveSpeed * Time.deltaTime;
 
         if (isAtDestination(leftHandHome.position))
         {
+            reachingRatio = 0;
+            reachingStartPosition = Vector3.zero;
+
             medicineBottles.RemoveAt(randomMedicine);
             medicineHandPositions.RemoveAt(randomMedicine);
             medicineHeadPositions.RemoveAt(randomMedicine);
@@ -183,9 +205,9 @@ public class CutscenePlanner : MonoBehaviour
 
     private Vector3 QuadraticInterpolation(Vector3 start, Vector3 end, float t)
     {
-        float tSquared = t * t;
+        float height = 0.1f;
         Vector3 lerpedPosition = Vector3.Lerp(start, end, t);
-        lerpedPosition.z = Mathf.Lerp(start.z, end.z, 1 - tSquared);
+        lerpedPosition.y = lerpedPosition.y + height * (- 4 * t * t + 4 * t);
         return lerpedPosition;
     }
 
@@ -202,7 +224,6 @@ public class CutscenePlanner : MonoBehaviour
 
         if (lookDirection != Vector3.zero)
         {
-            // headIKTarget.rotation = Quaternion.LookRotation(lookDirection, Vector3.up);
             Quaternion targetRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
             headIKTarget.rotation = Quaternion.Slerp(headIKTarget.rotation, targetRotation, headTurnSpeed * Time.deltaTime);        
         }
