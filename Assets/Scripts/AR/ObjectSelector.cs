@@ -111,7 +111,6 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
         foreach (RaycastResult result in results)
         {
-            Debug.Log("Mouse is over: " + result.gameObject.name);
 
             if (result.gameObject.GetComponent<Canvas>() != null)
             {
@@ -119,8 +118,6 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
                 
                 continue;
             }
-
-            // Debug.Log("Mouse is over: " + result.gameObject.name);
 
             if (result.gameObject.name == mainCameraDisplayObject.name)
             {
