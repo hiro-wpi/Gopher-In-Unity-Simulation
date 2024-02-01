@@ -75,7 +75,9 @@ public class UnityAutoNavigation : AutoNavigation
         if (waypointIndex == GlobalWaypoints.Length - 1)
             tolerance = agent.stoppingDistance;
         // move to current waypoint
-        float currentDis = (transform.position - GlobalWaypoints[waypointIndex]).magnitude;
+        float currentDis = (
+            transform.position - GlobalWaypoints[waypointIndex]
+        ).magnitude;
 
         // Check distance to GlobalWaypoints and update motion
         if (currentDis > tolerance)
@@ -103,17 +105,25 @@ public class UnityAutoNavigation : AutoNavigation
         float Kp = 2;
         // Errors
         float distance = (waypoint - transform.position).magnitude;
-        Quaternion targetRotation = Quaternion.LookRotation(waypoint - transform.position);
-        float angleDifference = Mathf.DeltaAngle(targetRotation.eulerAngles[1], 
-                                                 transform.rotation.eulerAngles[1]);
+        Quaternion targetRotation = Quaternion.LookRotation(
+            waypoint - transform.position
+        );
+        float angleDifference = Mathf.DeltaAngle(
+            targetRotation.eulerAngles[1], 
+            transform.rotation.eulerAngles[1]
+        );
 
         // Adjust rotation angle first
         if (Mathf.Abs(angleDifference) > 1 && rotationNeeded) // 1° tolorance
         {
             float angularSpeed = Kp * angleDifference;
-            angularSpeed = Mathf.Clamp(angularSpeed, -agent.angularSpeed, agent.angularSpeed);
+            angularSpeed = Mathf.Clamp(
+                angularSpeed, -agent.angularSpeed, agent.angularSpeed
+            );
             // set angular velocity
-            Vector3 angularVelocity = new Vector3(0f, angularSpeed * Mathf.Deg2Rad, 0f);
+            Vector3 angularVelocity = new Vector3(
+                0f, angularSpeed * Mathf.Deg2Rad, 0f
+            );
             baseController.SetVelocity(Vector3.zero, angularVelocity);
         }
         // Then handle by local planner
@@ -139,7 +149,11 @@ public class UnityAutoNavigation : AutoNavigation
     public override void SetGoal(Vector3 position, Vector3 orientation)
     {
         // Get closest point in the navmesh
-        if (NavMesh.SamplePosition(position, out NavMeshHit hit, 1.0f, agent.areaMask))
+        if (
+            NavMesh.SamplePosition(
+                position, out NavMeshHit hit, 1.0f, agent.areaMask
+            )
+        )
         {
             Vector3 goal = hit.position;
 

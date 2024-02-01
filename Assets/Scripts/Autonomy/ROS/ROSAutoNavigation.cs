@@ -21,7 +21,8 @@ public class ROSAutoNavigation : AutoNavigation
     [SerializeField] private PathSubscriber pathPlanner;
 
     // AMCL
-    [SerializeField] private PoseWithCovarianceStampedPublisher poseWithCovarianceStampedPublisher;
+    [SerializeField] private 
+        PoseWithCovarianceStampedPublisher poseWithCovarianceStampedPublisher;
 
     [SerializeField] private TwistSubscriber twistSubscriber;
 
@@ -29,17 +30,17 @@ public class ROSAutoNavigation : AutoNavigation
 
     // Flags
     private bool isTwistSubscriberPaused = false;
-    private bool isInitcialPosePublished = false;
+    private bool isInitialPosePublished = false;
 
     private bool updateWaypoints = true;
 
     void Start()
     {   
         StartCoroutine(PauseTwistSubscriber());
-        StartCoroutine(PublishInitcialPose());
+        StartCoroutine(PublishInitialPose());
     }
 
-    // Pauses the Twist Subscriber from controlling the base given Twist Commands
+    // Pauses the Twist Subscriber from controlling the base
     IEnumerator PauseTwistSubscriber()
     {
         yield return new WaitForFixedUpdate();
@@ -49,14 +50,16 @@ public class ROSAutoNavigation : AutoNavigation
         isTwistSubscriberPaused = true;
     }
 
-    // Publishes the Initcial pose of the robot to AMCL
-    IEnumerator PublishInitcialPose()
+    // Publishes the Initial pose of the robot to AMCL
+    IEnumerator PublishInitialPose()
     {
         yield return new WaitForFixedUpdate();
 
-        // Send the initcial Pose
-        poseWithCovarianceStampedPublisher.PublishPoseStampedCommand(robot.transform.position, robot.transform.rotation.eulerAngles);
-        isInitcialPosePublished = true;
+        // Send the Initial Pose
+        poseWithCovarianceStampedPublisher.PublishPoseStampedCommand(
+            robot.transform.position, robot.transform.rotation.eulerAngles
+        );
+        isInitialPosePublished = true;
     }
 
     // TEMP TO BE REMOVED
@@ -87,14 +90,14 @@ public class ROSAutoNavigation : AutoNavigation
     void Update()
     {
         
-        // Initcialize twist subsciber
+        // Initialize twist subsciber
         if(isTwistSubscriberPaused == false)
         {
             return;
         }
         
         // Publish initial pose
-        if(isInitcialPosePublished == false)
+        if(isInitialPosePublished == false)
         {
             return;
         }
@@ -128,7 +131,7 @@ public class ROSAutoNavigation : AutoNavigation
 
     // Start, pause and resume navigation
     // Start is essentially the same as resume
-        // Allow the robot to move along the planned waypoints
+    // Allow the robot to move along the planned waypoints
     public override void StartNavigation()
     {
         UpdateNav(true);
@@ -136,7 +139,8 @@ public class ROSAutoNavigation : AutoNavigation
     }
 
     // Pause robot navigation
-        // Stop the motion of the robot. Still allow the waypoints to be seen
+    // Stop the motion of the robot. 
+    // Still allow the waypoints to be seen
     public override void PauseNavigation()
     {
         UpdateNav(false);
@@ -161,7 +165,8 @@ public class ROSAutoNavigation : AutoNavigation
     }
 
     // TEMP
-    // Update the navigation status of the robot, and pause listening to the twist subsriber
+    // Update the navigation status of the robot, 
+    // and pause listening to the twist subsriber
     private void UpdateNav(bool isNav)
     {
         IsNavigating = isNav;

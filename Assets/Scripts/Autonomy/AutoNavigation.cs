@@ -6,8 +6,9 @@ using UnityEngine;
 ///     Autonomy for 2D navigation.
 ///     
 ///     This autonomy could be achived using
-///     Unity NavMesh component (only for simulation robot) or
-///     packages in ROS (feasible for both simulation and physical robot).
+///     Unity NavMesh component (only for simulation robot)
+///     or path planning packages (e.g. MoveBase) in ROS 
+///     (feasible for both simulation and physical robot).
 /// </summary>
 public abstract class AutoNavigation : MonoBehaviour
 {

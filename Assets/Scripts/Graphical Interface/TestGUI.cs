@@ -35,7 +35,7 @@ public class TestGUI : MonoBehaviour
     // public GameObject robotFollower;
     private ROSAutoNavigation autoNavigation;
 
-    private DynamicFootprint dynamicFootprint;
+    // private DynamicFootprint dynamicFootprint;
     
     // Path visualization
     /*
@@ -51,7 +51,7 @@ public class TestGUI : MonoBehaviour
         // planner
         autoNavigation = robot.GetComponentInChildren<ROSAutoNavigation>();
         gopherControl = robot.GetComponentInChildren<GopherControlManager>();
-        dynamicFootprint = robot.GetComponentInChildren<DynamicFootprint>();
+        // dynamicFootprint = robot.GetComponentInChildren<DynamicFootprint>();
 
         // map render texture
         //      create a live feed of an image that has the same dimentions 
