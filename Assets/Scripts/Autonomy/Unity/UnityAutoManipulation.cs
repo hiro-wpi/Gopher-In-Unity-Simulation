@@ -5,15 +5,18 @@ using UnityEngine;
 
 /// <summary>
 ///     Autonomy for arm manipulation.
-///     Plan a simple straight-line trajectory 
+///     
+///     Plan a simple straight-line trajectory
 ///     from current position to target position
 /// </summary>
 public class UnityAutoManipulation : AutoManipulation
 {
     // Parameter
-    // [SerializeField] private float cartesianSpeed = 0.05f;
+    [SerializeField] private int numberOfWaypoints = 5;
+    // For planning in cartesian space
+    [SerializeField] private float cartesianSpeed = 0.05f;
+    // For planning in joint space
     [SerializeField] private float jointSpeed = 0.5f;
-    [SerializeField] private int numberOfWaypoints = 3;
     private float completionTime;
 
     // Kinematic solver
@@ -29,55 +32,227 @@ public class UnityAutoManipulation : AutoManipulation
         Vector3 targetPosition,
         Quaternion targetRotation,
         Action<float[], float[][], float[][], float[][]> callback,
-        bool cartesianSpace = false
+        bool cartesianSpace = true
     )
     {
-        // Initialize 
-        int numJoint = currJointAngles.Length;
-        float[] timeSteps = new float[numJoint];
-        float[][] angles = new float[numJoint][];
-        float[][] velocities = new float[numJoint][];
-        float[][] accelerations = new float[numJoint][];
+        float[] timeSteps;
+        float[][] angles;
+        float[][] velocities;
+        float[][] accelerations;
 
-        // Cartesian Space planning is not supported yet
+        // Cartesian Space planning using a simple straight line
         if (cartesianSpace == true)
         {
-            Debug.Log(
-                "Cartesian Space planning is not supported yet." +
-                "Use joint space planning instead."
-            );
+            (timeSteps, angles, velocities, accelerations) = 
+                PlanStraightLine(
+                    currJointAngles,
+                    targetPosition,
+                    targetRotation
+                );
         }
-        
-        // Solve IK for target position joint angles
-        var targetJointAngles = inverseKinematics.SolveIK(
-            currJointAngles, targetPosition, targetRotation
-        );
-        // TODO
-        bool converged = true;
-        if (!converged)
+
+        // Not recommended to use
+        // Simple interpolation between current and target joint angles
+        else
         {
-            Debug.Log("No valid path to given target.");
-            callback(timeSteps, angles, velocities, accelerations);
-            return;
+            // Debug.Log(
+            //     "Not recommended to use planning in joint space. "
+            //     + "Plan in cartesian space instead. "
+            //     + "Try to set cartesianSpace to True."
+            // );
+            // Will still use straght line planning in cartesian space instead
+            (timeSteps, angles, velocities, accelerations) = 
+                PlanStraightLine(
+                    currJointAngles,
+                    targetPosition,
+                    targetRotation
+                );
+            // (timeSteps, angles, velocities, accelerations) = 
+            //     PlanJointInterpolation(
+            //         currJointAngles,
+            //         targetPosition,
+            //         targetRotation
+            //     );
         }
 
-        // Lerp between points to generate a path
-        completionTime = GetMaxDifferent(
-            currJointAngles, targetJointAngles
-        ) / jointSpeed;
-        // get trajectory
-        (timeSteps, angles, velocities, accelerations) = GenerateJointTrajectory(
-            currJointAngles,
-            targetJointAngles,
-            numberOfWaypoints,
-            completionTime
-        );
-
-        // Send it back to the caller
+        // Send the result back to the caller
         callback(timeSteps, angles, velocities, accelerations);
     }
 
-    private float GetMaxDifferent(float[] ang1, float[] ang2)
+    private (float[], float[][], float[][], float[][]) PlanStraightLine(
+        float[] currJointAngles,
+        Vector3 targetPosition,
+        Quaternion targetRotation
+    )
+    {
+        // Initialize 
+        float[] timeSteps = new float[numberOfWaypoints];
+        float[][] angles = new float[numberOfWaypoints][];
+        // velocities and accelerations are not used
+        float[][] velocities = new float[numberOfWaypoints][];
+        float[][] accelerations = new float[numberOfWaypoints][];
+
+        // Compute current position and rotation
+        forwardKinematics.SolveFK(currJointAngles);
+        var (startPosition, startRotation) = forwardKinematics.GetPose(
+            forwardKinematics.NumJoint
+        );
+
+        // Calculate time step
+        completionTime = (
+            Vector3.Distance(startPosition, targetPosition)
+            + Quaternion.Angle(
+                startRotation, targetRotation
+            ) * Mathf.Deg2Rad / 10  // 4 is a scaler
+        ) / cartesianSpeed;
+
+        // Interpolate between Start and Goal (positions and rotations)
+        Vector3[] waypointsPositions = InterpolatePosition(
+            startPosition, targetPosition, numberOfWaypoints
+        );
+        Quaternion[] waypointsRotations = InterpolateRotation(
+            startRotation, targetRotation, numberOfWaypoints
+        );
+
+        // First waypoint is current position
+        timeSteps[0] = 0;
+        angles[0] = currJointAngles;
+
+        // Solve IK for each waypoint
+        for (int i = 1; i < numberOfWaypoints; ++i)
+        {
+            // time
+            timeSteps[i] = completionTime * i / (numberOfWaypoints - 1);
+
+            // Solve to get new Joint Angles
+            currJointAngles = inverseKinematics.SolveIK(
+                currJointAngles, waypointsPositions[i], waypointsRotations[i]
+            );
+            angles[i] = currJointAngles;
+        }
+
+        // Check if this is a valid solution
+        bool converged = CheckConfiguration(
+            angles[angles.Length - 1], targetPosition, targetRotation
+        );
+        if (!converged)
+        {
+            Debug.Log("No valid path to the given target.");
+            return (
+                new float[0], new float[0][], new float[0][], new float[0][]
+            );
+        }
+
+        return (timeSteps, angles, velocities, accelerations);
+    }
+
+    // Interpolation function
+    private Vector3[] InterpolatePosition(Vector3 start, Vector3 goal, int num)
+    {
+        Vector3[] positions = new Vector3[num];
+        for (int i = 0; i < num; i++)
+        {
+            float t = i / (float) (num - 1);
+            positions[i] = Vector3.Lerp(start, goal, t);
+        }
+        return positions;
+    }
+
+    private Quaternion[] InterpolateRotation(
+        Quaternion start, Quaternion goal, int num
+    ) 
+    {
+        Quaternion[] rotations = new Quaternion[num];
+        for (int i = 0; i < num; i++)
+        {
+            float t = i / (float) (num - 1);
+            rotations[i] = Quaternion.Slerp(start, goal, t);
+        }
+        return rotations;
+    }
+
+    public bool CheckConfiguration(
+        float[] jointAngles, Vector3 targetPosition, Quaternion targetRotation
+    ) 
+    {
+        // calculate error between our current 
+        // end effector position and the target position
+        forwardKinematics.SolveFK(jointAngles, updateJacobian: true);
+        var (eePosition, eeRotation) = forwardKinematics.GetPose(
+            forwardKinematics.NumJoint
+        );
+
+        float positionError = Vector3.Distance(eePosition, targetPosition);
+        float rotationError = Quaternion.Angle(
+            eeRotation, targetRotation
+        ) * Mathf.Deg2Rad;
+
+        // Check convergence
+        return positionError < 1e-3 && rotationError < 2e-2;
+    }
+
+    // Plan trajectory in joint space with simple interpolation
+    private (float[], float[][], float[][], float[][]) PlanJointInterpolation(
+        float[] currJointAngles,
+        Vector3 targetPosition,
+        Quaternion targetRotation
+    )
+    {
+        // Initialize 
+        int numJoints = currJointAngles.Length;
+        float[] timeSteps = new float[numJoints];
+        float[][] angles = new float[numJoints][];
+        // velocities and accelerations are not used
+        float[][] velocities = new float[numJoints][];
+        float[][] accelerations = new float[numJoints][];
+
+        // Check if there is a solution
+        var targetJointAngles = inverseKinematics.SolveIK(
+            currJointAngles, targetPosition, targetRotation
+        );
+        bool converged = CheckConfiguration(
+            targetJointAngles, targetPosition, targetRotation
+        );
+        if (!converged)
+        {
+            Debug.Log("No valid path to the given target.");
+            return (
+                new float[0], new float[0][], new float[0][], new float[0][]
+            );
+        }
+
+        // Lerp between points to generate a path
+        completionTime = MaxDifferent(
+            currJointAngles, targetJointAngles
+        ) / jointSpeed;
+
+        // First waypoint is current position
+        timeSteps[0] = 0;
+        angles[0] = currJointAngles;
+
+        // Lerp joint angles between current and target
+        for (int i = 1; i < numberOfWaypoints; ++i)
+        {
+            // time
+            timeSteps[i] = completionTime * i / (numberOfWaypoints - 1);
+
+            // angles
+            float[] jointValues = new float[numJoints];
+            for (int j = 0; j < numJoints; j++)
+            {
+                jointValues[j] = Mathf.Lerp(
+                    currJointAngles[j],
+                    targetJointAngles[j],
+                    i / (float) (numberOfWaypoints - 1)
+                );
+            }
+            angles[i] = jointValues;
+        }
+
+        return (timeSteps, angles, velocities, accelerations);
+    }
+
+    private float MaxDifferent(float[] ang1, float[] ang2)
     {
         float maxDiff = 0;
         for (var i = 0; i < ang1.Length; i++)
@@ -91,47 +266,43 @@ public class UnityAutoManipulation : AutoManipulation
         return maxDiff;
     }
 
-    // Generate a simple joint trajectory without velocity and acceleration
-    private (float[], float[][], float[][], float[][]) GenerateJointTrajectory(
-        float[] currentAngles,
-        float[] targetAngles,
-        int numWaypoints,
-        float completionTime
-    )
+    // Straight line collision detection
+    private bool CheckForCollisionFreePath(
+        Vector3 startPosition, Vector3 goalPosition
+    ) 
     {
-        // Initialize containers
-        int numJoints = currentAngles.Length;
-        float[] times = new float[numWaypoints+1];
-        float[][] angles = new float[numWaypoints+1][];
-        float[][] velocities = new float[numWaypoints+1][];
-        float[][] accelerations = new float[numWaypoints+1][];
+        // Check if there is a collision free straight path
+        // between start and goal positions
 
-        // First waypoint is current position
-        times[0] = 0;
-        angles[0] = currentAngles;
-
-        // Lerp joint angles between current and target
-        for (int t = 1; t < numWaypoints+1; ++t)
-        {
-            // time
-            times[t] = t / (float)numWaypoints * completionTime;
-            
-            // angles
-            float[] jointValues = new float[numJoints];
-            for (int i = 0; i < numJoints; i++)
+        // Cast a ray from start to goal
+        Vector3 direction = goalPosition - startPosition;
+        float maxDistance = Vector3.Distance(goalPosition, startPosition);
+        // Collision detected
+        if (Physics.Raycast(
+            startPosition, direction, out RaycastHit hit, maxDistance
+        )) {
+            // Filtering Collision With Graspable Objects
+            if (hit.collider.gameObject.CompareTag("GraspableObject"))
             {
-                jointValues[i] = Mathf.Lerp(
-                    currentAngles[i],
-                    targetAngles[i],
-                    t / (float)numWaypoints
-                );
+                return true;
             }
-            angles[t] = jointValues;
-            velocities[t] = new float[numJoints];
-            accelerations[t] = new float[numJoints];
+            // Filtering Collision With the Robot
+            int robotLayerNum = 15;
+            if (hit.collider.gameObject.layer == robotLayerNum)
+            {
+                return true;
+            }
+
+            Debug.LogWarning(
+                "Collision detected from "
+                + hit.collider.name
+                + " with layer number "
+                + hit.collider.gameObject.layer
+            );
+            return false;
         }
 
-        // Return trajectory without velocity and acceleration
-        return (times, angles, velocities, accelerations);
+        // No collision
+        return true;
     }
 }
