@@ -5,9 +5,9 @@ using UnityEngine;
 public class GetObjectsInView : MonoBehaviour
 {
     public Camera mainCamera;  // Reference to the camera rendering the scene
-    private List<Transform> graspableObjectsInView = new List<Transform>();  // List to store Graspable objects in view
+    public List<Transform> graspableObjectsInView = new List<Transform>();  // List to store Graspable objects in view
 
-    public GraphicalInterface graphicalInterface;
+    // public GraphicalInterface graphicalInterface;
     void Start()
     {
         // Automatically add all objects with a Graspable component to the list
@@ -19,19 +19,7 @@ public class GetObjectsInView : MonoBehaviour
 
         if(mainCamera == null)
         {
-            // Get all the active cameras referanced in the graphical interface
-            Camera[] cameras =  graphicalInterface.GetCurrentActiveCameras();
-
-            // We have cameras
-            if(cameras.Length > 0)
-            {
-                mainCamera = cameras[0];
-            }
-            else
-            {
-                // No cameras found
-                return;
-            }
+            return;
         }
 
         UpdateGraspableObjectsInViewList();
@@ -54,7 +42,7 @@ public class GetObjectsInView : MonoBehaviour
         // Now graspableObjectsInView list contains the Graspable objects in the camera's view
     }
 
-    bool IsGraspableObjectInView(GameObject obj)
+    public bool IsGraspableObjectInView(GameObject obj)
     {
         if (mainCamera != null)
         {

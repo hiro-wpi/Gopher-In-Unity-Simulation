@@ -12,6 +12,10 @@ public class DrawBoundingBox : MonoBehaviour
 
     void Start()
     {
+    }
+
+    void Update()
+    {
         if (cameraToUse == null)
         {
             Debug.LogError("Camera reference is missing!");
@@ -34,10 +38,14 @@ public class DrawBoundingBox : MonoBehaviour
         DrawBoundingBoxOnCanvas();
     }
 
+    
+
     void DrawBoundingBoxOnCanvas()
     {
         // Get the bounds of the target object in world space
         Bounds objectBounds = GetWorldBounds(targetObject);
+
+        Debug.Log(cameraToUse.WorldToScreenPoint(targetObject.transform.position));
 
         // Convert the bounds to screen coordinates
         Vector3 minScreenPoint = cameraToUse.WorldToScreenPoint(objectBounds.min);
@@ -56,14 +64,23 @@ public class DrawBoundingBox : MonoBehaviour
 
         // Set the position and size of the panel on the canvas
         boundingBoxRect.SetParent(canvasRect);
-        boundingBoxRect.anchorMin = new Vector2(minScreenPoint.x / canvasRect.pixelWidth, minScreenPoint.y / canvasRect.pixelHeight);
-        boundingBoxRect.anchorMax = new Vector2(maxScreenPoint.x / canvasRect.pixelWidth, maxScreenPoint.y / canvasRect.pixelHeight);
+        boundingBoxRect.anchorMin = new Vector2(minScreenPoint.x / Screen.width, minScreenPoint.y / Screen.height);
+        boundingBoxRect.anchorMax = new Vector2(maxScreenPoint.x / Screen.width, maxScreenPoint.y / Screen.height);
         boundingBoxRect.sizeDelta = new Vector2(boxSize.x, boxSize.y);
-        boundingBoxRect.anchoredPosition = new Vector2(minScreenPoint.x + boxSize.x / 2, minScreenPoint.y + boxSize.y / 2);
+
+        // Convert anchored position to canvas space
+        Vector2 canvasPosition;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, minScreenPoint, cameraToUse, out canvasPosition);
+        boundingBoxRect.anchoredPosition = canvasPosition + new Vector2(boundingBoxRect.rect.width / 2, boundingBoxRect.rect.height / 2);
 
         // Set the color of the bounding box
         boundingBoxImage.color = boxColor;
+
+        Debug.Log($"minScreenPoint: {minScreenPoint}, maxScreenPoint: {maxScreenPoint}, boxSize: {boxSize}, canvasPosition: {canvasPosition}");
+
     }
+
+
 
     Bounds GetWorldBounds(GameObject obj)
     {
