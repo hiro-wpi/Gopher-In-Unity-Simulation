@@ -33,6 +33,12 @@ public class GetObjectsInView : MonoBehaviour
 
         foreach (Graspable graspable in FindObjectsOfType<Graspable>())
         {
+            // For testing
+            if (graspable.gameObject.name != "Regular Medicine (3)")
+            {
+                continue;
+            }
+
             if (IsGraspableObjectInView(graspable.gameObject))
             {
                 graspableObjectsInView.Add(graspable.transform);

@@ -37,7 +37,7 @@ public class BoxObjectInView : MonoBehaviour
             return;
         }
 
-        if(mainCamera == null)
+        if (mainCamera == null)
         {
             // Get all the active cameras referanced in the graphical interface
             Camera[] cameras =  graphicalInterface.GetCurrentActiveCameras();
@@ -57,10 +57,10 @@ public class BoxObjectInView : MonoBehaviour
             }
         }
 
-        if(targetObject == null)
+        if (targetObject == null)
         {
             // Get the first object in the list
-            if(getObjectsInView.graspableObjectsInView.Count > 0)
+            if (getObjectsInView.graspableObjectsInView.Count > 0)
             {
                 targetObject = getObjectsInView.graspableObjectsInView[0].gameObject;
                 drawBoundingBox.targetObject = targetObject;
@@ -68,17 +68,17 @@ public class BoxObjectInView : MonoBehaviour
         }
 
         // update if the targetObject is out of view to another object
-        if(targetObject != null)
+        if (targetObject != null)
         {
-            if(!getObjectsInView.IsGraspableObjectInView(targetObject))
-            {
-                // Get the first object in the list
-                if(getObjectsInView.graspableObjectsInView.Count > 0)
-                {
-                    targetObject = getObjectsInView.graspableObjectsInView[0].gameObject;
-                    drawBoundingBox.targetObject = targetObject;
-                }
-            }
+            // if (!getObjectsInView.IsGraspableObjectInView(targetObject))
+            // {
+            //     // Get the first object in the list
+            //     if (getObjectsInView.graspableObjectsInView.Count > 0)
+            //     {
+            //         targetObject = getObjectsInView.graspableObjectsInView[0].gameObject;
+            //         drawBoundingBox.targetObject = targetObject;
+            //     }
+            // }
         }
 
     }
