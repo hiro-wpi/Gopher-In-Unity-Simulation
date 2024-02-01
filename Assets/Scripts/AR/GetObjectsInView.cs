@@ -16,6 +16,24 @@ public class GetObjectsInView : MonoBehaviour
 
     void Update()
     {
+        // // Could first use
+        // obj.GetComponent<Renderer>().isVisible
+        // // Then check IsGraspableObjectInView()
+        // // to check if it is in the main camera's view
+
+        // Idealy, DO NOT use constant check in Update()
+        // Use OnWillRenderObject() instead
+        // Create a new class and attach to the objects you are tracking
+        // public class CameraDetector : MonoBehaviour
+        // {
+        //     public GetObjectsInView ObjectInView;
+        //     void OnWillRenderObject()
+        //     {
+        //         // Tell this class that this object is being rendered
+        //         // ObjectInView.ObjectRendered(this.gameObject);
+        //     }
+        // }
+
 
         if(mainCamera == null)
         {
@@ -24,7 +42,7 @@ public class GetObjectsInView : MonoBehaviour
 
         UpdateGraspableObjectsInViewList();
 
-        Debug.Log(graspableObjectsInView.Count);
+        // Debug.Log(graspableObjectsInView.Count);
     }
 
     void UpdateGraspableObjectsInViewList()

@@ -3,18 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// TODO
+// 2, Use MainCameraRenderTexture to get the screen size
+// instead of hardcoding it (1440x810);
 public class DrawBoundingBox : MonoBehaviour
 {
     public Camera cameraToUse;
     public Canvas canvas;
+    private RectTransform canvasRect;
     public GameObject targetObject;
     public Color boxColor = Color.red;
     public GameObject boundingBoxPanel = null;
-    private Texture2D boundingBoxTexture;
+    RectTransform boundingBoxUI;
+    public Texture2D boundingBoxTexture;
 
+    public RectTransform MainCameraDisplay = null;
+    
     void Start()
     {
-        boundingBoxTexture = Resources.Load<Texture2D>("AR/AltButton_Normal");
+        
     }
 
     void Update()
@@ -31,55 +38,89 @@ public class DrawBoundingBox : MonoBehaviour
 
     void DrawBoundingBoxOnCanvas()
     {
-        // Get the bounds of the target object in world space <-- GOOD
-        Bounds objectBounds = GetWorldBounds(targetObject);
-
-        // 1 - Convert the bounds to screen coordinates <-- GOOD
-        Vector3 minScreenPoint = cameraToUse.WorldToViewportPoint(objectBounds.min);
-        Vector3 maxScreenPoint = cameraToUse.WorldToViewportPoint(objectBounds.max);
-
-        minScreenPoint.x = minScreenPoint.x * 1440;
-        minScreenPoint.y = 810 - minScreenPoint.y * 810;
-
-        maxScreenPoint.x = maxScreenPoint.x * 1440;
-        maxScreenPoint.y = 810 - maxScreenPoint.y * 810;
-
-        // 2 - Calculate the size of the box in screen space <-- GOOD
-        Vector3 boxSize = maxScreenPoint - minScreenPoint;
+        if (targetObject == null)
+        {
+            return;
+        }
 
         // Create a RectTransform for the canvas <-- GOOD
-        RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+        canvasRect = canvas.GetComponent<RectTransform>();
 
         // Create a UI panel to represent the bounding box <-- GOOD
         boundingBoxPanel = new GameObject("BoundingBoxPanel");
-        RectTransform boundingBoxRect = boundingBoxPanel.AddComponent<RectTransform>();
+        boundingBoxUI = boundingBoxPanel.AddComponent<RectTransform>();
         RawImage boundingBoxImage = boundingBoxPanel.AddComponent<RawImage>();
-
-        // Set the position and size of the panel on the canvas <-- NOT GOOD
-        boundingBoxRect.SetParent(canvasRect);
-        boundingBoxRect.localScale = Vector3.one;
-        boundingBoxRect.localPosition = minScreenPoint;
-        boundingBoxRect.sizeDelta = new Vector2(boxSize.x, boxSize.y);
-
-        // 3 - Convert anchored position to canvas space <-- NOT GOOD
-        Vector2 minAnchor = new Vector2(minScreenPoint.x, minScreenPoint.y);
-        Vector2 maxAnchor = new Vector2(maxScreenPoint.x, maxScreenPoint.y);
-        minAnchor.x /= canvasRect.sizeDelta.x;
-        minAnchor.y /= canvasRect.sizeDelta.y;
-        maxAnchor.x /= canvasRect.sizeDelta.x;
-        maxAnchor.y /= canvasRect.sizeDelta.y;
-        boundingBoxRect.anchorMin = minAnchor;
-        boundingBoxRect.anchorMax = maxAnchor;
+        boundingBoxPanel.transform.parent = canvas.transform;
     
         // Set the color of the bounding box <-- GOOD
         boundingBoxImage.color = boxColor;
 
-        // 4 Add texture to draw rectangle <-- NOT GOOD
-        boundingBoxImage.texture = boundingBoxTexture;    }
+        // IV Add texture to draw rectangle <-- GOOD
+        boundingBoxImage.texture = boundingBoxTexture;
+
+        UpdateBoundingBox();
+    }
 
     private void UpdateBoundingBox()
     {
-        // TODO - Constantly update the position and size of the bounding box
+        if (targetObject == null)
+        {
+            // Hide the bounding box
+            // boundingBoxUI.sizeDelta = new Vector2(0, 0);
+            boundingBoxPanel.SetActive(false);
+            return;
+        }
+        else
+        {
+            boundingBoxPanel.SetActive(true);
+        }
+
+        float canvasWidth = MainCameraDisplay.rect.width;
+        float canvasHeight = MainCameraDisplay.rect.height;
+        float buffer = 0.075f; // keep it between 0 and 0.1
+
+        // Get the bounds of the target object in world space <-- GOOD
+        Bounds objectBounds = GetWorldBounds(targetObject);
+
+        // I - Convert the bounds to screen coordinates <-- GOOD / TODO
+        Vector3 minScreenPoint = cameraToUse.WorldToViewportPoint(objectBounds.min);
+        Vector3 maxScreenPoint = cameraToUse.WorldToViewportPoint(objectBounds.max);
+        Vector3 centerScreenPoint = cameraToUse.WorldToViewportPoint(objectBounds.center);
+
+        // 0 - hide the bounding box if the object is out of view of the canvas + buffer
+        if (minScreenPoint.x < 0 + buffer || minScreenPoint.y < 0 + buffer || maxScreenPoint.x > 1 - buffer || maxScreenPoint.y > 1 - buffer)
+        {
+            // Hide the bounding box
+            // boundingBoxUI.sizeDelta = new Vector2(0, 0);
+            boundingBoxPanel.SetActive(false);
+            return;
+        }
+        else
+        {
+            boundingBoxPanel.SetActive(true);
+        }
+
+        minScreenPoint.x = minScreenPoint.x * canvasWidth;
+        minScreenPoint.y = minScreenPoint.y * canvasHeight;
+        maxScreenPoint.x = maxScreenPoint.x * canvasWidth;
+        maxScreenPoint.y = maxScreenPoint.y * canvasHeight;
+
+        // II Calculate size of the bounding box in canvas space
+        Vector2 centerPosition = new Vector2(
+            (minScreenPoint.x + maxScreenPoint.x) / 2,
+            (minScreenPoint.y + maxScreenPoint.y) / 2
+        );
+        Vector2 sizeInViewport = new Vector2(
+            Mathf.Abs(maxScreenPoint.x - minScreenPoint.x), 
+            Mathf.Abs(maxScreenPoint.y - minScreenPoint.y)
+        ) * 2;
+
+        // III Adjust position and size of the bounding box
+        boundingBoxUI.anchoredPosition = new Vector2(
+            (centerPosition.x) - (canvasRect.sizeDelta.x / 2), 
+            (centerPosition.y) - (canvasRect.sizeDelta.y / 2)
+        );
+        boundingBoxUI.sizeDelta = sizeInViewport;
     }
 
     private Bounds GetWorldBounds(GameObject obj)

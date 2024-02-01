@@ -57,29 +57,49 @@ public class BoxObjectInView : MonoBehaviour
             }
         }
 
-        if (targetObject == null)
+        // If there are no objects in view, set the targetObject to null
+        if(getObjectsInView.graspableObjectsInView.Count == 0) // empty
         {
-            // Get the first object in the list
-            if (getObjectsInView.graspableObjectsInView.Count > 0)
+            targetObject = null;
+            drawBoundingBox.targetObject = null;
+        }
+        else
+        {
+            if (targetObject == null)
             {
-                targetObject = getObjectsInView.graspableObjectsInView[0].gameObject;
-                drawBoundingBox.targetObject = targetObject;
+                // Get the first object in the list
+                if (getObjectsInView.graspableObjectsInView.Count > 0)
+                {
+                    targetObject = getObjectsInView.graspableObjectsInView[0].gameObject;
+                    drawBoundingBox.targetObject = targetObject;
+                }
             }
         }
 
-        // update if the targetObject is out of view to another object
-        if (targetObject != null)
-        {
-            // if (!getObjectsInView.IsGraspableObjectInView(targetObject))
-            // {
-            //     // Get the first object in the list
-            //     if (getObjectsInView.graspableObjectsInView.Count > 0)
-            //     {
-            //         targetObject = getObjectsInView.graspableObjectsInView[0].gameObject;
-            //         drawBoundingBox.targetObject = targetObject;
-            //     }
-            // }
-        }
+
+        // if (targetObject == null)
+        // {
+        //     // Get the first object in the list
+        //     if (getObjectsInView.graspableObjectsInView.Count > 0)
+        //     {
+        //         targetObject = getObjectsInView.graspableObjectsInView[0].gameObject;
+        //         drawBoundingBox.targetObject = targetObject;
+        //     }
+        // }
+
+        // // update if the targetObject is out of view to another object
+        // if (targetObject != null)
+        // {
+        //     // if (!getObjectsInView.IsGraspableObjectInView(targetObject))
+        //     // {
+        //     //     // Get the first object in the list
+        //     //     if (getObjectsInView.graspableObjectsInView.Count > 0)
+        //     //     {
+        //     //         targetObject = getObjectsInView.graspableObjectsInView[0].gameObject;
+        //     //         drawBoundingBox.targetObject = targetObject;
+        //     //     }
+        //     // }
+        // }
 
     }
 }
