@@ -27,7 +27,7 @@ public class TestHighlightObject2d : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.B))
+        if (Input.GetKeyDown(KeyCode.V))
         {
             highlightObject2D.RemoveHighlight(objectSelector.graspableObjects);
         }

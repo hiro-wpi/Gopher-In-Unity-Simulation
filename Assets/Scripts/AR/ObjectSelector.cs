@@ -72,6 +72,7 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             selectedPosition = clickPosition;
         }
 
+        Debug.Log("OnPointerUp: " + selectedPosition);
         // Check if the mouse is not over any UI element, excluding the Canvas
         if(IsPointerOverMainCameraDisplay(selectedPosition.x, selectedPosition.y))
         {
@@ -110,15 +111,28 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
         foreach (RaycastResult result in results)
         {
+            Debug.Log("Mouse is over: " + result.gameObject.name);
+
             if (result.gameObject.GetComponent<Canvas>() != null)
             {
                 // Ignore the Canvas as a UI element
+                
                 continue;
             }
+
+            // Debug.Log("Mouse is over: " + result.gameObject.name);
 
             if (result.gameObject.name == mainCameraDisplayObject.name)
             {
                 // Mouse is on the main camera display
+                // Debug.Log("Mouse is over the main camera display");
+                return true;
+            }
+
+            
+            if(result.gameObject.name == "BoundingBoxPanel")
+            {
+                // Mouse is over a Graspable object
                 return true;
             }
 

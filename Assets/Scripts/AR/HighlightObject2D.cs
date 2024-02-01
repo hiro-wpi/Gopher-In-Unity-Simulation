@@ -68,7 +68,7 @@ public class HighlightObject2D : MonoBehaviour
             // highlightPanels.Add(new RectTransform());
             // isVisable.Add(true);
             // highlightPanels.Add(new highlightObject(obj, true));
-            highlightPanels.Add(new highlightObject(obj, true, cameraToUse, canvas, MainCameraDisplay, boundingBoxTexture, boxColor));
+            highlightPanels.Add(new highlightObject(obj, true, cameraToUse, canvas, MainCameraDisplay, boundingBoxTexture, boxColor, this.gameObject.transform));
         }
     }
 
@@ -77,6 +77,7 @@ public class HighlightObject2D : MonoBehaviour
         // if the object is in the list, remove it
         if (objectsToHighlight.Contains(obj))
         {
+            Debug.Log("Remove Highlight");
             int index = objectsToHighlight.IndexOf(obj);
             objectsToHighlight.RemoveAt(index);
 
@@ -111,9 +112,10 @@ public class HighlightObject2D : MonoBehaviour
         private Texture2D boundingBoxTexture;
         private Color boxColor;
         private RectTransform canvasRect;
+        private Transform parent;
 
 
-        public highlightObject(GameObject obj, bool isVisable, Camera cam, Canvas canvas, RectTransform MainCameraDisplay, Texture2D boundingBoxTexture, Color boxColor)
+        public highlightObject(GameObject obj, bool isVisable, Camera cam, Canvas canvas, RectTransform MainCameraDisplay, Texture2D boundingBoxTexture, Color boxColor, Transform parent = null)
         {
             this.targetObject = obj;
             this.isVisable = isVisable;
@@ -123,6 +125,7 @@ public class HighlightObject2D : MonoBehaviour
             this.MainCameraDisplay = MainCameraDisplay;
             this.boundingBoxTexture = boundingBoxTexture;
             this.boxColor = boxColor;
+            this.parent = parent;
             
             
             DrawBoundingBoxOnCanvas();
@@ -137,7 +140,8 @@ public class HighlightObject2D : MonoBehaviour
             boundingBoxPanel = new GameObject("BoundingBoxPanel");
             boundingBoxUI = boundingBoxPanel.AddComponent<RectTransform>();
             RawImage boundingBoxImage = boundingBoxPanel.AddComponent<RawImage>();
-            boundingBoxPanel.transform.parent = canvas.transform;
+            // boundingBoxPanel.transform.parent = canvas.transform;
+            boundingBoxPanel.transform.parent = parent;
         
             // Set the color of the bounding box <-- GOOD
             boundingBoxImage.color = boxColor;
