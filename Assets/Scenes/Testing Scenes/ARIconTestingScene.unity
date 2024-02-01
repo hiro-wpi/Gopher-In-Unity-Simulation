@@ -843,6 +843,8 @@ GameObject:
   - component: {fileID: 279664478}
   - component: {fileID: 279664479}
   - component: {fileID: 279664480}
+  - component: {fileID: 279664482}
+  - component: {fileID: 279664481}
   m_Layer: 5
   m_Name: RegularGUI
   m_TagString: Untagged
@@ -942,7 +944,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 279664472}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56938b54f084ce746985f3481dfd434c, type: 3}
   m_Name: 
@@ -961,7 +963,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 279664472}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51298566b531a9f4b92242ba2860595a, type: 3}
   m_Name: 
@@ -986,6 +988,39 @@ MonoBehaviour:
   mainCameraDisplayObject: {fileID: 271174650}
   graspableObjects: {fileID: 0}
   objectPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &279664481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 279664472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4470375e771b37e41b905979013377c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectSelector: {fileID: 279664480}
+  highlightObject2D: {fileID: 279664482}
+--- !u!114 &279664482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 279664472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fb8b2a0582366f4fb6e85472de49942, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectsToHighlight: []
+  cameraToUse: {fileID: 0}
+  MainCameraDisplay: {fileID: 271174651}
+  canvas: {fileID: 1666640050}
+  graphicalInterface: {fileID: 279664474}
+  boundingBoxTexture: {fileID: 2800000, guid: 1a37204371470f241bbbc81aedb5fb9b, type: 3}
+  boxColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &338443519
 GameObject:
   m_ObjectHideFlags: 0
