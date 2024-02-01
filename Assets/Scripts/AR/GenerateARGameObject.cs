@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public static class GenerateARGameObject
 {
-    public static GameObject Generate(GameObject gameObject, string type, Vector3 scale, Color color, float transparency = 0.25f)
+    public static GameObject Generate(GameObject gameObject, string type, Vector3 positionOffset, Vector3 rotationOffset, Vector3 scale, Color color, float transparency = 0.25f)
     {
 
         // Create the game object based on the type
@@ -37,6 +37,10 @@ public static class GenerateARGameObject
         go.transform.localScale = scale; // the size of the object relative to the parent
                                         // global scale of the object can't be changed
 
+        // Set the position and rotation offset relative to the parent
+        go.transform.localPosition += positionOffset;
+        go.transform.Rotate(rotationOffset, Space.Self);
+        
         // Disable the collider
         go.GetComponent<Collider>().enabled = false;
         
