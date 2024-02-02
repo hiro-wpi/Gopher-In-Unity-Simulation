@@ -26,9 +26,10 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     public GameObject ARArrowStart;
     public GameObject ARArrowEnd;
     public Vector3 startPositionARARrow = new Vector3(0, 0, 0);
-    private Vector3 endPositionARArrow = new Vector3(0, 0, 0);
+    public Vector3 endPositionARArrow = new Vector3(0, 0, 0);
     public Quaternion rotationARArrow = new Quaternion(0, 0, 0, 0);  
     private bool isOnFloor = false;
+    public ArrowCreator arrowCreator;
 
     void Start()
     {
@@ -109,6 +110,11 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             // Update the end position of the AR Arrow
             endPositionARArrow = GetPointOnFloor(eventData.position);
             ARArrowEnd.transform.position = endPositionARArrow;
+
+            // Update the arrow position and rotation
+            // arrowCreator.startPoint = startPositionARARrow;
+            // arrowCreator.endPoint = endPositionARArrow;
+            arrowCreator.SetArrowPoints(startPositionARARrow, endPositionARArrow);
         }
         else
         {
