@@ -15,6 +15,14 @@ public class DynamicLineBetweenPoints : MonoBehaviour
     {
         if (startPoint != null && endPoint != null)
         {
+
+            // if the start and end point are zero, reset the arrow
+            if (startPoint.position == new Vector3(0, 0, 0) && endPoint.position == new Vector3(0, 0, 0))
+            {
+                resetArrow();
+                return;
+            }
+
             // Get the direction and distance between the two points
             Vector3 direction = endPoint.position - startPoint.position;
             float distance = direction.magnitude;
@@ -55,6 +63,12 @@ public class DynamicLineBetweenPoints : MonoBehaviour
         {
             Debug.LogError("End Point not assigned!");
         }
+    }
+
+    public void resetArrow()
+    {
+        transform.position = new Vector3(0, 0, 0);
+        transform.localScale = new Vector3(0, 0, 0);
     }
     // public Transform startPoint;
     // public Transform endPoint;

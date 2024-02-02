@@ -76,7 +76,7 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     // Event Handlers
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("Pointer Down");
+        // Debug.Log("Pointer Down");
         dragStartPosition = eventData.position;
         clickPosition = eventData.position;
         selectedPosition = Vector2.zero;
@@ -90,7 +90,7 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         if(isOnFloor)
         {
             startPositionARARrow = floorPosition;
-            ARArrowStart.transform.position = startPositionARARrow;
+            endPositionARArrow = floorPosition;
         }
 
         // Disable and reset the selection rectangle when starting a new selection
@@ -107,14 +107,10 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
         if(isOnFloor)
         {
-            // Update the end position of the AR Arrow
+            // Update the arrow Start and end positions
             endPositionARArrow = GetPointOnFloor(eventData.position);
+            ARArrowStart.transform.position = startPositionARARrow;
             ARArrowEnd.transform.position = endPositionARArrow;
-
-            // Update the arrow position and rotation
-            // arrowCreator.startPoint = startPositionARARrow;
-            // arrowCreator.endPoint = endPositionARArrow;
-            // arrowCreator.SetArrowPoints(startPositionARARrow, endPositionARArrow);
         }
         else
         {
@@ -144,11 +140,20 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             if(isOnFloor)
             {
                 // // Get the direction of the AR arrow from the start to end position
-                // Vector3 direction = endPositionARArrow - startPositionARARrow;
-                // Get the direction of the AR arrow from the start to end position as a quaternion in the world space
-                Debug.Log("Start: " + startPositionARARrow + " End: " + endPositionARArrow);
+                // Debug.Log("Start: " + startPositionARARrow + " End: " + endPositionARArrow);
                 rotationARArrow = Quaternion.LookRotation(endPositionARArrow - startPositionARARrow);
-                Debug.Log("Rotation: " + rotationARArrow.eulerAngles);
+                // Debug.Log("Rotation: " + rotationARArrow.eulerAngles);
+
+                // Reset the AR Arroe
+                startPositionARARrow = new Vector3(0, 0, 0);
+                endPositionARArrow = new Vector3(0, 0, 0);
+
+                // Set the AR Arrow gameobject transforms to zero
+                ARArrowStart.transform.position = new Vector3(0, 0, 0);
+                ARArrowEnd.transform.position = new Vector3(0, 0, 0);
+
+                // Reset the AR Flag
+                isOnFloor = false;
             }
         }
 
@@ -158,7 +163,6 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             selectedPosition = clickPosition;
         }
 
-        // Debug.Log("OnPointerUp: " + selectedPosition);
         // Check if the mouse is not over any UI element, excluding the Canvas
         if(IsPointerOverMainCameraDisplay(selectedPosition.x, selectedPosition.y))
         {
@@ -248,7 +252,7 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
                     // Get the 3D coordinates where the ray hit the floor
                     Vector3 floorCoordinates = hit.point;
                     // Do something with the floor coordinates
-                    Debug.Log("Clicked on floor at: " + floorCoordinates);
+                    // Debug.Log("Clicked on floor at: " + floorCoordinates);
 
                     return (true, floorCoordinates);
                 }
@@ -288,7 +292,7 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
                         Vector3 floorCoordinates = hit.point;
 
                         // Do something with the floor coordinates
-                        Debug.Log("Clicked on floor at: " + floorCoordinates);
+                        // Debug.Log("Clicked on floor at: " + floorCoordinates);
 
                         // Return the point on the floor directly
                         return floorCoordinates;
