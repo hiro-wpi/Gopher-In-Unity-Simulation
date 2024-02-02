@@ -51,7 +51,10 @@ public class Laser : MonoBehaviour
         public void Execute(int i)
         {
             RaycastCommands[i] = new RaycastCommand(
-                Position, RaycastRotations[i] * Forward, MaxDistance
+                Position,
+                RaycastRotations[i] * Forward,
+                QueryParameters.Default, 
+                distance:MaxDistance
             );
         }
     }

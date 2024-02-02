@@ -13,34 +13,20 @@ Shader "Custom/DepthScaler"
 
     SubShader
     {
-        Tags { "RenderType"="Opaque" "RenderPipeline" = "UniversalPipeline"}
-
+        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline"}
         Pass
         {
             HLSLPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
-
             // URP header
             // The Core.hlsl file contains definitions of frequently used 
             // HLSL macros and functions
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            // The Blit.hlsl file provides the vertex shader (Vert),
+            // input structure (Attributes) and output strucutre (Varyings)
+            #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
 
-            struct Attributes
-            {
-                // Vertex position in object space
-                float4 positionOS : POSITION;
-                // UV coordinates
-                float2 uv : TEXCOORD0;
-            };
-
-            struct Varyings
-            {
-                // Vertex position in screen space
-                float4 positionCS : SV_POSITION;
-                // UV coordinates
-                float2 uv : TEXCOORD0;
-            };
+            #pragma vertex Vert
+            #pragma fragment frag
 
             // Source texture
             TEXTURE2D(_MainTex);
@@ -50,22 +36,12 @@ Shader "Custom/DepthScaler"
             // Far plane distance
             float _FarClipPlane;
 
-            Varyings vert(Attributes input)
-            {
-                Varyings output;
-                // Transform the vertex position to clip space and 
-                // pass it to the fragment function
-                output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
-                // Pass the UV coordinates to the fragment function
-                output.uv = input.uv;
-
-                return output;
-            }
-
             half4 frag (Varyings input) : SV_Target
             {
                 // sample the source texture at the UV coordinates
-                float depth = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv).r;
+                float depth = SAMPLE_TEXTURE2D(
+                    _MainTex, sampler_MainTex, input.texcoord
+                ).r;
                 // scale the depth value by the far plane distance
                 return depth * _FarClipPlane;
 

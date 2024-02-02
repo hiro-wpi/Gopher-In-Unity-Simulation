@@ -4,14 +4,10 @@ Shader "Custom/DepthShader"
 
     SubShader
     {
-        Tags { "RenderType"="Opaque" "RenderPipeline" = "UniversalPipeline"}
-
+        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline"}
         Pass
         {
             HLSLPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
-
             // URP header
             // The Core.hlsl file contains definitions of frequently used 
             // HLSL macros and functions
@@ -19,37 +15,26 @@ Shader "Custom/DepthShader"
             // The DeclareDepthTexture.hlsl file contains utilities for 
             // sampling the Camera depth texture.
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
+            // The Blit.hlsl file provides the vertex shader (Vert),
+            // input structure (Attributes) and output strucutre (Varyings)
+            #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
 
-            struct Attributes
-            {
-                // The vertex positions in object space.
-                float4 positionOS : POSITION;
-            };
-
-            struct Varyings
-            {
-                // The vertex position in screen space
-                float4 positionCS : SV_POSITION;
-            };
-
-            Varyings vert(Attributes input)
-            {
-                Varyings output;
-                // The TransformObjectToHClip function transforms vertex positions
-                // from object space to homogenous clip space.
-                output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
- 
-                return output;
-            }
+            #pragma vertex Vert
+            #pragma fragment frag
 
             half4 frag (Varyings input) : SV_Target
             {
-                // Sample the depth from the Camera depth texture with the 
-                // UV coordinates => 
-                // divide the pixel location by the render target resolution
-                float depth = SampleSceneDepth(
-                    input.positionCS.xy / _ScaledScreenParams.xy
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
+                // sample the source texture at the UV coordinates
+                float depth = SAMPLE_DEPTH_TEXTURE(
+                    _CameraDepthTexture, 
+                    sampler_CameraDepthTexture, 
+                    input.texcoord
                 );
+
+                // For testing, output the depth without normalization
+                // This output is more clear to be seen in the view
+                // return depth;
 
                 // Convert perpendicular distance values to the plane of the camera,
                 // to the actual distance depth values to the camera,
@@ -60,7 +45,6 @@ Shader "Custom/DepthShader"
                 // to the near and far clipping plane.
                 if(depth > 0.9999 || depth < 0.0001)
                     return 0;
-
                 return depth;
             }
             ENDHLSL

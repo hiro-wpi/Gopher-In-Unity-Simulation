@@ -112,6 +112,8 @@ public class ImagePublisher : MonoBehaviour
         timer = new Timer(publishRate);
 
         // Initialize sampler and container for acquiring image messages
+        // TODO
+        // CommandBuffer may not work with XR. Unsure if it's a problem
         cmd = new CommandBuffer();
         if (format == ImageFormat.RGB)
         {

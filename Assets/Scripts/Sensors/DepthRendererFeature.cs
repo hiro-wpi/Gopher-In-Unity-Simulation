@@ -12,22 +12,27 @@ using UnityEngine.Rendering.Universal;
 /// </summary>
 public class DepthRendererFeature : ScriptableRendererFeature 
 {
-    class RenderPass : ScriptableRenderPass 
+    class DepthRenderPass : ScriptableRenderPass 
     {
         private Material material;
-        private RenderTargetHandle tempTexture;
-        private RenderTargetIdentifier source;
-        private RenderTextureDescriptor descriptor;
+        private RTHandle target;
 
-        public RenderPass(Material material) : base() 
+        public DepthRenderPass(Material material) : base() 
         {
             this.material = material;
-            tempTexture.Init("_TempDepthTexture");
+            renderPassEvent = RenderPassEvent.AfterRenderingPostProcessing;
         }
 
-        public void SetSource(RenderTargetIdentifier source) 
+        public override void OnCameraSetup(
+            CommandBuffer cmd, ref RenderingData renderingData
+        )
         {
-            this.source = source;
+            ConfigureTarget(target);
+        }
+
+        public void SetTarget(RTHandle target) 
+        {
+            this.target = target;
         }
 
         public override void Execute(
@@ -35,38 +40,26 @@ public class DepthRendererFeature : ScriptableRendererFeature
         ) 
         {
             // Init buffer
-            CommandBuffer cmd = CommandBufferPool.Get("DepthFeature");
-            // Acquire a temporary texture  
-            cmd.GetTemporaryRT(
-                tempTexture.id, 
-                renderingData.cameraData.cameraTargetDescriptor
-            );
-
-            // Blit, applying the depth material
-            cmd.Blit(source, tempTexture.Identifier(), material);
-            cmd.Blit(tempTexture.Identifier(), source);
+            CommandBuffer cmd = CommandBufferPool.Get();
+            using (new ProfilingScope(cmd, profilingSampler))
+            {
+                Blitter.BlitCameraTexture(cmd, target, target, material, 0);
+            }
             context.ExecuteCommandBuffer(cmd);
-            // End
-            CommandBufferPool.Release(cmd);
-        }
+            cmd.Clear();
 
-        public override void FrameCleanup(CommandBuffer cmd) 
-        {
-            cmd.ReleaseTemporaryRT(tempTexture.id);
+            CommandBufferPool.Release(cmd);
         }
     }
 
-    private RenderPass renderPass;
+    private DepthRenderPass renderPass;
 
     // Init renderer feature
     public override void Create() 
     {
         // Get a depth render pass
         var material = new Material(Shader.Find("Custom/DepthShader"));
-        renderPass = new RenderPass(material);
-
-        // Use the depth render pass after rendering
-        renderPass.renderPassEvent = RenderPassEvent.AfterRenderingPostProcessing;
+        renderPass = new DepthRenderPass(material);
     }
 
     // Run at every frame
@@ -77,8 +70,18 @@ public class DepthRendererFeature : ScriptableRendererFeature
         // Only apply to "DepthCamera"
         if (renderingData.cameraData.camera.tag == "DepthCamera")
         {
-            renderPass.SetSource(renderer.cameraColorTarget);
             renderer.EnqueuePass(renderPass);
+        }
+    }
+
+    public override void SetupRenderPasses(
+        ScriptableRenderer renderer, in RenderingData renderingData
+    )
+    {
+        // Only apply to "DepthCamera"
+        if (renderingData.cameraData.camera.tag == "DepthCamera")
+        {
+            renderPass.SetTarget(renderer.cameraColorTargetHandle);
         }
     }
 }

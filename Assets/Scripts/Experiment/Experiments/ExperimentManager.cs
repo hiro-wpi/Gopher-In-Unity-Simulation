@@ -40,8 +40,9 @@ public class ExperimentManager : MonoBehaviour
     private string recordFolder;
 
     // Nav Mesh Agent for dynamic 
-    public NavMeshSurface navMeshHuman;
-    public NavMeshSurface navMeshRobot;  
+    // TODO
+    // public NavMeshSurface navMeshHuman;
+    //public NavMeshSurface navMeshRobot;  
 
     void Start()
     {
@@ -234,16 +235,18 @@ public class ExperimentManager : MonoBehaviour
             currentTask.GenerateStaticObjects();
             yield return new WaitForSeconds(0.1f);
             // Remake nav mesh
-            navMeshRobot.BuildNavMesh();
-            yield return new WaitForSeconds(0.4f);
+            // TODO
+            // navMeshRobot.BuildNavMesh();
+            // yield return new WaitForSeconds(0.4f);
 
             // Generate task and goal objects
             currentTask.GenerateTaskObjects();
             currentTask.GenerateGoalObjects();
             yield return new WaitForSeconds(0.1f);
-            // Remake nav mesh
-            navMeshHuman.BuildNavMesh();
-            yield return new WaitForSeconds(0.4f);
+            // // Remake nav mesh
+            // TODO
+            // navMeshHuman.BuildNavMesh();
+            // yield return new WaitForSeconds(0.4f);
 
             // Generate dynamic objects
             currentTask.GenerateDynamicObjects();
@@ -274,17 +277,19 @@ public class ExperimentManager : MonoBehaviour
             // Generate static objects
             currentTask.GenerateStaticObjects();
             yield return new WaitForSeconds(0.1f);
-            // Remake nav mesh
-            navMeshRobot.BuildNavMesh();
-            yield return new WaitForSeconds(0.4f);
+             // TODO
+            // // Remake nav mesh
+            // navMeshRobot.BuildNavMesh();
+            // yield return new WaitForSeconds(0.4f);
 
             // Generate task and goal objects
             currentTask.GenerateTaskObjects();
             currentTask.GenerateGoalObjects();
             yield return new WaitForSeconds(0.1f);
-            // Remake nav mesh
-            navMeshHuman.BuildNavMesh();
-            yield return new WaitForSeconds(0.4f);
+             // TODO
+            // // Remake nav mesh
+            // navMeshHuman.BuildNavMesh();
+            // yield return new WaitForSeconds(0.4f);
 
             // Generate dynamic objects
             currentTask.GenerateDynamicObjects();
