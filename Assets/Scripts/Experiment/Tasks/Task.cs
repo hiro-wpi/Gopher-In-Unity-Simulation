@@ -206,8 +206,7 @@ public abstract class Task : MonoBehaviour
         {
             CharacterNavigation charNav = 
                 dynamicObjects[i].GetComponent<CharacterNavigation>();
-            charNav.SetTrajectory(DynamicObjectSpawnArray[i].trajectory);
-            charNav.loop = true;
+            charNav.SetTrajectory(DynamicObjectSpawnArray[i].trajectory, true);
         }
 
         return dynamicObjects;

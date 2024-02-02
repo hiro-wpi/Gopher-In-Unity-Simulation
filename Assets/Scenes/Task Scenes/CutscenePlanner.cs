@@ -4,46 +4,42 @@ using UnityEngine;
 
 public class CutscenePlanner : MonoBehaviour
 {
-    [SerializeField] private Transform leftHandTarget;
-    [SerializeField] private Transform rightHandTarget;
+    [SerializeField] private CharacterIKController ikController;
+    private CharacterIKController.MotionType motionType = 
+        CharacterIKController.MotionType.Quadratic;
+
     [SerializeField] private Transform leftHandHome;
     [SerializeField] private Transform rightHandHome;
-    [SerializeField] private Transform headIKTarget;
     [SerializeField] private Transform monitor;
-    [SerializeField] private Animator animator;
-    [SerializeField] private List<Transform> medicineHandPositions; 
-    [SerializeField] private List<Transform> medicineHeadPositions;
-    [SerializeField] private List<GameObject> medicineBottles;
+
+    [SerializeField] private List<Transform> medicineHandPositions = new(); 
+    [SerializeField] private List<Transform> medicineHeadPositions = new();
+    [SerializeField] private List<GameObject> medicineBottles = new();
 
     private float holdTimer = 0.0f;
     private float holdDuration = 1.0f;
     private float waitTimer = 0.0f;
     private float minWait = 5.0f;
     private float maxWait = 15.0f;
-    private float headTurnSpeed = 2.0f;
-    private float armMoveSpeed = 1.0f; 
+
+    private float headTurnSpeed = 10.0f;
+    private float armMoveSpeed = 0.2f; 
     private int randomMedicine = 0;
-    private Vector3 reachingStartPosition;
-    private float reachingRatio = 0.0f;
 
     private enum CutsceneState
     {
         WaitingBeforeMedicine,
-        SelectingRandomMedicine,
         GoingToMedicine,
         WaitingAtMedicine,
         GoingToHome,
-        PrepAfterHome,
         StayingAtHome
     }
-
     private CutsceneState currentState;
 
     private void Start()
     {
-        startLookAtTarget(monitor);
-        rightHandTarget.position = rightHandHome.position;
-        leftHandTarget.position = leftHandHome.position;
+        SendToHome(180, 10);
+
         currentState = CutsceneState.WaitingBeforeMedicine;
     }
 
@@ -52,205 +48,140 @@ public class CutscenePlanner : MonoBehaviour
         switch (currentState)
         {
             case CutsceneState.WaitingBeforeMedicine:
-                waitBeforeMedicine();
-                break;
-
-            case CutsceneState.SelectingRandomMedicine:
-                selectRandomMedicine();
+                WaitingBeforeMedicine();
                 break;
 
             case CutsceneState.GoingToMedicine:
-                goToMedicine();
+                GoingToMedicine();
                 break;
 
             case CutsceneState.WaitingAtMedicine:
-                waitAtMedicine();
+                WaitingAtMedicine();
                 break;
             
             case CutsceneState.GoingToHome:
-                goToHome();
-                break;
-
-            case CutsceneState.PrepAfterHome:
-                prepAfterHome();
+                GoingToHome();
                 break;
 
             case CutsceneState.StayingAtHome:
-                stayAtHome();
                 break;
         }
     }
 
-    private void waitBeforeMedicine()
+    private void WaitingBeforeMedicine()
     {
         waitTimer += Time.deltaTime;
-
-        if (waitTimer >= Random.Range(minWait, maxWait))
+        if (waitTimer < Random.Range(minWait, maxWait))
         {
-            currentState = CutsceneState.SelectingRandomMedicine;
-            waitTimer = 0.0f;
+            return;
         }
-    }    
+        waitTimer = 0.0f;
 
-    private void selectRandomMedicine()
-    {
+        // Select a random medicine and move towards it
         if (medicineHandPositions.Count > 0)
         {            
             randomMedicine = Random.Range(0, medicineHandPositions.Count - 1);
-            
-            reachingRatio = 0;
-            reachingStartPosition = leftHandTarget.position;
+            ikController.LookAtTarget(
+                medicineHeadPositions[randomMedicine].position,
+                headTurnSpeed
+            );
+            ikController.MoveLeftHand(
+                motionType, 
+                medicineHandPositions[randomMedicine].position,
+                positionSpeed: armMoveSpeed,
+                height: 0.1f
+            );
+
             currentState = CutsceneState.GoingToMedicine;
         }
+
+        // No more medicine to reach
         else
         {
+            SendToHome(headTurnSpeed, armMoveSpeed);
             currentState = CutsceneState.StayingAtHome;
         }
     }
 
-    private void goToMedicine()
+    private void GoingToMedicine()
     {
-        if (medicineHeadPositions.Count <= 0)
-        {
-            return;
-        }
-
-        lookAtTarget(medicineHeadPositions[randomMedicine]);
-
-        leftHandTarget.position = QuadraticInterpolation(
-            reachingStartPosition, 
-            medicineHandPositions[randomMedicine].position, 
-            reachingRatio
+        ikController.LookAtTarget(
+            medicineHeadPositions[randomMedicine].position,
+            headTurnSpeed
         );
-        reachingRatio += 1 / armMoveSpeed * Time.deltaTime;
 
-        if (isAtDestination(medicineHandPositions[randomMedicine].position))
+        if (
+            ikController.IsLeftHandReached(
+                medicineHandPositions[randomMedicine].position
+            )
+        )
         {
-            reachingRatio = 0;
-            reachingStartPosition = Vector3.zero;
-
-            closeHand();
-
-            medicineBottles[randomMedicine].transform.SetParent(leftHandTarget);   
-
             currentState = CutsceneState.WaitingAtMedicine;
         }
     }
 
-    private void waitAtMedicine()
+    private void WaitingAtMedicine()
     {
         holdTimer += Time.deltaTime;
-
-        if (holdTimer >= holdDuration)
-        {
-            reachingRatio = 0;
-            reachingStartPosition = leftHandTarget.position;
-
-            currentState = CutsceneState.GoingToHome;
-            holdTimer = 0.0f;
-        }
-    }
-
-    private void goToHome()
-    {
-        if (medicineHeadPositions.Count <= 0)
+        if (holdTimer < holdDuration)
         {
             return;
         }
+        holdTimer = 0.0f;
 
-        lookAtTarget(medicineHeadPositions[randomMedicine]);
+        ikController.CloseLeftHand();
 
-        leftHandTarget.position = QuadraticInterpolation(
-            reachingStartPosition, 
-            leftHandHome.position, 
-            reachingRatio
+        // Move back to home
+        ikController.LookAtTarget(
+            medicineHeadPositions[randomMedicine].position,
+            headTurnSpeed
         );
-        reachingRatio += 1 / armMoveSpeed * Time.deltaTime;
+        ikController.MoveLeftHand(
+            motionType, 
+            leftHandHome.position,
+            positionSpeed: armMoveSpeed,
+            height: 0.1f
+        );
 
-        if (isAtDestination(leftHandHome.position))
-        {
-            reachingRatio = 0;
-            reachingStartPosition = Vector3.zero;
-
-            medicineBottles.RemoveAt(randomMedicine);
-            medicineHandPositions.RemoveAt(randomMedicine);
-            medicineHeadPositions.RemoveAt(randomMedicine);
-            currentState = CutsceneState.PrepAfterHome;
-        }
+        currentState = CutsceneState.GoingToHome;
     }
 
-    private void prepAfterHome()
+    private void GoingToHome()
     {
-        openHand();
-        
-        if (leftHandTarget.childCount > 0)
-        {
-            Transform child = leftHandTarget.GetChild(0);
-            child.SetParent(null);
-        }
-        
-        lookAtTarget(monitor);
+        ikController.LookAtTarget(
+            medicineHeadPositions[randomMedicine].position,
+            headTurnSpeed
+        );
 
-        if (isLookingAtTarget(monitor))
+        if (
+            ikController.IsLeftHandReached(
+                leftHandHome.position
+            )
+        )
         {
+            ikController.OpenLeftHand();
+            medicineHeadPositions.RemoveAt(randomMedicine);
+            medicineHandPositions.RemoveAt(randomMedicine);
+            medicineBottles.RemoveAt(randomMedicine);
+
             currentState = CutsceneState.WaitingBeforeMedicine;
         }
     }
 
-    private void stayAtHome()
+    private void SendToHome(float headSpeed, float armSpeed)
     {
-        leftHandTarget.position = Vector3.Lerp(leftHandTarget.position, leftHandHome.position, armMoveSpeed * Time.deltaTime);
-        lookAtTarget(monitor);
+        ikController.LookAtTarget(monitor.position, headSpeed);
+        ikController.MoveLeftHand(
+            motionType,
+            leftHandHome.position,
+            positionSpeed: armSpeed,
+            height: 0.1f
+        );
+        ikController.MoveRightHand(
+            motionType,
+            rightHandHome.position,
+            positionSpeed: armSpeed,
+            height: 0.1f
+        );
     }
-
-    private Vector3 QuadraticInterpolation(Vector3 start, Vector3 end, float t)
-    {
-        float height = 0.1f;
-        Vector3 lerpedPosition = Vector3.Lerp(start, end, t);
-        lerpedPosition.y = lerpedPosition.y + height * (- 4 * t * t + 4 * t);
-        return lerpedPosition;
-    }
-
-    private bool isLookingAtTarget(Transform targetObject)
-    {
-        Vector3 lookDirection = targetObject.position - headIKTarget.position;
-        float dotProduct = Vector3.Dot(lookDirection.normalized, headIKTarget.forward);
-        return dotProduct > 0.99f;
-    }    
-
-    private void lookAtTarget(Transform targetObject)
-    {
-        Vector3 lookDirection = targetObject.position - headIKTarget.position;
-
-        if (lookDirection != Vector3.zero)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
-            headIKTarget.rotation = Quaternion.Slerp(headIKTarget.rotation, targetRotation, headTurnSpeed * Time.deltaTime);        
-        }
-    }
-
-    private void startLookAtTarget(Transform targetObject)
-    {
-        Vector3 lookDirection = targetObject.position - headIKTarget.position;
-
-        if (lookDirection != Vector3.zero)
-        {
-            headIKTarget.rotation = Quaternion.LookRotation(lookDirection, Vector3.up);    
-        }        
-    }
-
-    private bool isAtDestination(Vector3 destination)
-    {
-        return Vector3.Distance(leftHandTarget.position, destination) < 0.01f;
-    }
-
-    private void openHand()
-    {
-        animator.SetFloat("Left Grab", 0.0f);
-    }
-
-    private void closeHand()
-    {
-        animator.SetFloat("Left Grab", 1.0f);
-    }    
 }

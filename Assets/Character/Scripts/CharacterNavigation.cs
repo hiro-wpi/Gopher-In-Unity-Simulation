@@ -3,24 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+/// <summary>
+///     A controller script that used to control the character navigation.
+///     
+///     One can use the following function to control the character navigation:
+///     SetTrajectory(Vector3[] trajectory, bool loopTrajectory)
+/// </summary>
 public class CharacterNavigation : MonoBehaviour
 {
-    public Animator animator;
-    public NavMeshAgent agent;
+    [SerializeField] private Animator animator;
+    [SerializeField] private NavMeshAgent agent;
 
     private Vector3 worldVelocity;
     private Vector3 agentVelocity;
     private float forward;
     private float turn;
 
-    public bool loop;
-    private Vector3[] targetTrajectory;
-    private int currentIndex = 0;
+    [SerializeField, ReadOnly] private bool loop;
+    [SerializeField, ReadOnly] private Vector3[] targetTrajectory;
+    [SerializeField, ReadOnly] private int currentIndex = 0;
 
-
-    void Start()
-    {
-    }
+    void Start() {}
 
     void Update()
     {
@@ -29,7 +32,10 @@ public class CharacterNavigation : MonoBehaviour
         worldVelocity = agent.desiredVelocity;
         if (worldVelocity.magnitude > 1f) 
             worldVelocity.Normalize(); // animation blender range [0, 1]
-        agentVelocity = agent.transform.InverseTransformDirection(worldVelocity);
+        agentVelocity = agent.transform.InverseTransformDirection(
+            worldVelocity
+        );
+
         UpdateAnimator(agentVelocity);
     }
 
@@ -45,9 +51,10 @@ public class CharacterNavigation : MonoBehaviour
     }
 
 
-    public void SetTrajectory(Vector3[] trajectory)
+    public void SetTrajectory(Vector3[] trajectory, bool loopTrajectory)
     {
         targetTrajectory = trajectory;
+        loop = loopTrajectory;
 
         currentIndex = 0;
         agent.SetDestination(targetTrajectory[currentIndex]);
