@@ -120,9 +120,9 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             {
                 selectionRectangleImage.gameObject.SetActive(true);
                 Vector2 currentMousePosition = eventData.position;
-                Vector2 size = currentMousePosition - dragStartPosition;
-                selectionRectangleTransform.sizeDelta = size;
-                selectionRectangleTransform.position = (dragStartPosition + currentMousePosition) / 2f;
+                Vector2 size = dragStartPosition - currentMousePosition;
+                selectionRectangleTransform.sizeDelta = new Vector2(Mathf.Abs(size.x), Mathf.Abs(size.y));
+                selectionRectangleTransform.position = dragStartPosition - size / 2f;
             }
         }
 
