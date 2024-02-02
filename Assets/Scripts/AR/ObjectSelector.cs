@@ -22,6 +22,14 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     private RawImage selectionRectangleImage;
     private RectTransform selectionRectangleTransform;
 
+    // Floor Arrow AR Feature (AR Arrow)
+    public GameObject ARArrowStart;
+    public GameObject ARArrowEnd;
+    public Vector3 startPositionARARrow = new Vector3(0, 0, 0);
+    private Vector3 endPositionARArrow = new Vector3(0, 0, 0);
+    public Quaternion rotationARArrow = new Quaternion(0, 0, 0, 0);  
+    private bool isOnFloor = false;
+
     void Start()
     {
         InitializeSelectionRectangle();
@@ -73,6 +81,17 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         selectedPosition = Vector2.zero;
         isDragging = false;
 
+        startPositionARARrow = new Vector3(0, 0, 0);
+
+        // Check if the mouse is clicking on the floor (throught the canvas)
+        Vector3 floorPosition = Vector3.zero;
+        (isOnFloor, floorPosition) = IsPointerOnFloor(clickPosition);
+        if(isOnFloor)
+        {
+            startPositionARARrow = floorPosition;
+            ARArrowStart.transform.position = startPositionARARrow;
+        }
+
         // Disable and reset the selection rectangle when starting a new selection
         if (selectionRectangleImage != null)
         {
@@ -85,15 +104,27 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         isDragging = true;
 
-        // Visualize the dragging with a selection rectangle
-        if (selectionRectangleImage != null)
+        if(isOnFloor)
         {
-            selectionRectangleImage.gameObject.SetActive(true);
-            Vector2 currentMousePosition = eventData.position;
-            Vector2 size = currentMousePosition - dragStartPosition;
-            selectionRectangleTransform.sizeDelta = size;
-            selectionRectangleTransform.position = (dragStartPosition + currentMousePosition) / 2f;
+            // Update the end position of the AR Arrow
+            endPositionARArrow = GetPointOnFloor(eventData.position);
+            ARArrowEnd.transform.position = endPositionARArrow;
         }
+        else
+        {
+            // Do the normal dragging behavior
+            // Visualize the dragging with a selection rectangle
+            if (selectionRectangleImage != null)
+            {
+                selectionRectangleImage.gameObject.SetActive(true);
+                Vector2 currentMousePosition = eventData.position;
+                Vector2 size = currentMousePosition - dragStartPosition;
+                selectionRectangleTransform.sizeDelta = size;
+                selectionRectangleTransform.position = (dragStartPosition + currentMousePosition) / 2f;
+            }
+        }
+
+        
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -103,6 +134,16 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             // Drag Selection
             Vector2 dragCenter = (dragStartPosition + eventData.position) / 2f;
             selectedPosition = dragCenter;
+
+            if(isOnFloor)
+            {
+                // // Get the direction of the AR arrow from the start to end position
+                // Vector3 direction = endPositionARArrow - startPositionARARrow;
+                // Get the direction of the AR arrow from the start to end position as a quaternion in the world space
+                Debug.Log("Start: " + startPositionARARrow + " End: " + endPositionARArrow);
+                rotationARArrow = Quaternion.LookRotation(endPositionARArrow - startPositionARARrow);
+                Debug.Log("Rotation: " + rotationARArrow.eulerAngles);
+            }
         }
 
         else
@@ -179,5 +220,78 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
         // Mouse is not over any UI element
         return true;
+    }
+
+
+    // Check to see if the object we picked is the floor
+    // If it's on the floor, return the position of the floor
+    private (bool, Vector3) IsPointerOnFloor(Vector2 selectedPosition)
+    {
+        Ray ray = mainCamera.ScreenPointToRay(selectedPosition);
+        RaycastHit hit;
+
+        // Perform the raycast against the 3D objects
+        if (Physics.Raycast(ray, out hit))
+        {
+            // Check if the hit object has a collider
+            if (hit.collider != null)
+            {
+                // check to see if the layer of the hit collider is the floor tag
+                if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Floor"))
+                {
+                    // Get the 3D coordinates where the ray hit the floor
+                    Vector3 floorCoordinates = hit.point;
+                    // Do something with the floor coordinates
+                    Debug.Log("Clicked on floor at: " + floorCoordinates);
+
+                    return (true, floorCoordinates);
+                }
+            }
+        }
+
+        return (false, Vector3.zero);
+    }
+
+    // Get the point on the floor, ignoring any other objects
+    private Vector3 GetPointOnFloor(Vector2 selectedPosition)
+    {
+        Ray ray = mainCamera.ScreenPointToRay(selectedPosition);
+        RaycastHit[] hits = new RaycastHit[10]; // Assuming a maximum of 10 hits, adjust as needed
+
+        // Use a large enough distance for the ray to pass through objects
+        float maxDistance = 1000f;
+
+        // Perform the raycast against the 3D objects, allowing for multiple hits
+        int hitCount = Physics.RaycastNonAlloc(ray, hits, maxDistance);
+
+        // Check if any hits were detected
+        if (hitCount > 0)
+        {
+            // Iterate through the hits and find the one on the floor
+            for (int i = 0; i < hitCount; i++)
+            {
+                RaycastHit hit = hits[i];
+
+                // Check if the hit object has a collider
+                if (hit.collider != null)
+                {
+                    // Check if the hit object is on the "Floor" layer
+                    if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Floor"))
+                    {
+                        // Get the 3D coordinates where the ray hit the floor
+                        Vector3 floorCoordinates = hit.point;
+
+                        // Do something with the floor coordinates
+                        Debug.Log("Clicked on floor at: " + floorCoordinates);
+
+                        // Return the point on the floor directly
+                        return floorCoordinates;
+                    }
+                }
+            }
+        }
+
+        // If no hit on the floor was found, return Vector3.zero or any default value you prefer
+        return Vector3.zero;
     }
 }
