@@ -12,8 +12,6 @@ using UnityEngine;
 /// </summary>
 public class CollisionAvoidance : MonoBehaviour
 {
-    [SerializeField] private float updateRate;
-
     // Robot components
     [SerializeField] private Laser laser;
     [SerializeField] private ArticulationBaseController baseController;
@@ -25,8 +23,9 @@ public class CollisionAvoidance : MonoBehaviour
     private int minIndex = -1;
     private int maxIndex = -1;
     // base controller
+    [SerializeField] private float slowThreshold = 1.0f;
     [SerializeField] private float slowMultiplier = 0.5f;
-    [SerializeField] private float stopDistance = 0.2f;
+    [SerializeField] private float stopDistance = 0.3f;
     [SerializeField] private string wheelSpeedLimitID = "collision avoidance limit";
 
     void Start()
@@ -60,14 +59,18 @@ public class CollisionAvoidance : MonoBehaviour
     {
         // Get the minimal distance to the obstacles forward
         float minDistance = GetMinDistanceToObstacle();
-        if (minDistance < stopDistance)
-        {   
-            minDistance = 0f;
-        }
         
         // Only forward linear speed limit
-        float speedLimit = minDistance * slowMultiplier;
-        if (minDistance == 100f)
+        float speedLimit;
+        if (minDistance < stopDistance)
+        {   
+            speedLimit = 0f;
+        }
+        else if (minDistance < slowThreshold)
+        {
+            speedLimit = minDistance * slowMultiplier;
+        }
+        else  // minDistance >= slowThreshold
         {
             speedLimit = 100f;
         }

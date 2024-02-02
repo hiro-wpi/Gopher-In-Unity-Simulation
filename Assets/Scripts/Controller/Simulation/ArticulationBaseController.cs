@@ -24,8 +24,7 @@ public class ArticulationBaseController : BaseController
     private float[] speedLimit = new[] { 100f, 100f, 100f, 100f };
     // A dictionary to store all enforced speed limits
     // ID, [linear_forward, linear_backward, angular_left, angular_right]
-    private Dictionary<string, float[]> speedLimitsDict = 
-        new() { {"default", new[] { 100f, 100f, 100f, 100f }} };
+    private Dictionary<string, float[]> speedLimitsDict = new() {};
 
     // void Start() {}
 
@@ -38,25 +37,19 @@ public class ArticulationBaseController : BaseController
             return;
         }
 
+        // Extra speed limit
+        linearVelocity = Utils.ClampVector3(
+            linearVelocity, -speedLimit[1], speedLimit[0]
+        );
+        angularVelocity = Utils.ClampVector3(
+            angularVelocity, -speedLimit[2], speedLimit[3]
+        );
+
         // Velocity smoothing process is done 
         // in the BaseController parent class
         wheelController.SetRobotSpeedStep(
             linearVelocity.z, 
             angularVelocity.y
-        );
-    }
-
-    public override void SetVelocity(Vector3 linear, Vector3 angular)
-    {
-        // Speed limit
-        base.SetVelocity(linear, angular);
-
-        // Extra speed limit
-        targetLinearVelocity = Utils.ClampVector3(
-            targetLinearVelocity, -speedLimit[1], speedLimit[0]
-        );
-        targetAngularVelocity = Utils.ClampVector3(
-            targetAngularVelocity, -speedLimit[2], speedLimit[3]
         );
     }
 
@@ -113,6 +106,10 @@ public class ArticulationBaseController : BaseController
     {
         // Convert the speed limits dict to array
         float[][] speedLimits = speedLimitsDict.Values.ToArray();
+        if (speedLimits.Length == 0)
+        {
+            speedLimit = new[] { 100f, 100f, 100f, 100f };
+        }
 
         // Find the minimal speed limits for each direction
         speedLimits = Utils.TransposeArray(speedLimits);

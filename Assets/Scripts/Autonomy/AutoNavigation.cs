@@ -37,7 +37,7 @@ public abstract class AutoNavigation : MonoBehaviour
     // Set goal, regardless of the goal orientation
     public abstract void SetGoal(Vector3 position);
     // Set goal, with goal orientation
-    public abstract void SetGoal(Vector3 position, Vector3 orientation);
+    public abstract void SetGoal(Vector3 position, Quaternion rotation);
 
     // Start, pause and resume navigation
     // Start is essentially the same as resume

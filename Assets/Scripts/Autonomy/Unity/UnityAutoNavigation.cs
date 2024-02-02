@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Services.Relay.Models;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -15,112 +16,153 @@ using UnityEngine.AI;
 /// </summary>
 public class UnityAutoNavigation : AutoNavigation
 {
-    // Robot
-    public GameObject robot;
-    public ArticulationBaseController baseController;
-    
-    // TODO arm control
-    /*
-    public ArmControlManager leftArmControlManager;
-    public ArmControlManager rightArmControlManager;
-    */
-    
-    // nav mesh agent
-    // this is not actually used, only served as the parameter container
-    // for speed, angularSpeed, stoppingDistance, areMask, etc.
-    public NavMeshAgent agent;
-    // nav mesh obstacles
-    // during auto navigation, only the base one is enabled
-    private NavMeshObstacle[] navMeshObstacles;
-    private Coroutine planningCoroutine;
+    // Waypoint orientations
+    [SerializeField, ReadOnly] private Quaternion[] waypointRotations;
 
-    // Motion planning
-    public float replanTime = 5f;
-    private float elapsed;
-    private Vector3 goal = new(0f, -100f, 0f);
+    // Robot
+    [SerializeField] private GameObject robot;
+    [SerializeField] private ArticulationBaseController baseController;
+
+    // Global planning
+    // Nav mesh agent
+    // this is not really used, only served as the parameter container
+    // for speed, angularSpeed, stoppingDistance, areMask, etc.
+    [SerializeField] private NavMeshAgent agent;
+    private NavMeshObstacle[] obstacles;
+    // Target position and rotation
+    private Vector3 goal;
+    private Quaternion endRotation;
+    // Nav mesh planning
+    private Coroutine planningCoroutine;
     private NavMeshPath path;
-    private int waypointIndex = 0;
-    private bool rotationNeeded = true;
+    private bool goalSet = false;
+
+    // Local planning
+    // replan the trajectory every x seconds
+    [SerializeField] private float replanTime = 5f;
+    private float elapsed;
+    // waypoint checking
+    private int waypointIndex;
+    [SerializeField] private float positionTolerance = 0.2f;
+    [SerializeField] private float rotationTolerance = 2f;
+    private bool rotationAdjustment = true;
+    // local controller
+    [SerializeField] private float Kp = 1;
+    [SerializeField] private float Kd = 0.1f;
+    private float previousDistanceError = 0.0f;
+    private float previousAngleError = 0.0f;
 
     void Start()
     {
-        // never enabled
+        // Never enabled
         agent.enabled = false;
+        // Get self nav mesh obstacles
+        obstacles = robot.GetComponentsInChildren<NavMeshObstacle>();
     }
 
     void Update() {}
 
     void FixedUpdate()
     {
-        // Check goals
-        if (GlobalWaypoints.Length == 0)
+        // Goal not set or Autonomy paused
+        if (!goalSet || !IsNavigating)
+        {
             return;
+        }
 
-        // Check replan
+        // Replan check
         elapsed += Time.fixedDeltaTime;
         if (elapsed > replanTime)
         {
-            // replan
             elapsed = 0f;
-            SetGoal(goal);
+            SetGoal(goal, endRotation);
         }
 
-        // Autonomy disabled
-        if (!IsNavigating)
-            return;
+        // Move along the path
+        FollowTrajectory();
+    }
 
-        // Check goal
-        // select tolerance
-        float tolerance = 0.1f;
+    private void FollowTrajectory()
+    {
+        // Select tolerance
         if (waypointIndex == GlobalWaypoints.Length - 1)
-            tolerance = agent.stoppingDistance;
-        // move to current waypoint
-        float currentDis = (
-            transform.position - GlobalWaypoints[waypointIndex]
-        ).magnitude;
-
-        // Check distance to GlobalWaypoints and update motion
-        if (currentDis > tolerance)
         {
-            NavigateToWaypoint(GlobalWaypoints[waypointIndex]);
+            positionTolerance = agent.stoppingDistance;
         }
-        // current waypoint reached
         else
         {
-            waypointIndex ++;
-            // prevDis = 0; // temp
-            rotationNeeded = true;
-            // Fianl goal is reached
-            if (waypointIndex == GlobalWaypoints.Length)
+            positionTolerance = 0.1f;
+        }
+        // Check waypoint reached
+        float distanceError = (
+            GlobalWaypoints[waypointIndex] - robot.transform.position
+        ).magnitude;
+        float angleError = Mathf.Abs(
+            waypointRotations[waypointIndex].eulerAngles.y 
+            - robot.transform.rotation.eulerAngles.y
+        );
+
+        // Not reached, move to the waypoint
+        if (
+            distanceError > positionTolerance 
+            || angleError > rotationTolerance
+        )
+        {
+            NavigateToNextWaypoint();
+        }
+
+        // Current waypoint reached, next
+        else
+        {
+            // fianl goal is reached
+            if (waypointIndex == GlobalWaypoints.Length - 1)
             {
                 baseController.SetVelocity(Vector3.zero, Vector3.zero);
                 StopNavigation();
             }
+            // next waypoint
+            else
+            {
+                waypointIndex++;
+                rotationAdjustment = true;
+            }
         }
     }
 
-    private void NavigateToWaypoint(Vector3 waypoint)
+    // Implementa a simple strategy and local controller to move the robot
+    private void NavigateToNextWaypoint()
     {
-        // P controller, Kp = 2
-        float Kp = 2;
+        // This should not happen
+        if (waypointIndex >= GlobalWaypoints.Length)
+        {
+            return;
+        }
+
+        Vector3 position = GlobalWaypoints[waypointIndex];
+        Quaternion rotation = waypointRotations[waypointIndex]; 
+
         // Errors
-        float distance = (waypoint - transform.position).magnitude;
-        Quaternion targetRotation = Quaternion.LookRotation(
-            waypoint - transform.position
-        );
-        float angleDifference = Mathf.DeltaAngle(
-            targetRotation.eulerAngles[1], 
-            transform.rotation.eulerAngles[1]
+        float distanceError = (position - robot.transform.position).magnitude;
+        float angleError = (
+            rotation.eulerAngles.y - robot.transform.rotation.eulerAngles.y
         );
 
         // Adjust rotation angle first
-        if (Mathf.Abs(angleDifference) > 1 && rotationNeeded) // 1° tolorance
+        if (
+            Mathf.Abs(angleError) > rotationTolerance
+            && rotationAdjustment
+        )
         {
-            float angularSpeed = Kp * angleDifference;
+            // PD controller
+            float deltaAngleError = angleError - previousAngleError;
+            previousAngleError = angleError;
+
+            float angularSpeed = - (Kp * angleError + Kd * deltaAngleError);
             angularSpeed = Mathf.Clamp(
                 angularSpeed, -agent.angularSpeed, agent.angularSpeed
             );
-            // set angular velocity
+
+            // Set angular velocity
             Vector3 angularVelocity = new Vector3(
                 0f, angularSpeed * Mathf.Deg2Rad, 0f
             );
@@ -129,9 +171,15 @@ public class UnityAutoNavigation : AutoNavigation
         // Then handle by local planner
         else
         {
-            rotationNeeded = false;
+            rotationAdjustment = false;
+
+            // PD controller
+            float deltaDistanceError = distanceError - previousDistanceError;
+            previousDistanceError = distanceError;
             
-            float linearSpeed = Kp * distance;
+            float linearSpeed = Kp * distanceError + Kd * deltaDistanceError;
+
+            // Set linear velocity
             linearSpeed = Mathf.Clamp(linearSpeed, -agent.speed, agent.speed);
             // set linear speed
             Vector3 linearVelocity = new Vector3(0f, 0f, linearSpeed);
@@ -139,14 +187,14 @@ public class UnityAutoNavigation : AutoNavigation
         }
     }
 
-    // TODO orientation
+    // Without orientation
     public override void SetGoal(Vector3 position)
     {
-        SetGoal(position, Vector3.zero);
+        SetGoal(position, new Quaternion());
     }
 
-    // TODO orientation is not used yet
-    public override void SetGoal(Vector3 position, Vector3 orientation)
+    // Without orientation is not used yet
+    public override void SetGoal(Vector3 position, Quaternion rotation)
     {
         // Get closest point in the navmesh
         if (
@@ -156,79 +204,106 @@ public class UnityAutoNavigation : AutoNavigation
         )
         {
             Vector3 goal = hit.position;
-
-            // path planning
             if (planningCoroutine != null)
             {
                 StopCoroutine(planningCoroutine);
             }
-            planningCoroutine = StartCoroutine(PathPlanningCoroutine(goal));
+            planningCoroutine = StartCoroutine(
+                PathPlanningCoroutine(goal, rotation)
+            );
         }
         else
         {
             Debug.Log("The given goal is invalid.");
         }
-
-        // Don't move the robot before confirmation
-        IsNavigating = false;
     }
 
     private IEnumerator PathPlanningCoroutine(
-        Vector3 goal, float obstacleDisableTime = 0.5f)
+        Vector3 goal, Quaternion endRotation, float obstacleDisableTime = 0.5f
+    )
     {
         SetObstacleActive(false);
         yield return new WaitForSeconds(0.1f);
-        bool pathFound = FindGlobalPath(goal);
 
+        // path planning
+        bool pathFound = PathPlanning(goal, endRotation);
         // path found or not
         if (pathFound)
+        {
             this.goal = goal;
+            this.endRotation = endRotation;
+            goalSet = true;
+        }
         else
+        {
             Debug.Log("No path found to given goal.");
+        }
+
         yield return new WaitForSeconds(obstacleDisableTime);
         SetObstacleActive(true);
     }
 
-    private void SetObstacleActive(bool IsNavigating)
+    private void SetObstacleActive(bool active)
     {
         // In case arm is carrying objects
-        navMeshObstacles = robot.GetComponentsInChildren<NavMeshObstacle>();
-        foreach(NavMeshObstacle navMeshObstacle in navMeshObstacles)
-            navMeshObstacle.carving = IsNavigating;
+        foreach(NavMeshObstacle navMeshObstacle in obstacles)
+        {
+            navMeshObstacle.carving = active;
+        }
     }
 
-    private bool FindGlobalPath(Vector3 goal)
+    private bool PathPlanning(Vector3 endPosition, Quaternion endRotation)
     {
-        if (goal[1] == -100f)
-            return false;
-
         // Global Path finding - A*
         path = new NavMeshPath();
         NavMesh.CalculatePath(
-            transform.position, goal, agent.areaMask, path
+            robot.transform.position, endPosition, agent.areaMask, path
         );
-        // Set trajectories
-        SetTrajectory(path);
-        waypointIndex = 0;
-        rotationNeeded = true;
 
-        return path.corners.Length != 0;
-    }
-
-    private void SetTrajectory(NavMeshPath path)
-    {
-        // Convert path into GlobalWaypoints
-        GlobalWaypoints = new Vector3[path.corners.Length];
-        // Invalid Trajectory -> stop sign
-        if (path.corners.Length == 0)
+        // Path not found
+        if (path.corners.Length < 2)
         {
-            return;
+            return false;
         }
-        // Valid -> Set up GlobalWaypoints and goal
+
+        // Set trajectories
+        // If end rotation set, add one more waypoint to store the end rotation
+        int pathLength = path.corners.Length;
+        if (endRotation != new Quaternion())
+        {
+            pathLength += 1;
+        }
+
+        // Convert path into GlobalWaypoints
+        GlobalWaypoints = new Vector3[pathLength];
+        waypointRotations = new Quaternion[pathLength];
         for (int i = 0; i < path.corners.Length; ++i)
         {
             GlobalWaypoints[i] = path.corners[i];
+            if (i != 0)
+            {
+                waypointRotations[i] = Quaternion.LookRotation(
+                    path.corners[i] - path.corners[i - 1]
+                );
+            }
+            else
+            {
+                waypointRotations[i] = waypointRotations[i + 1];
+            }
         }
+
+        // As mentioned, add the end rotation
+        if (endRotation != new Quaternion())
+        {
+            GlobalWaypoints[path.corners.Length] = 
+                GlobalWaypoints[path.corners.Length - 1];
+            waypointRotations[path.corners.Length] = endRotation;
+        }
+
+        // Init local controller parameters
+        waypointIndex = 0;
+        rotationAdjustment = true;
+        return true;
     }
 
     // Start navigation
@@ -238,46 +313,18 @@ public class UnityAutoNavigation : AutoNavigation
     }
 
     // Resume navigation
-    // TODO: arm pose
     public override void ResumeNavigation()
     {
         // Must have valid goal and plan first
-        /*
-        if (goal[1] == -100f)
+        if (!goalSet)
         {
             Debug.Log("No valid goal is set.");
             return;
         }
-        */
-        /*
-        // Change arm pose
-        bool changeArmPose = true;
-        if (changeArmPose)
-        {
-            bool success = ChangeArmPose(5);
-            Debug.Log("Changing arm pose failed.");
-            if (!success)
-                return;
-        }
-        */
         IsNavigating = true;
     }
 
-    // TODO: arm pose
-    /*
-    private bool ChangeArmPose(int presetIndex)
-    {
-        bool leftSuccess = true;
-        bool rightSuccess = true;
-        if (leftArmControlManager != null && rightArmControlManager != null)
-        {
-            leftSuccess = leftArmControlManager.MoveToPreset(presetIndex);
-            rightSuccess = rightArmControlManager.MoveToPreset(presetIndex);
-        }
-        return leftSuccess && rightSuccess;
-    }
-    */
-
+    // Pause navigation
     public override void PauseNavigation()
     {
         // Stop moving the robot
@@ -289,10 +336,12 @@ public class UnityAutoNavigation : AutoNavigation
     public override void StopNavigation()
     {
         // Init parameters
-        goal = new Vector3(0f, -100f, 0f);
+        goal = new Vector3();
+        endRotation = new Quaternion();
+        goalSet = false;
         path = new NavMeshPath();
         GlobalWaypoints = new Vector3[0];
-        SetTrajectory(path);
+        waypointRotations = new Quaternion[0];
 
         // Stop moving the robot
         baseController.SetVelocity(Vector3.zero, Vector3.zero);

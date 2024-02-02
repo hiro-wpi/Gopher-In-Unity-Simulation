@@ -113,18 +113,20 @@ public class ROSAutoNavigation : AutoNavigation
     // Set goal, regardless of the goal orientation
     public override void SetGoal(Vector3 position)
     {
-        SetGoal(position, new Vector3(0,0,0));
+        SetGoal(position, new Quaternion());
     }
 
     // Set goal, with goal orientation
         // Local and global waypoints are displayed based on the sent goal
         // The robot doesn't move 
-    public override void SetGoal(Vector3 position, Vector3 orientation)
+    public override void SetGoal(Vector3 position, Quaternion rotation)
     {
         TargetPosition = position;
-        TargetOrientationEuler = orientation;
+        TargetOrientationEuler = rotation.eulerAngles;
 
-        sendGoalService.SendGoalCommandService(position, orientation);
+        sendGoalService.SendGoalCommandService(
+            TargetPosition, TargetOrientationEuler
+        );
         UpdateNav(false);
         updateWaypoints = true;
     }
