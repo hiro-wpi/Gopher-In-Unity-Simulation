@@ -29,7 +29,7 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     public Vector3 endPositionARArrow = new Vector3(0, 0, 0);
     public Quaternion rotationARArrow = new Quaternion(0, 0, 0, 0);  
     private bool isOnFloor = false;
-    public ArrowCreator arrowCreator;
+    // public ArrowCreator arrowCreator;
 
     void Start()
     {
@@ -114,7 +114,7 @@ public class ObjectSelector : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             // Update the arrow position and rotation
             // arrowCreator.startPoint = startPositionARARrow;
             // arrowCreator.endPoint = endPositionARArrow;
-            arrowCreator.SetArrowPoints(startPositionARARrow, endPositionARArrow);
+            // arrowCreator.SetArrowPoints(startPositionARARrow, endPositionARArrow);
         }
         else
         {
