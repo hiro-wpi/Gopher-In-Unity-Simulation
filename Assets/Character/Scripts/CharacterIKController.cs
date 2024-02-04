@@ -17,6 +17,10 @@ using UnityEngine;
 ///     OpenRightHand()
 ///     CloseLeftHand()
 ///     CloseRightHand()
+///     
+///     GetHeadIKTarget()
+///     GetLeftHandIKTarget()
+///     GetRightHandIKTarget()
 /// </summary>
 public class CharacterIKController : MonoBehaviour
 {
@@ -63,7 +67,7 @@ public class CharacterIKController : MonoBehaviour
         }
         Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
 
-        while (IsLookingAtTarget(targetRotation))
+        while (!IsLookingAtTarget(targetRotation))
         {
             headIKTarget.rotation = Quaternion.Slerp(
                 headIKTarget.rotation,
