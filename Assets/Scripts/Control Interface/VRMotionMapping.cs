@@ -56,7 +56,7 @@ public class VRMotionMapping : MonoBehaviour
         // Track the arm controller status
         if (armController is ArticulationArmController articulationArm)
         {
-            articulationArm.ManualControlEvent += ResetTracking;
+            articulationArm.OnManualControl += ResetTracking;
         }
 
         // Set up the delegate
@@ -80,7 +80,7 @@ public class VRMotionMapping : MonoBehaviour
         // TODO: add support to physical robot as well
         if (armController is ArticulationArmController articulationArm)
         {
-            articulationArm.ManualControlEvent -= ResetTracking;
+            articulationArm.OnManualControl -= ResetTracking;
         }
 
         trackingButton.action.performed -= changeTrackingStateDelegate;

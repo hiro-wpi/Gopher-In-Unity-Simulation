@@ -39,6 +39,9 @@ public abstract class ArmController : MonoBehaviour
     [SerializeField, ReadOnly] protected Vector3 angularVelocity;
     [SerializeField, ReadOnly] protected float gripperPosition;
 
+    // TODO
+    // Move Control Mode from ArticulationBodyController to here
+
     void Awake() 
     {
         // Unknown bug with SerializeField
@@ -102,11 +105,13 @@ public abstract class ArmController : MonoBehaviour
     }
 
     // Autonomy function
-    public virtual void SetTarget(Vector3 position, Quaternion rotation) {}
+    public virtual void SetAutonomyTarget(
+        Vector3 position, Quaternion rotation
+    ) {}
 
-    public virtual void CancelTarget() {}
+    public virtual void CancelAutonomyTarget() {}
 
-    public virtual void MoveToTarget() {}
+    public virtual void MoveToAutonomyTarget() {}
 
     // Get/Set robot speed mode
     public SpeedMode GetSpeedMode()
@@ -145,4 +150,10 @@ public abstract class ArmController : MonoBehaviour
 
     // Get the end effector target pose
     public abstract (Vector3, Quaternion) GetEETargetPose();
+
+    // Compute end effector target pose given joint angle
+    public abstract (Vector3, Quaternion) GetEETargetPose(float[] angles);
+
+    // Stop all joints
+    public abstract void StopAllJoints();
 }

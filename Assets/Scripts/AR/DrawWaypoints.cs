@@ -15,6 +15,7 @@ public class DrawWaypoints : MonoBehaviour
     [SerializeField] private Material defaultLineMaterial;
 
     private Dictionary<string, LineRenderer> lineMap = new ();
+    private Dictionary<string, GameObject> lineObjects = new ();
 
     void Start() {}
 
@@ -52,8 +53,13 @@ public class DrawWaypoints : MonoBehaviour
         // Create new line
         else
         {
+            // Make a game object to hold the line
+            GameObject lineObject = new GameObject(id);
+            lineObject.transform.SetParent(transform);
+            lineObjects.Add(id, lineObject);
+
             // LineRenderer componenet
-            lineRenderer = gameObject.AddComponent<LineRenderer>();
+            lineRenderer = lineObject.AddComponent<LineRenderer>();
             lineRenderer.numCapVertices = 5;
             lineRenderer.numCornerVertices = 5;
             lineMap.Add(id, lineRenderer);
@@ -84,8 +90,9 @@ public class DrawWaypoints : MonoBehaviour
     {
         if (lineMap.ContainsKey(id))
         {
-            Destroy(lineMap[id]);
+            Destroy(lineObjects[id]);
             lineMap.Remove(id);
+            lineObjects.Remove(id);
         }
     }
 }
