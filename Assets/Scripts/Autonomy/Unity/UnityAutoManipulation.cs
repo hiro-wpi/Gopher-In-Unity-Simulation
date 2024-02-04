@@ -58,6 +58,7 @@ public class UnityAutoManipulation : AutoManipulation
         // Check validity of the path
         if (timeSteps == null || timeSteps.Length <= 1)
         {
+            ValidGoalSet = false;
             Debug.Log("No path found");
             return;
         }
@@ -76,7 +77,7 @@ public class UnityAutoManipulation : AutoManipulation
         // Must have valid goal and plan first
         if (!ValidGoalSet)
         {
-            Debug.Log("No valid goal is set.");
+            Debug.Log("No valid manipulation goal set.");
             return;
         }
 

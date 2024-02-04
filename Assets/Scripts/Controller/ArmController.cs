@@ -151,6 +151,9 @@ public abstract class ArmController : MonoBehaviour
     // Get the end effector target pose
     public abstract (Vector3, Quaternion) GetEETargetPose();
 
+    // Compute end effector target pose given joint angle
+    public abstract (Vector3, Quaternion) GetEETargetPose(float[] angles);
+
     // Stop all joints
     public abstract void StopAllJoints();
 }

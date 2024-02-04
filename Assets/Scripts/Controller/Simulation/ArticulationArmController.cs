@@ -211,6 +211,7 @@ public class ArticulationArmController : ArmController
 
     public override void MoveToAutonomyTarget()
     {
+        SwitchToAutonomy();
         autoManipulation.StartManipulation(OnAutonomyDone);
     }
 
@@ -363,6 +364,12 @@ public class ArticulationArmController : ArmController
     public override (Vector3, Quaternion) GetEETargetPose()
     {
         return endEffectorController.GetEETargetPose();
+    }
+
+    // Compute end effector target pose given joint angle
+    public override (Vector3, Quaternion) GetEETargetPose(float[] angles)
+    {
+        return endEffectorController.GetJointTargetPose(angles);
     }
 
     // Stop all joints

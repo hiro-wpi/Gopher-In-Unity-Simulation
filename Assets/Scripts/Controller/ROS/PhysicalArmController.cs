@@ -132,6 +132,12 @@ public class PhysicalArmController : ArmController
         return (Vector3.zero, Quaternion.identity);
     }
 
+    // Compute end effector target pose given joint angle
+    public override (Vector3, Quaternion) GetEETargetPose(float[] angles)
+    {
+        return (Vector3.zero, Quaternion.identity);
+    }
+
     public override void StopAllJoints()
     {
         return;

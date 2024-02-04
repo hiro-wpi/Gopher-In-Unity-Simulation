@@ -96,8 +96,10 @@ public class UnityAutoNavigation : AutoNavigation
             GlobalWaypoints[waypointIndex] - robot.transform.position
         ).magnitude;
         float angleError = Mathf.Abs(
-            waypointRotations[waypointIndex].eulerAngles.y 
-            - robot.transform.rotation.eulerAngles.y
+            Mathf.DeltaAngle(
+                robot.transform.rotation.eulerAngles.y,
+                waypointRotations[waypointIndex].eulerAngles.y
+            )
         );
 
         // Not reached, move to the waypoint
@@ -141,8 +143,9 @@ public class UnityAutoNavigation : AutoNavigation
 
         // Errors
         float distanceError = (position - robot.transform.position).magnitude;
-        float angleError = (
-            rotation.eulerAngles.y - robot.transform.rotation.eulerAngles.y
+        float angleError = Mathf.DeltaAngle(
+            robot.transform.rotation.eulerAngles.y,
+            rotation.eulerAngles.y
         );
 
         // Adjust rotation angle first
@@ -155,7 +158,7 @@ public class UnityAutoNavigation : AutoNavigation
             float deltaAngleError = angleError - previousAngleError;
             previousAngleError = angleError;
 
-            float angularSpeed = - (Kp * angleError + Kd * deltaAngleError);
+            float angularSpeed = -(Kp * angleError + Kd * deltaAngleError);
             angularSpeed = Mathf.Clamp(
                 angularSpeed, -agent.angularSpeed, agent.angularSpeed
             );
@@ -210,7 +213,7 @@ public class UnityAutoNavigation : AutoNavigation
         }
         else
         {
-            Debug.Log("The given goal is invalid.");
+            Debug.Log("The given navigation goal is invalid.");
             callback?.Invoke(new Vector3[0]);
         }
     }
@@ -237,7 +240,7 @@ public class UnityAutoNavigation : AutoNavigation
         }
         else
         {
-            Debug.Log("No path found to given goal.");
+            Debug.Log("No path found to given navigation goal.");
             callback?.Invoke(new Vector3[0]);
         }
 
@@ -271,7 +274,7 @@ public class UnityAutoNavigation : AutoNavigation
         // Set trajectories
         // If end rotation set, add one more waypoint to store the end rotation
         int pathLength = path.corners.Length;
-        if (endRotation != new Quaternion())
+        if (Quaternion.Dot(endRotation, endRotation) > Mathf.Epsilon)
         {
             pathLength += 1;
         }
@@ -279,23 +282,18 @@ public class UnityAutoNavigation : AutoNavigation
         // Convert path into GlobalWaypoints
         GlobalWaypoints = new Vector3[pathLength];
         waypointRotations = new Quaternion[pathLength];
-        for (int i = 0; i < path.corners.Length; ++i)
+        for (int i = 1; i < path.corners.Length; ++i)
         {
             GlobalWaypoints[i] = path.corners[i];
-            if (i != 0)
-            {
-                waypointRotations[i] = Quaternion.LookRotation(
-                    path.corners[i] - path.corners[i - 1]
-                );
-            }
-            else
-            {
-                waypointRotations[i] = waypointRotations[i + 1];
-            }
+            waypointRotations[i] = Quaternion.LookRotation(
+                path.corners[i] - path.corners[i - 1]
+            );
         }
+        GlobalWaypoints[0] = path.corners[0];
+        waypointRotations[0] = waypointRotations[1];
 
-        // As mentioned, add the end rotation
-        if (endRotation != new Quaternion())
+        // As mentioned, add the end rotation if not default
+        if (Quaternion.Dot(endRotation, endRotation) > Mathf.Epsilon)
         {
             GlobalWaypoints[path.corners.Length] = 
                 GlobalWaypoints[path.corners.Length - 1];
@@ -320,7 +318,7 @@ public class UnityAutoNavigation : AutoNavigation
         // Must have valid goal and plan first
         if (!ValidGoalSet)
         {
-            Debug.Log("No valid goal is set.");
+            Debug.Log("No valid navigation goal set.");
             return;
         }
 

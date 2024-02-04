@@ -26,13 +26,13 @@ public abstract class AutoManipulation : MonoBehaviour
     // Navigation status
     [field:SerializeField, ReadOnly]
     public bool IsManipulating { get; protected set; }
-    [field:SerializeField, ReadOnly]
+    // [field:SerializeField, ReadOnly]
     public float[] TimeSteps { get; protected set; } = new float[0];
-    [field:SerializeField, ReadOnly]
+    // [field:SerializeField, ReadOnly]
     public float[][] Angles { get; protected set; } = new float[0][];
-    [field:SerializeField, ReadOnly]
+    // [field:SerializeField, ReadOnly]
     public float[][] Velocities { get; protected set; } = new float[0][];
-    [field:SerializeField, ReadOnly]
+    // [field:SerializeField, ReadOnly]
     public float[][] Accelerations { get; protected set; } = new float[0][];
 
     void Start() {}
