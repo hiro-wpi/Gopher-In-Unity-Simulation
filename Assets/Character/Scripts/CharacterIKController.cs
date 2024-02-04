@@ -298,4 +298,20 @@ public class CharacterIKController : MonoBehaviour
     {
         animator.SetFloat("Left Grab", 1.0f);
     }
+
+    // Public getter
+    public Transform GetHeadIKTarget()
+    {
+        return headIKTarget;
+    }
+
+    public Transform GetLeftHandIKTarget()
+    {
+        return leftHandTarget;
+    }
+
+    public Transform GetRightHandIKTarget()
+    {
+        return rightHandTarget;
+    }
 }
