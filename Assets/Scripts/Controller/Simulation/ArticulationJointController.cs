@@ -17,10 +17,6 @@ public class ArticulationJointController : MonoBehaviour
     // Control parameters
     [SerializeField] private float jointMaxSpeed = 1.0f; 
     
-    // Articulation Bodies Presets
-    // When joint position is set to be IGNORE_VAL, don't change it
-    public static float IGNORE_VAL = -100f;
-    
     // Articulation Bodies
     [SerializeField] private ArticulationBody[] articulationChain;
     private Collider[] colliders;
@@ -30,6 +26,9 @@ public class ArticulationJointController : MonoBehaviour
     // trajectory control
     private List<float[]> targetPositions;
     private int currTrajectoryIndex = 0;
+
+    // Note:
+    // Values being Mathf.Infinity are ignored
 
     void Awake()
     {
@@ -107,8 +106,9 @@ public class ArticulationJointController : MonoBehaviour
         float[] currTargets = GetCurrentJointTargets();
         for (int i = 0; i < positions.Length; ++i)
         {
-            if ((positions[i] != IGNORE_VAL) && 
-                (Mathf.Abs(currTargets[i] - positions[i]) > 1e-5f))
+            if (
+                (positions[i] != Mathf.Infinity)
+                && (Mathf.Abs(currTargets[i] - positions[i]) > 1e-5f))
             {
                 return false;
             }
@@ -124,7 +124,7 @@ public class ArticulationJointController : MonoBehaviour
     {
         for (int i = 0; i < articulationChain.Length; ++i)
         {
-            if (targets[i] == IGNORE_VAL)
+            if (targets[i] == Mathf.Infinity)
             {
                 continue;
             }

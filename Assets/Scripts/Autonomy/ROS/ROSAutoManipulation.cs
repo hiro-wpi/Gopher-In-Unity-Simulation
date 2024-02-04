@@ -42,4 +42,25 @@ public class ROSAutoManipulation : AutoManipulation
             currJointAngles, targetPosition, targetRotation, callback
         );
     }
+
+    // TODO
+    public override void StartManipulation(Action callback)
+    {
+
+    }
+
+    public override void StopManipulation()
+    {
+
+    }
+
+    public override void PauseManipulation()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void ResumeManipulation(Action callback)
+    {
+        throw new NotImplementedException();
+    }
 }

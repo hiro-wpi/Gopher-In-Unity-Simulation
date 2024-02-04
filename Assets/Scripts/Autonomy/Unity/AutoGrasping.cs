@@ -104,7 +104,7 @@ public class AutoGrasping : MonoBehaviour
         {
             // Hover point reached
             // Set grasping target
-            armController.SetTarget(
+            armController.SetAutonomyTarget(
                 targetGraspPoint.position, 
                 targetGraspPoint.rotation
             );
@@ -163,7 +163,7 @@ public class AutoGrasping : MonoBehaviour
             );
 
         // Set hover target
-        armController.SetTarget(
+        armController.SetAutonomyTarget(
             targetHoverPoint.position, 
             targetHoverPoint.rotation
         );
@@ -174,6 +174,6 @@ public class AutoGrasping : MonoBehaviour
     {
         targetObject = null;
         checkHoverReached = false;
-        armController.CancelTarget();
+        armController.CancelAutonomyTarget();
     }
 }

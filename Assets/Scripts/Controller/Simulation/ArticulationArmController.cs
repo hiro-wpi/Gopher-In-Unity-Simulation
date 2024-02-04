@@ -19,40 +19,57 @@ public class ArticulationArmController : ArmController
     [SerializeField] private bool emergencyStop = false;
 
     // Arm component controller
-    [SerializeField] 
+    [Header("Local Controller")]
+    [SerializeField]
     private ArticulationEndEffectorController endEffectorController;
     [SerializeField] private ArticulationJointController jointController;
     [SerializeField] private ArticulationGripperController gripperController;
+
+    [Header("Autonomy")]
     [SerializeField] private AutoManipulation autoManipulation;
 
     // Arm control mode
     // manual & auto
     private enum ControlMode { Manual, Auto }
+    [Header("Control Mode")]
     [SerializeField, ReadOnly]
     private ControlMode controlMode = ControlMode.Manual;
-    // manual control mode
+
+    // Manual control mode
     public enum ManualControlMode { Position, Velocity }
+    [Header("Manual Control Mode")]
     [SerializeField]
     private ManualControlMode manualControlMode = ManualControlMode.Velocity;
     // manual control event (triggered after switching to manual control)
-    public delegate void SwitchToManualControlHandler();
-    public event SwitchToManualControlHandler ManualControlEvent;
-
+    public delegate void ManualControlHandler();
+    public event ManualControlHandler OnManualControl;
     // Manual IK input - velocity control
     private float[] jointAngles;
-    // Automatic grasping with IK solver
-    private Coroutine currentCoroutine;
-    [SerializeField, ReadOnly] private bool targetSet = false;
+
+    // Autonomy motion with IK solver
+    [Header("Autonomy Planning")]
     [SerializeField, ReadOnly] private Vector3 targetPosition;
     [SerializeField, ReadOnly] private Quaternion targetRotation;
+    // autonomy event (triggered after switching to manual control)
+    public delegate void AutonomControlHandler();
+    public event AutonomControlHandler OnAutonomy;
+    // autonomy event (triggered if valid trajectory generated)
+    public delegate void AutonomyTrajectoryHandler();
+    public event AutonomyTrajectoryHandler OnAutonomyTrajectory;
+    // autonomy event (triggered if valid trajectory generated)
+    public delegate void AutonomyCompleteHandler();
+    public event AutonomyCompleteHandler OnAutonomyComplete;
+    // planning coroutine
+    private Coroutine currentCoroutine;
 
-    // Presets
-    private static float IGNORE_VAL = ArticulationJointController.IGNORE_VAL;
-    [SerializeField] private bool flipPresetAngles;
+    // Pre-defined joint angles
+    [Header("Pre-defined Poses")]
+    [SerializeField] private bool flipPresetAngles;  // To be removed
     // default home position
     [SerializeField] private JointAngles homePositions = new(new float[] {
         -1f, -Mathf.PI/2, -Mathf.PI/2, 2.2f, 0.0f, -1.2f, Mathf.PI
     });
+    // Math.Infinity means no change
     [SerializeField] private JointAngles[] presets = 
     {
         // preset 1 vertical grasping pose
@@ -65,12 +82,12 @@ public class ArticulationArmController : ArmController
         }),
         // preset 3 and 4 only change the last joint
         new JointAngles(new float[] {
-            IGNORE_VAL, IGNORE_VAL, IGNORE_VAL, IGNORE_VAL,
-            IGNORE_VAL, IGNORE_VAL, Mathf.PI
+            Mathf.Infinity, Mathf.Infinity, Mathf.Infinity, Mathf.Infinity,
+            Mathf.Infinity, Mathf.Infinity, Mathf.PI
         }),
         new JointAngles(new float[] {
-            IGNORE_VAL, IGNORE_VAL, IGNORE_VAL, IGNORE_VAL,
-            IGNORE_VAL, IGNORE_VAL, Mathf.PI/2
+            Mathf.Infinity, Mathf.Infinity, Mathf.Infinity, Mathf.Infinity,
+            Mathf.Infinity, Mathf.Infinity, Mathf.PI/2
         }),
     };
 
@@ -108,7 +125,7 @@ public class ArticulationArmController : ArmController
             jointController.GetCurrentJointTargets()
         );
 
-        ManualControlEvent?.Invoke();
+        OnManualControl?.Invoke();
     }
 
     public void SwitchToManualVelocityControl()
@@ -154,27 +171,23 @@ public class ArticulationArmController : ArmController
     }
 
     // Autonomous mode
-    public override void SetTarget(Vector3 position, Quaternion rotation)
+    public void SwitchToAutonomy()
     {
-        targetSet = true;
+        controlMode = ControlMode.Auto;
+        OnAutonomy?.Invoke();
+    }
+
+    public override void SetAutonomyTarget(
+        Vector3 position, Quaternion rotation = new Quaternion()
+    )
+    {
+        // If rotation is not provided, use current
+        if (Quaternion.Dot(rotation, rotation) < Mathf.Epsilon)
+        {
+            rotation = GetEETargetPose().Item2;
+        }
         targetPosition = position;
         targetRotation = rotation;
-    }
-
-    public override void CancelTarget()
-    {
-        targetSet = false;
-        targetPosition = Vector3.zero;
-        targetRotation = Quaternion.identity;
-    }
-
-    public override void MoveToTarget()
-    {
-        if (!targetSet)
-        {
-            Debug.Log("Target not set.");
-            return;
-        }
 
         // Try to plan a path to the target
         Debug.Log("Sending request to move to the target.");
@@ -184,26 +197,60 @@ public class ArticulationArmController : ArmController
         );
     }
 
-    public void TrajectoryGenerated(
-        float[] timeSteps, float[][] angles, float[][] velocities, float[][]accelerations
+    public override void CancelAutonomyTarget()
+    {
+        targetPosition = Vector3.zero;
+        targetRotation = Quaternion.identity;
+
+        if (controlMode == ControlMode.Auto)
+        {
+            autoManipulation.StopManipulation();
+            SwitchToManualControl();
+        }
+    }
+
+    public override void MoveToAutonomyTarget()
+    {
+        autoManipulation.StartManipulation(OnAutonomyDone);
+    }
+
+    private void TrajectoryGenerated(
+        float[] timeSteps,
+        float[][] angles,
+        float[][] velocities,
+        float[][] accelerations
     )
     {
         // check validity of the path
         if (timeSteps == null || timeSteps.Length <= 1)
         {
-            Debug.Log("No path found");
             return;
         }
 
-        // Execute the path
-        SetJointTrajectory(timeSteps, angles, velocities, accelerations);
+        OnAutonomyTrajectory?.Invoke();
+    }
+
+    private void OnAutonomyDone()
+    {
+        SwitchToManualControl();
+        OnAutonomyComplete?.Invoke();
+    }
+
+    public (float[], float[][], float[][], float[][]) GetAutonomyTrajectory()
+    {
+        return (
+            autoManipulation.TimeSteps,
+            autoManipulation.Angles,
+            autoManipulation.Velocities,
+            autoManipulation.Accelerations
+        );
     }
 
     // Move to joint angles
     public override void SetJointAngles(float[] jointAngles)
     {
         // Move to given position
-        controlMode = ControlMode.Auto;
+        SwitchToAutonomy();
         jointController.SetJointTargets(
             jointAngles, false, SwitchToManualControl
         );
@@ -215,10 +262,13 @@ public class ArticulationArmController : ArmController
         float[][] velocities, float[][] accelerations
     )
     {
-        controlMode = ControlMode.Auto;
+        SwitchToAutonomy();
         jointController.SetJointTrajectory(
-            timeSteps, angles, 
-            velocities, accelerations, SwitchToManualControl
+            timeSteps,
+            angles, 
+            velocities,
+            accelerations,
+            SwitchToManualControl
         );
     }
 
@@ -232,7 +282,7 @@ public class ArticulationArmController : ArmController
             angles = FlipAngles(angles);
         }
         // Move to the position
-        controlMode = ControlMode.Auto;
+        SwitchToAutonomy();
         jointController.SetJointTargets(angles, true, SwitchToManualControl);
     }
 
@@ -271,7 +321,7 @@ public class ArticulationArmController : ArmController
         // Other joints are flipped to negative
         for (int i = 1; i < angles.Length; ++i)
         {
-            if (angles[i] == IGNORE_VAL)
+            if (angles[i] == Mathf.Infinity)
             {
                 flippedAngles[i] = angles[i];
             }
@@ -313,5 +363,12 @@ public class ArticulationArmController : ArmController
     public override (Vector3, Quaternion) GetEETargetPose()
     {
         return endEffectorController.GetEETargetPose();
+    }
+
+    // Stop all joints
+    public override void StopAllJoints()
+    {
+        jointController.StopJoints();
+        gripperController.StopGripper();
     }
 }

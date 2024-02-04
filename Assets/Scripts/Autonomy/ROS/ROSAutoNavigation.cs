@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -110,22 +112,20 @@ public class ROSAutoNavigation : AutoNavigation
         
     }    
 
-    // Set goal, regardless of the goal orientation
-    public override void SetGoal(Vector3 position)
-    {
-        SetGoal(position, new Quaternion());
-    }
-
     // Set goal, with goal orientation
-        // Local and global waypoints are displayed based on the sent goal
-        // The robot doesn't move 
-    public override void SetGoal(Vector3 position, Quaternion rotation)
+    // Local and global waypoints are displayed based on the sent goal
+    // The robot doesn't move 
+    public override void SetGoal(
+        Vector3 position, 
+        Quaternion rotation = new Quaternion(),
+        Action<Vector3[]> callback = null
+    )
     {
         TargetPosition = position;
-        TargetOrientationEuler = rotation.eulerAngles;
+        TargetRotation = rotation;
 
         sendGoalService.SendGoalCommandService(
-            TargetPosition, TargetOrientationEuler
+            TargetPosition, TargetRotation.eulerAngles
         );
         UpdateNav(false);
         updateWaypoints = true;
@@ -134,7 +134,7 @@ public class ROSAutoNavigation : AutoNavigation
     // Start, pause and resume navigation
     // Start is essentially the same as resume
     // Allow the robot to move along the planned waypoints
-    public override void StartNavigation()
+    public override void StartNavigation(Action baseReached = null)
     {
         UpdateNav(true);
         updateWaypoints = true;
@@ -150,7 +150,7 @@ public class ROSAutoNavigation : AutoNavigation
     }
 
     // Resume navigation
-    public override void ResumeNavigation()
+    public override void ResumeNavigation(Action baseReached = null)
     {
         UpdateNav(true);
         updateWaypoints = true;

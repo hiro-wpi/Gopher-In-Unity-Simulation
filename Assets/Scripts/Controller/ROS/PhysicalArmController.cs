@@ -68,7 +68,7 @@ public class PhysicalArmController : ArmController
     // TODO
     public override void SetEndEffectorPose(Vector3 position, Quaternion rotation)
     {
-
+        
     }
 
     public override void HomeJoints()
@@ -76,10 +76,28 @@ public class PhysicalArmController : ArmController
         
     }
 
+    // Autonomy function
+    public override void SetAutonomyTarget(
+        Vector3 position, Quaternion rotation
+    )
+    {
+
+    }
+
+    public override void CancelAutonomyTarget()
+    {
+        
+    }
+
+    public override void MoveToAutonomyTarget()
+    {
+
+    }
+
     // Send command to move to pre-defined positions
     public override void MoveToPreset(int presetIndex) 
-    { 
-        
+    {
+
     }
 
     // TODO
@@ -112,5 +130,10 @@ public class PhysicalArmController : ArmController
     public override (Vector3, Quaternion) GetEETargetPose()
     {
         return (Vector3.zero, Quaternion.identity);
+    }
+
+    public override void StopAllJoints()
+    {
+        return;
     }
 }
