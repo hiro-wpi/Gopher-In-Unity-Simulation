@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -139,7 +139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &9976439
 Transform:
   m_ObjectHideFlags: 0
@@ -897,6 +897,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 287009590}
   m_CullTransparentMesh: 1
+--- !u!1 &287232316
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 287232317}
+  m_Layer: 0
+  m_Name: AutonomyController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &287232317
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 287232316}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.4628885, y: 2.3228006, z: 2.6602523}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &354269765
 GameObject:
   m_ObjectHideFlags: 0
@@ -2414,7 +2445,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &735654462
 Transform:
   m_ObjectHideFlags: 0
@@ -4283,7 +4314,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1336012339
 Transform:
   m_ObjectHideFlags: 0
@@ -6225,33 +6256,13 @@ MonoBehaviour:
   TaskName: Check Vitals and Rooms (Var1)
   TaskDescription: 'The robot has been provided with several sets of patient rooms
     and vital monitors to check and investigate. '
-  SceneName: Hospital
-  StaticObjectSpawnArray:
-  - gameObject: {fileID: 676365421134526795, guid: 07618b36962fe764280e83c54b755ec6, type: 3}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 0, z: 0}
-    trajectory: []
+  SceneName: NavigationTaskScene
+  StaticObjectSpawnArray: []
   DynamicObjectSpawnArray: []
   TaskObjectSpawnArray: []
   GoalObjectSpawnArray:
   - gameObject: {fileID: 2075622757900185994, guid: 845719786c1c896ac83165c019c2763e, type: 3}
-    position: {x: 7.68, y: 0, z: 12.51}
-    rotation: {x: 0, y: 0, z: 0}
-    trajectory: []
-  - gameObject: {fileID: 2075622757900185994, guid: 845719786c1c896ac83165c019c2763e, type: 3}
-    position: {x: 4.74, y: 0, z: 1.41}
-    rotation: {x: 0, y: 0, z: 0}
-    trajectory: []
-  - gameObject: {fileID: 2075622757900185994, guid: 845719786c1c896ac83165c019c2763e, type: 3}
-    position: {x: -5.8, y: 0, z: -12.3}
-    rotation: {x: 0, y: 0, z: 0}
-    trajectory: []
-  - gameObject: {fileID: 2075622757900185994, guid: 845719786c1c896ac83165c019c2763e, type: 3}
-    position: {x: -2.68, y: 0, z: -6.76}
-    rotation: {x: 0, y: 0, z: 0}
-    trajectory: []
-  - gameObject: {fileID: 2075622757900185994, guid: 845719786c1c896ac83165c019c2763e, type: 3}
-    position: {x: 3.84, y: 0, z: -6.71}
+    position: {x: 0, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0}
     trajectory: []
   robotSpawnArray:
@@ -6969,3 +6980,4 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1622921146}
+  - {fileID: 287232317}
