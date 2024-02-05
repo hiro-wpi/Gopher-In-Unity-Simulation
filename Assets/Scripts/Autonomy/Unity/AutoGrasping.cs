@@ -8,7 +8,9 @@ using UnityEngine;
 ///     
 ///     The target can be automatically set when the object
 ///     is in the graspable zone (defined by the collider)
-///     Or the target can be set by calling SetTargetObject()
+///     when ProximityGraspableCheck is set to true
+///     
+///     Or can be used as an utils by calling GetGraspAndHoverPoint()
 /// </summary>
 public class AutoGrasping : MonoBehaviour
 {
@@ -29,23 +31,23 @@ public class AutoGrasping : MonoBehaviour
 
     void Update() {}
 
-    public void SetTargetObject(GameObject go)
+    public (Transform, Transform) GetHoverAndGraspTransforms(GameObject go)
     {
         if (go.GetComponent<AutoGraspable>() == null)
         {
             Debug.Log("Not a auto graspable object");
-            return;
+            return (null, null);
         }
-
-        // Cancel the previous target if different and exists
-        if (targetObject != null && targetObject != go)
-        {
-            CancelCurrentTargetObject();
-        }
-        SetTarget(go);
-
         // For safety
         ProximityGraspableCheck = false;
+
+        // Cancel the previous target if different
+        if (targetObject != go)
+        {
+            CancelCurrentTargetObject();
+            SetTarget(go);
+        }
+        return (targetHoverPoint, targetGraspPoint);
     }
 
     private void OnTriggerEnter(Collider other) 
@@ -87,6 +89,11 @@ public class AutoGrasping : MonoBehaviour
 
     private void OnTriggerStay()
     {
+        if (!ProximityGraspableCheck)
+        {
+            return;
+        }
+
         if (targetObject == null || checkHoverReached == false)
         {
             return;

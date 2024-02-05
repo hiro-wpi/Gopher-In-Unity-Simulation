@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4832428211247972140
+--- !u!1 &1337182721817379579
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,21 +8,21 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2369638965026170298}
+  - component: {fileID: 8139558712727890380}
   m_Layer: 0
-  m_Name: Grasp Point
+  m_Name: Grasping Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2369638965026170298
+--- !u!4 &8139558712727890380
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4832428211247972140}
+  m_GameObject: {fileID: 1337182721817379579}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0.07}
@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: 8748481814097370299}
   - component: {fileID: 8748481814097370293}
   - component: {fileID: 8748481814097370292}
-  - component: {fileID: 2113155676962706002}
+  - component: {fileID: 678263378679171407}
   m_Layer: 0
   m_Name: Expired Medicine
   m_TagString: GraspableObject
@@ -67,7 +67,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2369638965026170298}
+  - {fileID: 8139558712727890380}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!33 &5282083769411479563
@@ -335,7 +335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   disableGravity: 0
---- !u!114 &2113155676962706002
+--- !u!114 &678263378679171407
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -347,7 +347,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8be4569d092108a47bc0fff0270551b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  graspPoint: {fileID: 2369638965026170298}
+  graspPoint: {fileID: 8139558712727890380}
   hoverHeight: -0.1
   hoverDirection: 1
-  hoverOrientation: 1
+  hoverOrientation: 2

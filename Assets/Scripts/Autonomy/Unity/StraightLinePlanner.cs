@@ -97,7 +97,7 @@ public class StraightLinePlanner : MonoBehaviour
             Vector3.Distance(startPosition, targetPosition)
             + Quaternion.Angle(
                 startRotation, targetRotation
-            ) * Mathf.Deg2Rad / 10  // 4 is a scaler
+            ) * Mathf.Deg2Rad / 10  // 10 is a scaler
         ) / cartesianSpeed;
 
         // Interpolate between Start and Goal (positions and rotations)
@@ -131,7 +131,6 @@ public class StraightLinePlanner : MonoBehaviour
         );
         if (!converged)
         {
-            Debug.Log("No valid path to the given target.");
             return (
                 new float[0], new float[0][], new float[0][], new float[0][]
             );
