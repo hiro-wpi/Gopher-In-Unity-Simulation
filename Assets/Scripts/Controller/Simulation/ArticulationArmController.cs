@@ -190,7 +190,7 @@ public class ArticulationArmController : ArmController
         targetRotation = rotation;
 
         // Try to plan a path to the target
-        Debug.Log("Sending request to move to the target.");
+        Debug.Log("Sending request to move to the manipulation target.");
         jointAngles = jointController.GetCurrentJointTargets();
         autoManipulation.PlanTrajectory(
             jointAngles, targetPosition, targetRotation, TrajectoryGenerated
@@ -233,8 +233,10 @@ public class ArticulationArmController : ArmController
 
     private void OnAutonomyDone()
     {
-        SwitchToManualControl();
         OnAutonomyComplete?.Invoke();
+
+        // TODO why sudden move in the end
+        // SwitchToManualControl();
     }
 
     public (float[], float[][], float[][], float[][]) GetAutonomyTrajectory()

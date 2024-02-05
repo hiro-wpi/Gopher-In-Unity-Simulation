@@ -17,6 +17,7 @@ public class TestAutonomy : MonoBehaviour
     [SerializeField] private AutoGrasping autoGrapsing;
 
     private GameObject robot;
+    [SerializeField] private GameObject arGripper;
 
     void Start()
     {
@@ -66,12 +67,12 @@ public class TestAutonomy : MonoBehaviour
             return;
         }
 
-        // Don't use this
-        // armController.SetAutonomyTarget(
-        //     gameObject.transform.position, 
-        //     gameObject.transform.rotation
-        // );
-        autoGrapsing.SetTargetObject(gameObject);
+        var (hoverTransform, graspTransform) = 
+            autoGrapsing.GetHoverAndGraspTransforms(gameObject);
+        armController.SetAutonomyTarget(
+            hoverTransform.position, 
+            hoverTransform.rotation
+        );
     }
 
     private void OnBaseTrajectoryGenerated()
@@ -100,7 +101,7 @@ public class TestAutonomy : MonoBehaviour
         // Add new waypoints
         foreach (var angle in angles)
         {
-            GameObject waypoint = new GameObject("Waypoint");
+            GameObject waypoint = Instantiate(arGripper);
             waypoint.transform.SetParent(armWaypointParent.transform);
 
             (waypoint.transform.position, waypoint.transform.rotation) =
@@ -108,8 +109,7 @@ public class TestAutonomy : MonoBehaviour
 
             arGenerator.Instantiate(
                 waypoint,
-                GenerateARGameObject.ARObjectType.Cube,
-                scale: Vector3.one * 0.05f
+                arGripper
             );
         }
     }

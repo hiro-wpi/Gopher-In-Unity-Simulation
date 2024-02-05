@@ -48,18 +48,18 @@ public class UnityAutoManipulation : AutoManipulation
         float[][] jointAccelerations
     )
     {
-        otherCallback(
-            timeSteps,
-            jointAngles, 
-            jointVelocities,
-            jointAccelerations
-        );
-
         // Check validity of the path
         if (timeSteps == null || timeSteps.Length <= 1)
         {
             ValidGoalSet = false;
-            Debug.Log("No path found");
+            otherCallback(
+                timeSteps,
+                jointAngles, 
+                jointVelocities,
+                jointAccelerations
+            );
+
+            Debug.Log("No manipulation path found");
             return;
         }
 
@@ -69,6 +69,13 @@ public class UnityAutoManipulation : AutoManipulation
         Angles = jointAngles;
         Velocities = jointVelocities;
         Accelerations = jointAccelerations;
+
+        otherCallback(
+            TimeSteps,
+            Angles, 
+            Velocities,
+            Accelerations
+        );
     }
 
     // Start manipulation

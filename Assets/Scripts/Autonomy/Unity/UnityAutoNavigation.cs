@@ -240,7 +240,7 @@ public class UnityAutoNavigation : AutoNavigation
         }
         else
         {
-            Debug.Log("No path found to given navigation goal.");
+            Debug.Log("No navigation path found to given navigation goal.");
             callback?.Invoke(new Vector3[0]);
         }
 
