@@ -233,6 +233,7 @@ public class ArticulationArmController : ArmController
 
     private void OnAutonomyDone()
     {
+        Debug.Log("!!!!!!!DONE!!!!!!!");
         OnAutonomyComplete?.Invoke();
 
         // TODO why sudden move in the end
