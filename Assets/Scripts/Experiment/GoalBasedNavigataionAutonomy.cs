@@ -126,7 +126,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     {
         // Event will be called when the robot reaches the goal
         Debug.Log("Base reached goal");
-        
+
         reachedGoal = true;
     }
 
@@ -159,7 +159,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             // Constantly subscribe to the event to make our trajectory visible
             //      check if we arrive at the goal
             baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
-            baseController.OnAutonomyComplete += OnBaseReachedGoal;
+            // baseController.OnAutonomyComplete += OnBaseReachedGoal;
 
             // ScheuldeNextTask();
         }

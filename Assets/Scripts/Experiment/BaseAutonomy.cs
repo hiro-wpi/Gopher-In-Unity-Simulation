@@ -27,6 +27,7 @@ public class BaseAutonomy : MonoBehaviour
     [SerializeField] private ArticulationBaseController baseController;
 
     private GameObject robot;
+    private Vector3 goalPosition;
 
     void OnEnable()
     {
@@ -64,6 +65,7 @@ public class BaseAutonomy : MonoBehaviour
         Debug.Log("Floor selected: " + position + " " + rotation);
 
         baseController.SetAutonomyTarget(position, rotation);
+        goalPosition = position;
     }
 
 
@@ -84,6 +86,16 @@ public class BaseAutonomy : MonoBehaviour
     {
         // Event will be called when the robot reaches the goal
         Debug.Log("Base reached goal");
+    }
+
+    // Use the robot world position and the goal position to calculate when we reached the goal
+    private void CheckHasReachedGoal()
+    {
+        if(Vector3.Distance(robot.transform.position, goalPosition) < 0.2f)
+        {
+            Debug.Log("Base reached goal: Using CheckHasReachedGoal()");
+            baseController.CancelAutonomyTarget();
+        }
     }
 
     // Update is called once per frame
@@ -116,6 +128,8 @@ public class BaseAutonomy : MonoBehaviour
             //      check if we arrive at the goal
             baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
             baseController.OnAutonomyComplete += OnBaseReachedGoal;
+            CheckHasReachedGoal();
+
         }
 
         // Keyboard press enter to start autonomy
