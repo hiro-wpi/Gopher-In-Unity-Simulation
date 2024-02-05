@@ -67,12 +67,12 @@ public class TestAutonomy : MonoBehaviour
             return;
         }
 
-        // Don't use this
-        // armController.SetAutonomyTarget(
-        //     gameObject.transform.position, 
-        //     gameObject.transform.rotation
-        // );
-        autoGrapsing.SetTargetObject(gameObject);
+        var (hoverTransform, graspTransform) = 
+            autoGrapsing.GetHoverAndGraspTransforms(gameObject);
+        armController.SetAutonomyTarget(
+            hoverTransform.position, 
+            hoverTransform.rotation
+        );
     }
 
     private void OnBaseTrajectoryGenerated()
