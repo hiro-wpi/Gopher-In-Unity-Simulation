@@ -222,6 +222,7 @@ public class ArticulationArmController : ArmController
         float[][] accelerations
     )
     {
+        Debug.Log(timeSteps.Length);
         // check validity of the path
         if (timeSteps == null || timeSteps.Length <= 1)
         {

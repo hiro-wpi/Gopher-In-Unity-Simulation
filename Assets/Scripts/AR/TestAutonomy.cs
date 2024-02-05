@@ -91,6 +91,8 @@ public class TestAutonomy : MonoBehaviour
         var (time, angles, velocities, accelerations) = 
             armController.GetAutonomyTrajectory();
 
+        Debug.Log(angles[0]);
+
         // Clear old waypoints
         foreach (Transform child in armWaypointParent.transform)
         {
@@ -109,8 +111,7 @@ public class TestAutonomy : MonoBehaviour
 
             arGenerator.Instantiate(
                 waypoint,
-                GenerateARGameObject.ARObjectType.Cube,
-                scale: Vector3.one * 0.05f
+                arGripper
             );
         }
     }
