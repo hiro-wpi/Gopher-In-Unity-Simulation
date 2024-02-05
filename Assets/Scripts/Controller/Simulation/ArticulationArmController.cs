@@ -233,8 +233,10 @@ public class ArticulationArmController : ArmController
 
     private void OnAutonomyDone()
     {
-        SwitchToManualControl();
         OnAutonomyComplete?.Invoke();
+
+        // TODO why sudden move in the end
+        // SwitchToManualControl();
     }
 
     public (float[], float[][], float[][], float[][]) GetAutonomyTrajectory()
