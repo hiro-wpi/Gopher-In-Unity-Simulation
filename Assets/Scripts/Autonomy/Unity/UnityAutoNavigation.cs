@@ -76,7 +76,6 @@ public class UnityAutoNavigation : AutoNavigation
         if (purePursuitPlanner.IsGoalReached())
         {
             StopNavigation();
-            Debug.Log("Done");
             reachedAction?.Invoke();
         }
     }
