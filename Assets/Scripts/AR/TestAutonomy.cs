@@ -16,7 +16,7 @@ public class TestAutonomy : MonoBehaviour
     [SerializeField] private ArticulationArmController armController;
     [SerializeField] private AutoGrasping autoGrapsing;
 
-    private GameObject robot;
+    [SerializeField] private GameObject robot;
     [SerializeField] private GameObject arGripper;
 
     void Start()
@@ -32,6 +32,15 @@ public class TestAutonomy : MonoBehaviour
         // Subscribe to the event
         floorSelector.OnFloorSelected += OnFloorSelected;
         objectSelector.OnObjectSelected += OnObjectSelected;
+
+        if (baseController != null)
+        {
+            baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
+        }
+        if (armController != null)
+        {
+            armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
+        }
     }
 
     void OnDisable()

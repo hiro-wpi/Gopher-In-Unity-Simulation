@@ -32,6 +32,25 @@ public class JacobianIK : InverseKinematics
 
     void Update() {}
 
+    public override void SetIterations(int iterations)
+    {
+        this.iterations = iterations;
+    }
+
+    public override void SetTolerances(
+        float positionTolerance = -1, float rotationTolerance = -1
+    )
+    {
+        if (positionTolerance > 0)
+        {
+            this.positionTolerance = positionTolerance;
+        }
+        if (rotationTolerance > 0)
+        {
+            this.rotationTolerance = rotationTolerance;
+        }
+    }
+
     public override float[] SolveIK(
         float[] jointAngles, Vector3 targetPosition, Quaternion targetRotation
     ) {
