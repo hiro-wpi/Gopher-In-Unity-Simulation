@@ -3414,8 +3414,8 @@ RectTransform:
   - {fileID: 1911556805}
   - {fileID: 1414229113}
   - {fileID: 1157685684}
-  - {fileID: 320648764}
   - {fileID: 1895300221}
+  - {fileID: 320648764}
   - {fileID: 1538371429}
   - {fileID: 1150766931}
   m_Father: {fileID: 1264190032}
@@ -3563,12 +3563,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arGenerator: {fileID: 1233093154}
-  drawWaypoints: {fileID: 0}
-  objectSelector: {fileID: 0}
-  floorSelector: {fileID: 0}
+  drawWaypoints: {fileID: 1233093158}
+  objectSelector: {fileID: 1233093156}
+  floorSelector: {fileID: 1233093155}
   baseController: {fileID: 0}
   armController: {fileID: 0}
   autoGrapsing: {fileID: 0}
+  arGripper: {fileID: 2710091181654038673, guid: 735101cad7c4b704c802695827135a92, type: 3}
 --- !u!114 &1233093158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3581,7 +3582,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4abc1e833d64e124d82e2ddfb59c59c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultLineMaterial: {fileID: 0}
+  defaultLineMaterial: {fileID: 2100000, guid: e5741756d5f1cf44eb3df8d24c6f029d, type: 2}
 --- !u!1 &1264190031
 GameObject:
   m_ObjectHideFlags: 0
@@ -5892,7 +5893,7 @@ MonoBehaviour:
   TaskName: Check Vitals and Rooms (Var1)
   TaskDescription: 'The robot has been provided with several sets of patient rooms
     and vital monitors to check and investigate. '
-  SceneName: NavigationTaskScene
+  SceneName: Hospital
   StaticObjectSpawnArray: []
   DynamicObjectSpawnArray: []
   TaskObjectSpawnArray: []
