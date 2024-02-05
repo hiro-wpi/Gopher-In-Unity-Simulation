@@ -10,7 +10,9 @@ using UnityEngine;
 ///     is in the graspable zone (defined by the collider)
 ///     when ProximityGraspableCheck is set to true
 ///     
-///     Or can be used as an utils by calling GetGraspAndHoverPoint()
+///     Or set ProximityGraspableCheck to be false
+///     This can be simply used as an utils 
+///     by calling GetGraspAndHoverPoint()
 /// </summary>
 public class AutoGrasping : MonoBehaviour
 {
@@ -38,16 +40,35 @@ public class AutoGrasping : MonoBehaviour
             Debug.Log("Not a auto graspable object");
             return (null, null);
         }
-        // For safety
-        ProximityGraspableCheck = false;
 
-        // Cancel the previous target if different
-        if (targetObject != go)
+        AutoGraspable[] autoGraspables = 
+            go.GetComponentsInChildren<AutoGraspable>();
+
+        // If found multiple graspable points,
+        // select the one with min position distance
+        float minDistance = 1000;
+        int selectedIndex = 0;
+        for (int i = 1; i < autoGraspables.Length; ++i)
         {
-            CancelCurrentTargetObject();
-            SetTarget(go);
+            float distance = (
+                autoGraspables[i].GetGraspPosition() - transform.position
+            ).magnitude;
+            if (minDistance > distance)
+            {
+                minDistance = distance;
+                selectedIndex = i;
+            }
         }
-        return (targetHoverPoint, targetGraspPoint);
+
+        // Find hover goal and grasp goal
+        // given the current end effector pose
+        var (targetHoverTf, targetGraspTf) = 
+            autoGraspables[selectedIndex].GetHoverAndGrapPoint(
+                grasping.GetEndEffector().transform.position,
+                grasping.GetEndEffector().transform.rotation
+            );
+
+        return (targetHoverTf, targetGraspTf);
     }
 
     private void OnTriggerEnter(Collider other) 
@@ -104,8 +125,8 @@ public class AutoGrasping : MonoBehaviour
             Utils.IsPoseClose(
                 targetHoverPoint,
                 grasping.GetEndEffector().transform,
-                0.03f, 
-                0.2f
+                0.01f, 
+                0.1f
             )
         )
         {
@@ -141,33 +162,17 @@ public class AutoGrasping : MonoBehaviour
 
     private void SetTarget(GameObject go)
     {
-        // Get all auto graspable points
-        targetObject = go;
-        AutoGraspable[] autoGraspables = 
-            go.GetComponentsInChildren<AutoGraspable>();
-
-        // Found multiple graspable points,
-        // select the one with min position distance
-        float minDistance = 1000;
-        int selectedIndex = 0;
-        for (int i = 1; i < autoGraspables.Length; ++i)
+        // Find hover goal and grasp goal
+        var (hoverPoint, graspPoint) = GetHoverAndGraspTransforms(go);
+        if (hoverPoint == null || graspPoint == null)
         {
-            float distance = (
-                autoGraspables[i].GetGraspPosition() - transform.position
-            ).magnitude;
-            if (minDistance > distance)
-            {
-                minDistance = distance;
-                selectedIndex = i;
-            }
+            return;
         }
 
-        // Find hover goal and grasp goal
-        (targetHoverPoint, targetGraspPoint) = 
-            autoGraspables[selectedIndex].GetHoverAndGrapPoint(
-                grasping.GetEndEffector().transform.position,
-                grasping.GetEndEffector().transform.rotation
-            );
+        // Valid -> set as target
+        targetObject = go;
+        targetHoverPoint = hoverPoint;
+        targetGraspPoint = graspPoint;
 
         // Set hover target
         armController.SetAutonomyTarget(
