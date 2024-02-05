@@ -125,15 +125,6 @@ public class StraightLinePlanner : MonoBehaviour
             angles[i] = currJointAngles;
         }
 
-        for (int i = 0; i < numberOfWaypoints; i++)
-        {
-            Debug.Log(
-                CheckConfiguration(
-                    angles[i], waypointsPositions[i], waypointsRotations[i]
-                )
-            );
-        }
-
         // Check if this is a valid solution
         bool converged = CheckConfiguration(
             angles[angles.Length - 1], targetPosition, targetRotation
