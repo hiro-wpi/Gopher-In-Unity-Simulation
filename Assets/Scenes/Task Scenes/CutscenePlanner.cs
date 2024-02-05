@@ -130,6 +130,8 @@ public class CutscenePlanner : MonoBehaviour
         holdTimer = 0.0f;
 
         ikController.CloseLeftHand();
+        medicineBottles[randomMedicine].transform.SetParent(ikController.GetLeftHandIKTarget());   
+
 
         // Move back to home
         ikController.LookAtTarget(
@@ -160,6 +162,11 @@ public class CutscenePlanner : MonoBehaviour
         )
         {
             ikController.OpenLeftHand();
+            if (ikController.GetLeftHandIKTarget().childCount > 0)
+            {
+                Transform child = ikController.GetLeftHandIKTarget().GetChild(0);
+                child.SetParent(null);
+            }
             medicineHeadPositions.RemoveAt(randomMedicine);
             medicineHandPositions.RemoveAt(randomMedicine);
             medicineBottles.RemoveAt(randomMedicine);
