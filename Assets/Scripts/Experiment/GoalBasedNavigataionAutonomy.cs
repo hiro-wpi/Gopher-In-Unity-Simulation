@@ -26,6 +26,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     // AR Featrues 
     [SerializeField] private FloorSelector floorSelector;
     [SerializeField] private DrawWaypoints drawWaypoints;
+    // [SerializeField] private GenerateARGameObject generateARGameObject;
 
     // Autonomy
     [SerializeField] private ArticulationBaseController baseController;

@@ -37,6 +37,7 @@ public class GenerateARGameObject : MonoBehaviour
         Color? color = null,
         float transparency = 0.5f
     )
+    
     {
         GameObject arObject = GameObject.Instantiate(arObjectPrefab);
         arObject.tag = "ARObject";

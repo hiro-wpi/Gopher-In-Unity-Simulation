@@ -73,7 +73,17 @@ public class UnityAutoNavigation : AutoNavigation
         if (elapsed > replanTime)
         {
             elapsed = 0f;
-            SetGoal(TargetPosition, TargetRotation);
+            if (Quaternion.Dot(TargetRotation, TargetRotation) < Mathf.Epsilon)
+            {
+                SetGoal(TargetPosition, TargetRotation);
+            }
+            else if (
+                Quaternion.Dot(TargetRotation, TargetRotation) > Mathf.Epsilon
+                && waypointIndex < GlobalWaypoints.Length - 1
+            )
+            {
+                SetGoal(TargetPosition, TargetRotation);
+            }
         }
 
         // Move along the path
@@ -83,13 +93,12 @@ public class UnityAutoNavigation : AutoNavigation
     private void FollowTrajectory()
     {
         // Select tolerance
-        if (waypointIndex == GlobalWaypoints.Length - 1)
+        if (
+            waypointIndex == GlobalWaypoints.Length - 1
+            && Quaternion.Dot(TargetRotation, TargetRotation) > Mathf.Epsilon
+        )
         {
-            positionTolerance = agent.stoppingDistance;
-        }
-        else
-        {
-            positionTolerance = 0.1f;
+            positionTolerance = positionTolerance * 2;
         }
         // Check waypoint reached
         float distanceError = (
@@ -124,6 +133,10 @@ public class UnityAutoNavigation : AutoNavigation
             else
             {
                 waypointIndex++;
+                if (waypointIndex == GlobalWaypoints.Length - 1)
+                {
+                    Debug.Log("!!!!!!!!!!!Final waypoint reached!!!!!!!!!!!!!");
+                }
                 rotationAdjustment = true;
             }
         }
@@ -147,6 +160,8 @@ public class UnityAutoNavigation : AutoNavigation
             robot.transform.rotation.eulerAngles.y,
             rotation.eulerAngles.y
         );
+
+        Debug.Log("Index: " + waypointIndex + " Distance: " + distanceError + " Angle: " + angleError);
 
         // Adjust rotation angle first
         if (

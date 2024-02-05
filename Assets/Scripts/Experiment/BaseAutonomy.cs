@@ -118,9 +118,13 @@ public class BaseAutonomy : MonoBehaviour
         }
 
         // Find the Gopher GameObject
-        robot = GameObject.Find("Gopher(Clone)");
-        if (robot != null)
+        if (robot == null)
         {
+            robot = GameObject.Find("Gopher(Clone)");
+            if (robot == null)
+            {
+                return;
+            }
             // Set the articulation base controller
             baseController = robot.GetComponentInChildren<ArticulationBaseController>();
 
@@ -128,8 +132,10 @@ public class BaseAutonomy : MonoBehaviour
             //      check if we arrive at the goal
             baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
             baseController.OnAutonomyComplete += OnBaseReachedGoal;
-            CheckHasReachedGoal();
-
+        }
+        if (robot != null)
+        {
+            // CheckHasReachedGoal();
         }
 
         // Keyboard press enter to start autonomy
