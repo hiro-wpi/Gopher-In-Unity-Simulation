@@ -17,6 +17,7 @@ public class TestAutonomy : MonoBehaviour
     [SerializeField] private AutoGrasping autoGrapsing;
 
     private GameObject robot;
+    [SerializeField] private GameObject arGripper;
 
     void Start()
     {
@@ -100,7 +101,7 @@ public class TestAutonomy : MonoBehaviour
         // Add new waypoints
         foreach (var angle in angles)
         {
-            GameObject waypoint = new GameObject("Waypoint");
+            GameObject waypoint = Instantiate(arGripper);
             waypoint.transform.SetParent(armWaypointParent.transform);
 
             (waypoint.transform.position, waypoint.transform.rotation) =

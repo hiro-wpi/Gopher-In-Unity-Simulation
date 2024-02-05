@@ -40,6 +40,7 @@ public class GenerateARGameObject : MonoBehaviour
     {
         GameObject arObject = GameObject.Instantiate(arObjectPrefab);
         arObject.tag = "ARObject";
+        arObject.layer = LayerMask.NameToLayer("ARObject");
         if (Highlights.ContainsKey(gameObject))
         {
             Highlights[gameObject].Add(arObject);
@@ -86,6 +87,7 @@ public class GenerateARGameObject : MonoBehaviour
             return;
         }
         arObject.tag = "ARObject";
+        arObject.layer = LayerMask.NameToLayer("ARObject");
 
         if (Highlights.ContainsKey(gameObject))
         {

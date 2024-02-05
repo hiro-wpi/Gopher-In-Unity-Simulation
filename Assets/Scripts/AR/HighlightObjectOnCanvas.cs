@@ -201,6 +201,7 @@ public class HighlightObjectOnCanvas : MonoBehaviour
             highlightObject = new GameObject("HighlightObject");
             highlightObject.transform.parent = displayRect.transform;
             highlightObject.tag = "ARObject";
+            highlightObject.layer = LayerMask.NameToLayer("ARObject");
 
             highlightRect = highlightObject.AddComponent<RectTransform>();
             highlightImage = highlightObject.AddComponent<Image>();
