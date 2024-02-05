@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 
 public class ArmAutonomy : MonoBehaviour
@@ -16,6 +17,9 @@ public class ArmAutonomy : MonoBehaviour
     [SerializeField] private HighlightObjectOnCanvas highlightObject;
     [SerializeField, ReadOnly] private GameObject selectedObject;
 
+    // [SerializeField] private Transform hoverTransform;
+    // [SerializeField] private Transform graspTransform;
+
     void Start()
     {
         armWaypointParent = new GameObject("Arm Waypoints");
@@ -28,6 +32,12 @@ public class ArmAutonomy : MonoBehaviour
     {
         // Subscribe to the event
         objectSelector.OnObjectSelected += OnObjectSelected;
+
+        // if (armController != null)
+        // {
+        //     armController.OnAutonomyComplete += OnGraspAutonomyComplete;
+        //     armController.OnAutonomyComplete += OnHoverAutonomyComplete;
+        // }
     }
 
     void OnDisable()
@@ -37,22 +47,60 @@ public class ArmAutonomy : MonoBehaviour
 
         // if (armController != null)
         // {
-        //     armController.OnAutonomyTrajectory -= OnArmTrajectoryGenerated;
+        //     armController.OnAutonomyComplete -= OnGraspAutonomyComplete;
+        //     armController.OnAutonomyComplete -= OnHoverAutonomyComplete;
+        //     // armController.OnAutonomyTrajectory -= OnArmTrajectoryGenerated;
         // }
     }
 
+    // private void OnHoverAutonomyComplete()
+    // {
+    //     Debug.Log("Hover Autonomy Complete");
+    //     armController.SetAutonomyTarget(hoverTransform.position, hoverTransform.rotation);
+    // }
+
+    // private void OnGraspAutonomyComplete()
+    // {
+    //     Debug.Log("Grasp Autonomy Complete");
+    //     armController.SetAutonomyTarget(graspTransform.position, graspTransform.rotation);
+    // }
+
     private void OnObjectSelected(GameObject gameObject, Vector3 position)
     {
+        Debug.Log("Entered OnObjectSelected");
+
         if (robot == null || gameObject == null)
         {
+            Debug.Log("Exiting OnObjectSelected");
             return;
         }
 
+        // Check if there was a previously selected object
+        if (selectedObject != null)
+        {
+            // Perform actions to cancel the previous selection
+            autoGrasping.CancelCurrentTargetObject();
+            highlightObject.RemoveHighlight(selectedObject);
+        }
+
         selectedObject = gameObject;
+        Debug.Log("Found selected object");
+        
         highlightObject.Highlight(selectedObject, cam, displayRect);
-        autoGrasping.SetTargetObject(selectedObject);
-        armController.MoveToAutonomyTarget();
+        Debug.Log("Highlighted selected object");
+        
         armController.SetGripperPosition(0.0f);
+        Debug.Log("Opened gripper");
+        
+        var (hoverTransform, graspTransform) = autoGrasping.GetHoverAndGraspTransforms(selectedObject);
+        Debug.Log("Retrieved hover transform");
+        
+        // armController.SetAutonomyTarget(hoverTransform.position, hoverTransform.rotation);
+        // Debug.Log("Approached hover transform");
+        
+        // armController.SetAutonomyTarget(graspTransform.position, graspTransform.rotation);
+        // armController.SetGripperPosition(1.0f);
+        // armController.SetAutonomyTarget(hoverTransform.position, hoverTransform.rotation);
     }
 
     // private void OnArmTrajectoryGenerated()
@@ -91,10 +139,11 @@ public class ArmAutonomy : MonoBehaviour
             robot = GameObject.Find("Gopher(Clone)");
             if (robot != null)
             {
-                armController =
-                    robot.GetComponentInChildren<ArticulationArmController>();
-                autoGrasping = 
-                    robot.GetComponentInChildren<AutoGrasping>();
+                Transform rightArmHardware = robot.transform.Find("Plugins/Hardware/Right Arm");
+                Transform rightArmAutonomy = robot.transform.Find("Plugins/Autonomy/Unity/Right Arm");
+
+                armController = rightArmHardware.GetComponentInChildren<ArticulationArmController>();
+                autoGrasping = rightArmAutonomy.GetComponentInChildren<AutoGrasping>();
 
                 // armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
             }
@@ -117,7 +166,7 @@ public class ArmAutonomy : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             highlightObject.RemoveHighlight(selectedObject);
-            armController.CancelAutonomyTarget();
+            autoGrasping.CancelCurrentTargetObject();
         } 
     }
 }
