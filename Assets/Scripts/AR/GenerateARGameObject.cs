@@ -161,6 +161,18 @@ public class GenerateARGameObject : MonoBehaviour
         }
     }
 
+    public List<GameObject> GetARGameObject(GameObject gameObject)
+    {
+        if (Highlights.ContainsKey(gameObject))
+        {
+            return Highlights[gameObject];
+        }
+        else
+        {
+            return new List<GameObject>();
+        }
+    }
+
     public void Destroy(GameObject gameObject, int index = -1)
     {
         if (Highlights.ContainsKey(gameObject))

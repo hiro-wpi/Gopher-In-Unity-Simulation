@@ -77,6 +77,23 @@ public class HighlightObjectOnCanvas : MonoBehaviour
         }
     }
 
+    public List<GameObject> GetHighlightGameObject(GameObject go)
+    {
+        if (Highlights.ContainsKey(go))
+        {
+            List<GameObject> highlightGameObjects = new List<GameObject>();
+            foreach (var highlight in Highlights[go])
+            {
+                highlightGameObjects.Add(highlight.GetHighlightObject());
+            }
+            return highlightGameObjects;
+        }
+        else
+        {
+            return new List<GameObject>();
+        }
+    }
+
     public void RemoveHighlight(GameObject go, int index = -1)
     {
         // if the object is in the list, remove it
@@ -343,6 +360,11 @@ public class HighlightObjectOnCanvas : MonoBehaviour
         private bool HasValidBound(Renderer renderer)
         {
             return renderer.gameObject.tag != "ARObject";
+        }
+
+        public GameObject GetHighlightObject()
+        {
+            return highlightObject;
         }
 
         public void SetDisplay(Camera cam, RectTransform displayRect)
