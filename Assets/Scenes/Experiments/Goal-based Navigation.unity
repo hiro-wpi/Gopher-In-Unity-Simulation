@@ -3391,6 +3391,7 @@ GameObject:
   - component: {fileID: 1233093152}
   - component: {fileID: 1233093157}
   - component: {fileID: 1233093159}
+  - component: {fileID: 1233093160}
   m_Layer: 5
   m_Name: RegularGUI
   m_TagString: Untagged
@@ -3591,7 +3592,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1233093149}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b611e40271f282541b3ac32630b72d5c, type: 3}
   m_Name: 
@@ -3601,6 +3602,35 @@ MonoBehaviour:
   floorSelector: {fileID: 1233093155}
   drawWaypoints: {fileID: 1233093158}
   baseController: {fileID: 0}
+--- !u!114 &1233093160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233093149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee12e8035d65e214592a96cf25474722, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  graphicalInterface: {fileID: 1233093151}
+  displayRect: {fileID: 320648764}
+  floorSelector: {fileID: 1233093155}
+  drawWaypoints: {fileID: 1233093158}
+  baseController: {fileID: 0}
+  patcientPosition:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  patcientRotations:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  pharmacyPosition: {x: -7.5, y: 0.1, z: 8.1}
+  pharmacyRotation: {x: 0, y: -90, z: 0}
 --- !u!1 &1264190031
 GameObject:
   m_ObjectHideFlags: 0

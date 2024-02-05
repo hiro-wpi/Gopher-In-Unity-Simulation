@@ -5,6 +5,11 @@ using UnityEngine;
 /// <summary>
 ///    Base autonomy
 ///    Example Script to Handle the autonomy of the robot base
+///    Goals:
+///    - Be able to pass in the target position and orientation
+///    - Be able to visualize the trajectory
+///    - Be able to cancel the trajectory
+///    - Identiy when the robot has reached the goal
 /// </summary>
 public class BaseAutonomy : MonoBehaviour
 {
@@ -56,6 +61,8 @@ public class BaseAutonomy : MonoBehaviour
             return;
         }
 
+        Debug.Log("Floor selected: " + position + " " + rotation);
+
         baseController.SetAutonomyTarget(position, rotation);
     }
 
@@ -98,9 +105,11 @@ public class BaseAutonomy : MonoBehaviour
             }
         }
 
+        // Find the Gopher GameObject
         robot = GameObject.Find("Gopher(Clone)");
         if (robot != null)
         {
+            // Set the articulation base controller
             baseController = robot.GetComponentInChildren<ArticulationBaseController>();
 
             // Constantly subscribe to the event to make our trajectory visible
@@ -122,10 +131,5 @@ public class BaseAutonomy : MonoBehaviour
             baseController.CancelAutonomyTarget();
         }
 
-        
-
-
     }
-
-
 }
