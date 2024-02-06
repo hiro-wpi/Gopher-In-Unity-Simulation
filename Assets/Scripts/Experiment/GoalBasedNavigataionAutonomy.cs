@@ -121,6 +121,9 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         drawWaypoints.RemoveLine("Global Path");
         // Add new waypoints
         drawWaypoints.DrawLine("Global Path", globalWaypoints);
+
+        // Automatically Send the robot to the goal
+        baseController.MoveToAutonomyTarget();
     }
 
     private void OnBaseReachedGoal()
@@ -150,9 +153,24 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         }
 
         // Find the Gopher GameObject
-        robot = GameObject.Find("Gopher(Clone)");
-        if (robot != null)
+        // robot = GameObject.Find("Gopher(Clone)");
+        // if (robot != null)
+        // {
+        //     // Set the articulation base controller
+        //     baseController = robot.GetComponentInChildren<ArticulationBaseController>();
+
+        //     // Constantly subscribe to the event to make our trajectory visible
+        //     //      check if we arrive at the goal
+        //     baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
+        //     // baseController.OnAutonomyComplete += OnBaseReachedGoal;
+
+        //     // ScheuldeNextTask();
+        // }
+
+        if(robot == null)
         {
+            robot = GameObject.Find("Gopher(Clone)");
+            
             // Set the articulation base controller
             baseController = robot.GetComponentInChildren<ArticulationBaseController>();
 
@@ -175,7 +193,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         {
             Debug.Log("Parmacy");
             SetAutonomyGoal(pharmacyPosition, pharmacyRotation);
-            baseController.MoveToAutonomyTarget();
+            
         }
 
         // // Keyboard press space to emergency stop
