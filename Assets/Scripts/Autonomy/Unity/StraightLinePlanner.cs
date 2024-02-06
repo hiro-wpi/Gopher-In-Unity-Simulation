@@ -29,6 +29,26 @@ public class StraightLinePlanner : MonoBehaviour
         bool cartesianSpace = true
     )
     {
+        inverseKinematics.SetIterations(30);
+        StartCoroutine(
+            PlanningCoroutine(
+                currJointAngles,
+                targetPosition,
+                targetRotation,
+                callback,
+                cartesianSpace
+            )
+        );
+    }
+
+    private IEnumerator PlanningCoroutine(
+        float[] currJointAngles,
+        Vector3 targetPosition,
+        Quaternion targetRotation,
+        Action<float[], float[][], float[][], float[][]> callback,
+        bool cartesianSpace = true
+    )
+    {
         float[] timeSteps;
         float[][] angles;
         float[][] velocities;
@@ -71,6 +91,7 @@ public class StraightLinePlanner : MonoBehaviour
 
         // Send the result back to the caller
         callback(timeSteps, angles, velocities, accelerations);
+        yield return null;
     }
 
     private (float[], float[][], float[][], float[][]) PlanStraightLine(
