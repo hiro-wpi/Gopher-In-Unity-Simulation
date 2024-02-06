@@ -28,7 +28,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     // AR Featrues 
     [SerializeField] private FloorSelector floorSelector;
     [SerializeField] private DrawWaypoints drawWaypoints;
-    // [SerializeField] private GenerateARGameObject generateARGameObject;
+    [SerializeField] private GenerateARGameObject arGenerator;
 
     // Autonomy
     [SerializeField] private ArticulationBaseController baseController;
@@ -65,6 +65,9 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     private bool waypointReachedGoal = false; // This is for just reaching successive points on the list
     private bool reachedGoal = false;  // reached the whole goal
+
+
+    public GameObject[] patientMedCarts;
 
     void Start()
     {
@@ -104,6 +107,35 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             // ScheuldeNextTask();
         }
 
+        if(patientMedCarts.Length == 0)
+        {
+            patientMedCarts = GameObject.FindGameObjectsWithTag("GoalObject");
+
+            foreach(GameObject cart in patientMedCarts)
+            {
+                var type = GenerateARGameObject.ARObjectType.Cube;
+                arGenerator.Instantiate(
+                    cart,
+                    type,
+                    new Vector3(0, 0.93f, -0.02f),
+                    new Vector3(0, 0, 0),
+                    new Vector3(0.3f, 0.1f, 0.5f),
+                    Color.green,
+                    0.5f
+                );
+            }
+            
+
+            if(patientMedCarts.Length == 0)
+            {
+                Debug.Log("No carts found");;
+            }
+
+
+        }
+
+
+        
         ScheuldeNextTask();
         
         // Keyboard press enter to start autonomy
