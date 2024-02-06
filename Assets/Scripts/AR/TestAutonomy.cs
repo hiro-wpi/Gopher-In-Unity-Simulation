@@ -36,10 +36,12 @@ public class TestAutonomy : MonoBehaviour
         if (baseController != null)
         {
             baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
+            baseController.OnAutonomyComplete += OnBaseAutonomyComplete;
         }
         if (armController != null)
         {
             armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
+            armController.OnAutonomyComplete += OnArmAutonomyComplete;
         }
     }
 
@@ -52,10 +54,28 @@ public class TestAutonomy : MonoBehaviour
         if (baseController != null)
         {
             baseController.OnAutonomyTrajectory -= OnBaseTrajectoryGenerated;
+            baseController.OnAutonomyComplete -= OnBaseAutonomyComplete;
         }
         if (armController != null)
         {
             armController.OnAutonomyTrajectory -= OnArmTrajectoryGenerated;
+            armController.OnAutonomyComplete -= OnArmAutonomyComplete;
+        }
+    }
+
+    private void OnBaseAutonomyComplete()
+    {
+        Debug.Log("Base Autonomy Complete");
+        drawWaypoints.RemoveLine("Global Path");
+    }
+
+    private void OnArmAutonomyComplete()
+    {
+        Debug.Log("Arm Autonomy Complete");
+        foreach (Transform child in armWaypointParent.transform)
+        {
+            arGenerator.Destroy(child.gameObject);
+            Destroy(child.gameObject);
         }
     }
 
