@@ -33,7 +33,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     // Autonomy
     [SerializeField] private ArticulationBaseController baseController;
-
+    [SerializeField] private ArticulationArmController armController;
+    [SerializeField] private AutoGrasping autoGrasping;
     private GameObject robot;
 
     // State Machines
@@ -59,7 +60,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     public List<Vector3> transferReturnWaypointRotations = new List<Vector3>();
 
 
-    // Tracked Trajectory of the Robot
+    // Tracked Trajectory of the Robot base
 
     private List<Vector3> waypointPositions = new List<Vector3>();
     private List<Vector3> waypointRotations = new List<Vector3>();
@@ -108,11 +109,15 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             }
 
             baseController = robot.GetComponentInChildren<ArticulationBaseController>();
-
+            armController = robot.GetComponentInChildren<ArticulationArmController>();
+            autoGrasping = robot.GetComponentInChildren<AutoGrasping>();
             // Constantly subscribe to the event to make our trajectory visible
             //      check if we arrive at the goal
             baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
             baseController.OnAutonomyComplete += OnBaseReachedGoal;
+
+            armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
+            armController.OnAutonomyComplete += OnArmAutonomyComplete;
 
             // ScheuldeNextTask();
         }
@@ -156,36 +161,18 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
         
         
-        // Keyboard press enter to start autonomy
+        // Keyboard press enter send med goal
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            // Set the ar for the current
-
-            Vector3 patientPos = patcientPosition[(int)currentPatcient];
-            GenerateARForNearestCart(patientPos);
+            SetArmToMedTarget();
         }
 
-        // Keyborad press C change the color of the nearest cart
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            Vector3 patientPos = patcientPosition[(int)currentPatcient];
-            ChangeNearestCartARColor(patientPos, Color.green);
+            armController.MoveToAutonomyTarget();
         }
 
-        // Keyborad press X change the color of the nearest cart
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            Vector3 patientPos = patcientPosition[(int)currentPatcient];
-            ChangeNearestCartARColor(patientPos, Color.red);
-        }
-
-        // Keyboard press V to change the color of the nearest med
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            GameObject med = ChooseMedToPickUp();
-        }
-
-        ScheuldeNextTask();
+        // ScheuldeNextTask();
 
     }
 
@@ -199,6 +186,12 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
             baseController.OnAutonomyComplete += OnBaseReachedGoal;
         }
+
+        if (armController != null)
+        {
+            armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
+            armController.OnAutonomyComplete += OnArmAutonomyComplete;
+        }
     }
 
     void OnDisable()
@@ -209,6 +202,12 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         {
             baseController.OnAutonomyTrajectory -= OnBaseTrajectoryGenerated;
             baseController.OnAutonomyComplete -= OnBaseReachedGoal;
+        }
+
+        if (armController != null)
+        {
+            armController.OnAutonomyTrajectory -= OnArmTrajectoryGenerated;
+            armController.OnAutonomyComplete -= OnArmAutonomyComplete;
         }
     }
 
@@ -384,6 +383,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         }
     }
 
+    // Base Navigation and Autonomy Functions //////////////////////////////////////////////////////////////////////////////////////////
 
     // Automatically Sets the waypoint and goes to it
     private void SetWaypoints(Vector3 pos, Vector3 rot)
@@ -540,7 +540,33 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     }
 
 
+    // Arm Navigation and Autonomy Functions //////////////////////////////////////////////////////////////////////////////////////////
+    private void OnArmAutonomyComplete()
+    {
+        Debug.Log("Arm Autonomy Complete");
+    }
 
+    private void OnArmTrajectoryGenerated()
+    {
+        Debug.Log("Arm trajectory generated");
+    }
+
+    private void SetArmTarget(GameObject med)
+    { 
+        // Assume what we are picking up is on the left of our left ee
+
+        // Get the hoverpoint and the grasp point
+        var (hoverTransform, graspingTransform) = autoGrasping.GetHoverAndGraspTransforms(med);
+        Debug.Log("hoverTransform: " + hoverTransform.position + " graspingTransform: " + graspingTransform.position);
+        // Sending it to just hover in front of the med
+        armController.SetAutonomyTarget(hoverTransform.position, hoverTransform.rotation);
+    }
+
+    private void SetArmToMedTarget()
+    {
+        GameObject med = ChooseMedToPickUp();
+        SetArmTarget(med);
+    }
 
 
 
