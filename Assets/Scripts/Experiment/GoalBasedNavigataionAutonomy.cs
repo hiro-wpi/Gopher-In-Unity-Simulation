@@ -6,16 +6,17 @@ using UnityEngine;
 
 /// <summary>
 ///    Goal Based Navigataion Autonomy
-///    Main Script to handle full autonomy for the goal-based delivery task   
-/// 
-///    Sub Goals:
-///    - Be able to pass in the target position and orientation
-///    - Be able to visualize the trajectory
-///    - Be able to cancel the trajectory
-///    - Identiy when the robot has reached the goal
+///    Main Script to handle full autonomy for the goal-based delivery task 
+///    in the hospital environment
 ///    
-///    Task Goals for the completion of the autonomy:
-///    - Be able to navigate to a set of waypoints
+///     This script is able to:
+///     - Set the gross waypoints for the robot to navigate
+///     - Follow the gross waypoints
+///     - Generate AR for carts and meds
+///     - Change the color of the AR for the carts to describe state of task
+///     
+///    
+/// 
 /// </summary>
 public class GoalBasedNavigataionAutonomy : MonoBehaviour
 {
@@ -367,7 +368,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // Generate AR for the nearest cart
                 patientPos = patcientPosition[(int)currentPatcient];
                 GenerateARForNearestCart(patientPos);
-                
+
                 state = State.CheckPatcient;
 
                 break;

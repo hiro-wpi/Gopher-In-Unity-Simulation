@@ -3,15 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-///    Base autonomy
+///    Simple Base Autonomy
 ///    Example Script to Handle the autonomy of the robot base
 ///    Goals:
 ///    - Be able to pass in the target position and orientation
 ///    - Be able to visualize the trajectory
 ///    - Be able to cancel the trajectory
 ///    - Identiy when the robot has reached the goal
+///    
+///    User Inputs:
+///    - Press Enter to start autonomy
+///    - Press Space to emergency stop
+///    - Mouse click and drag to select the goal position and orientation
 /// </summary>
-public class BaseAutonomy : MonoBehaviour
+public class SimpleBaseAutonomy : MonoBehaviour
 {
 
     // Test setup
