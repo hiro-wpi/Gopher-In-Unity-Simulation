@@ -164,7 +164,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         // Keyboard press enter send med goal
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            SetArmToMedTarget();
+            // SetArmToMedTarget();
+            
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -567,6 +568,65 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         GameObject med = ChooseMedToPickUp();
         SetArmTarget(med);
     }
+
+    // States needed to be able to pick up the med
+    // Got to hover point
+    // Go to grasp point
+    // Close the gripper
+    // Go to hover point
+    // Go to home position - try home points first (HomeJoints)
+
+    // Other states to drop off the med
+    // Let the AR feature of the cart become the goal for the medacine
+    // Go to the AR feature
+    // Open Gripper
+
+    // State Machine for the arm
+    // private void ArmStateMachine()
+    // {
+    //     switch(armState)
+    //     {
+    //         case ArmState.WaitForGraspRequest:
+    //             // Wait for the request to grasp a med
+    //             // if key is pressed, set the arm to the med target
+    //             // !!!TODO, I need some way to know if the arm rejects the target
+    //             break;
+    //         case ArmState.GoToHoverPointFirst:
+    //             // Go to the hover point
+    //             break;
+    //         case ArmState.GoToGraspPoint:
+    //             // Go to the grasp point
+    //             break;
+    //         case ArmState.CloseGripper:
+    //             // Close the gripper
+    //             break;
+    //         case ArmState.GoToHoverPointSecond:
+    //             // Go to the hover point
+    //             break;
+    //         case ArmState.GoToHomePositionWithMed:
+    //             // Go to the home position with the medication in hand
+    //             // Note: If the robot moves the object too fast, it will most likely drop the object
+    //             //      Consider another location while carrying object
+    //             break;
+    //         case ArmState.WaitForDropOffRequest:
+    //             // Wait for the request to drop off the med
+    //             break;
+    //         case ArmState.GoToDropOffPoint:
+    //             // Go to the drop off point in the center of the AR feature
+    //             break;
+    //         case ArmState.OpenGripper:
+    //             // Open the gripper
+    //             break;
+    //         case ArmState.GoToHomePosition:
+    //             // Go to the home position
+    //             break;
+    //         default:
+    //             break;
+    //     }
+    // }
+
+
+
 
 
 
