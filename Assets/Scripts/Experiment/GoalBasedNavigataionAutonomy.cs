@@ -1,11 +1,8 @@
 // using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-
 // using System.Numerics;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 /// <summary>
 ///    Goal Based Navigataion Autonomy
@@ -55,6 +52,11 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     public Vector3 pharmacyPosition;
     public Vector3 pharmacyRotation;
 
+    // Public Navigation Waypoints between pharmacy to patcient room
+    public List<Vector3> transfereWaypointPositions = new List<Vector3>();
+    public List<Vector3> transferWaypointRotations = new List<Vector3>();
+    public List<Vector3> transferReturnWaypointRotations = new List<Vector3>();
+
 
     // Tracked Trajectory of the Robot
 
@@ -66,17 +68,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     void Start()
     {
-        Vector3 p1Position = new Vector3(-8.393f, 0.1f, 5.95f);
-        Vector3 p1Rotation = new Vector3(0f, 90f, 0f);
-
-        Vector3 p2Position = new Vector3(-7.5f, 0.1f, 8.1f);
-        Vector3 p2Rotation = new Vector3(0f, -90f, 0f);
-
-        waypointPositions.Add(p2Position);
-        waypointPositions.Add(p1Position);
-
-        waypointRotations.Add(p2Rotation);
-        waypointRotations.Add(p1Rotation);
     }
 
 
@@ -106,16 +97,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         }
     }
 
-    // private void OnFloorSelected(Vector3 position, Quaternion rotation)
-    // {
-    //     if (robot == null)
-    //     {
-    //         return;
-    //     }
-
-    //     baseController.SetAutonomyTarget(position, rotation);
-    // }
-
     private void SetAutonomyGoal(Vector3 worldPosition, Vector3 worldRotationEuler)
     {
         if (robot == null)
@@ -135,7 +116,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     private void OnBaseTrajectoryGenerated()
     {
-        Debug.Log("Base trajectory generated");
+        // Debug.Log("Base trajectory generated");
 
         var (globalWaypoints, LocalWaypoints) = 
             baseController.GetTrajectories();
@@ -152,8 +133,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     private void OnBaseReachedGoal()
     {
         // Event will be called when the robot reaches the goal
-        Debug.Log("Base reached goal");
-        reachedGoal = true;
+        // Debug.Log("Base reached goal");
+        // reachedGoal = true;
         waypointReachedGoal = true;
     }
 
@@ -176,21 +157,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             }
         }
 
-        // Find the Gopher GameObject
-        // robot = GameObject.Find("Gopher(Clone)");
-        // if (robot != null)
-        // {
-        //     // Set the articulation base controller
-        //     baseController = robot.GetComponentInChildren<ArticulationBaseController>();
-
-        //     // Constantly subscribe to the event to make our trajectory visible
-        //     //      check if we arrive at the goal
-        //     baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
-        //     // baseController.OnAutonomyComplete += OnBaseReachedGoal;
-
-        //     // ScheuldeNextTask();
-        // }
-
         if(robot == null)
         {
             robot = GameObject.Find("Gopher(Clone)");
@@ -205,11 +171,22 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
             // ScheuldeNextTask();
         }
+        
 
-        // // Keyboard press enter to start autonomy
+        // Keyboard press enter to start autonomy
         // if (Input.GetKeyDown(KeyCode.Return))
         // {
-        //     baseController.MoveToAutonomyTarget();
+        //     Vector3 p1Position = new Vector3(-8.393f, 0.1f, 5.95f);
+        //     Vector3 p1Rotation = new Vector3(0f, 90f, 0f);
+
+        //     Vector3 p2Position = new Vector3(-7.5f, 0.1f, 8.1f);
+        //     Vector3 p2Rotation = new Vector3(0f, -90f, 0f);
+
+        //     List<Vector3> posTrajectory = new List<Vector3>{p1Position, p2Position};
+        //     List<Vector3> rotTrajectory = new List<Vector3>{p1Rotation, p2Rotation};
+
+        //     // SetWaypoints(posTrajectory, rotTrajectory);
+        //     SetWaypoints(p1Position, p1Rotation);
         // }
 
         // Press Enter to send the robot to the pharmacy
@@ -221,8 +198,10 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         //     StartCoroutine(FollowWaypoints());
             
         // }
+        
+        
 
-        ScheulderTest();
+        ScheuldeNextTask();
 
         // // Keyboard press space to emergency stop
         // if (Input.GetKeyDown(KeyCode.Space))
@@ -312,7 +291,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // Autonomy starts here
                 // Go to the first patient
                 Debug.Log("Setting the first patient");
-                SetAutonomyGoal(patcientPosition[(int)currentPatcient], patcientRotations[(int)currentPatcient]);
+                SetWaypoints(patcientPosition[(int)currentPatcient], patcientRotations[(int)currentPatcient]);
 
                 state = State.CheckPatcient;
 
@@ -328,7 +307,17 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     if (currentPatcient == Patcient.Patcient2)
                     {
                         Debug.Log("Paticeint 2 is missing their meds, going to the pharmacy");
-                        SetAutonomyGoal(pharmacyPosition, pharmacyRotation);
+                        
+                        List<Vector3> posTraj = new List<Vector3>{transfereWaypointPositions[1],transfereWaypointPositions[0]} ;
+                        List<Vector3> rotTraj = new List<Vector3>{transferReturnWaypointRotations[1], transferReturnWaypointRotations[0]};
+                        // List<Vector3> posTraj = transfereWaypointPositions;
+                        // List<Vector3> rotTraj = transferReturnWaypointRotations;
+
+                        posTraj.Add(pharmacyPosition);
+                        rotTraj.Add(pharmacyRotation);
+
+                        SetWaypoints(posTraj, rotTraj);
+
                         state = State.GoToPharmacy;
                     }
                     else
@@ -336,6 +325,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         Debug.Log("Patient has all their meds, going to the next patient");
                         state = State.ChangePatient;
                     }
+                    // state = State.ChangePatient;
                 }
                 break;
 
@@ -361,8 +351,16 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // if we have the medicine, go deliver the medicine
                 if (gotMedicine)
                 {
-                    Debug.Log("Getting Medicine");
-                    SetAutonomyGoal(patcientPosition[(int)currentPatcient], patcientRotations[(int)currentPatcient]);
+                    Debug.Log("Got Medicine");
+                    List<Vector3> posTraj = transfereWaypointPositions;
+                    List<Vector3> rotTraj = transferWaypointRotations;
+                    // List<Vector3> posTraj = transfereWaypointPositions;
+                    // List<Vector3> rotTraj = transferReturnWaypointRotations;
+
+                    posTraj.Add(patcientPosition[(int)currentPatcient]);
+                    rotTraj.Add(patcientRotations[(int)currentPatcient]);
+
+                    SetWaypoints(posTraj, rotTraj);
                     state = State.GoDeliverMedicine;
                 }
                 
@@ -412,12 +410,15 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         break;
                 }
 
+                SetWaypoints(patcientPosition[(int)currentPatcient], patcientRotations[(int)currentPatcient]);
+                state = State.CheckPatcient;
+
                 break;
 
             case State.Done:
                 // Done
                 // The autonomy is done
-                Debug.Log("Autonomy is done");
+                // Debug.Log("Autonomy is done");
                 break;
 
             default:
@@ -430,33 +431,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     // lets actually do a couroutine where we can actually have it handle the waypoints being played int he abck
     IEnumerator FollowWaypoints()
     {
-        // Set the first 1
         Debug.Log("Start Motion");
-        // int i = 0;
-        // SetAutonomyGoal(waypointPositions[0], waypointRotations[0]);
-        // yield return null;
-
-        // for(int i = 1; waypointPositions.Count < i; i++ )
-        //     // Check that we have reached before moving on
-        //     if(waypointReachedGoal)
-        //     {
-        //         SetAutonomyGoal(waypointPositions[i], waypointRotations[i]);
-        //     }
-
-        // while(i < waypointPositions.Count)
-        // {
-        //     // If we reached the waypoint
-        //     if(waypointReachedGoal)
-        //     {
-        //         // Go to the next waypoint
-        //         if(i > )
-        //         i += 1;
-        //         SetAutonomyGoal(waypointPositions[i], waypointRotations[i]);
-                
-        //         Debug.Log("Going to next waypoint");
-        //     }
-        //     yield return null;
-        // }
 
         for(int i = 0; i < waypointPositions.Count; i++)
         {
@@ -466,4 +441,33 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         }
         reachedGoal = true;
     }
+
+    // Automatically Sets the waypoint and goes to it
+    private void SetWaypoints(Vector3 pos, Vector3 rot)
+    {
+        waypointPositions = new List<Vector3>{pos};
+        waypointRotations = new List<Vector3>{rot};
+
+        StartCoroutine(FollowWaypoints());
+    }
+
+    // Automatically Sets the waypoint and goes to it
+    private void SetWaypoints(List<Vector3> pos, List<Vector3> rot)
+    {
+        if(pos.Count != rot.Count)
+        {
+            Debug.LogWarning("The list used are not the same size, they are not being added");
+            return;
+        }
+
+        waypointPositions = pos;
+        waypointRotations = rot;
+
+        StartCoroutine(FollowWaypoints());
+    }
+
+    // private void StartFollowingWaypoints()
+    // {
+    //     StartCoroutine(FollowWaypoints());
+    // }
 }

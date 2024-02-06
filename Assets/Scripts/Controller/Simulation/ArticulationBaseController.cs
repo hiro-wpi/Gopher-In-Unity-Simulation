@@ -86,7 +86,7 @@ public class ArticulationBaseController : BaseController
         targetRotation = rotation;
 
         // Try to plan a path to the target
-        Debug.Log("Sending request to move to the navigation target.");
+        // Debug.Log("Sending request to move to the navigation target.");
         autoNavigation.SetGoal(position, rotation, TrajectoryGenerated);
     }
 
