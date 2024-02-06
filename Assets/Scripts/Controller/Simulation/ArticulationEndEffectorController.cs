@@ -99,6 +99,11 @@ public class ArticulationEndEffectorController : MonoBehaviour
 
     public void SetTargetDeltaPose(Vector3 linearDelta, Vector3 angularDelta) 
     {
+        if (linearDelta == Vector3.zero && angularDelta == Vector3.zero)
+        {
+            return;
+        }
+
         // Update current target pose in world frame
         (targetPosition, targetRotation) = Utils.LocalToWorldPose(
             baseTransform, targetLocalPosition, targetLocalRotation
