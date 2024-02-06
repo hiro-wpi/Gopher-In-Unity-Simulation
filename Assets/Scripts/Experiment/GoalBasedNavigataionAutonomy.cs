@@ -1,6 +1,11 @@
+// using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+
+// using System.Numerics;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 /// <summary>
 ///    Goal Based Navigataion Autonomy
@@ -35,13 +40,11 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     // State Machines
     private enum State { SetFirstPatcient, CheckPatcient, GoToPharmacy, GetMedicine, GoDeliverMedicine, ChangePatient, Done};
-    private State state = State.CheckPatcient;
+    private State state = State.SetFirstPatcient;
 
     private enum Patcient { Patcient1, Patcient2, Patcient3, Patcient4};
 
     private Patcient currentPatcient = Patcient.Patcient1;
-
-    private bool reachedGoal = false;
 
 
     // Patcient Navigation Waypoints
@@ -53,9 +56,28 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     public Vector3 pharmacyRotation;
 
 
-    
+    // Tracked Trajectory of the Robot
 
+    private List<Vector3> waypointPositions = new List<Vector3>();
+    private List<Vector3> waypointRotations = new List<Vector3>();
 
+    private bool waypointReachedGoal = false; // This is for just reaching successive points on the list
+    private bool reachedGoal = false;  // reached the whole goal
+
+    void Start()
+    {
+        Vector3 p1Position = new Vector3(-8.393f, 0.1f, 5.95f);
+        Vector3 p1Rotation = new Vector3(0f, 90f, 0f);
+
+        Vector3 p2Position = new Vector3(-7.5f, 0.1f, 8.1f);
+        Vector3 p2Rotation = new Vector3(0f, -90f, 0f);
+
+        waypointPositions.Add(p2Position);
+        waypointPositions.Add(p1Position);
+
+        waypointRotations.Add(p2Rotation);
+        waypointRotations.Add(p1Rotation);
+    }
 
 
     void OnEnable()
@@ -103,6 +125,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
         // Reset the reached goal flag
         reachedGoal = false;
+        waypointReachedGoal = false;
 
         // Convert from euler angles to quaternion
         Quaternion worldRotation = Quaternion.Euler(worldRotationEuler);
@@ -131,6 +154,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         // Event will be called when the robot reaches the goal
         Debug.Log("Base reached goal");
         reachedGoal = true;
+        waypointReachedGoal = true;
     }
 
     // Update is called once per frame
@@ -192,9 +216,13 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return))
         {
             Debug.Log("Parmacy");
-            SetAutonomyGoal(pharmacyPosition, pharmacyRotation);
+            // SetAutonomyGoal(pharmacyPosition, pharmacyRotation);
+
+            StartCoroutine(FollowWaypoints());
             
         }
+
+        // ScheulderTest();
 
         // // Keyboard press space to emergency stop
         // if (Input.GetKeyDown(KeyCode.Space))
@@ -206,6 +234,73 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         
 
     }
+
+    private void ScheulderTest()
+    {
+        switch (state)
+        {
+            case State.SetFirstPatcient:
+                Debug.Log("Set the first Patcient");
+                SetAutonomyGoal(patcientPosition[(int)currentPatcient], patcientRotations[(int)currentPatcient]);
+                state = State.CheckPatcient;
+                break;
+
+            case State.CheckPatcient:
+
+                if(reachedGoal)
+                {
+                    state = State.ChangePatient;
+                }
+                break;
+
+            case State.ChangePatient:
+                
+                // Change the patient
+                // Debug.Log("Changing Patient");
+
+                // if all the patients have been checked, we are done
+                // if we have changed the patient, go back to check the patient
+                switch (currentPatcient)
+                {
+                    case Patcient.Patcient1:
+                        // Set the next 
+                        Debug.Log("Changing to Patcient 2");
+                        currentPatcient = Patcient.Patcient2;
+                        SetAutonomyGoal(patcientPosition[(int)currentPatcient], patcientRotations[(int)currentPatcient]);
+                        state = State.CheckPatcient;
+                        break;
+                    case Patcient.Patcient2:
+                        // Set the next patient
+                        Debug.Log("Changing to Patcient 3");
+                        currentPatcient = Patcient.Patcient3;
+                        SetAutonomyGoal(patcientPosition[(int)currentPatcient], patcientRotations[(int)currentPatcient]);
+                        state = State.CheckPatcient;
+                        break;
+                    case Patcient.Patcient3:
+                        // Set the next patient
+                        Debug.Log("Changing to Patcient 4");
+                        currentPatcient = Patcient.Patcient4;
+                        SetAutonomyGoal(patcientPosition[(int)currentPatcient], patcientRotations[(int)currentPatcient]);
+                        state = State.CheckPatcient;
+                        break;
+                    case Patcient.Patcient4:
+                        // Set the next patient
+                        Debug.Log("All patients have been checked");
+                        state = State.Done;
+                        break;
+                    default:
+                        break;
+                }
+
+                break;
+            
+            case State.Done:
+                break;
+                
+        }
+        
+    }
+
 
     // State Machine   //////////////////////////////////////////////////////////////////////////////////////////
     private void ScheuldeNextTask()
@@ -328,5 +423,47 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    // New Method for Scheuling Task
+
+    // lets actually do a couroutine where we can actually have it handle the waypoints being played int he abck
+    IEnumerator FollowWaypoints()
+    {
+        // Set the first 1
+        Debug.Log("Start Motion");
+        // int i = 0;
+        // SetAutonomyGoal(waypointPositions[0], waypointRotations[0]);
+        // yield return null;
+
+        // for(int i = 1; waypointPositions.Count < i; i++ )
+        //     // Check that we have reached before moving on
+        //     if(waypointReachedGoal)
+        //     {
+        //         SetAutonomyGoal(waypointPositions[i], waypointRotations[i]);
+        //     }
+
+        // while(i < waypointPositions.Count)
+        // {
+        //     // If we reached the waypoint
+        //     if(waypointReachedGoal)
+        //     {
+        //         // Go to the next waypoint
+        //         if(i > )
+        //         i += 1;
+        //         SetAutonomyGoal(waypointPositions[i], waypointRotations[i]);
+                
+        //         Debug.Log("Going to next waypoint");
+        //     }
+        //     yield return null;
+        // }
+
+        for(int i = 0; i < waypointPositions.Count; i++)
+        {
+            Debug.Log("Going to Waypoint");
+            SetAutonomyGoal(waypointPositions[i], waypointRotations[i]);
+            yield return new WaitUntil(() => waypointReachedGoal);
+        }
+        reachedGoal = true;
     }
 }
