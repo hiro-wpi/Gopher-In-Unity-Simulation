@@ -69,9 +69,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     private GameObject[] patientMedCarts;
 
-    public GameObject[] graspableMeds;
-
-
+    // public GameObject[] graspableMeds;
+    private List<GameObject> graspableMeds = new List<GameObject>();
 
     void Start()
     {
@@ -101,6 +100,12 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             robot = GameObject.Find("Gopher(Clone)");
             
             // Set the articulation base controller
+            if(robot == null)
+            {
+                Debug.Log("No robot found");
+                return;
+            }
+
             baseController = robot.GetComponentInChildren<ArticulationBaseController>();
 
             // Constantly subscribe to the event to make our trajectory visible
@@ -123,7 +128,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
         }
 
-        if(graspableMeds == null || graspableMeds.Length == 0)
+        if(graspableMeds.Count == 0)
         {
             GameObject[] graspable = GameObject.FindGameObjectsWithTag("GraspableObject");
 
@@ -136,9 +141,9 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     filteredGraspable.Add(obj);
                 }
             }
-            graspableMeds = filteredGraspable.ToArray();
+            graspableMeds = filteredGraspable;
 
-            if(graspableMeds.Length == 0)
+            if(graspableMeds.Count == 0)
             {
                 Debug.Log("No meds found");;
             }
@@ -148,7 +153,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             }
         }
 
-        // ScheuldeNextTask();
+        
         
         // Keyboard press enter to start autonomy
         if (Input.GetKeyDown(KeyCode.Return))
@@ -174,6 +179,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             GameObject med = ChooseMedToPickUp();
         }
 
+        ScheuldeNextTask();
 
     }
 
@@ -222,8 +228,11 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // Go to the first patient
                 Debug.Log("Setting the first patient");
 
-                posTraj = transfereWaypointPositions;
-                rotTraj = transferWaypointRotations;
+                
+
+
+                posTraj = new List<Vector3>(transfereWaypointPositions);
+                rotTraj = new List<Vector3>(transferWaypointRotations);
                 posTraj.Add(patcientPosition[(int)currentPatcient]);
                 rotTraj.Add(patcientRotations[(int)currentPatcient]);
                 SetWaypoints(posTraj, rotTraj);
@@ -239,7 +248,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 {
                     Debug.Log("Checking the patient");
                     // TODO: Do this actually properly
-                    if (currentPatcient == Patcient.Patcient2)
+                    if (true)
                     {
                         Debug.Log("Paticeint 2 is missing their meds, going to the pharmacy");
                         
@@ -287,8 +296,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 if (gotMedicine)
                 {
                     Debug.Log("Got Medicine");
-                    posTraj = transfereWaypointPositions;
-                    rotTraj = transferWaypointRotations;
+                    posTraj = new List<Vector3>(transfereWaypointPositions);
+                    rotTraj = new List<Vector3>(transferWaypointRotations);
                     posTraj.Add(patcientPosition[(int)currentPatcient]);
                     rotTraj.Add(patcientRotations[(int)currentPatcient]);
                     SetWaypoints(posTraj, rotTraj);
@@ -496,6 +505,9 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     {
         // Get a med
         GameObject med = graspableMeds[0];
+
+        // Remvove the med from the list
+        graspableMeds.Remove(med);
 
         // Generate AR for the nearest med
         GenerateARForMed(med);
