@@ -23,6 +23,8 @@ public class ArmAutonomy : MonoBehaviour
     private bool hasNewGoal = false;
     private GameObject goalObject;
 
+    public bool gotTrajectory = false;
+
     private enum AutonomyState
     {
         SelectObject,
@@ -51,6 +53,7 @@ public class ArmAutonomy : MonoBehaviour
         if (armController != null)
         {
             armController.OnAutonomyComplete += OnArmReachedGoal;
+            armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
         }
     }
 
@@ -75,6 +78,8 @@ public class ArmAutonomy : MonoBehaviour
 
     private void OnArmTrajectoryGenerated()
     {
+        Debug.Log("We got a trajectory");
+        gotTrajectory = true;
         var (time, angles, velocities, accelerations) = 
             armController.GetAutonomyTrajectory();
 
@@ -97,6 +102,8 @@ public class ArmAutonomy : MonoBehaviour
                 arGripper
             );
         }
+
+        armController.MoveToAutonomyTarget();
     }
 
     private void OnObjectSelected(GameObject gameObject, Vector3 position)
@@ -127,26 +134,33 @@ public class ArmAutonomy : MonoBehaviour
                 if (hasNewGoal)
                 {
                     hasNewGoal = false;
-                    (hoverTransform, graspTransform) = autoGrasping.GetHoverAndGraspTransforms(selectedObject);
                     reachedGoal = false;
+                    (hoverTransform, graspTransform) = autoGrasping.GetHoverAndGraspTransforms(selectedObject);
                     currentState = AutonomyState.FirstHoverOverObject;
                 }
                 break;
             
             case AutonomyState.FirstHoverOverObject:
-                armController.SetAutonomyTarget(hoverTransform.position, hoverTransform.rotation);
-                armController.MoveToAutonomyTarget(); 
+                if(gotTrajectory == false)
+                {
+                    //call it again
+                    armController.SetAutonomyTarget(hoverTransform.position, hoverTransform.rotation);
+                }
+                 
                 if (reachedGoal)
                 {
+                    Debug.Log("Reached hover goal");
                     reachedGoal = false;
                     armController.SetGripperPosition(0.0f);
                     currentState = AutonomyState.GraspObject;
+                    Debug.Log("Switching state to grasp");
                 }
                 break;
 
             case AutonomyState.GraspObject:
+                Debug.Log("Ready to grasp object");
                 armController.SetAutonomyTarget(graspTransform.position, graspTransform.rotation);
-                armController.MoveToAutonomyTarget();
+                // armController.MoveToAutonomyTarget();
                 if (reachedGoal)
                 {
                     reachedGoal = false;

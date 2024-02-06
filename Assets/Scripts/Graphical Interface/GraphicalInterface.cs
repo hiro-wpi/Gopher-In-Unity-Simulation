@@ -322,7 +322,7 @@ public class GraphicalInterface : MonoBehaviour
         // UpdateControlMode(gopherControl.MainCameraEnabled, gopherControl.ControlMode);
         UpdateCameraViewing(cameraIndex);
         // location
-        UpdateLocalization(localization.Position, localization.RotationEuler);
+        // UpdateLocalization(localization.Position, localization.RotationEuler);
     }
 
     private void UpdateLinearSpeed(float linearSpeed, float multiplier=1f)
