@@ -213,16 +213,16 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         // }
 
         // Press Enter to send the robot to the pharmacy
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            Debug.Log("Parmacy");
-            // SetAutonomyGoal(pharmacyPosition, pharmacyRotation);
+        // if (Input.GetKeyDown(KeyCode.Return))
+        // {
+        //     Debug.Log("Parmacy");
+        //     // SetAutonomyGoal(pharmacyPosition, pharmacyRotation);
 
-            StartCoroutine(FollowWaypoints());
+        //     StartCoroutine(FollowWaypoints());
             
-        }
+        // }
 
-        // ScheulderTest();
+        ScheulderTest();
 
         // // Keyboard press space to emergency stop
         // if (Input.GetKeyDown(KeyCode.Space))
