@@ -67,7 +67,11 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     private bool reachedGoal = false;  // reached the whole goal
 
 
-    public GameObject[] patientMedCarts;
+    private GameObject[] patientMedCarts;
+
+    public GameObject[] graspableMeds;
+
+
 
     void Start()
     {
@@ -107,23 +111,9 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             // ScheuldeNextTask();
         }
 
-        if(patientMedCarts.Length == 0)
+        if(patientMedCarts == null)
         {
             patientMedCarts = GameObject.FindGameObjectsWithTag("GoalObject");
-
-            foreach(GameObject cart in patientMedCarts)
-            {
-                var type = GenerateARGameObject.ARObjectType.Cube;
-                arGenerator.Instantiate(
-                    cart,
-                    type,
-                    new Vector3(0, 0.93f, -0.02f),
-                    new Vector3(0, 0, 0),
-                    new Vector3(0.3f, 0.1f, 0.5f),
-                    Color.green,
-                    0.5f
-                );
-            }
             
 
             if(patientMedCarts.Length == 0)
@@ -131,18 +121,59 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 Debug.Log("No carts found");;
             }
 
-
         }
 
+        if(graspableMeds == null || graspableMeds.Length == 0)
+        {
+            GameObject[] graspable = GameObject.FindGameObjectsWithTag("GraspableObject");
 
-        
-        ScheuldeNextTask();
+            // Filter the graspable object for those with the script "AutoGraspable"
+            List<GameObject> filteredGraspable = new List<GameObject>();
+            foreach(GameObject obj in graspable)
+            {
+                if(obj.GetComponent<AutoGraspable>() != null)
+                {
+                    filteredGraspable.Add(obj);
+                }
+            }
+            graspableMeds = filteredGraspable.ToArray();
+
+            if(graspableMeds.Length == 0)
+            {
+                Debug.Log("No meds found");;
+            }
+            else
+            {
+                Debug.Log("Meds found");
+            }
+        }
+
+        // ScheuldeNextTask();
         
         // Keyboard press enter to start autonomy
-        // if (Input.GetKeyDown(KeyCode.Return))
-        // {
-                // TODO ADD WHAT YOU NEED FOR TESTING
-        // }
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            GenerateARForNearestCart();
+        }
+
+        // Keyborad press C change the color of the nearest cart
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            ChangeNearestCartARColor(Color.green);
+        }
+
+        // Keyborad press X change the color of the nearest cart
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            ChangeNearestCartARColor(Color.red);
+        }
+
+        // Keyboard press V to change the color of the nearest med
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            GameObject med = ChooseMedToPickUp();
+        }
+
 
     }
 
@@ -389,8 +420,94 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         baseController.MoveToAutonomyTarget();
     }
 
-    // private void StartFollowingWaypoints()
-    // {
-    //     StartCoroutine(FollowWaypoints());
-    // }
+    // AR Functions //////////////////////////////////////////////////////////////////////////////////////////
+
+    // Generate AR for the nearest cart
+    private void GenerateARForNearestCart()
+    {
+        // Get the nearest cart relative to the robot
+        GameObject nearestCart = GetNearestCart();
+
+        // Generate AR for the nearest cart
+        var type = GenerateARGameObject.ARObjectType.Cube;
+            arGenerator.Instantiate(
+                nearestCart,
+                type,
+                new Vector3(0, 0.93f, -0.02f),
+                new Vector3(0, 0, 0),
+                new Vector3(0.3f, 0.1f, 0.5f),
+                Color.yellow,
+                0.5f
+            );
+    }
+
+    // Get the nearest cart
+    private GameObject GetNearestCart()
+    {
+        // Get the nearest cart relative to the robot
+        GameObject nearestCart = patientMedCarts[0];
+        float nearestDistance = Vector3.Distance(nearestCart.transform.position, robot.transform.position);
+        foreach(GameObject cart in patientMedCarts)
+        {
+            float distance = Vector3.Distance(cart.transform.position, robot.transform.position);
+            if(distance < nearestDistance)
+            {
+                nearestCart = cart;
+                nearestDistance = distance;
+            }
+        }
+
+        return nearestCart;
+    }
+
+    
+    private void ChangeCartARColor(GameObject cart, Color color)
+    {
+        List<GameObject> arFeatures = arGenerator.GetARGameObject(cart);
+
+        if(arFeatures.Count == 1)
+        {
+            // if there is only one AR feature, change the color
+            arFeatures[0].GetComponent<Renderer>().material.color = color;
+        }
+    }
+
+    private void ChangeNearestCartARColor(Color color)
+    {
+        GameObject nearestCart = GetNearestCart();
+        ChangeCartARColor(nearestCart, color);
+    }
+
+    private void GenerateARForMed(GameObject med)
+    {
+        var type = GenerateARGameObject.ARObjectType.Cube;
+        arGenerator.Instantiate(
+            med,
+            type,
+            new Vector3(0, 0.045f, 0),
+            new Vector3(0, 0, 0),
+            new Vector3(0.06f, 0.06f, 0.1f),
+            Color.green,
+            0.25f
+        );
+    }
+
+    private GameObject ChooseMedToPickUp()
+    {
+        // Get a med
+        GameObject med = graspableMeds[0];
+
+        // Generate AR for the nearest med
+        GenerateARForMed(med);
+
+        Debug.Log("Med Chosen");
+
+        return med;
+    }
+
+
+
+
+
+
 }
