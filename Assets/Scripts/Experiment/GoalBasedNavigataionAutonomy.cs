@@ -158,19 +158,24 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         // Keyboard press enter to start autonomy
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            GenerateARForNearestCart();
+            // Set the ar for the current
+
+            Vector3 patientPos = patcientPosition[(int)currentPatcient];
+            GenerateARForNearestCart(patientPos);
         }
 
         // Keyborad press C change the color of the nearest cart
         if (Input.GetKeyDown(KeyCode.C))
         {
-            ChangeNearestCartARColor(Color.green);
+            Vector3 patientPos = patcientPosition[(int)currentPatcient];
+            ChangeNearestCartARColor(patientPos, Color.green);
         }
 
         // Keyborad press X change the color of the nearest cart
         if (Input.GetKeyDown(KeyCode.X))
         {
-            ChangeNearestCartARColor(Color.red);
+            Vector3 patientPos = patcientPosition[(int)currentPatcient];
+            ChangeNearestCartARColor(patientPos, Color.red);
         }
 
         // Keyboard press V to change the color of the nearest med
@@ -218,24 +223,25 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     private void ScheuldeNextTask()
     {
         List<Vector3> posTraj = new List<Vector3>();
-
         List<Vector3> rotTraj = new List<Vector3>();
+        Vector3 patientPos;
+
         switch (state)
         {   
             case State.SetFirstPatcient:
 
                 // Autonomy starts here
-                // Go to the first patient
-                Debug.Log("Setting the first patient");
-
                 
-
-
+                // Create the waypoints to get to the first patcient
                 posTraj = new List<Vector3>(transfereWaypointPositions);
                 rotTraj = new List<Vector3>(transferWaypointRotations);
                 posTraj.Add(patcientPosition[(int)currentPatcient]);
                 rotTraj.Add(patcientRotations[(int)currentPatcient]);
                 SetWaypoints(posTraj, rotTraj);
+
+                // Create AR for the cart nearest to the patcient
+                patientPos = patcientPosition[(int)currentPatcient];
+                GenerateARForNearestCart(patientPos);
 
                 state = State.CheckPatcient;
 
@@ -248,25 +254,27 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 {
                     Debug.Log("Checking the patient");
                     // TODO: Do this actually properly
-                    if (true)
-                    {
-                        Debug.Log("Paticeint 2 is missing their meds, going to the pharmacy");
-                        
+                    if (currentPatcient == Patcient.Patcient2)
+                    {   
+                        // Create the waypoints to get to the pharmacy
                         posTraj = new List<Vector3>{transfereWaypointPositions[1],transfereWaypointPositions[0]} ;
                         rotTraj = new List<Vector3>{transferReturnWaypointRotations[1], transferReturnWaypointRotations[0]};
-                        // List<Vector3> posTraj = transfereWaypointPositions;
-                        // List<Vector3> rotTraj = transferReturnWaypointRotations;
-
                         posTraj.Add(pharmacyPosition);
                         rotTraj.Add(pharmacyRotation);
-
                         SetWaypoints(posTraj, rotTraj);
+
+                        // Change AR to indicate an issue
+                        patientPos = patcientPosition[(int)currentPatcient];
+                        ChangeNearestCartARColor(patientPos, Color.red);
 
                         state = State.GoToPharmacy;
                     }
                     else
                     {
-                        Debug.Log("Patient has all their meds, going to the next patient");
+                        // Change AR to indicate no issue
+                        patientPos = patcientPosition[(int)currentPatcient];
+                        ChangeNearestCartARColor(patientPos, Color.green);
+
                         state = State.ChangePatient;
                     }
                     // state = State.ChangePatient;
@@ -280,7 +288,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // if we arrive at the pharmacy, get the medicine
                 if (reachedGoal)
                 {
-                    Debug.Log("Going to the pharmacy");
+                    GameObject med = ChooseMedToPickUp();
                     state = State.GetMedicine;
                 }
                 
@@ -313,7 +321,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // if we have delivered the medicine, change the patient
                 if (reachedGoal)
                 {
-                    Debug.Log("Delivering Medicine");
+                    patientPos = patcientPosition[(int)currentPatcient];
+                    ChangeNearestCartARColor(patientPos, Color.green);
                     state = State.ChangePatient;
                 }
                 
@@ -346,12 +355,19 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         // Set the next patient
                         Debug.Log("All patients have been checked");
                         state = State.Done;
+                        return;
                         break;
                     default:
                         break;
                 }
 
+                // Go to the next patient
                 SetWaypoints(patcientPosition[(int)currentPatcient], patcientRotations[(int)currentPatcient]);
+
+                // Generate AR for the nearest cart
+                patientPos = patcientPosition[(int)currentPatcient];
+                GenerateARForNearestCart(patientPos);
+                
                 state = State.CheckPatcient;
 
                 break;
@@ -432,10 +448,10 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     // AR Functions //////////////////////////////////////////////////////////////////////////////////////////
 
     // Generate AR for the nearest cart
-    private void GenerateARForNearestCart()
+    private void GenerateARForNearestCart(Vector3 position)
     {
         // Get the nearest cart relative to the robot
-        GameObject nearestCart = GetNearestCart();
+        GameObject nearestCart = GetNearestCart(position);
 
         // Generate AR for the nearest cart
         var type = GenerateARGameObject.ARObjectType.Cube;
@@ -451,14 +467,14 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     }
 
     // Get the nearest cart
-    private GameObject GetNearestCart()
+    private GameObject GetNearestCart(Vector3 position)
     {
         // Get the nearest cart relative to the robot
         GameObject nearestCart = patientMedCarts[0];
-        float nearestDistance = Vector3.Distance(nearestCart.transform.position, robot.transform.position);
+        float nearestDistance = Vector3.Distance(nearestCart.transform.position, position);
         foreach(GameObject cart in patientMedCarts)
         {
-            float distance = Vector3.Distance(cart.transform.position, robot.transform.position);
+            float distance = Vector3.Distance(cart.transform.position, position);
             if(distance < nearestDistance)
             {
                 nearestCart = cart;
@@ -469,6 +485,11 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         return nearestCart;
     }
 
+    private GameObject GetNearestCart()
+    {
+        return GetNearestCart(robot.transform.position);
+    }
+    
     
     private void ChangeCartARColor(GameObject cart, Color color)
     {
@@ -481,9 +502,9 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         }
     }
 
-    private void ChangeNearestCartARColor(Color color)
+    private void ChangeNearestCartARColor(Vector3 position, Color color)
     {
-        GameObject nearestCart = GetNearestCart();
+        GameObject nearestCart = GetNearestCart(position);
         ChangeCartARColor(nearestCart, color);
     }
 
