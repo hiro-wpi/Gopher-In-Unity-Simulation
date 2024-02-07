@@ -60,7 +60,7 @@ public class CutscenePlanner : MonoBehaviour
                 break;
             
             case CutsceneState.GoingToHome:
-                GoingToHome();
+                GoingToHome(headTurnSpeed);
                 break;
 
             case CutsceneState.StayingAtHome:
@@ -148,7 +148,7 @@ public class CutscenePlanner : MonoBehaviour
         currentState = CutsceneState.GoingToHome;
     }
 
-    private void GoingToHome()
+    private void GoingToHome(float headSpeed)
     {
         ikController.LookAtTarget(
             medicineHeadPositions[randomMedicine].position,
@@ -171,13 +171,14 @@ public class CutscenePlanner : MonoBehaviour
             medicineHandPositions.RemoveAt(randomMedicine);
             medicineBottles.RemoveAt(randomMedicine);
 
+            ikController.LookAtTarget(monitor.position, headSpeed);
+
             currentState = CutsceneState.WaitingBeforeMedicine;
         }
     }
 
     private void SendToHome(float headSpeed, float armSpeed)
     {
-        ikController.LookAtTarget(monitor.position, headSpeed);
         ikController.MoveLeftHand(
             motionType,
             leftHandHome.position,
@@ -190,5 +191,6 @@ public class CutscenePlanner : MonoBehaviour
             positionSpeed: armSpeed,
             height: 0.1f
         );
+        ikController.LookAtTarget(monitor.position, headSpeed);
     }
 }

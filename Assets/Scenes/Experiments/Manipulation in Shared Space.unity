@@ -992,6 +992,7 @@ MonoBehaviour:
   baseController: {fileID: 0}
   armController: {fileID: 0}
   autoGrapsing: {fileID: 0}
+  robot: {fileID: 0}
   arGripper: {fileID: 2710091181654038673, guid: 735101cad7c4b704c802695827135a92, type: 3}
 --- !u!114 &279664480
 MonoBehaviour:
@@ -2356,29 +2357,29 @@ MonoBehaviour:
   DynamicObjectSpawnArray: []
   TaskObjectSpawnArray:
   - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
-    position: {x: -5.15, y: 0.8, z: -12.8}
+    position: {x: -5.135, y: 0.8, z: -12.8}
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
-    position: {x: -5.15, y: 0.8, z: -12.7}
+    position: {x: -5.135, y: 0.8, z: -12.7}
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
-    position: {x: -5.15, y: 0.8, z: -12.6}
+    position: {x: -5.135, y: 0.8, z: -12.6}
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
-    position: {x: -5.15, y: 0.8, z: -12.5}
+    position: {x: -5.135, y: 0.8, z: -12.5}
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   GoalObjectSpawnArray:
   - gameObject: {fileID: 4057350141855912022, guid: 9f582b48d920422749e33fcbc2bde462, type: 3}
-    position: {x: -5.319, y: 0.8000001, z: -13.253}
+    position: {x: -5.165, y: 0.8000001, z: -13.05}
     rotation: {x: 0, y: 0, z: 0}
     trajectory: []
   robotSpawnArray:
   - gameObject: {fileID: 702946891374405994, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
-    position: {x: -6, y: 0, z: -12.75}
+    position: {x: -5.8, y: 0, z: -12.75}
     rotation: {x: 0, y: 90, z: 0}
     trajectory: []
   GUI: {fileID: 279664474}
@@ -2435,10 +2436,7 @@ MonoBehaviour:
   displayRect: {fileID: 271174651}
   highlightObject: {fileID: 279664475}
   arGripper: {fileID: 2710091181654038673, guid: 735101cad7c4b704c802695827135a92, type: 3}
-  selectedObject: {fileID: 0}
-  hoverTransform: {fileID: 0}
-  graspTransform: {fileID: 0}
-  reachedGoal: 0
+  hasNewGoal: 0
 --- !u!1 &824941344
 GameObject:
   m_ObjectHideFlags: 0

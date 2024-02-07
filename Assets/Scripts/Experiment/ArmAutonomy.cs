@@ -16,22 +16,22 @@ public class ArmAutonomy : MonoBehaviour
     private Camera cam;
     [SerializeField] private HighlightObjectOnCanvas highlightObject;
     [SerializeField] private GameObject arGripper;
-    [SerializeField] private GameObject selectedObject;
-    [SerializeField] private Transform hoverTransform;
-    [SerializeField] private Transform graspTransform;
-    [SerializeField] private bool reachedGoal = false;
-    private bool hasNewGoal = false;
+    private GameObject selectedObject;
+    private GameObject previousSelectedObject;
+    private Transform hoverTransform;
+    private Transform graspTransform;
+    private Transform goalHoverTransform;
+    private Transform goalGraspTransform;
+    [SerializeField] private bool hasNewGoal = false;
     private GameObject goalObject;
-
-    public bool gotTrajectory = false;
 
     private enum AutonomyState
     {
-        SelectObject,
         FirstHoverOverObject,
         GraspObject,
         SecondHoverOverObject,
-        DeliverToGoal
+        DeliverToGoal,
+        OpenGripperAtGoal
     }
     private AutonomyState currentState;
 
@@ -42,7 +42,7 @@ public class ArmAutonomy : MonoBehaviour
         armWaypointParent.transform.localPosition = Vector3.zero;
         armWaypointParent.transform.localRotation = Quaternion.identity;
 
-        currentState = AutonomyState.SelectObject;
+        currentState = AutonomyState.FirstHoverOverObject;
     }
 
     void OnEnable()
@@ -52,8 +52,8 @@ public class ArmAutonomy : MonoBehaviour
 
         if (armController != null)
         {
-            armController.OnAutonomyComplete += OnArmReachedGoal;
             armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
+            // armController.OnAutonomyComplete += OnArmAutonomyComplete;
         }
     }
 
@@ -64,22 +64,23 @@ public class ArmAutonomy : MonoBehaviour
 
         if (armController != null)
         {
-            armController.OnAutonomyComplete -= OnArmReachedGoal;
-            armController.OnAutonomyTrajectory -= OnArmTrajectoryGenerated;
+            armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
+            // armController.OnAutonomyComplete += OnArmAutonomyComplete;
         }
     }
 
-    // reachedGoal not being set to true <-- FIX
-    private void OnArmReachedGoal()
-    {
-        Debug.Log("Arm Reached Goal");
-        reachedGoal = true;
-    }
-
+    // private void OnArmAutonomyComplete()
+    // {
+    //     Debug.Log("Arm Autonomy Complete");
+    //     foreach (Transform child in armWaypointParent.transform)
+    //     {
+    //         arGenerator.Destroy(child.gameObject);
+    //         Destroy(child.gameObject);
+    //     }
+    // }
+    
     private void OnArmTrajectoryGenerated()
     {
-        Debug.Log("We got a trajectory");
-        gotTrajectory = true;
         var (time, angles, velocities, accelerations) = 
             armController.GetAutonomyTrajectory();
 
@@ -102,8 +103,6 @@ public class ArmAutonomy : MonoBehaviour
                 arGripper
             );
         }
-
-        armController.MoveToAutonomyTarget();
     }
 
     private void OnObjectSelected(GameObject gameObject, Vector3 position)
@@ -112,87 +111,79 @@ public class ArmAutonomy : MonoBehaviour
         {
             return;
         }
+        
+        GameObject previousObject = selectedObject;
 
         // Allow user to select a new goal and clear the previous goal <-- FIX
         if (selectedObject != null)
         {
-            highlightObject.RemoveHighlight(selectedObject);
             autoGrasping.CancelCurrentTargetObject();
             armController.CancelAutonomyTarget();
+            highlightObject.RemoveHighlight(previousObject);
+            armController.SetGripperPosition(0.0f);
+            hasNewGoal = true;
+            currentState = AutonomyState.FirstHoverOverObject;
         }
 
         selectedObject = gameObject;
-        hasNewGoal = true;
         highlightObject.Highlight(selectedObject, cam, displayRect);
+        (hoverTransform, graspTransform) = autoGrasping.GetHoverAndGraspTransforms(selectedObject);
+        hasNewGoal = true;
+
+        previousSelectedObject = selectedObject;
     }
 
     private void TaskSchedule()
     {
         switch (currentState)
-        {
-            case AutonomyState.SelectObject:
-                if (hasNewGoal)
+        {   
+            case AutonomyState.FirstHoverOverObject:
+                armController.SetAutonomyTarget(hoverTransform.position, hoverTransform.rotation);
+                if (hasNewGoal && Input.GetKeyDown(KeyCode.Space))
                 {
                     hasNewGoal = false;
-                    reachedGoal = false;
-                    (hoverTransform, graspTransform) = autoGrasping.GetHoverAndGraspTransforms(selectedObject);
-                    currentState = AutonomyState.FirstHoverOverObject;
-                }
-                break;
-            
-            case AutonomyState.FirstHoverOverObject:
-                if(gotTrajectory == false)
-                {
-                    //call it again
-                    armController.SetAutonomyTarget(hoverTransform.position, hoverTransform.rotation);
-                }
-                 
-                if (reachedGoal)
-                {
-                    Debug.Log("Reached hover goal");
-                    reachedGoal = false;
-                    armController.SetGripperPosition(0.0f);
+                    armController.MoveToAutonomyTarget();
                     currentState = AutonomyState.GraspObject;
-                    Debug.Log("Switching state to grasp");
                 }
                 break;
 
             case AutonomyState.GraspObject:
-                Debug.Log("Ready to grasp object");
                 armController.SetAutonomyTarget(graspTransform.position, graspTransform.rotation);
-                // armController.MoveToAutonomyTarget();
-                if (reachedGoal)
+
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    reachedGoal = false;
-                    armController.SetGripperPosition(1.0f);
+                    armController.MoveToAutonomyTarget();
                     currentState = AutonomyState.SecondHoverOverObject;
                 }
                 break; 
 
             case AutonomyState.SecondHoverOverObject:
                 armController.SetAutonomyTarget(hoverTransform.position, hoverTransform.rotation);
-                armController.MoveToAutonomyTarget();
-                if (reachedGoal)
+                
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    reachedGoal = false;
+                    armController.SetGripperPosition(1.0f);
+                    armController.MoveToAutonomyTarget();
                     currentState = AutonomyState.DeliverToGoal;
                 }
                 break;
             
             case AutonomyState.DeliverToGoal:
-                Debug.Log("Entered Goal Delivery");
+                armController.SetAutonomyTarget(goalHoverTransform.position, goalHoverTransform.rotation);
 
-                // Deliver to goal position <-- FIX
-                goalObject = GameObject.Find("Wooden Box(Clone)");
-                (hoverTransform, graspTransform) = autoGrasping.GetHoverAndGraspTransforms(goalObject);
-                armController.SetAutonomyTarget(hoverTransform.position, hoverTransform.rotation);
-                armController.MoveToAutonomyTarget();
-
-                if (reachedGoal)
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    armController.MoveToAutonomyTarget();
+                    currentState = AutonomyState.OpenGripperAtGoal;
+                }
+                break;
+            
+            case AutonomyState.OpenGripperAtGoal:
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
                     armController.SetGripperPosition(0.0f);
-                    Debug.Log("Exiting Goal Delivery");
-                    currentState = AutonomyState.SelectObject;
+                    highlightObject.RemoveHighlight(selectedObject);
+                    currentState = AutonomyState.FirstHoverOverObject;
                 }
                 break;
         }
@@ -211,7 +202,6 @@ public class ArmAutonomy : MonoBehaviour
                 armController = rightArmHardware.GetComponentInChildren<ArticulationArmController>();
                 autoGrasping = rightArmAutonomy.GetComponentInChildren<AutoGrasping>();
                 armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
-                armController.OnAutonomyComplete += OnArmReachedGoal;
             }
         }
 
@@ -226,15 +216,18 @@ public class ArmAutonomy : MonoBehaviour
             }
         }
 
+        goalObject = GameObject.Find("Experiment Objects/Goal Medicine");
+        (goalHoverTransform, goalGraspTransform) = autoGrasping.GetHoverAndGraspTransforms(goalObject);
+
         // Allow user to stop arm motion and remove highlight only when in valid state <-- FIX
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Return))
         {
-            if (currentState == AutonomyState.SelectObject || currentState == AutonomyState.FirstHoverOverObject)
-            {
-                autoGrasping.CancelCurrentTargetObject();
-                armController.CancelAutonomyTarget();
-                highlightObject.RemoveHighlight(selectedObject);
-            }
+            autoGrasping.CancelCurrentTargetObject();
+            armController.CancelAutonomyTarget();
+            highlightObject.RemoveHighlight(selectedObject);
+            armController.SetGripperPosition(0.0f);
+            hasNewGoal = false;
+            currentState = AutonomyState.FirstHoverOverObject;
         }
 
         // State machine for tasks
