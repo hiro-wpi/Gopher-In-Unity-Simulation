@@ -111,8 +111,8 @@ public class ArmAutonomy : MonoBehaviour
                 arGenerator.Instantiate(
                     waypoint,
                     GenerateARGameObject.ARObjectType.Sphere,
-                    color: Color.blue,
-                    transparency: 0.25f,
+                    color: Color.red,
+                    transparency: 0.35f,
                     scale: new Vector3(0.05f, 0.05f, 0.05f)
                 );
             }

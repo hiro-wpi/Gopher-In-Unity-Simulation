@@ -12,6 +12,12 @@ public class CutscenePlanner : MonoBehaviour
     [SerializeField] private Transform rightHandHome;
     [SerializeField] private Transform leftHandRaise;
     [SerializeField] private Transform monitor;
+    [SerializeField] private GameObject handARPrefab;
+    private GameObject handAR;
+    private float handAROffset = -0.076144f;
+    [SerializeField] private GameObject eyeARPrefab;
+    private GameObject eyeAR;
+    private float eyeAROffset = 0.03f;
 
     [SerializeField] private List<Transform> medicineHandPositions = new(); 
     [SerializeField] private List<Transform> medicineHeadPositions = new();
@@ -96,17 +102,19 @@ public class CutscenePlanner : MonoBehaviour
         //     currentState = CutsceneState.GoingToMedicine;
         // }
 
-        // Check if there are more medicines to reach
         if (currentMedicineIndex < medicineHandPositions.Count)
         {
             ikController.LookAtTarget(medicineHeadPositions[currentMedicineIndex].position, headTurnSpeed);
+
             // ikController.MoveLeftHand(motionType, medicineHandPositions[currentMedicineIndex].position, positionSpeed: armMoveSpeed, height: 0.1f);
             ikController.MoveLeftHand(motionType, leftHandRaise.position, positionSpeed: armMoveSpeed, height: 0.1f);
+
+            handAR = Instantiate(handARPrefab, ikController.GetLeftHandIKTarget().position + new Vector3(handAROffset, 0f, 0f), handARPrefab.transform.rotation);
+            handAR.transform.SetParent(ikController.GetLeftHandIKTarget());
 
             currentState = CutsceneState.RaisingHand;
         }
 
-        // No more medicine to reach, go back to home
         else
         {
             SendToHome(headTurnSpeed, armMoveSpeed);
@@ -125,6 +133,9 @@ public class CutscenePlanner : MonoBehaviour
         raiseTimer = 0.0f;
 
         ikController.MoveLeftHand(motionType, medicineHandPositions[currentMedicineIndex].position, positionSpeed: armMoveSpeed, height: 0.1f);
+
+        eyeAR = Instantiate(eyeARPrefab, medicineBottles[currentMedicineIndex].transform.position + new Vector3(0f, eyeAROffset, 0f), eyeARPrefab.transform.rotation);
+        eyeAR.transform.SetParent(medicineBottles[currentMedicineIndex].transform);
 
         currentState = CutsceneState.GoingToMedicine;
     }
@@ -181,13 +192,16 @@ public class CutscenePlanner : MonoBehaviour
             ikController.OpenLeftHand();
             if (ikController.GetLeftHandIKTarget().childCount > 0)
             {
-                Transform child = ikController.GetLeftHandIKTarget().GetChild(0);
+                Transform child = ikController.GetLeftHandIKTarget().GetChild(1);
                 child.SetParent(null);
             }
 
             // medicineHeadPositions.RemoveAt(randomMedicine);
             // medicineHandPositions.RemoveAt(randomMedicine);
             // medicineBottles.RemoveAt(randomMedicine);
+            
+            Destroy(eyeAR);
+            Destroy(handAR);
             
             currentMedicineIndex++;
 
