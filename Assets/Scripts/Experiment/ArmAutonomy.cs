@@ -24,6 +24,8 @@ public class ArmAutonomy : MonoBehaviour
     private Transform goalGraspTransform;
     [SerializeField] private bool hasNewGoal = false;
     private GameObject goalObject;
+    private bool planFlag = true;
+    private bool completed = false;
 
     private enum AutonomyState
     {
@@ -53,31 +55,20 @@ public class ArmAutonomy : MonoBehaviour
         if (armController != null)
         {
             armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
-            // armController.OnAutonomyComplete += OnArmAutonomyComplete;
+            armController.OnAutonomyComplete += OnAutonomyCompleted;
         }
     }
 
     void OnDisable()
     {
-        // Unsubscribe from the static event to clean up
         objectSelector.OnObjectSelected -= OnObjectSelected;
 
         if (armController != null)
         {
-            armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
-            // armController.OnAutonomyComplete += OnArmAutonomyComplete;
+            armController.OnAutonomyTrajectory -= OnArmTrajectoryGenerated;
+            armController.OnAutonomyComplete -= OnAutonomyCompleted;
         }
     }
-
-    // private void OnArmAutonomyComplete()
-    // {
-    //     Debug.Log("Arm Autonomy Complete");
-    //     foreach (Transform child in armWaypointParent.transform)
-    //     {
-    //         arGenerator.Destroy(child.gameObject);
-    //         Destroy(child.gameObject);
-    //     }
-    // }
     
     private void OnArmTrajectoryGenerated()
     {
@@ -90,19 +81,53 @@ public class ArmAutonomy : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        foreach (var angle in angles)
+        for (int i = 0; i < time.Length; i++)
         {
-            GameObject waypoint = Instantiate(arGripper);
+            GameObject waypoint;
+            if (i == 0 || i == time.Length - 1)
+            {
+                waypoint = Instantiate(arGripper);
+            }
+            else
+            {
+                waypoint = new GameObject("waypoint" + i);
+            }
+            
+
             waypoint.transform.SetParent(armWaypointParent.transform);
 
             (waypoint.transform.position, waypoint.transform.rotation) =
-                armController.GetEETargetPose(angle);
-
-            arGenerator.Instantiate(
-                waypoint,
-                arGripper
-            );
+                armController.GetEETargetPose(angles[i]);
+            
+            if (i == 0 || i == time.Length - 1)
+            {
+                arGenerator.Instantiate(
+                    waypoint,
+                    arGripper
+                );
+            }
+            else 
+            {
+                arGenerator.Instantiate(
+                    waypoint,
+                    GenerateARGameObject.ARObjectType.Sphere,
+                    color: Color.blue,
+                    transparency: 0.25f,
+                    scale: new Vector3(0.05f, 0.05f, 0.05f)
+                );
+            }
         }
+    }
+
+    private void OnAutonomyCompleted()
+    {
+        completed = true;
+
+        foreach (Transform child in armWaypointParent.transform)
+        {
+            arGenerator.Destroy(child.gameObject);
+            Destroy(child.gameObject);
+        }        
     }
 
     private void OnObjectSelected(GameObject gameObject, Vector3 position)
@@ -114,7 +139,6 @@ public class ArmAutonomy : MonoBehaviour
         
         GameObject previousObject = selectedObject;
 
-        // Allow user to select a new goal and clear the previous goal <-- FIX
         if (selectedObject != null)
         {
             autoGrasping.CancelCurrentTargetObject();
@@ -122,6 +146,7 @@ public class ArmAutonomy : MonoBehaviour
             highlightObject.RemoveHighlight(previousObject);
             armController.SetGripperPosition(0.0f);
             hasNewGoal = true;
+            planFlag = true;
             currentState = AutonomyState.FirstHoverOverObject;
         }
 
@@ -138,43 +163,92 @@ public class ArmAutonomy : MonoBehaviour
         switch (currentState)
         {   
             case AutonomyState.FirstHoverOverObject:
-                armController.SetAutonomyTarget(hoverTransform.position, hoverTransform.rotation);
+                if (selectedObject == null)
+                {
+                    return;
+                }
+
+                if (planFlag)
+                {
+                    armController.SetAutonomyTarget(hoverTransform.position, hoverTransform.rotation);
+                    planFlag = false;
+                    completed = false;                    
+                }
+
                 if (hasNewGoal && Input.GetKeyDown(KeyCode.Space))
                 {
                     hasNewGoal = false;
                     armController.MoveToAutonomyTarget();
+                }
+
+                if (completed)
+                {
                     currentState = AutonomyState.GraspObject;
+                    planFlag = true;
                 }
                 break;
 
             case AutonomyState.GraspObject:
-                armController.SetAutonomyTarget(graspTransform.position, graspTransform.rotation);
+                if (planFlag)
+                {
+                    armController.SetAutonomyTarget(graspTransform.position, graspTransform.rotation);
+                    planFlag = false;
+                    completed = false;                    
+                }
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
+                    hasNewGoal = false;
                     armController.MoveToAutonomyTarget();
+                }
+
+                if (completed)
+                {
                     currentState = AutonomyState.SecondHoverOverObject;
+                    planFlag = true;
                 }
                 break; 
 
             case AutonomyState.SecondHoverOverObject:
-                armController.SetAutonomyTarget(hoverTransform.position, hoverTransform.rotation);
-                
+                if (planFlag)
+                {
+                    armController.SetAutonomyTarget(hoverTransform.position, hoverTransform.rotation);
+                    planFlag = false;
+                    completed = false;                    
+                }
+
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     armController.SetGripperPosition(1.0f);
+                    hasNewGoal = false;
                     armController.MoveToAutonomyTarget();
+                }
+
+                if (completed)
+                {
                     currentState = AutonomyState.DeliverToGoal;
+                    planFlag = true;
                 }
                 break;
             
             case AutonomyState.DeliverToGoal:
-                armController.SetAutonomyTarget(goalHoverTransform.position, goalHoverTransform.rotation);
+                if (planFlag)
+                {
+                    armController.SetAutonomyTarget(goalHoverTransform.position, goalHoverTransform.rotation);
+                    planFlag = false;
+                    completed = false;                    
+                }
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
+                    hasNewGoal = false;
                     armController.MoveToAutonomyTarget();
+                }
+
+                if (completed)
+                {
                     currentState = AutonomyState.OpenGripperAtGoal;
+                    planFlag = true;
                 }
                 break;
             
@@ -201,7 +275,9 @@ public class ArmAutonomy : MonoBehaviour
 
                 armController = rightArmHardware.GetComponentInChildren<ArticulationArmController>();
                 autoGrasping = rightArmAutonomy.GetComponentInChildren<AutoGrasping>();
+
                 armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
+                armController.OnAutonomyComplete += OnAutonomyCompleted;
             }
         }
 
@@ -215,11 +291,16 @@ public class ArmAutonomy : MonoBehaviour
                 objectSelector.SetCameraAndDisplay(cam, displayRect);
             }
         }
+        
+        if (goalObject == null)
+        {
+            goalObject = GameObject.Find("Experiment Objects/Goal Medicine");
+        }
+        if (goalObject != null && autoGrasping != null)
+        {
+            (goalHoverTransform, goalGraspTransform) = autoGrasping.GetHoverAndGraspTransforms(goalObject);
+        }
 
-        goalObject = GameObject.Find("Experiment Objects/Goal Medicine");
-        (goalHoverTransform, goalGraspTransform) = autoGrasping.GetHoverAndGraspTransforms(goalObject);
-
-        // Allow user to stop arm motion and remove highlight only when in valid state <-- FIX
         if (Input.GetKeyDown(KeyCode.Return))
         {
             autoGrasping.CancelCurrentTargetObject();
@@ -227,10 +308,10 @@ public class ArmAutonomy : MonoBehaviour
             highlightObject.RemoveHighlight(selectedObject);
             armController.SetGripperPosition(0.0f);
             hasNewGoal = false;
+            planFlag = true;
             currentState = AutonomyState.FirstHoverOverObject;
         }
 
-        // State machine for tasks
         TaskSchedule();
     }
 }

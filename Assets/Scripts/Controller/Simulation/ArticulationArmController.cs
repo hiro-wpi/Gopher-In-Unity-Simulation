@@ -233,7 +233,6 @@ public class ArticulationArmController : ArmController
 
     private void OnAutonomyDone()
     {
-        Debug.Log("!!!!!!!DONE!!!!!!!");
         OnAutonomyComplete?.Invoke();
         SwitchToManualControl();
     }

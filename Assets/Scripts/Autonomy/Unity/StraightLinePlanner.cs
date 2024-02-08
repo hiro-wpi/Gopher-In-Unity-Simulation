@@ -120,7 +120,6 @@ public class StraightLinePlanner : MonoBehaviour
                 startRotation, targetRotation
             ) * Mathf.Deg2Rad / 10  // 10 is a scaler
         ) / cartesianSpeed;
-
         // Interpolate between Start and Goal (positions and rotations)
         Vector3[] waypointsPositions = InterpolatePosition(
             startPosition, targetPosition, numberOfWaypoints
