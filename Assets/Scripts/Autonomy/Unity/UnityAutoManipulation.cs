@@ -18,6 +18,7 @@ public class UnityAutoManipulation : AutoManipulation
     // Planner
     [SerializeField] private StraightLinePlanner planner;
     private Action<float[], float[][], float[][], float[][]> otherCallback;
+    private Action otherArmReached;
 
     void Start() {}
 
@@ -96,9 +97,16 @@ public class UnityAutoManipulation : AutoManipulation
                 Angles, 
                 Velocities,
                 Accelerations,
-                armReached
+                ArmReached
             );
+            otherArmReached = armReached;
         }
+    }
+
+    private void ArmReached()
+    {
+        StopManipulation();
+        otherArmReached?.Invoke();
     }
 
     // Resume manipulation
