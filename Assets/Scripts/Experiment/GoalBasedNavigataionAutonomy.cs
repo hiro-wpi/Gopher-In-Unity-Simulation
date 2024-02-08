@@ -70,8 +70,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
      // Tracked Trajectory of the Robot Arm
 
-    private List<Vector3> waypointArmPositions = new List<Vector3>();
-    private List<Quaternion> waypointArmRotations = new List<Quaternion>();
+    public List<Vector3> waypointArmPositions = new List<Vector3>();
+    public List<Quaternion> waypointArmRotations = new List<Quaternion>();
 
     private bool waypointArmReachedGoal = false; // This is for just reaching successive points on the list
     private bool reachedArmGoal = false;  // reached the whole goal
@@ -180,21 +180,38 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            // create the ar feature for the nearest cart
+            // Use the AR feature of the cart as the drop off location of the med
             GameObject nearestCart = GetNearestCart();
             GenerateARForNearestCart(nearestCart.transform.position);
-
-            // Get the ar feature for the nearest cart
             List<GameObject> arFeatures = arGenerator.GetARGameObject(nearestCart);
+
             if(arFeatures.Count == 1)
             {
-                // set the transform of the ar feature as the goal for the arm
-                // let the roation be the same as the ar rotation
-                // Grab from the gopher gameobject the child called "left EE"
+
+                // Set the drop off position and rotation for the med
+                Vector3 dropOffPos = arFeatures[0].transform.position + Vector3.right * 0.1f + Vector3.back * 0.1f;
+                Vector3 hoverDropOffPos2 = dropOffPos + Vector3.up * 0.1f;
+                Vector3 hoverDropOffPos1 = hoverDropOffPos2 + Vector3.right * 0.2f;
+
+
+                Quaternion dropOffRot = arFeatures[0].transform.rotation;
+                Quaternion hoverDropOffRot2 = dropOffRot;
+                Quaternion hoverDropOffRot1 = dropOffRot;
                 
-                SetArmWaypoints(arFeatures[0].transform.position, arFeatures[0].transform.rotation, 0);
+                // Set the waypoints for the arm to drop off the med
+                List<Vector3> positions = new List<Vector3>{hoverDropOffPos1, hoverDropOffPos2, dropOffPos, hoverDropOffPos2, hoverDropOffPos1};
+                List<Quaternion> rotations = new List<Quaternion>{hoverDropOffRot1, hoverDropOffRot2, dropOffRot, hoverDropOffRot2, hoverDropOffRot1};
+                List<int> gripperActions = new List<int>{-1, -1, 0, -1, -1};
+                
+                SetArmWaypoints(positions, rotations, gripperActions);
             }
 
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            // rehome the arm
+            armController.HomeJoints();
         }
 
         // ScheuldeNextTask();
