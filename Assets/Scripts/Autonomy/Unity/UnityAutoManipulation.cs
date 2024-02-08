@@ -89,13 +89,16 @@ public class UnityAutoManipulation : AutoManipulation
         }
 
         IsManipulating = true;
-        jointController.SetJointTrajectory(
-            TimeSteps,
-            Angles, 
-            Velocities,
-            Accelerations,
-            armReached
-        );
+        if (!IsManipulating)
+        {
+            jointController.SetJointTrajectory(
+                TimeSteps,
+                Angles, 
+                Velocities,
+                Accelerations,
+                armReached
+            );
+        }
     }
 
     // Resume manipulation
