@@ -18,6 +18,7 @@ public class UnityAutoManipulation : AutoManipulation
     // Planner
     [SerializeField] private StraightLinePlanner planner;
     private Action<float[], float[][], float[][], float[][]> otherCallback;
+    private Action otherArmReached;
 
     void Start() {}
 
@@ -88,14 +89,24 @@ public class UnityAutoManipulation : AutoManipulation
             return;
         }
 
-        IsManipulating = true;
-        jointController.SetJointTrajectory(
-            TimeSteps,
-            Angles, 
-            Velocities,
-            Accelerations,
-            armReached
-        );
+        if (!IsManipulating)
+        {
+            IsManipulating = true;
+            jointController.SetJointTrajectory(
+                TimeSteps,
+                Angles, 
+                Velocities,
+                Accelerations,
+                ArmReached
+            );
+            otherArmReached = armReached;
+        }
+    }
+
+    private void ArmReached()
+    {
+        StopManipulation();
+        otherArmReached?.Invoke();
     }
 
     // Resume manipulation
