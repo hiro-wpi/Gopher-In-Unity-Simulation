@@ -88,9 +88,9 @@ public class UnityAutoManipulation : AutoManipulation
             return;
         }
 
-        IsManipulating = true;
         if (!IsManipulating)
         {
+            IsManipulating = true;
             jointController.SetJointTrajectory(
                 TimeSteps,
                 Angles, 
