@@ -55,7 +55,16 @@ public class TestAR : MonoBehaviour
     {
         Debug.Log("Object selected: " + obj.name);
         Debug.Log("Hit position: " + position);
+
+        highlightObject.RemoveHighlight(selectedObject);
+
         selectedObject = obj;
+
+        highlightObject.Highlight(
+            selectedObject,
+            cam,
+            displayRect
+        );
     }
     //////////////////////////////////////////
 
