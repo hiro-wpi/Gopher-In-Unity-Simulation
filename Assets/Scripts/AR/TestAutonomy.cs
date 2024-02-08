@@ -99,8 +99,10 @@ public class TestAutonomy : MonoBehaviour
         var (hoverTransform, graspTransform) = 
             autoGrapsing.GetHoverAndGraspTransforms(gameObject);
         armController.SetAutonomyTarget(
-            hoverTransform.position, 
-            hoverTransform.rotation
+            // hoverTransform.position, 
+            // hoverTransform.rotation
+            graspTransform.position,
+            graspTransform.rotation
         );
     }
 
