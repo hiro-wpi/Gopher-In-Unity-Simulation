@@ -11,6 +11,8 @@ public class CutscenePlanner : MonoBehaviour
     [SerializeField] private Transform leftHandHome;
     [SerializeField] private Transform rightHandHome;
     [SerializeField] private Transform leftHandRaise;
+    [SerializeField] private Transform generalMedicineEyeLocation;
+    [SerializeField] private Transform leftHandHomeEyeLocation;
     [SerializeField] private Transform monitor;
     [SerializeField] private GameObject handARPrefab;
     private GameObject handAR;
@@ -26,15 +28,13 @@ public class CutscenePlanner : MonoBehaviour
     private float holdTimer = 0.0f;
     private float holdDuration = 1.0f;
     private float waitTimer = 0.0f;
-    private float minWait = 5.0f;
-    private float maxWait = 10.0f;
+    private float waitDuration = 2.5f;
     private float raiseTimer = 0.0f;
-    // private float raiseDuration = 5.0f;
+    private float raiseDuration = 1.5f;
 
     private float headTurnSpeed = 10.0f;
     private float armMoveSpeed = 0.2f; 
     private int currentMedicineIndex = 0;
-    // private int randomMedicine = 0;
 
     private enum CutsceneState
     {
@@ -86,27 +86,16 @@ public class CutscenePlanner : MonoBehaviour
     private void WaitingBeforeMedicine()
     {
         waitTimer += Time.deltaTime;
-        if (waitTimer < Random.Range(minWait, maxWait))
+        if (waitTimer < waitDuration)
         {
             return;
         }
         waitTimer = 0.0f;
 
-        // // Select a random medicine and move towards it
-        // if (medicineHandPositions.Count > 0)
-        // {            
-        //     randomMedicine = Random.Range(0, medicineHandPositions.Count - 1);
-        //     ikController.LookAtTarget(medicineHeadPositions[randomMedicine].position, headTurnSpeed);
-        //     ikController.MoveLeftHand(motionType, medicineHandPositions[randomMedicine].position, positionSpeed: armMoveSpeed, height: 0.1f);
-
-        //     currentState = CutsceneState.GoingToMedicine;
-        // }
-
         if (currentMedicineIndex < medicineHandPositions.Count)
         {
-            ikController.LookAtTarget(medicineHeadPositions[currentMedicineIndex].position, headTurnSpeed);
+            ikController.LookAtTarget(generalMedicineEyeLocation.position, headTurnSpeed);
 
-            // ikController.MoveLeftHand(motionType, medicineHandPositions[currentMedicineIndex].position, positionSpeed: armMoveSpeed, height: 0.1f);
             ikController.MoveLeftHand(motionType, leftHandRaise.position, positionSpeed: armMoveSpeed, height: 0.1f);
 
             handAR = Instantiate(handARPrefab, ikController.GetLeftHandIKTarget().position + new Vector3(handAROffset, 0f, 0f), handARPrefab.transform.rotation);
@@ -125,7 +114,7 @@ public class CutscenePlanner : MonoBehaviour
     private void RaiseHand()
     {
         raiseTimer += Time.deltaTime;
-        if (raiseTimer < Random.Range(minWait, maxWait))
+        if (raiseTimer < raiseDuration)
         {
             ikController.MoveLeftHand(motionType, leftHandRaise.position, positionSpeed: armMoveSpeed, height: 0.1f);
             return;
@@ -142,13 +131,6 @@ public class CutscenePlanner : MonoBehaviour
 
     private void GoingToMedicine()
     {
-        // ikController.LookAtTarget(medicineHeadPositions[randomMedicine].position, headTurnSpeed);
-
-        // if (ikController.IsLeftHandReached(medicineHandPositions[randomMedicine].position))
-        // {
-        //     currentState = CutsceneState.WaitingAtMedicine;
-        // }
-
         ikController.LookAtTarget(medicineHeadPositions[currentMedicineIndex].position, headTurnSpeed);
 
         if (ikController.IsLeftHandReached(medicineHandPositions[currentMedicineIndex].position))
@@ -168,14 +150,8 @@ public class CutscenePlanner : MonoBehaviour
 
         ikController.CloseLeftHand();
 
-        // medicineBottles[randomMedicine].transform.SetParent(ikController.GetLeftHandIKTarget());   
         medicineBottles[currentMedicineIndex].transform.SetParent(ikController.GetLeftHandIKTarget());
 
-        // // Move back to home
-        // ikController.LookAtTarget(medicineHeadPositions[randomMedicine].position, headTurnSpeed);
-        // ikController.MoveLeftHand(motionType, leftHandHome.position, positionSpeed: armMoveSpeed, height: 0.1f);
-
-        // Move back to home
         ikController.LookAtTarget(medicineHeadPositions[currentMedicineIndex].position, headTurnSpeed);
         ikController.MoveLeftHand(motionType, leftHandHome.position, positionSpeed: armMoveSpeed, height: 0.1f);
 
@@ -184,8 +160,7 @@ public class CutscenePlanner : MonoBehaviour
 
     private void GoingToHome(float headSpeed)
     {
-        // ikController.LookAtTarget(medicineHeadPositions[randomMedicine].position,headTurnSpeed);
-        ikController.LookAtTarget(medicineHeadPositions[currentMedicineIndex].position, headTurnSpeed);
+        ikController.LookAtTarget(leftHandHomeEyeLocation.position, headTurnSpeed);
 
         if (ikController.IsLeftHandReached(leftHandHome.position))
         {
@@ -195,10 +170,6 @@ public class CutscenePlanner : MonoBehaviour
                 Transform child = ikController.GetLeftHandIKTarget().GetChild(1);
                 child.SetParent(null);
             }
-
-            // medicineHeadPositions.RemoveAt(randomMedicine);
-            // medicineHandPositions.RemoveAt(randomMedicine);
-            // medicineBottles.RemoveAt(randomMedicine);
             
             Destroy(eyeAR);
             Destroy(handAR);
