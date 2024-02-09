@@ -836,9 +836,6 @@ GameObject:
   - component: {fileID: 279664477}
   - component: {fileID: 279664476}
   - component: {fileID: 279664475}
-  - component: {fileID: 279664481}
-  - component: {fileID: 279664480}
-  - component: {fileID: 279664479}
   m_Layer: 5
   m_Name: RegularGUI
   m_TagString: Untagged
@@ -973,66 +970,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   transparentMaterial: {fileID: 2100000, guid: dd757363e3c4608e1aee02a81b8cbcf0, type: 2}
---- !u!114 &279664479
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 279664472}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 517a23870e684de4292c8889e8c4f7c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  arGenerator: {fileID: 279664478}
-  drawWaypoints: {fileID: 279664477}
-  objectSelector: {fileID: 279664476}
-  floorSelector: {fileID: 279664481}
-  baseController: {fileID: 0}
-  armController: {fileID: 0}
-  autoGrapsing: {fileID: 0}
-  robot: {fileID: 0}
-  arGripper: {fileID: 2710091181654038673, guid: 735101cad7c4b704c802695827135a92, type: 3}
---- !u!114 &279664480
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 279664472}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4470375e771b37e41b905979013377c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlightObject: {fileID: 279664475}
-  arGenerator: {fileID: 279664478}
-  floorSelector: {fileID: 279664481}
-  objectSelector: {fileID: 279664476}
-  graphicalInterface: {fileID: 279664474}
-  displayRect: {fileID: 271174651}
-  icon: {fileID: 21300000, guid: 2e96ed6aa37deb14caa18642954e3367, type: 3}
-  arObjectPrefab: {fileID: 442531877585012060, guid: a10bfb04847088d568af8a0fe0d37c77, type: 3}
-  selectedObject: {fileID: 0}
---- !u!114 &279664481
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 279664472}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ace9c114d1fbb524e99d864510cba605, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cam: {fileID: 0}
-  cameraRect: {fileID: 271174651}
-  floorLayerMask:
-    serializedVersion: 2
-    m_Bits: 256
-  arrowPrefab: {fileID: 5496924815662241504, guid: b18a356f130969749b1ec7dad3deb77e, type: 3}
 --- !u!1 &338443519
 GameObject:
   m_ObjectHideFlags: 0
@@ -2357,29 +2294,29 @@ MonoBehaviour:
   DynamicObjectSpawnArray: []
   TaskObjectSpawnArray:
   - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
-    position: {x: -5.135, y: 0.8, z: -12.93}
+    position: {x: -5.135, y: 0.8, z: -12.975}
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
-    position: {x: -5.135, y: 0.8, z: -12.83}
+    position: {x: -5.135, y: 0.8, z: -12.78}
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
-    position: {x: -5.135, y: 0.8, z: -12.73}
+    position: {x: -5.135, y: 0.8, z: -12.59}
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
-    position: {x: -5.135, y: 0.8, z: -12.63}
+    position: {x: -5.03, y: 0.8, z: -12.875}
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   GoalObjectSpawnArray:
   - gameObject: {fileID: 4057350141855912022, guid: 9f582b48d920422749e33fcbc2bde462, type: 3}
-    position: {x: -5.165, y: 0.8000001, z: -13.15}
+    position: {x: -5.165, y: 0.8000001, z: -13.175}
     rotation: {x: 0, y: 0, z: 0}
     trajectory: []
   robotSpawnArray:
   - gameObject: {fileID: 702946891374405994, guid: 0994793bcef49c38bb6634909c491d77, type: 3}
-    position: {x: -5.65, y: 0, z: -12.75}
+    position: {x: -5.65, y: 0, z: -12.7}
     rotation: {x: 0, y: 90, z: 0}
     trajectory: []
   GUI: {fileID: 279664474}

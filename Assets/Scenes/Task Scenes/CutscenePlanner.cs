@@ -26,14 +26,14 @@ public class CutscenePlanner : MonoBehaviour
     [SerializeField] private List<GameObject> medicineBottles = new();
 
     private float holdTimer = 0.0f;
-    private float holdDuration = 1.0f;
+    private float holdDuration = 0.5f;
     private float waitTimer = 0.0f;
-    private float waitDuration = 2.5f;
+    private float waitDuration = 2.0f;
     private float raiseTimer = 0.0f;
     private float raiseDuration = 1.5f;
 
     private float headTurnSpeed = 10.0f;
-    private float armMoveSpeed = 0.2f; 
+    private float armMoveSpeed = 0.3f; 
     private int currentMedicineIndex = 0;
 
     private enum CutsceneState
@@ -116,7 +116,6 @@ public class CutscenePlanner : MonoBehaviour
         raiseTimer += Time.deltaTime;
         if (raiseTimer < raiseDuration)
         {
-            ikController.MoveLeftHand(motionType, leftHandRaise.position, positionSpeed: armMoveSpeed, height: 0.1f);
             return;
         }
         raiseTimer = 0.0f;

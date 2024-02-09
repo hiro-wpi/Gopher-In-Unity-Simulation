@@ -301,7 +301,7 @@ public class ArmAutonomy : MonoBehaviour
             (goalHoverTransform, goalGraspTransform) = autoGrasping.GetHoverAndGraspTransforms(goalObject);
         }
 
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.C))
         {
             autoGrasping.CancelCurrentTargetObject();
             armController.CancelAutonomyTarget();
