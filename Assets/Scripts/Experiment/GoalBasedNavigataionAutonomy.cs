@@ -39,7 +39,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     private GameObject leftRobotEE;
 
     // State Machines
-    private enum State { SetFirstPatcient, CheckPatcient, GoToPharmacy, GetMedicine, GoDeliverMedicine, ChangePatient, Done};
+    private enum State { SetFirstPatcient, CheckPatcient, GoToPharmacy, GetMedicine, GoDeliverMedicine, DropOffMedicine, ChangePatient, Done};
     private State state = State.SetFirstPatcient;
 
     private enum Patcient { Patcient1, Patcient2, Patcient3, Patcient4};
@@ -171,50 +171,50 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
         
         
-        // Keyboard press enter send med goal
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            SetArmToMedTarget();
+        // // Keyboard press enter send med goal
+        // if (Input.GetKeyDown(KeyCode.Return))
+        // {
+        //     SetArmToMedTarget();
             
-        }
+        // }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            // Use the AR feature of the cart as the drop off location of the med
-            GameObject nearestCart = GetNearestCart();
-            GenerateARForNearestCart(nearestCart.transform.position);
-            List<GameObject> arFeatures = arGenerator.GetARGameObject(nearestCart);
+        // if (Input.GetKeyDown(KeyCode.Space))
+        // {
+        //     // Use the AR feature of the cart as the drop off location of the med
+        //     GameObject nearestCart = GetNearestCart();
+        //     GenerateARForNearestCart(nearestCart.transform.position);
+        //     List<GameObject> arFeatures = arGenerator.GetARGameObject(nearestCart);
 
-            if(arFeatures.Count == 1)
-            {
+        //     if(arFeatures.Count == 1)
+        //     {
 
-                // Set the drop off position and rotation for the med
-                Vector3 dropOffPos = arFeatures[0].transform.position + Vector3.right * 0.1f + Vector3.back * 0.1f;
-                Vector3 hoverDropOffPos2 = dropOffPos + Vector3.up * 0.1f;
-                Vector3 hoverDropOffPos1 = hoverDropOffPos2 + Vector3.right * 0.2f;
+        //         // Set the drop off position and rotation for the med
+        //         Vector3 dropOffPos = arFeatures[0].transform.position + Vector3.right * 0.1f + Vector3.back * 0.1f;
+        //         Vector3 hoverDropOffPos2 = dropOffPos + Vector3.up * 0.1f;
+        //         Vector3 hoverDropOffPos1 = hoverDropOffPos2 + Vector3.right * 0.2f;
 
 
-                Quaternion dropOffRot = arFeatures[0].transform.rotation;
-                Quaternion hoverDropOffRot2 = dropOffRot;
-                Quaternion hoverDropOffRot1 = dropOffRot;
+        //         Quaternion dropOffRot = arFeatures[0].transform.rotation;
+        //         Quaternion hoverDropOffRot2 = dropOffRot;
+        //         Quaternion hoverDropOffRot1 = dropOffRot;
                 
-                // Set the waypoints for the arm to drop off the med
-                List<Vector3> positions = new List<Vector3>{hoverDropOffPos1, hoverDropOffPos2, dropOffPos, hoverDropOffPos2, hoverDropOffPos1};
-                List<Quaternion> rotations = new List<Quaternion>{hoverDropOffRot1, hoverDropOffRot2, dropOffRot, hoverDropOffRot2, hoverDropOffRot1};
-                List<int> gripperActions = new List<int>{-1, -1, 0, -1, -1};
+        //         // Set the waypoints for the arm to drop off the med
+        //         List<Vector3> positions = new List<Vector3>{hoverDropOffPos1, hoverDropOffPos2, dropOffPos, hoverDropOffPos2, hoverDropOffPos1};
+        //         List<Quaternion> rotations = new List<Quaternion>{hoverDropOffRot1, hoverDropOffRot2, dropOffRot, hoverDropOffRot2, hoverDropOffRot1};
+        //         List<int> gripperActions = new List<int>{-1, -1, 0, -1, -1};
                 
-                SetArmWaypoints(positions, rotations, gripperActions);
-            }
+        //         SetArmWaypoints(positions, rotations, gripperActions);
+        //     }
 
-        }
+        // }
 
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            // rehome the arm
-            armController.HomeJoints();
-        }
+        // if (Input.GetKeyDown(KeyCode.C))
+        // {
+        //     // rehome the arm
+        //     armController.HomeJoints();
+        // }
 
-        // ScheuldeNextTask();
+        ScheuldeNextTask();
 
     }
 
@@ -330,7 +330,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // if we arrive at the pharmacy, get the medicine
                 if (reachedGoal)
                 {
-                    GameObject med = ChooseMedToPickUp();
+                    // GameObject med = ChooseMedToPickUp();
+                    SetArmToMedTarget();
                     state = State.GetMedicine;
                 }
                 
@@ -340,12 +341,13 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
                 // Get the medicine
                 // TODO: Implement the medicine getting
-                bool gotMedicine = true;
+                // bool gotMedicine = true;
 
                 // if we have the medicine, go deliver the medicine
-                if (gotMedicine)
+                if (reachedArmGoal)
                 {
                     Debug.Log("Got Medicine");
+                    armController.HomeJoints();
                     posTraj = new List<Vector3>(transfereWaypointPositions);
                     rotTraj = new List<Vector3>(transferWaypointRotations);
                     posTraj.Add(patcientPosition[(int)currentPatcient]);
@@ -360,14 +362,50 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             case State.GoDeliverMedicine:
                 // Deliver the medicine
                 
-                // if we have delivered the medicine, change the patient
+                // if we came back to the patcient, drop off the medicine
                 if (reachedGoal)
                 {
                     patientPos = patcientPosition[(int)currentPatcient];
-                    ChangeNearestCartARColor(patientPos, Color.green);
-                    state = State.ChangePatient;
+                    GameObject nearestCart = GetNearestCart(patientPos);
+                    // GenerateARForNearestCart(nearestCart.transform.position);
+                    List<GameObject> arFeatures = arGenerator.GetARGameObject(nearestCart);
+                    if(arFeatures.Count == 1)
+                    {
+                        // Set the drop off position and rotation for the med
+                        Vector3 dropOffPos = arFeatures[0].transform.position + Vector3.right * 0.1f + Vector3.back * 0.1f;
+                        Vector3 hoverDropOffPos2 = dropOffPos + Vector3.up * 0.1f;
+                        Vector3 hoverDropOffPos1 = hoverDropOffPos2 + Vector3.right * 0.2f;
+
+
+                        Quaternion dropOffRot = arFeatures[0].transform.rotation;
+                        Quaternion hoverDropOffRot2 = dropOffRot;
+                        Quaternion hoverDropOffRot1 = dropOffRot;
+                        
+                        // Set the waypoints for the arm to drop off the med
+                        List<Vector3> positions = new List<Vector3>{hoverDropOffPos1, hoverDropOffPos2, hoverDropOffPos1};
+                        List<Quaternion> rotations = new List<Quaternion>{hoverDropOffRot1, hoverDropOffRot2, hoverDropOffRot1};
+                        List<int> gripperActions = new List<int>{-1, 0, -1, };
+                        
+                        SetArmWaypoints(positions, rotations, gripperActions);
+                    }
+
+                    // ChangeNearestCartARColor(patientPos, Color.green);
+                    state = State.DropOffMedicine;
                 }
                 
+                break;
+
+            case State.DropOffMedicine:
+                // Drop off the medicine
+                if(reachedArmGoal)
+                {
+                    patientPos = patcientPosition[(int)currentPatcient];
+                    ChangeNearestCartARColor(patientPos, Color.green);
+
+                    armController.HomeJoints();
+                    
+                    state = State.ChangePatient;
+                }
                 break;
 
             case State.ChangePatient:
