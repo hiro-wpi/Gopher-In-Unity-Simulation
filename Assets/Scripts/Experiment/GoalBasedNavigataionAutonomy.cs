@@ -296,7 +296,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 {
                     Debug.Log("Checking the patient");
                     // TODO: Do this actually properly
-                    if (currentPatcient == Patcient.Patcient2)
+                    if (true)
                     {   
                         // Create the waypoints to get to the pharmacy
                         posTraj = new List<Vector3>{transfereWaypointPositions[1],transfereWaypointPositions[0]} ;
