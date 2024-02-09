@@ -3388,6 +3388,7 @@ GameObject:
   - component: {fileID: 1233093154}
   - component: {fileID: 1233093153}
   - component: {fileID: 1233093158}
+  - component: {fileID: 1233093161}
   - component: {fileID: 1233093152}
   - component: {fileID: 1233093157}
   - component: {fileID: 1233093159}
@@ -3524,7 +3525,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1233093149}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ace9c114d1fbb524e99d864510cba605, type: 3}
   m_Name: 
@@ -3542,7 +3543,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1233093149}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 635d00880abea044cb93d62494e1f3e2, type: 3}
   m_Name: 
@@ -3617,8 +3618,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   graphicalInterface: {fileID: 1233093151}
   displayRect: {fileID: 320648764}
-  floorSelector: {fileID: 1233093155}
-  drawWaypoints: {fileID: 1233093158}
+  drawLocalWaypoints: {fileID: 1233093158}
   arGenerator: {fileID: 1233093154}
   baseController: {fileID: 0}
   armController: {fileID: 0}
@@ -3646,6 +3646,20 @@ MonoBehaviour:
   - {x: 0, y: 90, z: 0}
   waypointArmPositions: []
   waypointArmRotations: []
+  patientMissingMeds: 00010000
+--- !u!114 &1233093161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233093149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4abc1e833d64e124d82e2ddfb59c59c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultLineMaterial: {fileID: 2100000, guid: 15906be1180c2534fbc01b0d3c4a2f2c, type: 2}
 --- !u!1 &1264190031
 GameObject:
   m_ObjectHideFlags: 0

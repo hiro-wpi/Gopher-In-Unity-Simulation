@@ -27,8 +27,9 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     private Camera cam;
 
     // AR Featrues 
-    [SerializeField] private FloorSelector floorSelector;
-    [SerializeField] private DrawWaypoints drawWaypoints;
+    // [SerializeField] private FloorSelector floorSelector;
+    [SerializeField] private DrawWaypoints drawLocalWaypoints;
+    // [SerializeField] private DrawWaypoints drawGlobalWaypoints;
     [SerializeField] private GenerateARGameObject arGenerator;
 
     // Autonomy
@@ -82,6 +83,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     // public GameObject[] graspableMeds;
     private List<GameObject> graspableMeds = new List<GameObject>();
 
+    public List<bool> patientMissingMeds = new List<bool>{false, true, false, false}; 
+
     void Start()
     {
     }
@@ -99,7 +102,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 cam = cameras[0];
 
                 //////////////////////////////////////////
-                floorSelector.SetCameraAndDisplay(cam, displayRect);
+                // floorSelector.SetCameraAndDisplay(cam, displayRect);
                 // objectSelector.SetCameraAndDisplay(cam, displayRect);
                 //////////////////////////////////////////
             }
@@ -168,51 +171,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 Debug.Log("Meds found");
             }
         }
-
-        
-        
-        // // Keyboard press enter send med goal
-        // if (Input.GetKeyDown(KeyCode.Return))
-        // {
-        //     SetArmToMedTarget();
-            
-        // }
-
-        // if (Input.GetKeyDown(KeyCode.Space))
-        // {
-        //     // Use the AR feature of the cart as the drop off location of the med
-        //     GameObject nearestCart = GetNearestCart();
-        //     GenerateARForNearestCart(nearestCart.transform.position);
-        //     List<GameObject> arFeatures = arGenerator.GetARGameObject(nearestCart);
-
-        //     if(arFeatures.Count == 1)
-        //     {
-
-        //         // Set the drop off position and rotation for the med
-        //         Vector3 dropOffPos = arFeatures[0].transform.position + Vector3.right * 0.1f + Vector3.back * 0.1f;
-        //         Vector3 hoverDropOffPos2 = dropOffPos + Vector3.up * 0.1f;
-        //         Vector3 hoverDropOffPos1 = hoverDropOffPos2 + Vector3.right * 0.2f;
-
-
-        //         Quaternion dropOffRot = arFeatures[0].transform.rotation;
-        //         Quaternion hoverDropOffRot2 = dropOffRot;
-        //         Quaternion hoverDropOffRot1 = dropOffRot;
-                
-        //         // Set the waypoints for the arm to drop off the med
-        //         List<Vector3> positions = new List<Vector3>{hoverDropOffPos1, hoverDropOffPos2, dropOffPos, hoverDropOffPos2, hoverDropOffPos1};
-        //         List<Quaternion> rotations = new List<Quaternion>{hoverDropOffRot1, hoverDropOffRot2, dropOffRot, hoverDropOffRot2, hoverDropOffRot1};
-        //         List<int> gripperActions = new List<int>{-1, -1, 0, -1, -1};
-                
-        //         SetArmWaypoints(positions, rotations, gripperActions);
-        //     }
-
-        // }
-
-        // if (Input.GetKeyDown(KeyCode.C))
-        // {
-        //     // rehome the arm
-        //     armController.HomeJoints();
-        // }
 
         ScheuldeNextTask();
 
@@ -296,7 +254,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 {
                     Debug.Log("Checking the patient");
                     // TODO: Do this actually properly
-                    if (true)
+                    if (patientMissingMeds[(int)currentPatcient])
                     {   
                         // Create the waypoints to get to the pharmacy
                         posTraj = new List<Vector3>{transfereWaypointPositions[1],transfereWaypointPositions[0]} ;
@@ -435,10 +393,15 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         // Set the next patient
                         Debug.Log("All patients have been checked");
                         state = State.Done;
-                        return;
+                        // return;
                         break;
                     default:
                         break;
+                }
+
+                if(state == State.Done)
+                {
+                    return;
                 }
 
                 // Go to the next patient
@@ -518,9 +481,9 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             baseController.GetTrajectories();
         
         // Clear old waypoints
-        drawWaypoints.RemoveLine("Global Path");
+        drawLocalWaypoints.RemoveLine("Global Path");
         // Add new waypoints
-        drawWaypoints.DrawLine("Global Path", globalWaypoints);
+        drawLocalWaypoints.DrawLine("Global Path", globalWaypoints);
 
         // Automatically Send the robot to the goal
         baseController.MoveToAutonomyTarget();
@@ -536,23 +499,14 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
         // Generate AR for the nearest cart
         var type = GenerateARGameObject.ARObjectType.Cube;
-            // arGenerator.Instantiate(
-            //     nearestCart,
-            //     type,
-            //     new Vector3(0, 0.93f, -0.02f),
-            //     new Vector3(0, 0, 0),
-            //     new Vector3(0.3f, 0.1f, 0.5f),
-            //     Color.yellow,
-            //     0.5f
-            // );
             arGenerator.Instantiate(
                 nearestCart,
                 type,
                 new Vector3(0, 0.93f, -0.02f),
                 new Vector3(180, 0, 90),
-                new Vector3(-0.025f, 0.35f, 0.5f),
+                new Vector3(0.025f, 0.35f, 0.5f),
                 Color.yellow,
-                0.5f
+                0.15f
             );
     }
 
@@ -642,17 +596,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         armController.MoveToAutonomyTarget();
     }
 
-    // private void SetArmTarget(GameObject med)
-    // { 
-    //     // Assume what we are picking up is on the left of our left ee
-
-    //     // Get the hoverpoint and the grasp point
-    //     var (hoverTransform, graspingTransform) = autoGrasping.GetHoverAndGraspTransforms(med);
-    //     Debug.Log("hoverTransform: " + hoverTransform.position + " graspingTransform: " + graspingTransform.position);
-    //     // Sending it to just hover in front of the med
-    //     armController.SetAutonomyTarget(hoverTransform.position, hoverTransform.rotation);
-    // }
-
     private void SetArmToMedTarget()
     {
         GameObject med = ChooseMedToPickUp();
@@ -711,66 +654,5 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
         Debug.Log("Finished Trajectory");
     }
-
-    // States needed to be able to pick up the med
-    // Got to hover point
-    // Go to grasp point
-    // Close the gripper
-    // Go to hover point
-    // Go to home position - try home points first (HomeJoints)
-
-    // Other states to drop off the med
-    // Let the AR feature of the cart become the goal for the medacine
-    // Go to the AR feature
-    // Open Gripper
-
-    // State Machine for the arm
-    // private void ArmStateMachine()
-    // {
-    //     switch(armState)
-    //     {
-    //         case ArmState.WaitForGraspRequest:
-    //             // Wait for the request to grasp a med
-    //             // if key is pressed, set the arm to the med target
-    //             // !!!TODO, I need some way to know if the arm rejects the target
-    //             break;
-    //         case ArmState.GoToHoverPointFirst:
-    //             // Go to the hover point
-    //             break;
-    //         case ArmState.GoToGraspPoint:
-    //             // Go to the grasp point
-    //             break;
-    //         case ArmState.CloseGripper:
-    //             // Close the gripper
-    //             break;
-    //         case ArmState.GoToHoverPointSecond:
-    //             // Go to the hover point
-    //             break;
-    //         case ArmState.GoToHomePositionWithMed:
-    //             // Go to the home position with the medication in hand
-    //             // Note: If the robot moves the object too fast, it will most likely drop the object
-    //             //      Consider another location while carrying object
-    //             break;
-    //         case ArmState.WaitForDropOffRequest:
-    //             // Wait for the request to drop off the med
-    //             break;
-    //         case ArmState.GoToDropOffPoint:
-    //             // Go to the drop off point in the center of the AR feature
-    //             break;
-    //         case ArmState.OpenGripper:
-    //             // Open the gripper
-    //             break;
-    //         case ArmState.GoToHomePosition:
-    //             // Go to the home position
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    // }
-
-
-
-
-
 
 }
