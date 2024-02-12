@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17276844, g: 0.21589246, b: 0.2978263, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3393,6 +3393,7 @@ GameObject:
   - component: {fileID: 1233093157}
   - component: {fileID: 1233093159}
   - component: {fileID: 1233093160}
+  - component: {fileID: 1233093162}
   m_Layer: 5
   m_Name: RegularGUI
   m_TagString: Untagged
@@ -3618,14 +3619,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   graphicalInterface: {fileID: 1233093151}
   displayRect: {fileID: 320648764}
-  drawLocalWaypoints: {fileID: 1233093158}
-  drawGlobalWaypoints: {fileID: 1233093161}
+  arNavAuto: {fileID: 1233093162}
   arGenerator: {fileID: 1233093154}
   highlightObject: {fileID: 1233093153}
   icon1: {fileID: 21300000, guid: 2e96ed6aa37deb14caa18642954e3367, type: 3}
   icon2: {fileID: 21300000, guid: 9fcc9ddf3a4c6a84caf358bad3402ff3, type: 3}
   icon3: {fileID: 21300000, guid: 4ac78a854698c131bb9370e263905d81, type: 3}
-  baseController: {fileID: 0}
   armController: {fileID: 0}
   autoGrasping: {fileID: 0}
   patcientPosition:
@@ -3668,6 +3667,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultLineMaterial: {fileID: 2100000, guid: 15906be1180c2534fbc01b0d3c4a2f2c, type: 2}
+--- !u!114 &1233093162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233093149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b04703e3e02887a49b3f92cf2295afcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drawGlobalWaypoints: {fileID: 1233093161}
+  baseController: {fileID: 0}
+  reachedGoal: 0
 --- !u!1 &1264190031
 GameObject:
   m_ObjectHideFlags: 0

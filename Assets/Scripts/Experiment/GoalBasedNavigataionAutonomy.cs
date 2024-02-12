@@ -29,10 +29,13 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     [SerializeField] private RectTransform displayRect;
     private Camera cam;
 
+    // AR Automation
+    [SerializeField] private ARNavigationAutomation arNavAuto;
+
     // AR Featrues 
     // [SerializeField] private FloorSelector floorSelector;
-    [SerializeField] private DrawWaypoints drawLocalWaypoints;
-    [SerializeField] private DrawWaypoints drawGlobalWaypoints;
+    // [SerializeField] private DrawWaypoints drawLocalWaypoints;
+    // [SerializeField] private DrawWaypoints drawGlobalWaypoints;
     [SerializeField] private GenerateARGameObject arGenerator;
     [SerializeField] private HighlightObjectOnCanvas highlightObject;
 
@@ -45,7 +48,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     // [SerializeField] private Material localPathMaterial;
 
     // Autonomy
-    [SerializeField] private ArticulationBaseController baseController;
+    // [SerializeField] private ArticulationBaseController baseController;
     [SerializeField] private ArticulationArmController armController;
     [SerializeField] private AutoGrasping autoGrasping;
     private GameObject robot;
@@ -74,14 +77,14 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     public List<Vector3> transferReturnWaypointRotations = new List<Vector3>();
 
     // Tracked Trajectory of the Robot base
-    private List<Vector3> waypointPositions = new List<Vector3>();
-    private List<Vector3> waypointRotations = new List<Vector3>();
+    // private List<Vector3> waypointPositions = new List<Vector3>();
+    // private List<Vector3> waypointRotations = new List<Vector3>();
     private List<int> waypointGripperActions = new List<int>(); // 0 for open, 1 for close
 
-    private bool waypointReachedGoal = false; // This is for just reaching successive points on the list
-    private bool reachedGoal = false;  // reached the whole goal
+    // private bool waypointReachedGoal = false; // This is for just reaching successive points on the list
+    // private bool reachedGoal = false;  // reached the whole goal
 
-    private bool passingInGlobalGoal = false;
+    // private bool passingInGlobalGoal = false;
 
      // Tracked Trajectory of the Robot Arm
 
@@ -139,13 +142,13 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             // Get Child of the robot
             // leftRobotEE = robot.transform.Find("Plugins/Hardware/Left Arm").gameObject;
 
-            baseController = robot.GetComponentInChildren<ArticulationBaseController>();
+            // baseController = robot.GetComponentInChildren<ArticulationBaseController>();
             armController = robot.GetComponentInChildren<ArticulationArmController>();
             autoGrasping = robot.GetComponentInChildren<AutoGrasping>();
             // Constantly subscribe to the event to make our trajectory visible
             //      check if we arrive at the goal
-            baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
-            baseController.OnAutonomyComplete += OnBaseReachedGoal;
+            // baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
+            // baseController.OnAutonomyComplete += OnBaseReachedGoal;
 
             armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
             armController.OnAutonomyComplete += OnArmAutonomyComplete;
@@ -206,11 +209,11 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     {
         // Subscribe to the event
 
-        if (baseController != null)
-        {
-            baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
-            baseController.OnAutonomyComplete += OnBaseReachedGoal;
-        }
+        // if (baseController != null)
+        // {
+        //     baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
+        //     baseController.OnAutonomyComplete += OnBaseReachedGoal;
+        // }
 
         if (armController != null)
         {
@@ -223,11 +226,11 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     {
         // Unsubscribe from the static event to clean up
 
-        if (baseController != null)
-        {
-            baseController.OnAutonomyTrajectory -= OnBaseTrajectoryGenerated;
-            baseController.OnAutonomyComplete -= OnBaseReachedGoal;
-        }
+        // if (baseController != null)
+        // {
+        //     baseController.OnAutonomyTrajectory -= OnBaseTrajectoryGenerated;
+        //     baseController.OnAutonomyComplete -= OnBaseReachedGoal;
+        // }
 
         if (armController != null)
         {
@@ -238,11 +241,11 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     
 
-    private void OnBaseReachedGoal()
-    {
-        // Event will be called when the robot reaches the goal
-        waypointReachedGoal = true;
-    }
+    // private void OnBaseReachedGoal()
+    // {
+    //     // Event will be called when the robot reaches the goal
+    //     waypointReachedGoal = true;
+    // }
 
     // State Machine   //////////////////////////////////////////////////////////////////////////////////////////
     private void ScheuldeNextTask()
@@ -262,7 +265,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 rotTraj = new List<Vector3>(transferWaypointRotations);
                 posTraj.Add(patcientPosition[(int)currentPatcient]);
                 rotTraj.Add(patcientRotations[(int)currentPatcient]);
-                SetWaypoints(posTraj, rotTraj);
+                arNavAuto.SetWaypoints(posTraj, rotTraj);
 
                 // Create AR for the cart nearest to the patcient
                 patientPos = patcientPosition[(int)currentPatcient];
@@ -275,7 +278,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             case State.CheckPatcient:
 
                 // Check if the patient has all their medications
-                if (reachedGoal)
+                if (arNavAuto.reachedGoal)
                 {
                     Debug.Log("Checking the patient");
                     // TODO: Do this actually properly
@@ -288,7 +291,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         rotTraj = new List<Vector3>{transferReturnWaypointRotations[1], transferReturnWaypointRotations[0]};
                         posTraj.Add(pharmacyPosition);
                         rotTraj.Add(pharmacyRotation);
-                        SetWaypoints(posTraj, rotTraj);
+                        arNavAuto.SetWaypoints(posTraj, rotTraj);
 
                         // Change AR to indicate an issue
                         patientPos = patcientPosition[(int)currentPatcient];
@@ -315,7 +318,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // Go to the pharmacy
 
                 // if we arrive at the pharmacy, get the medicine
-                if (reachedGoal)
+                if (arNavAuto.reachedGoal)
                 {
                     // GameObject med = ChooseMedToPickUp();
                     SetArmToMedTarget();
@@ -339,7 +342,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     rotTraj = new List<Vector3>(transferWaypointRotations);
                     posTraj.Add(patcientPosition[(int)currentPatcient]);
                     rotTraj.Add(patcientRotations[(int)currentPatcient]);
-                    SetWaypoints(posTraj, rotTraj);
+                    arNavAuto.SetWaypoints(posTraj, rotTraj);
 
                     state = State.GoDeliverMedicine;
                 }
@@ -350,7 +353,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // Deliver the medicine
                 
                 // if we came back to the patcient, drop off the medicine
-                if (reachedGoal)
+                if (arNavAuto.reachedGoal)
                 {
                     patientPos = patcientPosition[(int)currentPatcient];
                     GameObject nearestCart = GetNearestCart(patientPos);
@@ -436,7 +439,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 }
 
                 // Go to the next patient
-                SetWaypoints(patcientPosition[(int)currentPatcient], patcientRotations[(int)currentPatcient]);
+                arNavAuto.SetWaypoints(patcientPosition[(int)currentPatcient], patcientRotations[(int)currentPatcient]);
 
                 // Destroy the AR of the previous patient
                 StartCoroutine(RemoveARForPatient(patcientPosition[(int)currentPatcient - 1]));
@@ -463,109 +466,109 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     // Base Navigation and Autonomy Functions //////////////////////////////////////////////////////////////////////////////////////////
 
     // Automatically Sets the waypoint and goes to it
-    private void SetWaypoints(Vector3 pos, Vector3 rot)
-    {
-        waypointPositions = new List<Vector3>{pos};
-        waypointRotations = new List<Vector3>{rot};
+    // private void SetWaypoints(Vector3 pos, Vector3 rot)
+    // {
+    //     waypointPositions = new List<Vector3>{pos};
+    //     waypointRotations = new List<Vector3>{rot};
 
-        StartCoroutine(FollowWaypoints());
-    }
+    //     StartCoroutine(FollowWaypoints());
+    // }
 
     // Automatically Sets the waypoint and goes to it
-    private void SetWaypoints(List<Vector3> pos, List<Vector3> rot)
-    {
-        if(pos.Count != rot.Count)
-        {
-            Debug.LogWarning("The list used are not the same size, they are not being added");
-            return;
-        }
+    // private void SetWaypoints(List<Vector3> pos, List<Vector3> rot)
+    // {
+    //     if(pos.Count != rot.Count)
+    //     {
+    //         Debug.LogWarning("The list used are not the same size, they are not being added");
+    //         return;
+    //     }
 
-        waypointPositions = pos;
-        waypointRotations = rot;
+    //     waypointPositions = pos;
+    //     waypointRotations = rot;
 
-        StartCoroutine(FollowWaypoints());
-    }
+    //     StartCoroutine(FollowWaypoints());
+    // }
 
-    IEnumerator FollowWaypoints()
-    {
-        // Debug.Log("Start Motion");
+    // IEnumerator FollowWaypoints()
+    // {
+    //     // Debug.Log("Start Motion");
 
-        // get the last position and rotation from waypointPositions and waypointRotations
-        reachedGoal = false;
+    //     // get the last position and rotation from waypointPositions and waypointRotations
+    //     reachedGoal = false;
 
-        int lastIndex = waypointPositions.Count - 1;
+    //     int lastIndex = waypointPositions.Count - 1;
 
-        // if there is only one waypoint, no need to show both the global and the local path, lets just show the global path
+    //     // if there is only one waypoint, no need to show both the global and the local path, lets just show the global path
         
-        // if(lastIndex == 0)
-        // {
-        //     // Hide the local path
-        //     hideLocalPath = true;
-        //     // drawGlobalWaypoints.RemoveLine("Global Path");
-        // }
-        // else
-        // {
-        //     hideLocalPath = false;
-        // }
+    //     // if(lastIndex == 0)
+    //     // {
+    //     //     // Hide the local path
+    //     //     hideLocalPath = true;
+    //     //     // drawGlobalWaypoints.RemoveLine("Global Path");
+    //     // }
+    //     // else
+    //     // {
+    //     //     hideLocalPath = false;
+    //     // }
 
-        // Display the global path
-        passingInGlobalGoal = true;
-        Debug.Log("FollowingWaypoints >> SendingGlobalPath");
-        baseController.SetAutonomyTarget(waypointPositions[lastIndex], Quaternion.Euler(waypointRotations[lastIndex]));
-        yield return new WaitUntil(() => passingInGlobalGoal == false);
+    //     // Display the global path
+    //     passingInGlobalGoal = true;
+    //     Debug.Log("FollowingWaypoints >> SendingGlobalPath");
+    //     baseController.SetAutonomyTarget(waypointPositions[lastIndex], Quaternion.Euler(waypointRotations[lastIndex]));
+    //     yield return new WaitUntil(() => passingInGlobalGoal == false);
         
-        for(int i = 0; i < waypointPositions.Count; i++)
-        {
-            // Debug.Log("Going to Waypoint");
-            // Reset the reached goal flag
-            Debug.Log("FollowingWaypoints >> SendingLocalPaths");
-            waypointReachedGoal = false;
+    //     for(int i = 0; i < waypointPositions.Count; i++)
+    //     {
+    //         // Debug.Log("Going to Waypoint");
+    //         // Reset the reached goal flag
+    //         Debug.Log("FollowingWaypoints >> SendingLocalPaths");
+    //         waypointReachedGoal = false;
 
-            // Convert from euler angles to quaternion
-            Quaternion worldRotation = Quaternion.Euler(waypointRotations[i]);
-            baseController.SetAutonomyTarget(waypointPositions[i], worldRotation);
+    //         // Convert from euler angles to quaternion
+    //         Quaternion worldRotation = Quaternion.Euler(waypointRotations[i]);
+    //         baseController.SetAutonomyTarget(waypointPositions[i], worldRotation);
 
-            yield return new WaitUntil(() => waypointReachedGoal);
-        }
-        reachedGoal = true;
-    }
+    //         yield return new WaitUntil(() => waypointReachedGoal);
+    //     }
+    //     reachedGoal = true;
+    // }
 
 
-    private void OnBaseTrajectoryGenerated()
-    {
-        // Debug.Log("Base trajectory generated");
-        var (globalWaypoints, LocalWaypoints) = 
-            baseController.GetTrajectories();
+    // private void OnBaseTrajectoryGenerated()
+    // {
+    //     // Debug.Log("Base trajectory generated");
+    //     var (globalWaypoints, LocalWaypoints) = 
+    //         baseController.GetTrajectories();
 
-        // Generate the global path
-        if(passingInGlobalGoal == true)
-        {   
-            // Clear old waypoints
-            drawGlobalWaypoints.RemoveLine("Global Path");
-            // Add new waypoints
-            drawGlobalWaypoints.DrawLine("Global Path", globalWaypoints);
-            // Debug.Log("Global Path");
-        }
-        else
-        {
-            // Debug.Log("Local Path");
+    //     // Generate the global path
+    //     if(passingInGlobalGoal == true)
+    //     {   
+    //         // Clear old waypoints
+    //         drawGlobalWaypoints.RemoveLine("Global Path");
+    //         // Add new waypoints
+    //         drawGlobalWaypoints.DrawLine("Global Path", globalWaypoints);
+    //         // Debug.Log("Global Path");
+    //     }
+    //     else
+    //     {
+    //         // Debug.Log("Local Path");
         
-            // Clear old waypoints
-            // drawLocalWaypoints.RemoveLine("Local Path");
+    //         // Clear old waypoints
+    //         // drawLocalWaypoints.RemoveLine("Local Path");
 
-            // if(!hideLocalPath)
-            // {
-            //     // Add new waypoints
-            //     drawLocalWaypoints.DrawLine("Local Path", globalWaypoints);
-            // }
+    //         // if(!hideLocalPath)
+    //         // {
+    //         //     // Add new waypoints
+    //         //     drawLocalWaypoints.DrawLine("Local Path", globalWaypoints);
+    //         // }
 
-            // Automatically Send the robot to the goal
-            baseController.MoveToAutonomyTarget();
-        }
-        passingInGlobalGoal = false;
+    //         // Automatically Send the robot to the goal
+    //         baseController.MoveToAutonomyTarget();
+    //     }
+    //     passingInGlobalGoal = false;
 
         
-    }
+    // }
 
     // AR Functions //////////////////////////////////////////////////////////////////////////////////////////
 
