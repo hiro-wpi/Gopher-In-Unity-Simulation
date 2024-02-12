@@ -34,7 +34,9 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     [SerializeField] private HighlightObjectOnCanvas highlightObject;
 
     private bool hideLocalPath = false;
-    [SerializeField] private Sprite icon;
+    [SerializeField] private Sprite icon1;
+    [SerializeField] private Sprite icon2;
+    [SerializeField] private Sprite icon3;
 
     // [SerializeField] private Material globalPathMaterial;
     // [SerializeField] private Material localPathMaterial;
@@ -277,6 +279,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         // Change AR to indicate an issue
                         patientPos = patcientPosition[(int)currentPatcient];
                         ChangeNearestCartARColor(patientPos, Color.red);
+                        ChangeNearestCartCanvasHighlightIcon(patientPos, icon3);
 
                         state = State.GoToPharmacy;
                     }
@@ -285,6 +288,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         // Change AR to indicate no issue
                         patientPos = patcientPosition[(int)currentPatcient];
                         ChangeNearestCartARColor(patientPos, Color.green);
+                        ChangeNearestCartCanvasHighlightIcon(patientPos, icon2);
 
                         state = State.ChangePatient;
                     }
@@ -370,6 +374,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 {
                     patientPos = patcientPosition[(int)currentPatcient];
                     ChangeNearestCartARColor(patientPos, Color.green);
+                    ChangeNearestCartCanvasHighlightIcon(patientPos, icon2);
 
                     armController.HomeJoints();
                     
@@ -571,8 +576,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         {
             // Add a highlight to the AR Feature
             Debug.Log("Create AR highlight object on canvas");
-            CreateHighlightObjectOnCanvas(nearestCart);
-            CreateHighlightObjectOnCanvas(arFeatures[0]);
+            CreateHighlightObjectOnCanvas(nearestCart, new Vector3(0f, 1.1f, 0));
         }
        
     }
@@ -631,8 +635,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             Color.green,
             0.25f
         );
-
-
     }
 
     private GameObject ChooseMedToPickUp()
@@ -724,12 +726,50 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         Debug.Log("Finished Trajectory");
     }
 
-
-    private void CreateHighlightObjectOnCanvas(GameObject selectedObject)
+    // Canvas Highlight Functions //////////////////////////////////////////////////////////////////////////////////////////
+    private void CreateHighlightObjectOnCanvas(GameObject selectedObject, Vector3 positionOffset = new Vector3())
     {
-       var location = HighlightObjectOnCanvas.ElementPosition.Bottom;
+        // Create a cube gameobject as a child of the selected object
+        var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        cube.transform.SetParent(selectedObject.transform);
+        cube.transform.localPosition = positionOffset;
+        cube.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);   // Scale will affect the size of the highlight
+        cube.name = "Highlight2DObjectLocation";
+
+        // Disable the collider and render of the cube
+        cube.GetComponent<Collider>().enabled = false;
+        cube.GetComponent<Renderer>().enabled = false;
+
+        var location = HighlightObjectOnCanvas.ElementPosition.Center;
             highlightObject.Highlight(
-                selectedObject,
+                cube,
+                cam,
+                displayRect,
+                icon1,
+                Color.green,
+                adjustUIScale: false,
+                position: location
+            );
+    }
+
+    private void ReplaceHighlightObjectOnCanvas(GameObject selectedObject, Sprite icon, Vector3 positionOffset = new Vector3())
+    {
+        // Find the cube
+        var cube = selectedObject.transform.Find("Highlight2DObjectLocation").gameObject;
+
+        // if(cube == null)
+        // {
+        //     CreateHighlightObjectOnCanvas(selectedObject, positionOffset);
+        //     return;
+        // }
+
+        // Destroy the previous highlight
+        highlightObject.RemoveHighlight(cube);
+
+        // Create a new highlight
+        var location = HighlightObjectOnCanvas.ElementPosition.Center;
+            highlightObject.Highlight(
+                cube,
                 cam,
                 displayRect,
                 icon,
@@ -737,6 +777,21 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 adjustUIScale: false,
                 position: location
             );
+    }
+
+    private void RemoveHighlightObjectOnCanvas(GameObject selectedObject)
+    {
+        // Find the cube
+        var cube = selectedObject.transform.Find("Highlight2DObjectLocation").gameObject;
+
+        // Destroy the previous highlight
+        highlightObject.RemoveHighlight(cube);
+    }
+
+    private void ChangeNearestCartCanvasHighlightIcon(Vector3 position, Sprite icon)
+    {
+        GameObject nearestCart = GetNearestCart(position);
+        ReplaceHighlightObjectOnCanvas(nearestCart, icon);
     }
 
 }
