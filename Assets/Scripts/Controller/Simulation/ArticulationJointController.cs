@@ -65,7 +65,9 @@ public class ArticulationJointController : MonoBehaviour
 
     // Coroutine for joint movement (move to target positions)
     private IEnumerator SetJointTargetsCoroutine(
-        float[] jointPositions, bool disableColliders = false, Action reached = null
+        float[] jointPositions,
+         bool disableColliders = false,
+         Action reached = null
     )
     {
         // Disable colliders before homing to avoid collisions
@@ -74,7 +76,13 @@ public class ArticulationJointController : MonoBehaviour
         {
             SetCollidersActive(false);
         }
-        yield return new WaitUntil(() => SetJointTargetsStepAndCheck(jointPositions) == true);
+
+        while (!CheckJointTargetReached(jointPositions))
+        {
+            SetJointTargetsStep(jointPositions);
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+        }
+
         if (disableColliders)
         {
             SetCollidersActive(true);
@@ -92,15 +100,7 @@ public class ArticulationJointController : MonoBehaviour
         }
     }
 
-    private bool SetJointTargetsStepAndCheck(float[] positions)
-    {
-        // Set joint targets
-        SetJointTargetsStep(positions);
-        // Check if reached
-        return CheckJointTargetStep(positions);
-    }
-
-    private bool CheckJointTargetStep(float[] positions)
+    private bool CheckJointTargetReached(float[] positions)
     {
         // Check if current joint targets are set to the target positions
         float[] currTargets = GetCurrentJointTargets();
