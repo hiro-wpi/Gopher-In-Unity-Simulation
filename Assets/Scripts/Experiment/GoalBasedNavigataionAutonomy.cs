@@ -29,8 +29,13 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     // AR Featrues 
     // [SerializeField] private FloorSelector floorSelector;
     [SerializeField] private DrawWaypoints drawLocalWaypoints;
-    // [SerializeField] private DrawWaypoints drawGlobalWaypoints;
+    [SerializeField] private DrawWaypoints drawGlobalWaypoints;
     [SerializeField] private GenerateARGameObject arGenerator;
+
+    private bool hideLocalPath = false;
+
+    // [SerializeField] private Material globalPathMaterial;
+    // [SerializeField] private Material localPathMaterial;
 
     // Autonomy
     [SerializeField] private ArticulationBaseController baseController;
@@ -68,6 +73,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     private bool waypointReachedGoal = false; // This is for just reaching successive points on the list
     private bool reachedGoal = false;  // reached the whole goal
+
+    private bool passingInGlobalGoal = false;
 
      // Tracked Trajectory of the Robot Arm
 
@@ -257,6 +264,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     if (patientMissingMeds[(int)currentPatcient])
                     {   
                         // Create the waypoints to get to the pharmacy
+
+
                         posTraj = new List<Vector3>{transfereWaypointPositions[1],transfereWaypointPositions[0]} ;
                         rotTraj = new List<Vector3>{transferReturnWaypointRotations[1], transferReturnWaypointRotations[0]};
                         posTraj.Add(pharmacyPosition);
@@ -454,13 +463,37 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     IEnumerator FollowWaypoints()
     {
-        // Debug.Log("Start Motion");s
+        // Debug.Log("Start Motion");
 
+        // get the last position and rotation from waypointPositions and waypointRotations
+        reachedGoal = false;
+
+        int lastIndex = waypointPositions.Count - 1;
+
+        // if there is only one waypoint, no need to show both the global and the local path, lets just show the global path
+        
+        // if(lastIndex == 0)
+        // {
+        //     // Hide the local path
+        //     hideLocalPath = true;
+        //     // drawGlobalWaypoints.RemoveLine("Global Path");
+        // }
+        // else
+        // {
+        //     hideLocalPath = false;
+        // }
+
+        // Display the global path
+        passingInGlobalGoal = true;
+        Debug.Log("FollowingWaypoints >> SendingGlobalPath");
+        baseController.SetAutonomyTarget(waypointPositions[lastIndex], Quaternion.Euler(waypointRotations[lastIndex]));
+        yield return new WaitUntil(() => passingInGlobalGoal == false);
+        
         for(int i = 0; i < waypointPositions.Count; i++)
         {
             // Debug.Log("Going to Waypoint");
             // Reset the reached goal flag
-            reachedGoal = false;
+            Debug.Log("FollowingWaypoints >> SendingLocalPaths");
             waypointReachedGoal = false;
 
             // Convert from euler angles to quaternion
@@ -476,17 +509,37 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     private void OnBaseTrajectoryGenerated()
     {
         // Debug.Log("Base trajectory generated");
-
         var (globalWaypoints, LocalWaypoints) = 
             baseController.GetTrajectories();
-        
-        // Clear old waypoints
-        drawLocalWaypoints.RemoveLine("Global Path");
-        // Add new waypoints
-        drawLocalWaypoints.DrawLine("Global Path", globalWaypoints);
 
-        // Automatically Send the robot to the goal
-        baseController.MoveToAutonomyTarget();
+        // Generate the global path
+        if(passingInGlobalGoal == true)
+        {   
+            // Clear old waypoints
+            drawGlobalWaypoints.RemoveLine("Global Path");
+            // Add new waypoints
+            drawGlobalWaypoints.DrawLine("Global Path", globalWaypoints);
+            // Debug.Log("Global Path");
+        }
+        else
+        {
+            // Debug.Log("Local Path");
+        
+            // Clear old waypoints
+            // drawLocalWaypoints.RemoveLine("Local Path");
+
+            // if(!hideLocalPath)
+            // {
+            //     // Add new waypoints
+            //     drawLocalWaypoints.DrawLine("Local Path", globalWaypoints);
+            // }
+
+            // Automatically Send the robot to the goal
+            baseController.MoveToAutonomyTarget();
+        }
+        passingInGlobalGoal = false;
+
+        
     }
 
     // AR Functions //////////////////////////////////////////////////////////////////////////////////////////
