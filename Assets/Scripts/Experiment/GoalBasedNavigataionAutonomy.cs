@@ -13,10 +13,13 @@ using UnityEngine;
 ///     - Set the gross waypoints for the robot to navigate
 ///     - Follow the gross waypoints
 ///     - Generate AR for carts and meds
-///     - Change the color of the AR for the carts to describe state of task
+///     - Change the color and icon of the AR for the carts to describe state of task
 ///     
-///    
-/// 
+///    Todo
+///    - Seperate the autonomy from the state machine
+///         - ARNavigationAutonomy
+///         - ARManipulationAutonomy
+
 /// </summary>
 public class GoalBasedNavigataionAutonomy : MonoBehaviour
 {
@@ -96,6 +99,10 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     public List<bool> patientMissingMeds = new List<bool>{false, true, false, false}; 
 
+    [SerializeField] private GameObject[] patientMedGameObjects;  // 0 load missing meds, 1 load all meds
+
+    private GameObject pluckedMed;
+
     void Start()
     {
     }
@@ -150,12 +157,19 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         {
             patientMedCarts = GameObject.FindGameObjectsWithTag("GoalObject");
             
-
             if(patientMedCarts.Length == 0)
             {
                 Debug.Log("No carts found");;
             }
-
+            else
+            {
+                Debug.Log("Carts found");
+                // load the patient meds into the scene
+                for(int i = 0; i < patcientPosition.Length; i++)
+                {
+                    LoadPatientMedPrefab(patcientPosition[i], patientMissingMeds[i]);
+                }
+            }
         }
 
         if(graspableMeds.Count == 0)
@@ -409,7 +423,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         // Set the next patient
                         Debug.Log("All patients have been checked");
                         state = State.Done;
-                        // return;
                         break;
                     default:
                         break;
@@ -417,11 +430,16 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
                 if(state == State.Done)
                 {
+                    // Remove the AR for the last patient
+                    StartCoroutine(RemoveARForPatient(patcientPosition[(int)currentPatcient]));
                     return;
                 }
 
                 // Go to the next patient
                 SetWaypoints(patcientPosition[(int)currentPatcient], patcientRotations[(int)currentPatcient]);
+
+                // Destroy the AR of the previous patient
+                StartCoroutine(RemoveARForPatient(patcientPosition[(int)currentPatcient - 1]));
 
                 // Generate AR for the nearest cart
                 patientPos = patcientPosition[(int)currentPatcient];
@@ -648,7 +666,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         // Generate AR for the nearest med
         GenerateARForMed(med);
 
-        Debug.Log("Med Chosen");
+        // Debug.Log("Med Chosen");
 
         return med;
     }
@@ -669,9 +687,9 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     private void SetArmToMedTarget()
     {
-        GameObject med = ChooseMedToPickUp();
+        pluckedMed = ChooseMedToPickUp();
 
-        var (hoverTransform, graspingTransform) = autoGrasping.GetHoverAndGraspTransforms(med);
+        var (hoverTransform, graspingTransform) = autoGrasping.GetHoverAndGraspTransforms(pluckedMed);
         List<Vector3> positions = new List<Vector3>{hoverTransform.position, graspingTransform.position, hoverTransform.position};
         List<Quaternion> rotations = new List<Quaternion>{hoverTransform.rotation, graspingTransform.rotation, hoverTransform.rotation};
         List<int> gripperActions = new List<int>{-1, 1, -1};
@@ -792,6 +810,35 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     {
         GameObject nearestCart = GetNearestCart(position);
         ReplaceHighlightObjectOnCanvas(nearestCart, icon);
+    }
+
+    // Load Patient Meds //////////////////////////////////////////////////////////////////////////////////////////
+
+    IEnumerator RemoveARForPatient(Vector3 position)
+    {
+        // wait for 2 seconds
+        yield return new WaitForSeconds(2);
+
+        // destroy the 3DAR and CanvasAR for the nearest cart
+        GameObject nearestCart = GetNearestCart(position);
+        RemoveHighlightObjectOnCanvas(nearestCart);
+        arGenerator.Destroy(nearestCart);
+        if(pluckedMed != null)
+        {
+            arGenerator.Destroy(pluckedMed);
+            pluckedMed = null;
+        }
+    }
+    
+
+    private void LoadPatientMedPrefab(Vector3 position, bool medState)
+    {
+        GameObject nearestCart = GetNearestCart(position);
+        //instatiate the prefab and place it on the cart
+        int medStateInt = medState ? 0 : 1; // shorthand: if true, return 1, false return 1
+        GameObject medPrefab = Instantiate(patientMedGameObjects[medStateInt], nearestCart.transform);
+        medPrefab.transform.localPosition = new Vector3(-0.002f, 0.87f, -0.1f);
+        // medPrefab.transform.localRotation = Quaternion.Euler(180, 0, 90);
     }
 
 }
