@@ -31,8 +31,10 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     [SerializeField] private DrawWaypoints drawLocalWaypoints;
     [SerializeField] private DrawWaypoints drawGlobalWaypoints;
     [SerializeField] private GenerateARGameObject arGenerator;
+    [SerializeField] private HighlightObjectOnCanvas highlightObject;
 
     private bool hideLocalPath = false;
+    [SerializeField] private Sprite icon;
 
     // [SerializeField] private Material globalPathMaterial;
     // [SerializeField] private Material localPathMaterial;
@@ -561,6 +563,18 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 Color.yellow,
                 0.15f
             );
+
+        // Get the cart ar feature
+        List<GameObject> arFeatures = arGenerator.GetARGameObject(nearestCart);
+
+        if(arFeatures.Count == 1)
+        {
+            // Add a highlight to the AR Feature
+            Debug.Log("Create AR highlight object on canvas");
+            CreateHighlightObjectOnCanvas(nearestCart);
+            CreateHighlightObjectOnCanvas(arFeatures[0]);
+        }
+       
     }
 
     // Get the nearest cart
@@ -617,6 +631,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             Color.green,
             0.25f
         );
+
+
     }
 
     private GameObject ChooseMedToPickUp()
@@ -706,6 +722,21 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         reachedArmGoal = true;
 
         Debug.Log("Finished Trajectory");
+    }
+
+
+    private void CreateHighlightObjectOnCanvas(GameObject selectedObject)
+    {
+       var location = HighlightObjectOnCanvas.ElementPosition.Bottom;
+            highlightObject.Highlight(
+                selectedObject,
+                cam,
+                displayRect,
+                icon,
+                Color.green,
+                adjustUIScale: false,
+                position: location
+            );
     }
 
 }
