@@ -387,8 +387,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 new Vector3(0, 0.93f, -0.02f),
                 new Vector3(180, 0, 90),
                 new Vector3(0.025f, 0.35f, 0.5f),
-                Color.yellow,
-                0.15f
+                Color.cyan,
+                0.7f
             );
 
         // Get the cart ar feature
@@ -502,7 +502,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 cam,
                 displayRect,
                 icon1,
-                Color.green,
+                Color.white,
                 adjustUIScale: false,
                 position: location
             );
@@ -523,7 +523,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 cam,
                 displayRect,
                 icon,
-                Color.green,
+                Color.white,
                 adjustUIScale: false,
                 position: location
             );
