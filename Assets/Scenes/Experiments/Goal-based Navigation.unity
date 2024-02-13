@@ -3583,7 +3583,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1233093149}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4abc1e833d64e124d82e2ddfb59c59c8, type: 3}
   m_Name: 
@@ -3627,16 +3627,16 @@ MonoBehaviour:
   icon1: {fileID: 21300000, guid: 2e96ed6aa37deb14caa18642954e3367, type: 3}
   icon2: {fileID: 21300000, guid: 9fcc9ddf3a4c6a84caf358bad3402ff3, type: 3}
   icon3: {fileID: 21300000, guid: 4ac78a854698c131bb9370e263905d81, type: 3}
-  patcientPosition:
-  - {x: -10.85, y: 0.1, z: 7.8}
-  - {x: -10.85, y: 0.1, z: 4.4}
-  - {x: -10.85, y: 0.1, z: 1.42}
-  - {x: -10.85, y: 0.1, z: -2}
-  patcientRotations:
-  - {x: 0, y: -90, z: 0}
-  - {x: 0, y: -90, z: 0}
-  - {x: 0, y: -90, z: 0}
-  - {x: 0, y: -90, z: 0}
+  patientPosition:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  patientRotations:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
   pharmacyPosition: {x: -7.9, y: 0.1, z: 8.1}
   pharmacyRotation: {x: 0, y: -90, z: 0}
   transfereWaypointPositions:
@@ -3677,8 +3677,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b04703e3e02887a49b3f92cf2295afcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawGlobalWaypoints: {fileID: 1233093161}
-  baseController: {fileID: 0}
+  drawGlobalWaypoints: {fileID: 1233093158}
   reachedGoal: 0
 --- !u!114 &1233093163
 MonoBehaviour:
@@ -3693,11 +3692,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arGenerator: {fileID: 1233093154}
-  armController: {fileID: 0}
-  autoGrasping: {fileID: 0}
-  waypointArmPositions: []
-  waypointArmRotations: []
-  reachedArmGoal: 0
+  reachedGoal: 0
 --- !u!1 &1264190031
 GameObject:
   m_ObjectHideFlags: 0
