@@ -881,6 +881,121 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 260785712}
   m_CullTransparentMesh: 1
+--- !u!1 &272281203
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 272281204}
+  - component: {fileID: 272281207}
+  - component: {fileID: 272281206}
+  - component: {fileID: 272281205}
+  m_Layer: 0
+  m_Name: ARAutonomy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &272281204
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272281203}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1622921146}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &272281205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272281203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee12e8035d65e214592a96cf25474722, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  graphicalInterface: {fileID: 1233093151}
+  displayRect: {fileID: 320648764}
+  arNavAuto: {fileID: 272281207}
+  arManipAuto: {fileID: 272281206}
+  arGenerator: {fileID: 1233093154}
+  highlightObject: {fileID: 1233093153}
+  icon1: {fileID: 21300000, guid: 2e96ed6aa37deb14caa18642954e3367, type: 3}
+  icon2: {fileID: 21300000, guid: 9fcc9ddf3a4c6a84caf358bad3402ff3, type: 3}
+  icon3: {fileID: 21300000, guid: 4ac78a854698c131bb9370e263905d81, type: 3}
+  patientPosition:
+  - {x: -10.85, y: 0.1, z: 7.8}
+  - {x: -10.85, y: 0.1, z: 4.4}
+  - {x: -10.85, y: 0.1, z: 1.42}
+  - {x: -10.85, y: 0.1, z: -2}
+  patientRotations:
+  - {x: 0, y: -90, z: 0}
+  - {x: 0, y: -90, z: 0}
+  - {x: 0, y: -90, z: 0}
+  - {x: 0, y: -90, z: 0}
+  pharmacyPosition: {x: -7.9, y: 0.1, z: 8.1}
+  pharmacyRotation: {x: 0, y: -90, z: 0}
+  transfereWaypointPositions:
+  - {x: -8.392, y: 0.1, z: 5.95}
+  - {x: -9.66, y: 0.1, z: 5.95}
+  transferWaypointRotations:
+  - {x: 0, y: -90, z: 0}
+  - {x: 0, y: -90, z: 0}
+  transferReturnWaypointRotations:
+  - {x: 0, y: 90, z: 0}
+  - {x: 0, y: 90, z: 0}
+  patientMissingMeds: 01000100
+  patientMedGameObjects:
+  - {fileID: 5931222874406895172, guid: 8a224b3a9f0312c418b51fc9c8daf0b7, type: 3}
+  - {fileID: 1301469043717798922, guid: 1378e3e5e04df4f4cac79eda43433921, type: 3}
+--- !u!114 &272281206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272281203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c7bece9fec2d7245bcfe6e6e39bdf40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arGenerator: {fileID: 1233093154}
+  armController: {fileID: 0}
+  autoGrasping: {fileID: 0}
+  waypointArmPositions: []
+  waypointArmRotations: []
+  reachedArmGoal: 0
+  autoReady: 0
+--- !u!114 &272281207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272281203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b04703e3e02887a49b3f92cf2295afcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drawGlobalWaypoints: {fileID: 1233093161}
+  baseController: {fileID: 0}
+  reachedGoal: 0
+  autoReady: 0
 --- !u!1 &320648763
 GameObject:
   m_ObjectHideFlags: 0
@@ -3387,14 +3502,9 @@ GameObject:
   - component: {fileID: 1233093155}
   - component: {fileID: 1233093154}
   - component: {fileID: 1233093153}
-  - component: {fileID: 1233093158}
   - component: {fileID: 1233093161}
   - component: {fileID: 1233093152}
   - component: {fileID: 1233093157}
-  - component: {fileID: 1233093159}
-  - component: {fileID: 1233093160}
-  - component: {fileID: 1233093162}
-  - component: {fileID: 1233093163}
   m_Layer: 5
   m_Name: RegularGUI
   m_TagString: Untagged
@@ -3568,7 +3678,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arGenerator: {fileID: 1233093154}
-  drawWaypoints: {fileID: 1233093158}
+  drawWaypoints: {fileID: 0}
   objectSelector: {fileID: 1233093156}
   floorSelector: {fileID: 1233093155}
   baseController: {fileID: 0}
@@ -3576,82 +3686,6 @@ MonoBehaviour:
   autoGrapsing: {fileID: 0}
   robot: {fileID: 0}
   arGripper: {fileID: 2710091181654038673, guid: 735101cad7c4b704c802695827135a92, type: 3}
---- !u!114 &1233093158
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1233093149}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4abc1e833d64e124d82e2ddfb59c59c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  defaultLineMaterial: {fileID: 2100000, guid: 440884769b21fe94d8313602fadeb17a, type: 2}
---- !u!114 &1233093159
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1233093149}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b611e40271f282541b3ac32630b72d5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  graphicalInterface: {fileID: 1233093151}
-  displayRect: {fileID: 320648764}
-  floorSelector: {fileID: 1233093155}
-  drawWaypoints: {fileID: 1233093158}
-  baseController: {fileID: 0}
---- !u!114 &1233093160
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1233093149}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee12e8035d65e214592a96cf25474722, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  graphicalInterface: {fileID: 1233093151}
-  displayRect: {fileID: 320648764}
-  arNavAuto: {fileID: 1233093162}
-  arManipAuto: {fileID: 1233093163}
-  arGenerator: {fileID: 1233093154}
-  highlightObject: {fileID: 1233093153}
-  icon1: {fileID: 21300000, guid: 2e96ed6aa37deb14caa18642954e3367, type: 3}
-  icon2: {fileID: 21300000, guid: 9fcc9ddf3a4c6a84caf358bad3402ff3, type: 3}
-  icon3: {fileID: 21300000, guid: 4ac78a854698c131bb9370e263905d81, type: 3}
-  patientPosition:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  patientRotations:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  pharmacyPosition: {x: -7.9, y: 0.1, z: 8.1}
-  pharmacyRotation: {x: 0, y: -90, z: 0}
-  transfereWaypointPositions:
-  - {x: -8.392, y: 0.1, z: 5.95}
-  - {x: -9.66, y: 0.1, z: 5.95}
-  transferWaypointRotations:
-  - {x: 0, y: -90, z: 0}
-  - {x: 0, y: -90, z: 0}
-  transferReturnWaypointRotations:
-  - {x: 0, y: 90, z: 0}
-  - {x: 0, y: 90, z: 0}
-  patientMissingMeds: 01000100
-  patientMedGameObjects:
-  - {fileID: 5931222874406895172, guid: 8a224b3a9f0312c418b51fc9c8daf0b7, type: 3}
-  - {fileID: 1301469043717798922, guid: 1378e3e5e04df4f4cac79eda43433921, type: 3}
 --- !u!114 &1233093161
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3665,34 +3699,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultLineMaterial: {fileID: 2100000, guid: 15906be1180c2534fbc01b0d3c4a2f2c, type: 2}
---- !u!114 &1233093162
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1233093149}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b04703e3e02887a49b3f92cf2295afcb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  drawGlobalWaypoints: {fileID: 1233093158}
-  reachedGoal: 0
---- !u!114 &1233093163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1233093149}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c7bece9fec2d7245bcfe6e6e39bdf40, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  arGenerator: {fileID: 1233093154}
-  reachedGoal: 0
 --- !u!1 &1264190031
 GameObject:
   m_ObjectHideFlags: 0
@@ -5319,6 +5325,7 @@ Transform:
   - {fileID: 440167326}
   - {fileID: 1051924524}
   - {fileID: 1494653340}
+  - {fileID: 272281204}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1622921147

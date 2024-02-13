@@ -37,7 +37,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     [SerializeField] private GenerateARGameObject arGenerator;
     [SerializeField] private HighlightObjectOnCanvas highlightObject;
 
-    // private bool hideLocalPath = false;
+    private bool hideLocalPath = false;
     [SerializeField] private Sprite icon1;
     [SerializeField] private Sprite icon2;
     [SerializeField] private Sprite icon3;
@@ -66,7 +66,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     public List<Vector3> transferWaypointRotations = new List<Vector3>();
     public List<Vector3> transferReturnWaypointRotations = new List<Vector3>();
 
-
+    
     private GameObject[] patientMedCarts;
 
     // public GameObject[] graspableMeds;
@@ -103,8 +103,14 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             
             if(robot == null)
             {
+                // Debug.Log("No robot found");
                 return;
             }
+        }
+
+        if(!(arNavAuto.autoReady && arManipAuto.autoReady))
+        {
+            return;
         }
 
         if(patientMedCarts == null)
@@ -113,11 +119,11 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             
             if(patientMedCarts.Length == 0)
             {
-                Debug.Log("No carts found");;
+                // Debug.Log("No carts found");;
             }
             else
             {
-                Debug.Log("Carts found");
+                // Debug.Log("Carts found");
                 // load the patient meds into the scene
                 for(int i = 0; i < patientPosition.Length; i++)
                 {
@@ -141,14 +147,14 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             }
             graspableMeds = filteredGraspable;
 
-            if(graspableMeds.Count == 0)
-            {
-                Debug.Log("No meds found");;
-            }
-            else
-            {
-                Debug.Log("Meds found");
-            }
+            // if(graspableMeds.Count == 0)
+            // {
+            //     // Debug.Log("No meds found");;
+            // }
+            // else
+            // {
+            //     // Debug.Log("Meds found");
+            // }
         }
 
         ScheuldeNextTask();
@@ -237,7 +243,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             case State.GetMedicine:
 
                 // if we have the medicine, go deliver the medicine
-                if (arManipAuto.reachedGoal)
+                if (arManipAuto.reachedArmGoal)
                 {
                     Debug.Log("Got Medicine");
                     arManipAuto.HomeJoints();
@@ -289,7 +295,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
             case State.DropOffMedicine:
                 // Drop off the medicine
-                if(arManipAuto.reachedGoal)
+                if(arManipAuto.reachedArmGoal)
                 {
                     patientPos = patientPosition[(int)currentpatient];
                     ChangeNearestCartARColor(patientPos, Color.green);
@@ -391,7 +397,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         if(arFeatures.Count == 1)
         {
             // Add a highlight to the AR Feature
-            Debug.Log("Create AR highlight object on canvas");
             CreateHighlightObjectOnCanvas(nearestCart, new Vector3(0f, 1.1f, 0));
         }
        

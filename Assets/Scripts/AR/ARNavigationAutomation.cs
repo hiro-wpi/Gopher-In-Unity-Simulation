@@ -27,8 +27,11 @@ public class ARNavigationAutomation : MonoBehaviour
     private bool waypointReachedGoal = false; // This is for just reaching successive points on the list
 
     [SerializeField, ReadOnly] public bool reachedGoal = false;  // reached the whole goal
+    [SerializeField, ReadOnly] public bool autoReady = false;  // reached the whole goal
 
     private bool passingInGlobalGoal = false;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +41,16 @@ public class ARNavigationAutomation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // // Get the main camera if it is not already set
+        // if (cam == null)
+        // {
+        //     // Get all the active cameras referanced in the graphical interface
+        //     Camera[] cameras =  graphicalInterface.GetCurrentActiveCameras();
+        //     if (cameras.Length > 0)
+        //     {
+        //         cam = cameras[0];
+        //     }
+        // }
 
         if(robot == null)
         {
@@ -46,6 +59,7 @@ public class ARNavigationAutomation : MonoBehaviour
             // Set the articulation base controller
             if(robot == null)
             {
+                // Debug.Log("No robot found");
                 return;
             }
             // Get Child of the robot
@@ -57,6 +71,8 @@ public class ARNavigationAutomation : MonoBehaviour
             //      check if we arrive at the goal
             baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
             baseController.OnAutonomyComplete += OnBaseReachedGoal;
+
+            autoReady = true;
         }
 
     }
@@ -122,22 +138,8 @@ public class ARNavigationAutomation : MonoBehaviour
 
         int lastIndex = waypointPositions.Count - 1;
 
-        // if there is only one waypoint, no need to show both the global and the local path, lets just show the global path
-        
-        // if(lastIndex == 0)
-        // {
-        //     // Hide the local path
-        //     hideLocalPath = true;
-        //     // drawGlobalWaypoints.RemoveLine("Global Path");
-        // }
-        // else
-        // {
-        //     hideLocalPath = false;
-        // }
-
         // Display the global path
         passingInGlobalGoal = true;
-        Debug.Log("FollowingWaypoints >> SendingGlobalPath");
         baseController.SetAutonomyTarget(waypointPositions[lastIndex], Quaternion.Euler(waypointRotations[lastIndex]));
         yield return new WaitUntil(() => passingInGlobalGoal == false);
         
@@ -145,7 +147,7 @@ public class ARNavigationAutomation : MonoBehaviour
         {
             // Debug.Log("Going to Waypoint");
             // Reset the reached goal flag
-            Debug.Log("FollowingWaypoints >> SendingLocalPaths");
+            
             waypointReachedGoal = false;
 
             // Convert from euler angles to quaternion
@@ -171,20 +173,10 @@ public class ARNavigationAutomation : MonoBehaviour
             drawGlobalWaypoints.RemoveLine("Global Path");
             // Add new waypoints
             drawGlobalWaypoints.DrawLine("Global Path", globalWaypoints);
-            // Debug.Log("Global Path");
+            
         }
         else
         {
-            // Debug.Log("Local Path");
-        
-            // Clear old waypoints
-            // drawLocalWaypoints.RemoveLine("Local Path");
-
-            // if(!hideLocalPath)
-            // {
-            //     // Add new waypoints
-            //     drawLocalWaypoints.DrawLine("Local Path", globalWaypoints);
-            // }
 
             // Automatically Send the robot to the goal
             baseController.MoveToAutonomyTarget();
