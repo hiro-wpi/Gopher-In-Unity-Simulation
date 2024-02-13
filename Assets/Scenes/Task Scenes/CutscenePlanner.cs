@@ -31,6 +31,8 @@ public class CutscenePlanner : MonoBehaviour
     private float waitDuration = 2.0f;
     private float raiseTimer = 0.0f;
     private float raiseDuration = 1.5f;
+    private float eyeARTimer = 0.0f;
+    private float eyeARDuration = 1.0f;
 
     private float headTurnSpeed = 10.0f;
     private float armMoveSpeed = 0.3f; 
@@ -40,6 +42,7 @@ public class CutscenePlanner : MonoBehaviour
     {
         WaitingBeforeMedicine,
         RaisingHand,
+        HighlightingMedicine,
         GoingToMedicine,
         WaitingAtMedicine,
         GoingToHome,
@@ -63,7 +66,11 @@ public class CutscenePlanner : MonoBehaviour
                 break;
 
             case CutsceneState.RaisingHand:
-                RaiseHand();
+                RaisingHand();
+                break;
+
+            case CutsceneState.HighlightingMedicine:
+                HighlightingMedicine();
                 break;
 
             case CutsceneState.GoingToMedicine:
@@ -111,7 +118,7 @@ public class CutscenePlanner : MonoBehaviour
         }
     }
 
-    private void RaiseHand()
+    private void RaisingHand()
     {
         raiseTimer += Time.deltaTime;
         if (raiseTimer < raiseDuration)
@@ -120,11 +127,22 @@ public class CutscenePlanner : MonoBehaviour
         }
         raiseTimer = 0.0f;
 
-        ikController.MoveLeftHand(motionType, medicineHandPositions[currentMedicineIndex].position, positionSpeed: armMoveSpeed, height: 0.1f);
-
         eyeAR = Instantiate(eyeARPrefab, medicineBottles[currentMedicineIndex].transform.position + new Vector3(0f, eyeAROffset, 0f), eyeARPrefab.transform.rotation);
         eyeAR.transform.SetParent(medicineBottles[currentMedicineIndex].transform);
 
+        currentState = CutsceneState.HighlightingMedicine;
+    }
+
+    private void HighlightingMedicine()
+    {
+        eyeARTimer += Time.deltaTime;
+        if (eyeARTimer < eyeARDuration)
+        {
+            return;
+        }
+        eyeARTimer = 0.0f;
+        
+        ikController.MoveLeftHand(motionType, medicineHandPositions[currentMedicineIndex].position, positionSpeed: armMoveSpeed, height: 0.1f);
         currentState = CutsceneState.GoingToMedicine;
     }
 

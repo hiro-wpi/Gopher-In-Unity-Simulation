@@ -2331,6 +2331,7 @@ GameObject:
   m_Component:
   - component: {fileID: 778222206}
   - component: {fileID: 778222207}
+  - component: {fileID: 778222208}
   m_Layer: 0
   m_Name: Arm Autonomy
   m_TagString: Untagged
@@ -2374,6 +2375,30 @@ MonoBehaviour:
   highlightObject: {fileID: 279664475}
   arGripper: {fileID: 2710091181654038673, guid: 735101cad7c4b704c802695827135a92, type: 3}
   hasNewGoal: 0
+--- !u!114 &778222208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 778222205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd37eb49dee87324da2001a06b25d7c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nurseSitting: {fileID: 0}
+  foreArmCollisionDetection: {fileID: 0}
+  handCollisionDetection: {fileID: 0}
+  smallForeArmCollisionDetection: {fileID: 0}
+  smallHandCollisionDetection: {fileID: 0}
+  highlightObject: {fileID: 279664475}
+  graphicalInterface: {fileID: 279664474}
+  displayRect: {fileID: 271174651}
+  warningIconObject: {fileID: 0}
+  warningIcon: {fileID: 21300000, guid: a292009cdfc9086479f03b098addc1e9, type: 3}
+  collisionIconObject: {fileID: 0}
+  collisionIcon: {fileID: 21300000, guid: be8aa7a88dd5a5c499bc64d84e6dfb6e, type: 3}
 --- !u!1 &824941344
 GameObject:
   m_ObjectHideFlags: 0

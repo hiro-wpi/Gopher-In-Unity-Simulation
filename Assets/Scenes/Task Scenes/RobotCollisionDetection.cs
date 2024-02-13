@@ -11,7 +11,7 @@ public class RobotCollisionDetection : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Robot"))
         {
             onRobotCollision = true;
-            Debug.Log("Robot collision detected");
+            // Debug.Log("Robot collision detected");
         }
     }
 
@@ -20,7 +20,7 @@ public class RobotCollisionDetection : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Robot"))
         {
             onRobotCollision = false;
-            Debug.Log("Robot collision ended");
+            // Debug.Log("Robot collision ended");
         }
     }
 }
