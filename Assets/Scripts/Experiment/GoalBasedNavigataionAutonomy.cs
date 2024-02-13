@@ -31,6 +31,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     // AR Automation
     [SerializeField] private ARNavigationAutomation arNavAuto;
+    [SerializeField] private ARManipulationAutomation arManipAuto;
 
     // AR Featrues 
     // [SerializeField] private FloorSelector floorSelector;
@@ -49,10 +50,10 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     // Autonomy
     // [SerializeField] private ArticulationBaseController baseController;
-    [SerializeField] private ArticulationArmController armController;
-    [SerializeField] private AutoGrasping autoGrasping;
+    // [SerializeField] private ArticulationArmController armController;
+    // [SerializeField] private AutoGrasping autoGrasping;
     private GameObject robot;
-    private GameObject leftRobotEE;
+    // private GameObject leftRobotEE;
 
     // State Machines
     private enum State { SetFirstPatcient, CheckPatcient, GoToPharmacy, GetMedicine, GoDeliverMedicine, DropOffMedicine, ChangePatient, Done};
@@ -79,7 +80,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     // Tracked Trajectory of the Robot base
     // private List<Vector3> waypointPositions = new List<Vector3>();
     // private List<Vector3> waypointRotations = new List<Vector3>();
-    private List<int> waypointGripperActions = new List<int>(); // 0 for open, 1 for close
+    // private List<int> waypointGripperActions = new List<int>(); // 0 for open, 1 for close
 
     // private bool waypointReachedGoal = false; // This is for just reaching successive points on the list
     // private bool reachedGoal = false;  // reached the whole goal
@@ -88,11 +89,11 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
      // Tracked Trajectory of the Robot Arm
 
-    public List<Vector3> waypointArmPositions = new List<Vector3>();
-    public List<Quaternion> waypointArmRotations = new List<Quaternion>();
+    // public List<Vector3> waypointArmPositions = new List<Vector3>();
+    // public List<Quaternion> waypointArmRotations = new List<Quaternion>();
 
-    private bool waypointArmReachedGoal = false; // This is for just reaching successive points on the list
-    private bool reachedArmGoal = false;  // reached the whole goal
+    // private bool waypointArmReachedGoal = false; // This is for just reaching successive points on the list
+    // private bool reachedArmGoal = false;  // reached the whole goal
 
 
     private GameObject[] patientMedCarts;
@@ -143,15 +144,15 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             // leftRobotEE = robot.transform.Find("Plugins/Hardware/Left Arm").gameObject;
 
             // baseController = robot.GetComponentInChildren<ArticulationBaseController>();
-            armController = robot.GetComponentInChildren<ArticulationArmController>();
-            autoGrasping = robot.GetComponentInChildren<AutoGrasping>();
+            // armController = robot.GetComponentInChildren<ArticulationArmController>();
+            // autoGrasping = robot.GetComponentInChildren<AutoGrasping>();
             // Constantly subscribe to the event to make our trajectory visible
             //      check if we arrive at the goal
             // baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
             // baseController.OnAutonomyComplete += OnBaseReachedGoal;
 
-            armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
-            armController.OnAutonomyComplete += OnArmAutonomyComplete;
+            // armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
+            // armController.OnAutonomyComplete += OnArmAutonomyComplete;
 
             // ScheuldeNextTask();
         }
@@ -215,11 +216,11 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         //     baseController.OnAutonomyComplete += OnBaseReachedGoal;
         // }
 
-        if (armController != null)
-        {
-            armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
-            armController.OnAutonomyComplete += OnArmAutonomyComplete;
-        }
+        // if (armController != null)
+        // {
+        //     armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
+        //     armController.OnAutonomyComplete += OnArmAutonomyComplete;
+        // }
     }
 
     void OnDisable()
@@ -232,11 +233,11 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         //     baseController.OnAutonomyComplete -= OnBaseReachedGoal;
         // }
 
-        if (armController != null)
-        {
-            armController.OnAutonomyTrajectory -= OnArmTrajectoryGenerated;
-            armController.OnAutonomyComplete -= OnArmAutonomyComplete;
-        }
+        // if (armController != null)
+        // {
+        //     armController.OnAutonomyTrajectory -= OnArmTrajectoryGenerated;
+        //     armController.OnAutonomyComplete -= OnArmAutonomyComplete;
+        // }
     }
 
     
@@ -334,10 +335,10 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // bool gotMedicine = true;
 
                 // if we have the medicine, go deliver the medicine
-                if (reachedArmGoal)
+                if (arManipAuto.reachedArmGoal)
                 {
                     Debug.Log("Got Medicine");
-                    armController.HomeJoints();
+                    arManipAuto.HomeJoints();
                     posTraj = new List<Vector3>(transfereWaypointPositions);
                     rotTraj = new List<Vector3>(transferWaypointRotations);
                     posTraj.Add(patcientPosition[(int)currentPatcient]);
@@ -376,7 +377,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         List<Quaternion> rotations = new List<Quaternion>{hoverDropOffRot1, hoverDropOffRot2, hoverDropOffRot1};
                         List<int> gripperActions = new List<int>{-1, 0, -1, };
                         
-                        SetArmWaypoints(positions, rotations, gripperActions);
+                        arManipAuto.SetArmWaypoints(positions, rotations, gripperActions);
                     }
 
                     // ChangeNearestCartARColor(patientPos, Color.green);
@@ -387,13 +388,13 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
             case State.DropOffMedicine:
                 // Drop off the medicine
-                if(reachedArmGoal)
+                if(arManipAuto.reachedArmGoal)
                 {
                     patientPos = patcientPosition[(int)currentPatcient];
                     ChangeNearestCartARColor(patientPos, Color.green);
                     ChangeNearestCartCanvasHighlightIcon(patientPos, icon2);
 
-                    armController.HomeJoints();
+                    arManipAuto.HomeJoints();
                     
                     state = State.ChangePatient;
                 }
@@ -676,76 +677,76 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
 
     // Arm Navigation and Autonomy Functions //////////////////////////////////////////////////////////////////////////////////////////
-    private void OnArmAutonomyComplete()
-    {
-        Debug.Log("Arm Autonomy Complete");
-        waypointArmReachedGoal = true;
-    }
+    // private void OnArmAutonomyComplete()
+    // {
+    //     Debug.Log("Arm Autonomy Complete");
+    //     waypointArmReachedGoal = true;
+    // }
 
-    private void OnArmTrajectoryGenerated()
-    {
-        Debug.Log("Arm trajectory generated");
-        armController.MoveToAutonomyTarget();
-    }
+    // private void OnArmTrajectoryGenerated()
+    // {
+    //     Debug.Log("Arm trajectory generated");
+    //     armController.MoveToAutonomyTarget();
+    // }
 
     private void SetArmToMedTarget()
     {
         pluckedMed = ChooseMedToPickUp();
 
-        var (hoverTransform, graspingTransform) = autoGrasping.GetHoverAndGraspTransforms(pluckedMed);
+        var (hoverTransform, graspingTransform) = arManipAuto.GetHoverAndGraspTransforms(pluckedMed);
         List<Vector3> positions = new List<Vector3>{hoverTransform.position, graspingTransform.position, hoverTransform.position};
         List<Quaternion> rotations = new List<Quaternion>{hoverTransform.rotation, graspingTransform.rotation, hoverTransform.rotation};
         List<int> gripperActions = new List<int>{-1, 1, -1};
         // SetArmTarget(med);
-        SetArmWaypoints(positions, rotations, gripperActions);
+        arManipAuto.SetArmWaypoints(positions, rotations, gripperActions);
     }
 
-    private void SetArmWaypoints(Vector3 position, Quaternion rotation, int gripperAction = 0)
-    {
-        SetArmWaypoints(new List<Vector3>{position}, new List<Quaternion>{rotation}, new List<int>{gripperAction});
-    }
+    // private void SetArmWaypoints(Vector3 position, Quaternion rotation, int gripperAction = 0)
+    // {
+    //     SetArmWaypoints(new List<Vector3>{position}, new List<Quaternion>{rotation}, new List<int>{gripperAction});
+    // }
 
 
-    private void SetArmWaypoints(List<Vector3> positions, List<Quaternion> rotations, List<int> gripperActions)
-    {
-        if(positions.Count != rotations.Count || positions.Count != gripperActions.Count)
-        {
-            Debug.LogWarning("The list used are not the same size, they are not being added");
-            return;
-        }
+    // private void SetArmWaypoints(List<Vector3> positions, List<Quaternion> rotations, List<int> gripperActions)
+    // {
+    //     if(positions.Count != rotations.Count || positions.Count != gripperActions.Count)
+    //     {
+    //         Debug.LogWarning("The list used are not the same size, they are not being added");
+    //         return;
+    //     }
 
-        waypointArmPositions = positions;
-        waypointArmRotations = rotations;
-        waypointGripperActions = gripperActions;
+    //     waypointArmPositions = positions;
+    //     waypointArmRotations = rotations;
+    //     waypointGripperActions = gripperActions;
 
-        StartCoroutine(FollowArmWaypoints());
-    }
+    //     StartCoroutine(FollowArmWaypoints());
+    // }
 
-    IEnumerator FollowArmWaypoints()
-    {
-        for(int i = 0; i < waypointArmPositions.Count; i++)
-        {
-            // Reset the reached goal flag
-            reachedArmGoal = false;
-            waypointArmReachedGoal = false;
+    // IEnumerator FollowArmWaypoints()
+    // {
+    //     for(int i = 0; i < waypointArmPositions.Count; i++)
+    //     {
+    //         // Reset the reached goal flag
+    //         reachedArmGoal = false;
+    //         waypointArmReachedGoal = false;
 
-            // Move to the position
-            armController.SetAutonomyTarget(waypointArmPositions[i], waypointArmRotations[i]);
+    //         // Move to the position
+    //         armController.SetAutonomyTarget(waypointArmPositions[i], waypointArmRotations[i]);
 
-            // Wait for when the arm reaches the position
-            yield return new WaitUntil(() => waypointArmReachedGoal);
+    //         // Wait for when the arm reaches the position
+    //         yield return new WaitUntil(() => waypointArmReachedGoal);
 
-            // Set the gripper (open or closed)
-            if(waypointGripperActions[i] != -1)
-            {
-                armController.SetGripperPosition(waypointGripperActions[i]);
-            }
+    //         // Set the gripper (open or closed)
+    //         if(waypointGripperActions[i] != -1)
+    //         {
+    //             armController.SetGripperPosition(waypointGripperActions[i]);
+    //         }
             
-        }
-        reachedArmGoal = true;
+    //     }
+    //     reachedArmGoal = true;
 
-        Debug.Log("Finished Trajectory");
-    }
+    //     Debug.Log("Finished Trajectory");
+    // }
 
     // Canvas Highlight Functions //////////////////////////////////////////////////////////////////////////////////////////
     private void CreateHighlightObjectOnCanvas(GameObject selectedObject, Vector3 positionOffset = new Vector3())

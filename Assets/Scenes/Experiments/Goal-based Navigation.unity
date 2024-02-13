@@ -3394,6 +3394,7 @@ GameObject:
   - component: {fileID: 1233093159}
   - component: {fileID: 1233093160}
   - component: {fileID: 1233093162}
+  - component: {fileID: 1233093163}
   m_Layer: 5
   m_Name: RegularGUI
   m_TagString: Untagged
@@ -3620,13 +3621,12 @@ MonoBehaviour:
   graphicalInterface: {fileID: 1233093151}
   displayRect: {fileID: 320648764}
   arNavAuto: {fileID: 1233093162}
+  arManipAuto: {fileID: 1233093163}
   arGenerator: {fileID: 1233093154}
   highlightObject: {fileID: 1233093153}
   icon1: {fileID: 21300000, guid: 2e96ed6aa37deb14caa18642954e3367, type: 3}
   icon2: {fileID: 21300000, guid: 9fcc9ddf3a4c6a84caf358bad3402ff3, type: 3}
   icon3: {fileID: 21300000, guid: 4ac78a854698c131bb9370e263905d81, type: 3}
-  armController: {fileID: 0}
-  autoGrasping: {fileID: 0}
   patcientPosition:
   - {x: -10.85, y: 0.1, z: 7.8}
   - {x: -10.85, y: 0.1, z: 4.4}
@@ -3648,8 +3648,6 @@ MonoBehaviour:
   transferReturnWaypointRotations:
   - {x: 0, y: 90, z: 0}
   - {x: 0, y: 90, z: 0}
-  waypointArmPositions: []
-  waypointArmRotations: []
   patientMissingMeds: 01000100
   patientMedGameObjects:
   - {fileID: 5931222874406895172, guid: 8a224b3a9f0312c418b51fc9c8daf0b7, type: 3}
@@ -3682,6 +3680,24 @@ MonoBehaviour:
   drawGlobalWaypoints: {fileID: 1233093161}
   baseController: {fileID: 0}
   reachedGoal: 0
+--- !u!114 &1233093163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233093149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c7bece9fec2d7245bcfe6e6e39bdf40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arGenerator: {fileID: 1233093154}
+  armController: {fileID: 0}
+  autoGrasping: {fileID: 0}
+  waypointArmPositions: []
+  waypointArmRotations: []
+  reachedArmGoal: 0
 --- !u!1 &1264190031
 GameObject:
   m_ObjectHideFlags: 0
