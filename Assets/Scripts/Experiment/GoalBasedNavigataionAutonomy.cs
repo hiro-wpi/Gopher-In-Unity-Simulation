@@ -40,7 +40,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     [SerializeField] private GenerateARGameObject arGenerator;
     [SerializeField] private HighlightObjectOnCanvas highlightObject;
 
-    private bool hideLocalPath = false;
+    // private bool hideLocalPath = false;
     [SerializeField] private Sprite icon1;
     [SerializeField] private Sprite icon2;
     [SerializeField] private Sprite icon3;
@@ -93,7 +93,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     // public List<Quaternion> waypointArmRotations = new List<Quaternion>();
 
     // private bool waypointArmReachedGoal = false; // This is for just reaching successive points on the list
-    // private bool reachedArmGoal = false;  // reached the whole goal
+    // private bool reachedGoal = false;  // reached the whole goal
 
 
     private GameObject[] patientMedCarts;
@@ -137,7 +137,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             // Set the articulation base controller
             if(robot == null)
             {
-                Debug.Log("No robot found");
                 return;
             }
             // Get Child of the robot
@@ -335,7 +334,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // bool gotMedicine = true;
 
                 // if we have the medicine, go deliver the medicine
-                if (arManipAuto.reachedArmGoal)
+                if (arManipAuto.reachedGoal)
                 {
                     Debug.Log("Got Medicine");
                     arManipAuto.HomeJoints();
@@ -388,7 +387,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
             case State.DropOffMedicine:
                 // Drop off the medicine
-                if(arManipAuto.reachedArmGoal)
+                if(arManipAuto.reachedGoal)
                 {
                     patientPos = patcientPosition[(int)currentPatcient];
                     ChangeNearestCartARColor(patientPos, Color.green);
@@ -727,7 +726,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     //     for(int i = 0; i < waypointArmPositions.Count; i++)
     //     {
     //         // Reset the reached goal flag
-    //         reachedArmGoal = false;
+    //         reachedGoal = false;
     //         waypointArmReachedGoal = false;
 
     //         // Move to the position
@@ -743,7 +742,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     //         }
             
     //     }
-    //     reachedArmGoal = true;
+    //     reachedGoal = true;
 
     //     Debug.Log("Finished Trajectory");
     // }

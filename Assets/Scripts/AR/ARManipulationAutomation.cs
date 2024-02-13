@@ -9,24 +9,21 @@ public class ARManipulationAutomation : MonoBehaviour
     // Task setup
     private GameObject robot;
 
+    // Automation
+    private ArticulationArmController armController;
+    private AutoGrasping autoGrasping;
+
     // AR Featrues
     [SerializeField] private GenerateARGameObject arGenerator;
 
-    // Automation
-
-    [SerializeField] private ArticulationArmController armController;
-    [SerializeField] private AutoGrasping autoGrasping;
-
     // Waypoints
     private List<int> waypointGripperActions = new List<int>(); // 0 for open, 1 for close
-    // private GameObject leftRobotEE;
-    public List<Vector3> waypointArmPositions = new List<Vector3>();
-    public List<Quaternion> waypointArmRotations = new List<Quaternion>();
+    private List<Vector3> waypointArmPositions = new List<Vector3>();
+    private List<Quaternion> waypointArmRotations = new List<Quaternion>();
 
-    // goal flags
-
-    private bool waypointArmReachedGoal = false; // This is for just reaching successive points on the list
-    [SerializeField, ReadOnly] public bool reachedArmGoal = false;  // reached the whole goal
+    // Goal flags
+    private bool waypointReachedGoal = false; // This is for just reaching successive points in the trajectory
+    [ReadOnly] public bool reachedGoal = false;  // For reaching the whole trajectory
 
     void Start()
     {
@@ -36,21 +33,6 @@ public class ARManipulationAutomation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Get the main camera if it is not already set
-        // if (cam == null)
-        // {
-        //     // Get all the active cameras referanced in the graphical interface
-        //     Camera[] cameras =  graphicalInterface.GetCurrentActiveCameras();
-        //     if (cameras.Length > 0)
-        //     {
-        //         cam = cameras[0];
-
-        //         //////////////////////////////////////////
-        //         // floorSelector.SetCameraAndDisplay(cam, displayRect);
-        //         // objectSelector.SetCameraAndDisplay(cam, displayRect);
-        //         //////////////////////////////////////////
-        //     }
-        // }
 
         if(robot == null)
         {
@@ -59,42 +41,28 @@ public class ARManipulationAutomation : MonoBehaviour
             // Set the articulation base controller
             if(robot == null)
             {
-                Debug.Log("No robot found");
                 return;
             }
-            // Get Child of the robot
-            // leftRobotEE = robot.transform.Find("Plugins/Hardware/Left Arm").gameObject;
-
-            // baseController = robot.GetComponentInChildren<ArticulationBaseController>();
+            
+            // Get robot components
             armController = robot.GetComponentInChildren<ArticulationArmController>();
             autoGrasping = robot.GetComponentInChildren<AutoGrasping>();
-            // Constantly subscribe to the event to make our trajectory visible
-            //      check if we arrive at the goal
-            // baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
-            // baseController.OnAutonomyComplete += OnBaseReachedGoal;
+            
+            armController.OnAutonomyTrajectory += OnArmTrajectoryWaypointGenerated;
+            armController.OnAutonomyComplete += OnArmAutonomyWaypointReached;
 
-            armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
-            armController.OnAutonomyComplete += OnArmAutonomyComplete;
-
-            // ScheuldeNextTask();
         }
 
     }
 
     void OnEnable()
     {
-        // Subscribe to the event
-
-        // if (baseController != null)
-        // {
-        //     baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
-        //     baseController.OnAutonomyComplete += OnBaseReachedGoal;
-        // }
+        // Subscribe to the events for the arm controller
 
         if (armController != null)
         {
-            armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
-            armController.OnAutonomyComplete += OnArmAutonomyComplete;
+            armController.OnAutonomyTrajectory += OnArmTrajectoryWaypointGenerated;
+            armController.OnAutonomyComplete += OnArmAutonomyWaypointReached;
         }
     }
 
@@ -102,31 +70,32 @@ public class ARManipulationAutomation : MonoBehaviour
     {
         // Unsubscribe from the static event to clean up
 
-        // if (baseController != null)
-        // {
-        //     baseController.OnAutonomyTrajectory -= OnBaseTrajectoryGenerated;
-        //     baseController.OnAutonomyComplete -= OnBaseReachedGoal;
-        // }
-
         if (armController != null)
         {
-            armController.OnAutonomyTrajectory -= OnArmTrajectoryGenerated;
-            armController.OnAutonomyComplete -= OnArmAutonomyComplete;
+            armController.OnAutonomyTrajectory -= OnArmTrajectoryWaypointGenerated;
+            armController.OnAutonomyComplete -= OnArmAutonomyWaypointReached;
         }
     }
 
-    private void OnArmAutonomyComplete()
+    // Event Handlers //////////////////////////////////////////////////////////////////////
+    // OnArmAutonomyWaypointReached - This is called when the arm reaches a waypoint
+    private void OnArmAutonomyWaypointReached()
     {
-        Debug.Log("Arm Autonomy Complete");
-        waypointArmReachedGoal = true;
+        // Debug.Log("Arm Autonomy Complete");
+
+        waypointReachedGoal = true;
     }
 
-    private void OnArmTrajectoryGenerated()
+    // OnArmAutonomyComplete - This is called when the arm is able to create a trajectory
+    private void OnArmTrajectoryWaypointGenerated()
     {
-        Debug.Log("Arm trajectory generated");
+        // Debug.Log("Arm trajectory generated");
+
+        // Automatically move to the target
         armController.MoveToAutonomyTarget();
     }
 
+    // SetArmWaypoints - Set the waypoint(s) for the arm, and how to handle gripper actions
     public void SetArmWaypoints(Vector3 position, Quaternion rotation, int gripperAction = 0)
     {
         SetArmWaypoints(new List<Vector3>{position}, new List<Quaternion>{rotation}, new List<int>{gripperAction});
@@ -148,19 +117,28 @@ public class ARManipulationAutomation : MonoBehaviour
         StartCoroutine(FollowArmWaypoints());
     }
 
+    // FollowArmWaypoints - Follow the waypoints for the arm and manages gripper actions
+    // - Order of operations:
+    //   1. Move to the position
+    //   2. Wait for when the arm reaches the position
+    //   3. Set the gripper (open or closed, if needed)
+    //      - (-1) for no action
+    //      - (0) for open
+    //      - (1) for close
+    //   4. Repeat for the next position until the end
     IEnumerator FollowArmWaypoints()
     {
         for(int i = 0; i < waypointArmPositions.Count; i++)
         {
             // Reset the reached goal flag
-            reachedArmGoal = false;
-            waypointArmReachedGoal = false;
+            reachedGoal = false;
+            waypointReachedGoal = false;
 
             // Move to the position
             armController.SetAutonomyTarget(waypointArmPositions[i], waypointArmRotations[i]);
 
             // Wait for when the arm reaches the position
-            yield return new WaitUntil(() => waypointArmReachedGoal);
+            yield return new WaitUntil(() => waypointReachedGoal);
 
             // Set the gripper (open or closed)
             if(waypointGripperActions[i] != -1)
@@ -169,16 +147,20 @@ public class ARManipulationAutomation : MonoBehaviour
             }
             
         }
-        reachedArmGoal = true;
+        reachedGoal = true;
 
         Debug.Log("Finished Trajectory");
     }
 
+    // HomeJoints - Home the joints of the arm
     public void HomeJoints()
     {
         armController.HomeJoints();
     }
 
+    // GetHoverAndGraspTransforms - Get the hover and grasp transforms for the object
+    // - HoverTransform: Someplace close to the object, to make it easier to grasp
+    // - GraspTransform: The place to grasp the object
     public (Transform, Transform) GetHoverAndGraspTransforms(GameObject obj)
     {
         // Get the hover and grasp transforms

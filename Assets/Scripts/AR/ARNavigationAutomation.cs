@@ -38,16 +38,6 @@ public class ARNavigationAutomation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // // Get the main camera if it is not already set
-        // if (cam == null)
-        // {
-        //     // Get all the active cameras referanced in the graphical interface
-        //     Camera[] cameras =  graphicalInterface.GetCurrentActiveCameras();
-        //     if (cameras.Length > 0)
-        //     {
-        //         cam = cameras[0];
-        //     }
-        // }
 
         if(robot == null)
         {
@@ -56,7 +46,6 @@ public class ARNavigationAutomation : MonoBehaviour
             // Set the articulation base controller
             if(robot == null)
             {
-                Debug.Log("No robot found");
                 return;
             }
             // Get Child of the robot
