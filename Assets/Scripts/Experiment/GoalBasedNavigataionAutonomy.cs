@@ -29,10 +29,11 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     [SerializeField] private RectTransform displayRect;
     private Camera cam;
 
+    // AR Automation
+    [SerializeField] private ARNavigationAutomation arNavAuto;
+    [SerializeField] private ARManipulationAutomation arManipAuto;
+
     // AR Featrues 
-    // [SerializeField] private FloorSelector floorSelector;
-    [SerializeField] private DrawWaypoints drawLocalWaypoints;
-    [SerializeField] private DrawWaypoints drawGlobalWaypoints;
     [SerializeField] private GenerateARGameObject arGenerator;
     [SerializeField] private HighlightObjectOnCanvas highlightObject;
 
@@ -41,57 +42,31 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     [SerializeField] private Sprite icon2;
     [SerializeField] private Sprite icon3;
 
-    // [SerializeField] private Material globalPathMaterial;
-    // [SerializeField] private Material localPathMaterial;
-
-    // Autonomy
-    [SerializeField] private ArticulationBaseController baseController;
-    [SerializeField] private ArticulationArmController armController;
-    [SerializeField] private AutoGrasping autoGrasping;
     private GameObject robot;
-    private GameObject leftRobotEE;
 
     // State Machines
-    private enum State { SetFirstPatcient, CheckPatcient, GoToPharmacy, GetMedicine, GoDeliverMedicine, DropOffMedicine, ChangePatient, Done};
-    private State state = State.SetFirstPatcient;
+    private enum State { SetFirstpatient, Checkpatient, GoToPharmacy, GetMedicine, GoDeliverMedicine, DropOffMedicine, ChangePatient, Done};
+    private State state = State.SetFirstpatient;
 
-    private enum Patcient { Patcient1, Patcient2, Patcient3, Patcient4};
+    private enum patient { patient1, patient2, patient3, patient4};
 
-    private Patcient currentPatcient = Patcient.Patcient1;
+    private patient currentpatient = patient.patient1;
 
 
-    // Patcient Navigation Waypoints
-    public Vector3[] patcientPosition = new Vector3[4];
-    public Vector3[] patcientRotations = new Vector3[4];
+    // Patient Navigation Waypoints
+    public Vector3[] patientPosition = new Vector3[4];
+    public Vector3[] patientRotations = new Vector3[4];
 
     // Pharmacy Navigation Waypoint
     public Vector3 pharmacyPosition;
     public Vector3 pharmacyRotation;
 
-    // Public Navigation Waypoints between pharmacy to patcient room
+    // Public Navigation Waypoints between pharmacy to patient room
     public List<Vector3> transfereWaypointPositions = new List<Vector3>();
     public List<Vector3> transferWaypointRotations = new List<Vector3>();
     public List<Vector3> transferReturnWaypointRotations = new List<Vector3>();
 
-    // Tracked Trajectory of the Robot base
-    private List<Vector3> waypointPositions = new List<Vector3>();
-    private List<Vector3> waypointRotations = new List<Vector3>();
-    private List<int> waypointGripperActions = new List<int>(); // 0 for open, 1 for close
-
-    private bool waypointReachedGoal = false; // This is for just reaching successive points on the list
-    private bool reachedGoal = false;  // reached the whole goal
-
-    private bool passingInGlobalGoal = false;
-
-     // Tracked Trajectory of the Robot Arm
-
-    public List<Vector3> waypointArmPositions = new List<Vector3>();
-    public List<Quaternion> waypointArmRotations = new List<Quaternion>();
-
-    private bool waypointArmReachedGoal = false; // This is for just reaching successive points on the list
-    private bool reachedArmGoal = false;  // reached the whole goal
-
-
+    
     private GameObject[] patientMedCarts;
 
     // public GameObject[] graspableMeds;
@@ -119,10 +94,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             {
                 cam = cameras[0];
 
-                //////////////////////////////////////////
-                // floorSelector.SetCameraAndDisplay(cam, displayRect);
-                // objectSelector.SetCameraAndDisplay(cam, displayRect);
-                //////////////////////////////////////////
             }
         }
 
@@ -130,27 +101,16 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         {
             robot = GameObject.Find("Gopher(Clone)");
             
-            // Set the articulation base controller
             if(robot == null)
             {
-                Debug.Log("No robot found");
+                // Debug.Log("No robot found");
                 return;
             }
-            // Get Child of the robot
-            // leftRobotEE = robot.transform.Find("Plugins/Hardware/Left Arm").gameObject;
+        }
 
-            baseController = robot.GetComponentInChildren<ArticulationBaseController>();
-            armController = robot.GetComponentInChildren<ArticulationArmController>();
-            autoGrasping = robot.GetComponentInChildren<AutoGrasping>();
-            // Constantly subscribe to the event to make our trajectory visible
-            //      check if we arrive at the goal
-            baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
-            baseController.OnAutonomyComplete += OnBaseReachedGoal;
-
-            armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
-            armController.OnAutonomyComplete += OnArmAutonomyComplete;
-
-            // ScheuldeNextTask();
+        if(!(arNavAuto.autoReady && arManipAuto.autoReady))
+        {
+            return;
         }
 
         if(patientMedCarts == null)
@@ -159,15 +119,15 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             
             if(patientMedCarts.Length == 0)
             {
-                Debug.Log("No carts found");;
+                // Debug.Log("No carts found");;
             }
             else
             {
-                Debug.Log("Carts found");
+                // Debug.Log("Carts found");
                 // load the patient meds into the scene
-                for(int i = 0; i < patcientPosition.Length; i++)
+                for(int i = 0; i < patientPosition.Length; i++)
                 {
-                    LoadPatientMedPrefab(patcientPosition[i], patientMissingMeds[i]);
+                    LoadPatientMedPrefab(patientPosition[i], patientMissingMeds[i]);
                 }
             }
         }
@@ -187,61 +147,18 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             }
             graspableMeds = filteredGraspable;
 
-            if(graspableMeds.Count == 0)
-            {
-                Debug.Log("No meds found");;
-            }
-            else
-            {
-                Debug.Log("Meds found");
-            }
+            // if(graspableMeds.Count == 0)
+            // {
+            //     // Debug.Log("No meds found");;
+            // }
+            // else
+            // {
+            //     // Debug.Log("Meds found");
+            // }
         }
 
         ScheuldeNextTask();
 
-    }
-
-
-    void OnEnable()
-    {
-        // Subscribe to the event
-
-        if (baseController != null)
-        {
-            baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
-            baseController.OnAutonomyComplete += OnBaseReachedGoal;
-        }
-
-        if (armController != null)
-        {
-            armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
-            armController.OnAutonomyComplete += OnArmAutonomyComplete;
-        }
-    }
-
-    void OnDisable()
-    {
-        // Unsubscribe from the static event to clean up
-
-        if (baseController != null)
-        {
-            baseController.OnAutonomyTrajectory -= OnBaseTrajectoryGenerated;
-            baseController.OnAutonomyComplete -= OnBaseReachedGoal;
-        }
-
-        if (armController != null)
-        {
-            armController.OnAutonomyTrajectory -= OnArmTrajectoryGenerated;
-            armController.OnAutonomyComplete -= OnArmAutonomyComplete;
-        }
-    }
-
-    
-
-    private void OnBaseReachedGoal()
-    {
-        // Event will be called when the robot reaches the goal
-        waypointReachedGoal = true;
     }
 
     // State Machine   //////////////////////////////////////////////////////////////////////////////////////////
@@ -253,33 +170,33 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
         switch (state)
         {   
-            case State.SetFirstPatcient:
+            case State.SetFirstpatient:
 
                 // Autonomy starts here
                 
-                // Create the waypoints to get to the first patcient
+                // Create the waypoints to get to the first patient
                 posTraj = new List<Vector3>(transfereWaypointPositions);
                 rotTraj = new List<Vector3>(transferWaypointRotations);
-                posTraj.Add(patcientPosition[(int)currentPatcient]);
-                rotTraj.Add(patcientRotations[(int)currentPatcient]);
-                SetWaypoints(posTraj, rotTraj);
+                posTraj.Add(patientPosition[(int)currentpatient]);
+                rotTraj.Add(patientRotations[(int)currentpatient]);
+                arNavAuto.SetWaypoints(posTraj, rotTraj);
 
-                // Create AR for the cart nearest to the patcient
-                patientPos = patcientPosition[(int)currentPatcient];
+                // Create AR for the cart nearest to the patient
+                patientPos = patientPosition[(int)currentpatient];
                 GenerateARForNearestCart(patientPos);
 
-                state = State.CheckPatcient;
+                state = State.Checkpatient;
 
                 break;
 
-            case State.CheckPatcient:
+            case State.Checkpatient:
 
                 // Check if the patient has all their medications
-                if (reachedGoal)
+                if (arNavAuto.reachedGoal)
                 {
                     Debug.Log("Checking the patient");
                     // TODO: Do this actually properly
-                    if (patientMissingMeds[(int)currentPatcient])
+                    if (patientMissingMeds[(int)currentpatient])
                     {   
                         // Create the waypoints to get to the pharmacy
 
@@ -288,10 +205,10 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         rotTraj = new List<Vector3>{transferReturnWaypointRotations[1], transferReturnWaypointRotations[0]};
                         posTraj.Add(pharmacyPosition);
                         rotTraj.Add(pharmacyRotation);
-                        SetWaypoints(posTraj, rotTraj);
+                        arNavAuto.SetWaypoints(posTraj, rotTraj);
 
                         // Change AR to indicate an issue
-                        patientPos = patcientPosition[(int)currentPatcient];
+                        patientPos = patientPosition[(int)currentpatient];
                         ChangeNearestCartARColor(patientPos, Color.red);
                         ChangeNearestCartCanvasHighlightIcon(patientPos, icon3);
 
@@ -300,7 +217,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     else
                     {
                         // Change AR to indicate no issue
-                        patientPos = patcientPosition[(int)currentPatcient];
+                        patientPos = patientPosition[(int)currentpatient];
                         ChangeNearestCartARColor(patientPos, Color.green);
                         ChangeNearestCartCanvasHighlightIcon(patientPos, icon2);
 
@@ -315,9 +232,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // Go to the pharmacy
 
                 // if we arrive at the pharmacy, get the medicine
-                if (reachedGoal)
+                if (arNavAuto.reachedGoal)
                 {
-                    // GameObject med = ChooseMedToPickUp();
                     SetArmToMedTarget();
                     state = State.GetMedicine;
                 }
@@ -326,20 +242,16 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
             case State.GetMedicine:
 
-                // Get the medicine
-                // TODO: Implement the medicine getting
-                // bool gotMedicine = true;
-
                 // if we have the medicine, go deliver the medicine
-                if (reachedArmGoal)
+                if (arManipAuto.reachedArmGoal)
                 {
                     Debug.Log("Got Medicine");
-                    armController.HomeJoints();
+                    arManipAuto.HomeJoints();
                     posTraj = new List<Vector3>(transfereWaypointPositions);
                     rotTraj = new List<Vector3>(transferWaypointRotations);
-                    posTraj.Add(patcientPosition[(int)currentPatcient]);
-                    rotTraj.Add(patcientRotations[(int)currentPatcient]);
-                    SetWaypoints(posTraj, rotTraj);
+                    posTraj.Add(patientPosition[(int)currentpatient]);
+                    rotTraj.Add(patientRotations[(int)currentpatient]);
+                    arNavAuto.SetWaypoints(posTraj, rotTraj);
 
                     state = State.GoDeliverMedicine;
                 }
@@ -349,10 +261,10 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             case State.GoDeliverMedicine:
                 // Deliver the medicine
                 
-                // if we came back to the patcient, drop off the medicine
-                if (reachedGoal)
+                // if we came back to the patient, drop off the medicine
+                if (arNavAuto.reachedGoal)
                 {
-                    patientPos = patcientPosition[(int)currentPatcient];
+                    patientPos = patientPosition[(int)currentpatient];
                     GameObject nearestCart = GetNearestCart(patientPos);
                     // GenerateARForNearestCart(nearestCart.transform.position);
                     List<GameObject> arFeatures = arGenerator.GetARGameObject(nearestCart);
@@ -373,10 +285,9 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         List<Quaternion> rotations = new List<Quaternion>{hoverDropOffRot1, hoverDropOffRot2, hoverDropOffRot1};
                         List<int> gripperActions = new List<int>{-1, 0, -1, };
                         
-                        SetArmWaypoints(positions, rotations, gripperActions);
+                        arManipAuto.SetArmWaypoints(positions, rotations, gripperActions);
                     }
 
-                    // ChangeNearestCartARColor(patientPos, Color.green);
                     state = State.DropOffMedicine;
                 }
                 
@@ -384,13 +295,13 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
             case State.DropOffMedicine:
                 // Drop off the medicine
-                if(reachedArmGoal)
+                if(arManipAuto.reachedArmGoal)
                 {
-                    patientPos = patcientPosition[(int)currentPatcient];
+                    patientPos = patientPosition[(int)currentpatient];
                     ChangeNearestCartARColor(patientPos, Color.green);
                     ChangeNearestCartCanvasHighlightIcon(patientPos, icon2);
 
-                    armController.HomeJoints();
+                    arManipAuto.HomeJoints();
                     
                     state = State.ChangePatient;
                 }
@@ -402,24 +313,24 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
                 // if all the patients have been checked, we are done
                 // if we have changed the patient, go back to check the patient
-                switch (currentPatcient)
+                switch (currentpatient)
                 {
-                    case Patcient.Patcient1:
+                    case patient.patient1:
                         // Set the next 
-                        Debug.Log("Changing to Patcient 2");
-                        currentPatcient = Patcient.Patcient2;
+                        Debug.Log("Changing to patient 2");
+                        currentpatient = patient.patient2;
                         break;
-                    case Patcient.Patcient2:
+                    case patient.patient2:
                         // Set the next patient
-                        Debug.Log("Changing to Patcient 3");
-                        currentPatcient = Patcient.Patcient3;
+                        Debug.Log("Changing to patient 3");
+                        currentpatient = patient.patient3;
                         break;
-                    case Patcient.Patcient3:
+                    case patient.patient3:
                         // Set the next patient
-                        Debug.Log("Changing to Patcient 4");
-                        currentPatcient = Patcient.Patcient4;
+                        Debug.Log("Changing to patient 4");
+                        currentpatient = patient.patient4;
                         break;
-                    case Patcient.Patcient4:
+                    case patient.patient4:
                         // Set the next patient
                         Debug.Log("All patients have been checked");
                         state = State.Done;
@@ -431,21 +342,21 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 if(state == State.Done)
                 {
                     // Remove the AR for the last patient
-                    StartCoroutine(RemoveARForPatient(patcientPosition[(int)currentPatcient]));
+                    StartCoroutine(RemoveARForPatient(patientPosition[(int)currentpatient]));
                     return;
                 }
 
                 // Go to the next patient
-                SetWaypoints(patcientPosition[(int)currentPatcient], patcientRotations[(int)currentPatcient]);
+                arNavAuto.SetWaypoints(patientPosition[(int)currentpatient], patientRotations[(int)currentpatient]);
 
                 // Destroy the AR of the previous patient
-                StartCoroutine(RemoveARForPatient(patcientPosition[(int)currentPatcient - 1]));
+                StartCoroutine(RemoveARForPatient(patientPosition[(int)currentpatient - 1]));
 
                 // Generate AR for the nearest cart
-                patientPos = patcientPosition[(int)currentPatcient];
+                patientPos = patientPosition[(int)currentpatient];
                 GenerateARForNearestCart(patientPos);
 
-                state = State.CheckPatcient;
+                state = State.Checkpatient;
 
                 break;
 
@@ -458,113 +369,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             default:
                 break;
         }
-    }
-
-    // Base Navigation and Autonomy Functions //////////////////////////////////////////////////////////////////////////////////////////
-
-    // Automatically Sets the waypoint and goes to it
-    private void SetWaypoints(Vector3 pos, Vector3 rot)
-    {
-        waypointPositions = new List<Vector3>{pos};
-        waypointRotations = new List<Vector3>{rot};
-
-        StartCoroutine(FollowWaypoints());
-    }
-
-    // Automatically Sets the waypoint and goes to it
-    private void SetWaypoints(List<Vector3> pos, List<Vector3> rot)
-    {
-        if(pos.Count != rot.Count)
-        {
-            Debug.LogWarning("The list used are not the same size, they are not being added");
-            return;
-        }
-
-        waypointPositions = pos;
-        waypointRotations = rot;
-
-        StartCoroutine(FollowWaypoints());
-    }
-
-    IEnumerator FollowWaypoints()
-    {
-        // Debug.Log("Start Motion");
-
-        // get the last position and rotation from waypointPositions and waypointRotations
-        reachedGoal = false;
-
-        int lastIndex = waypointPositions.Count - 1;
-
-        // if there is only one waypoint, no need to show both the global and the local path, lets just show the global path
-        
-        // if(lastIndex == 0)
-        // {
-        //     // Hide the local path
-        //     hideLocalPath = true;
-        //     // drawGlobalWaypoints.RemoveLine("Global Path");
-        // }
-        // else
-        // {
-        //     hideLocalPath = false;
-        // }
-
-        // Display the global path
-        passingInGlobalGoal = true;
-        Debug.Log("FollowingWaypoints >> SendingGlobalPath");
-        baseController.SetAutonomyTarget(waypointPositions[lastIndex], Quaternion.Euler(waypointRotations[lastIndex]));
-        yield return new WaitUntil(() => passingInGlobalGoal == false);
-        
-        for(int i = 0; i < waypointPositions.Count; i++)
-        {
-            // Debug.Log("Going to Waypoint");
-            // Reset the reached goal flag
-            Debug.Log("FollowingWaypoints >> SendingLocalPaths");
-            waypointReachedGoal = false;
-
-            // Convert from euler angles to quaternion
-            Quaternion worldRotation = Quaternion.Euler(waypointRotations[i]);
-            baseController.SetAutonomyTarget(waypointPositions[i], worldRotation);
-
-            yield return new WaitUntil(() => waypointReachedGoal);
-        }
-        reachedGoal = true;
-    }
-
-
-    private void OnBaseTrajectoryGenerated()
-    {
-        // Debug.Log("Base trajectory generated");
-        var (globalWaypoints, LocalWaypoints) = 
-            baseController.GetTrajectories();
-
-        // Generate the global path
-        if(passingInGlobalGoal == true)
-        {   
-            // Clear old waypoints
-            drawGlobalWaypoints.RemoveLine("Global Path");
-            // Add new waypoints
-            drawGlobalWaypoints.DrawLine("Global Path", globalWaypoints);
-            // Debug.Log("Global Path");
-        }
-        else
-        {
-            // Debug.Log("Local Path");
-        
-            // Clear old waypoints
-            // drawLocalWaypoints.RemoveLine("Local Path");
-
-            // if(!hideLocalPath)
-            // {
-            //     // Add new waypoints
-            //     drawLocalWaypoints.DrawLine("Local Path", globalWaypoints);
-            // }
-
-            // Automatically Send the robot to the goal
-            baseController.MoveToAutonomyTarget();
-        }
-        passingInGlobalGoal = false;
-
-        
     }
 
     // AR Functions //////////////////////////////////////////////////////////////////////////////////////////
@@ -583,8 +387,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 new Vector3(0, 0.93f, -0.02f),
                 new Vector3(180, 0, 90),
                 new Vector3(0.025f, 0.35f, 0.5f),
-                Color.yellow,
-                0.15f
+                Color.cyan,
+                0.7f
             );
 
         // Get the cart ar feature
@@ -593,7 +397,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         if(arFeatures.Count == 1)
         {
             // Add a highlight to the AR Feature
-            Debug.Log("Create AR highlight object on canvas");
             CreateHighlightObjectOnCanvas(nearestCart, new Vector3(0f, 1.1f, 0));
         }
        
@@ -616,11 +419,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         }
 
         return nearestCart;
-    }
-
-    private GameObject GetNearestCart()
-    {
-        return GetNearestCart(robot.transform.position);
     }
     
     
@@ -672,76 +470,16 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     }
 
 
-    // Arm Navigation and Autonomy Functions //////////////////////////////////////////////////////////////////////////////////////////
-    private void OnArmAutonomyComplete()
-    {
-        Debug.Log("Arm Autonomy Complete");
-        waypointArmReachedGoal = true;
-    }
-
-    private void OnArmTrajectoryGenerated()
-    {
-        Debug.Log("Arm trajectory generated");
-        armController.MoveToAutonomyTarget();
-    }
-
     private void SetArmToMedTarget()
     {
         pluckedMed = ChooseMedToPickUp();
 
-        var (hoverTransform, graspingTransform) = autoGrasping.GetHoverAndGraspTransforms(pluckedMed);
+        var (hoverTransform, graspingTransform) = arManipAuto.GetHoverAndGraspTransforms(pluckedMed);
         List<Vector3> positions = new List<Vector3>{hoverTransform.position, graspingTransform.position, hoverTransform.position};
         List<Quaternion> rotations = new List<Quaternion>{hoverTransform.rotation, graspingTransform.rotation, hoverTransform.rotation};
         List<int> gripperActions = new List<int>{-1, 1, -1};
         // SetArmTarget(med);
-        SetArmWaypoints(positions, rotations, gripperActions);
-    }
-
-    private void SetArmWaypoints(Vector3 position, Quaternion rotation, int gripperAction = 0)
-    {
-        SetArmWaypoints(new List<Vector3>{position}, new List<Quaternion>{rotation}, new List<int>{gripperAction});
-    }
-
-
-    private void SetArmWaypoints(List<Vector3> positions, List<Quaternion> rotations, List<int> gripperActions)
-    {
-        if(positions.Count != rotations.Count || positions.Count != gripperActions.Count)
-        {
-            Debug.LogWarning("The list used are not the same size, they are not being added");
-            return;
-        }
-
-        waypointArmPositions = positions;
-        waypointArmRotations = rotations;
-        waypointGripperActions = gripperActions;
-
-        StartCoroutine(FollowArmWaypoints());
-    }
-
-    IEnumerator FollowArmWaypoints()
-    {
-        for(int i = 0; i < waypointArmPositions.Count; i++)
-        {
-            // Reset the reached goal flag
-            reachedArmGoal = false;
-            waypointArmReachedGoal = false;
-
-            // Move to the position
-            armController.SetAutonomyTarget(waypointArmPositions[i], waypointArmRotations[i]);
-
-            // Wait for when the arm reaches the position
-            yield return new WaitUntil(() => waypointArmReachedGoal);
-
-            // Set the gripper (open or closed)
-            if(waypointGripperActions[i] != -1)
-            {
-                armController.SetGripperPosition(waypointGripperActions[i]);
-            }
-            
-        }
-        reachedArmGoal = true;
-
-        Debug.Log("Finished Trajectory");
+        arManipAuto.SetArmWaypoints(positions, rotations, gripperActions);
     }
 
     // Canvas Highlight Functions //////////////////////////////////////////////////////////////////////////////////////////
@@ -764,7 +502,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 cam,
                 displayRect,
                 icon1,
-                Color.green,
+                Color.white,
                 adjustUIScale: false,
                 position: location
             );
@@ -774,12 +512,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     {
         // Find the cube
         var cube = selectedObject.transform.Find("Highlight2DObjectLocation").gameObject;
-
-        // if(cube == null)
-        // {
-        //     CreateHighlightObjectOnCanvas(selectedObject, positionOffset);
-        //     return;
-        // }
 
         // Destroy the previous highlight
         highlightObject.RemoveHighlight(cube);
@@ -791,7 +523,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 cam,
                 displayRect,
                 icon,
-                Color.green,
+                Color.white,
                 adjustUIScale: false,
                 position: location
             );
