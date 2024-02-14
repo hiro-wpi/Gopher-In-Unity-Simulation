@@ -19,20 +19,27 @@ public class IVDeliveryAutonomy : MonoBehaviour
     enum ControlState {Manual, ManualToAuto, Auto, AutoToManual};
     ControlState controlState = ControlState.Manual;
 
+    enum ObsticleState {None, Detected, Handled};
+    ObsticleState obsticleState = ObsticleState.None;
+
     public ARNavigationAutomation arNavAuto;
 
     // Task Setup (IV Delivery)
-    public Vector3 doorPosition = new Vector3(0, 0, 0);
-    public Vector3 doorRotation = new Vector3(0, 0, 0);  // Euler angle to go inside the room
 
     public Vector3 goalPosition = new Vector3(0, 0, 0);
     public Vector3 goalRotation = new Vector3(0, 0, 0);  
 
-    public GameObject doorFront;
-    public GameObject doorBack;
-    public GameObject door;
-
+    // Task Objects  //////
+    // Door Entry
+    private GameObject doorFront;
+    private GameObject doorBack;
+    private GameObject door;
     private float doorOffset = 0.75f;
+
+    // Obsticle
+    private GameObject obsticle;  // For now, we are using the cart as an obsticle
+    private Vector3 obsticleInitPosition;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -65,11 +72,7 @@ public class IVDeliveryAutonomy : MonoBehaviour
             }
         }
 
-        // Create the door entry gameobjects
-        if(door == null)
-        {
-            CreateDoorEntryGameObjects();
-        }
+        InitTaskSetup();
 
         if(!arNavAuto.autoReady)
         {
@@ -77,6 +80,7 @@ public class IVDeliveryAutonomy : MonoBehaviour
         }
 
         UpdateRobotLocation();
+        HandleObsticleState();
         HandleChangeAutoState();
 
         
@@ -99,6 +103,46 @@ public class IVDeliveryAutonomy : MonoBehaviour
 
     }
 
+    public void InitTaskSetup()
+    {
+        // Make Sure We have all the necessary task gameobject to be able to start the task
+
+        // Create the door entry gameobjects
+        if(door == null)
+        {
+            door = GameObject.Find("DoorEntry(Clone)");
+            
+            if(door == null)
+            {
+                return;
+            }
+            else
+            {
+                CreateDoorEntryGameObjects();
+            }
+        }
+
+        // Find the cart
+        if(obsticle == null)
+        {
+            obsticle = GameObject.Find("Service Cart Movable(Clone)");
+            // Save the initial position of the obsticle for later use
+            // obsticleInitPosition = obsticle.transform.position;
+
+            if(obsticle == null)
+            {
+                return;
+            }
+            else
+            {
+                obsticleInitPosition = obsticle.transform.position;
+            }
+        }
+
+        // TODO Later Find the goal position
+
+    }
+
     public void HandleChangeAutoState()
     {
         switch(controlState)
@@ -106,11 +150,13 @@ public class IVDeliveryAutonomy : MonoBehaviour
             case ControlState.Manual:
 
                 // Start Switching to Auto
-                if(Input.GetKeyDown(KeyCode.Space))
+                // If the space button is pressed and there is no obsticle detected
+                if(Input.GetKeyDown(KeyCode.Space) && obsticleState != ObsticleState.Detected)
                 {
                     controlState = ControlState.ManualToAuto;
                     SetTaskWaypoints();
                 }
+                
                 break;
             case ControlState.ManualToAuto:
                 if(Input.GetKeyUp(KeyCode.Space))
@@ -120,12 +166,22 @@ public class IVDeliveryAutonomy : MonoBehaviour
                 break;
             case ControlState.Auto:
 
-                // Start Switching to Manual
-                if(Input.GetKeyDown(KeyCode.Space))
+                // Automatically Swtich to Manual if the obsticle is detected
+                if(obsticleState == ObsticleState.Detected)
                 {
-                    controlState = ControlState.AutoToManual;
+                    controlState = ControlState.Manual;  // No need to transition to ManualToAuto
                     CancelAutonomy();
                 }
+                else
+                {
+                    // Start Switching to Manual
+                    if(Input.GetKeyDown(KeyCode.Space))
+                    {
+                        controlState = ControlState.AutoToManual;
+                        CancelAutonomy();
+                    }
+                }
+
                 break;
             case ControlState.AutoToManual:
                 if(Input.GetKeyUp(KeyCode.Space))
@@ -137,6 +193,35 @@ public class IVDeliveryAutonomy : MonoBehaviour
         // Change the state of the robot to Auto
         // arNavAuto.autoReady = true;
     }
+
+    public void HandleObsticleState()
+    {
+        switch(obsticleState)
+        {
+            case ObsticleState.None:
+                // Change the state if the robot is close to the obsticle
+                if(RobotDistanceToPosition(obsticle.transform.position) < 1.5f)
+                {
+                    Debug.LogWarning("Obsticle Detected");
+                    obsticleState = ObsticleState.Detected;
+                }
+                break;
+
+            case ObsticleState.Detected:
+
+                // Change the state if the obsticle is moved
+                if(Vector3.Distance(obsticle.transform.position, obsticleInitPosition) > 0.5f)
+                {
+                    Debug.LogWarning("Obsticle Handled");
+                    obsticleState = ObsticleState.Handled;
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+    
 
     public void CancelAutonomy()
     {
@@ -156,8 +241,8 @@ public class IVDeliveryAutonomy : MonoBehaviour
         }
         else
         {
-            posTraj = new List<Vector3>{doorPosition};
-            rotTraj = new List<Vector3>{doorRotation};
+            posTraj = new List<Vector3>{door.transform.position};
+            rotTraj = new List<Vector3>{door.transform.rotation.eulerAngles};
             posTraj.Add(goalPosition);
             rotTraj.Add(goalRotation);
         }
@@ -167,25 +252,33 @@ public class IVDeliveryAutonomy : MonoBehaviour
 
     private void UpdateRobotLocation()
     {
-        // Check if the robot is in the room or not
-        // If the robot is in the room, set the robotInRoom to true
-        // If the robot is not in the room, set the robotInRoom to false
+        // Use a raycast from the robot to the door to determine if we need to change state
+        // Create a ray from the robot to the door, dont check anything past the door
+        RaycastHit hit;
+        Vector3 direction = door.transform.position - robot.transform.position;
+        float maxDistance = Vector3.Distance(door.transform.position, robot.transform.position);
 
-        if(!robotInRoom)
+        // Debug.DrawRay(robot.transform.position + Vector3.up * 1.5f , direction,  Color.red);
+
+        if(!Physics.Raycast(robot.transform.position + Vector3.up * 1.5f, direction, out hit, maxDistance))
         {
-            // Check the distance of the robot from the door + some other error in the same z rotation direction
+            // No obsticle detected between the robot and the door
+            // Check if the robot is closer to the doorfront or doorback to determine if the robot is in the room or not
+            float distanceFront = RobotDistanceToPosition(doorFront.transform.position);
+            float distanceBack = RobotDistanceToPosition(doorBack.transform.position);
 
-            // Calculate the new position of the door
-            // Vector3 doorPos = doorPosition + Quaternion.Euler(0, 0, doorRotation.z) * new Vector3(0, 0, 0.5f);
-            if(DistanceToPosition(doorBack.transform.position) < doorOffset)
+            if(distanceFront < distanceBack)
+            {
+                robotInRoom = false;
+            }
+            else
             {
                 robotInRoom = true;
             }
         }
-
     }
 
-    public float DistanceToPosition(Vector3 position)
+    public float RobotDistanceToPosition(Vector3 position)
     {
         // Get the distance from the robot to the given position
         return Vector3.Distance(robot.transform.position, position);
@@ -199,10 +292,10 @@ public class IVDeliveryAutonomy : MonoBehaviour
         Vector3 offset = new Vector3(0, 0, doorOffset);
 
         // Create the door gameobject
-        door = new GameObject();
-        door.transform.position = doorPosition;
-        door.transform.rotation = Quaternion.Euler(doorRotation);
-        door.name = "DoorEntry";
+        // door = new GameObject();
+        // door.transform.position = doorPosition;
+        // door.transform.rotation = Quaternion.Euler(doorRotation);
+        // door.name = "DoorEntry";
 
         // Create the front and back door gameobjects
         doorFront = new GameObject();
