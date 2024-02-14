@@ -15,6 +15,26 @@ using UnityEngine;
 /// </summary>
 public abstract class AutoManipulation : MonoBehaviour
 {
+    // Goal
+    [field:SerializeField, ReadOnly]
+    public bool ValidGoalSet { get; protected set; }
+    [field:SerializeField, ReadOnly]
+    public Vector3 TargetPosition { get; protected set; }
+    [field:SerializeField, ReadOnly]
+    public Quaternion TargetRotation { get; protected set; }
+
+    // Navigation status
+    [field:SerializeField, ReadOnly]
+    public bool IsManipulating { get; protected set; }
+    // [field:SerializeField, ReadOnly]
+    public float[] TimeSteps { get; protected set; } = new float[0];
+    // [field:SerializeField, ReadOnly]
+    public float[][] Angles { get; protected set; } = new float[0][];
+    // [field:SerializeField, ReadOnly]
+    public float[][] Velocities { get; protected set; } = new float[0][];
+    // [field:SerializeField, ReadOnly]
+    public float[][] Accelerations { get; protected set; } = new float[0][];
+
     void Start() {}
 
     void Update() {}
@@ -29,4 +49,13 @@ public abstract class AutoManipulation : MonoBehaviour
         Action<float[], float[][], float[][], float[][]> callback,
         bool cartesianSpace = false
     );
+
+    // Start, pause and resume manipulation
+    // Start is essentially the same as resume
+    public abstract void StartManipulation(Action armReached = null);
+    public abstract void PauseManipulation();
+    public abstract void ResumeManipulation(Action armReached = null);
+
+    // Stop Manipulation, clear previous plan
+    public abstract void StopManipulation();
 }

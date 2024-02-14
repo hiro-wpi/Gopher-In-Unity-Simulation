@@ -25,6 +25,10 @@ public abstract class InverseKinematics : MonoBehaviour
 
     // May be useful for some IK methods
     public virtual void SetJointAnglesAsHome(float[] jointAngles) {}
+    public virtual void SetIterations(int iterations) {}
+    public virtual void SetTolerances(
+        float positionTolerance = -1, float rotationTolerance = -1
+    ) {}
 
     public abstract float[] SolveIK(
         float[] jointAngles, Vector3 targetPosition, Quaternion targetRotation

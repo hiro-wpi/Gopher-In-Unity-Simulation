@@ -17,10 +17,6 @@ public class ArticulationJointController : MonoBehaviour
     // Control parameters
     [SerializeField] private float jointMaxSpeed = 1.0f; 
     
-    // Articulation Bodies Presets
-    // When joint position is set to be IGNORE_VAL, don't change it
-    public static float IGNORE_VAL = -100f;
-    
     // Articulation Bodies
     [SerializeField] private ArticulationBody[] articulationChain;
     private Collider[] colliders;
@@ -30,6 +26,9 @@ public class ArticulationJointController : MonoBehaviour
     // trajectory control
     private List<float[]> targetPositions;
     private int currTrajectoryIndex = 0;
+
+    // Note:
+    // Values being Mathf.Infinity are ignored
 
     void Awake()
     {
@@ -66,7 +65,9 @@ public class ArticulationJointController : MonoBehaviour
 
     // Coroutine for joint movement (move to target positions)
     private IEnumerator SetJointTargetsCoroutine(
-        float[] jointPositions, bool disableColliders = false, Action reached = null
+        float[] jointPositions,
+         bool disableColliders = false,
+         Action reached = null
     )
     {
         // Disable colliders before homing to avoid collisions
@@ -75,7 +76,13 @@ public class ArticulationJointController : MonoBehaviour
         {
             SetCollidersActive(false);
         }
-        yield return new WaitUntil(() => SetJointTargetsStepAndCheck(jointPositions) == true);
+
+        while (!CheckJointTargetReached(jointPositions))
+        {
+            SetJointTargetsStep(jointPositions);
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+        }
+
         if (disableColliders)
         {
             SetCollidersActive(true);
@@ -93,22 +100,15 @@ public class ArticulationJointController : MonoBehaviour
         }
     }
 
-    private bool SetJointTargetsStepAndCheck(float[] positions)
-    {
-        // Set joint targets
-        SetJointTargetsStep(positions);
-        // Check if reached
-        return CheckJointTargetStep(positions);
-    }
-
-    private bool CheckJointTargetStep(float[] positions)
+    private bool CheckJointTargetReached(float[] positions)
     {
         // Check if current joint targets are set to the target positions
         float[] currTargets = GetCurrentJointTargets();
         for (int i = 0; i < positions.Length; ++i)
         {
-            if ((positions[i] != IGNORE_VAL) && 
-                (Mathf.Abs(currTargets[i] - positions[i]) > 1e-5f))
+            if (
+                (positions[i] != Mathf.Infinity)
+                && (Mathf.Abs(currTargets[i] - positions[i]) > 1e-5f))
             {
                 return false;
             }
@@ -124,7 +124,7 @@ public class ArticulationJointController : MonoBehaviour
     {
         for (int i = 0; i < articulationChain.Length; ++i)
         {
-            if (targets[i] == IGNORE_VAL)
+            if (targets[i] == Mathf.Infinity)
             {
                 continue;
             }

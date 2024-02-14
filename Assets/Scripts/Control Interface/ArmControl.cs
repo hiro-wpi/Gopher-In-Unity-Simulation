@@ -141,7 +141,7 @@ public class ArmControl : MonoBehaviour
     {
         if (context.performed)
         {
-            armController.MoveToTarget();
+            armController.MoveToAutonomyTarget();
         }
     }
 

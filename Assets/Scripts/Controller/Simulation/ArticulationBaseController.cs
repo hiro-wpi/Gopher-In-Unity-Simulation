@@ -16,7 +16,31 @@ public class ArticulationBaseController : BaseController
     [SerializeField] private bool emergencyStop = false;
 
     // Local wheel controller
+    [Header("Local Controller")]
     [SerializeField] private ArticulationWheelController wheelController;
+    [Header("Autonomy")]
+    [SerializeField] private AutoNavigation autoNavigation;
+
+    // TODO
+    // Base control mode
+    // // manual & auto
+    // private enum ControlMode { Manual, Auto }
+    // [Header("Control Mode")]
+    // [SerializeField, ReadOnly]
+    // private ControlMode controlMode = ControlMode.Manual;
+
+    // Automatic navigation
+    [Header("Autonomy Planning")]
+    [SerializeField, ReadOnly] private Vector3 targetPosition;
+    [SerializeField, ReadOnly] private Quaternion targetRotation;
+    // autonomy event (triggered if valid trajectory generated)
+    public delegate void AutonomyTrajectoryHandler();
+    public event AutonomyTrajectoryHandler OnAutonomyTrajectory;
+    // autonomy event (triggered if valid trajectory generated)
+    public delegate void AutonomyCompleteHandler();
+    public event AutonomyCompleteHandler OnAutonomyComplete;
+    // planning coroutine
+    private Coroutine currentCoroutine;
 
     // Extra speed limits
     // enforced by autonomy, manipulating objects, etc.
@@ -50,6 +74,57 @@ public class ArticulationBaseController : BaseController
         wheelController.SetRobotSpeedStep(
             linearVelocity.z, 
             angularVelocity.y
+        );
+    }
+
+    // Autonomous mode
+    public override void SetAutonomyTarget(
+        Vector3 position, Quaternion rotation = new Quaternion()
+    )
+    {
+        targetPosition = position;
+        targetRotation = rotation;
+
+        // Try to plan a path to the target
+        // Debug.Log("Sending request to move to the navigation target.");
+        autoNavigation.SetGoal(position, rotation, TrajectoryGenerated);
+    }
+
+    public override void CancelAutonomyTarget()
+    {
+        targetPosition = Vector3.zero;
+        targetRotation = new Quaternion();
+
+        autoNavigation.StopNavigation();
+    }
+
+    public override void MoveToAutonomyTarget()
+    {
+        autoNavigation.StartNavigation(OnAutonomyDone);
+    }
+
+    public void TrajectoryGenerated(Vector3[] positions)
+    {
+        // check validity of the path
+        if (positions == null || positions.Length <= 1)
+        {
+            return;
+        }
+
+        OnAutonomyTrajectory?.Invoke();
+    }
+
+    private void OnAutonomyDone()
+    {
+        OnAutonomyComplete?.Invoke();
+        CancelAutonomyTarget();
+    }
+
+    public (Vector3[], Vector3[]) GetTrajectories()
+    {
+        return (
+            autoNavigation.GlobalWaypoints,
+            autoNavigation.LocalWaypoints
         );
     }
 

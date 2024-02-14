@@ -67,6 +67,15 @@ public abstract class BaseController : MonoBehaviour
         );
     }
 
+    // Autonomy function
+    public virtual void SetAutonomyTarget(
+        Vector3 position, Quaternion rotation
+    ) {}
+
+    public virtual void CancelAutonomyTarget() {}
+
+    public virtual void MoveToAutonomyTarget() {}
+
     // Get/Set robot control mode
     public SpeedMode GetSpeedMode()
     {

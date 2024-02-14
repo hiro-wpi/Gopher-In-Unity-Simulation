@@ -83,10 +83,7 @@ public class ArticulationEndEffectorController : MonoBehaviour
     {
         // Compute target pose
         float[] currJointAngles = jointAngles.Clone() as float[];
-        forwardKinematics.SolveFK(currJointAngles);
-        (targetPosition, targetRotation) = forwardKinematics.GetPose(
-            forwardKinematics.NumJoint
-        );
+        (targetPosition, targetRotation) = GetJointTargetPose(currJointAngles);
 
         // Set target
         succeed = true;
@@ -102,6 +99,11 @@ public class ArticulationEndEffectorController : MonoBehaviour
 
     public void SetTargetDeltaPose(Vector3 linearDelta, Vector3 angularDelta) 
     {
+        if (linearDelta == Vector3.zero && angularDelta == Vector3.zero)
+        {
+            return;
+        }
+
         // Update current target pose in world frame
         (targetPosition, targetRotation) = Utils.LocalToWorldPose(
             baseTransform, targetLocalPosition, targetLocalRotation
@@ -152,9 +154,8 @@ public class ArticulationEndEffectorController : MonoBehaviour
         }
 
         // Get solution pose
-        forwardKinematics.SolveFK(targetJointAngles);
-        var (solvedPosition, solvedRotation) = forwardKinematics.GetPose(
-            forwardKinematics.NumJoint
+        var (solvedPosition, solvedRotation) = GetJointTargetPose(
+            targetJointAngles
         );
 
         // Check convergence
@@ -180,9 +181,13 @@ public class ArticulationEndEffectorController : MonoBehaviour
     // Get the actual end effector pose (from joint targets)
     public (Vector3, Quaternion) GetJointTargetPose()
     {
-        forwardKinematics.SolveFK(
-            jointController.GetCurrentJointTargets()
-        );
+        return GetJointTargetPose(jointController.GetCurrentJointTargets());
+    }
+
+    // Compute the expected end effector pose given joint angle
+    public (Vector3, Quaternion) GetJointTargetPose(float[] angles)
+    {
+        forwardKinematics.SolveFK(angles);
         return forwardKinematics.GetPose(
             forwardKinematics.NumJoint
         );
