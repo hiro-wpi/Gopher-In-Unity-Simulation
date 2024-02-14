@@ -12,7 +12,7 @@ public class StraightLinePlanner : MonoBehaviour
     // Parameter
     [SerializeField] private int numberOfWaypoints = 5;
     // For planning in cartesian space
-    [SerializeField] private float cartesianSpeed = 0.05f;
+    [SerializeField] private float cartesianSpeed = 0.1f;
     // For planning in joint space
     [SerializeField] private float jointSpeed = 0.5f;
     private float completionTime;

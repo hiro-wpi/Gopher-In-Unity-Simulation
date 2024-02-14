@@ -205,13 +205,17 @@ public class ArticulationArmController : ArmController
         if (controlMode == ControlMode.Auto)
         {
             autoManipulation.StopManipulation();
-            SwitchToManualControl();
+            // Do not switch to manual control
+            // SwitchToManualControl();
         }
     }
 
     public override void MoveToAutonomyTarget()
     {
-        SwitchToAutonomy();
+        if (controlMode != ControlMode.Auto)
+        {
+            SwitchToAutonomy();
+        }
         autoManipulation.StartManipulation(OnAutonomyDone);
     }
 
@@ -234,7 +238,8 @@ public class ArticulationArmController : ArmController
     private void OnAutonomyDone()
     {
         OnAutonomyComplete?.Invoke();
-        SwitchToManualControl();
+        // Do not switch to manual control
+        // SwitchToManualControl();
     }
 
     public (float[], float[][], float[][], float[][]) GetAutonomyTrajectory()
@@ -251,7 +256,10 @@ public class ArticulationArmController : ArmController
     public override void SetJointAngles(float[] jointAngles)
     {
         // Move to given position
-        SwitchToAutonomy();
+        if (controlMode != ControlMode.Auto)
+        {
+            SwitchToAutonomy();
+        }
         jointController.SetJointTargets(
             jointAngles, false, SwitchToManualControl
         );
@@ -263,13 +271,16 @@ public class ArticulationArmController : ArmController
         float[][] velocities, float[][] accelerations
     )
     {
-        SwitchToAutonomy();
+        if (controlMode != ControlMode.Auto)
+        {
+            SwitchToAutonomy();
+        }
         jointController.SetJointTrajectory(
             timeSteps,
             angles, 
             velocities,
             accelerations,
-            SwitchToManualControl
+            OnAutonomyDone
         );
     }
 
