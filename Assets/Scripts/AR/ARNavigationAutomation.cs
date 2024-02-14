@@ -182,8 +182,11 @@ public class ARNavigationAutomation : MonoBehaviour
             baseController.MoveToAutonomyTarget();
         }
         passingInGlobalGoal = false;
+    }
 
-        
+    public void CancelAutonomy()
+    {
+        baseController.CancelAutonomyTarget();
     }
 
 }

@@ -203,6 +203,7 @@ Transform:
   - {fileID: 1860784606}
   - {fileID: 527774693}
   - {fileID: 1398951829}
+  - {fileID: 891172711}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &100631079
@@ -3238,6 +3239,76 @@ MonoBehaviour:
     trajectory: []
   GUI: {fileID: 1970284865}
   CUI: {fileID: 0}
+--- !u!1 &891172710
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 891172711}
+  - component: {fileID: 891172712}
+  - component: {fileID: 891172713}
+  m_Layer: 0
+  m_Name: Autonomy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &891172711
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 891172710}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 92570676}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &891172712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 891172710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b04703e3e02887a49b3f92cf2295afcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drawGlobalWaypoints: {fileID: 1970284867}
+  baseController: {fileID: 0}
+  reachedGoal: 0
+  autoReady: 0
+--- !u!114 &891172713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 891172710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c344eb843422f5744b070129e5424716, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  robotInRoom: 0
+  arNavAuto: {fileID: 891172712}
+  doorPosition: {x: 9, y: 0, z: 5}
+  doorRotation: {x: 0, y: 90, z: 0}
+  goalPosition: {x: 12, y: 0, z: 7}
+  goalRotation: {x: 0, y: 0, z: 0}
+  doorFront: {fileID: 0}
+  doorBack: {fileID: 0}
+  door: {fileID: 0}
 --- !u!1 &916969908
 GameObject:
   m_ObjectHideFlags: 0
@@ -4486,7 +4557,7 @@ MonoBehaviour:
     trajectory: []
   GoalObjectSpawnArray:
   - gameObject: {fileID: 2075622757900185994, guid: 845719786c1c896ac83165c019c2763e, type: 3}
-    position: {x: 12, y: 0, z: 7}
+    position: {x: 12, y: 0, z: 13}
     rotation: {x: 0, y: 0, z: 0}
     trajectory: []
   robotSpawnArray:
@@ -6236,6 +6307,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1970284866}
   - component: {fileID: 1970284865}
+  - component: {fileID: 1970284867}
   m_Layer: 5
   m_Name: RegularGUI
   m_TagString: Untagged
@@ -6313,6 +6385,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1970284867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1970284864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4abc1e833d64e124d82e2ddfb59c59c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultLineMaterial: {fileID: 2100000, guid: e5741756d5f1cf44eb3df8d24c6f029d, type: 2}
 --- !u!1 &1972533206
 GameObject:
   m_ObjectHideFlags: 0
