@@ -33,6 +33,8 @@ public class CutscenePlanner : MonoBehaviour
     private float raiseDuration = 1.5f;
     private float eyeARTimer = 0.0f;
     private float eyeARDuration = 1.0f;
+    private float startTimer = 0.0f;
+    private float startDuration = 4.0f;
 
     private float headTurnSpeed = 10.0f;
     private float armMoveSpeed = 0.3f; 
@@ -40,6 +42,7 @@ public class CutscenePlanner : MonoBehaviour
 
     private enum CutsceneState
     {
+        StartState,
         WaitingBeforeMedicine,
         RaisingHand,
         HighlightingMedicine,
@@ -54,13 +57,24 @@ public class CutscenePlanner : MonoBehaviour
     {
         SendToHome(180, 10);
 
-        currentState = CutsceneState.WaitingBeforeMedicine;
+        currentState = CutsceneState.StartState;
     }
 
     private void Update()
     {
         switch (currentState)
         {
+            case CutsceneState.StartState:
+                startTimer += Time.deltaTime;
+                if (startTimer < startDuration)
+                {
+                    return;
+                }
+                startTimer = 0.0f;
+
+                currentState = CutsceneState.WaitingBeforeMedicine;
+                break;
+
             case CutsceneState.WaitingBeforeMedicine:
                 WaitingBeforeMedicine();
                 break;
