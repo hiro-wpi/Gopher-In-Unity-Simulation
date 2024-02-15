@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Robotics.UrdfImporter;
 using UnityEngine;
 
 public class RobotCollisionWarning : MonoBehaviour
@@ -23,7 +22,6 @@ public class RobotCollisionWarning : MonoBehaviour
     [SerializeField] private Sprite collisionIcon;
     private GameObject collisionIconCanvas;
 
-    private GameObject robot;
     private GameObject robotBracelet;
 
     private void Update()
