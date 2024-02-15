@@ -2812,6 +2812,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c344eb843422f5744b070129e5424716, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphicalInterface: {fileID: 1970284865}
+  displayRect: {fileID: 489424119}
+  arGenerator: {fileID: 1970284868}
+  highlightObject: {fileID: 1970284869}
+  icon: {fileID: 21300000, guid: 5e117f4a4b2594344abe6edc0473ad92, type: 3}
   robotInRoom: 0
   arNavAuto: {fileID: 891172712}
   goalPosition: {x: 12, y: 0, z: 7}
@@ -5571,6 +5576,8 @@ GameObject:
   - component: {fileID: 1970284866}
   - component: {fileID: 1970284865}
   - component: {fileID: 1970284867}
+  - component: {fileID: 1970284869}
+  - component: {fileID: 1970284868}
   m_Layer: 5
   m_Name: RegularGUI
   m_TagString: Untagged
@@ -5661,6 +5668,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultLineMaterial: {fileID: 2100000, guid: e5741756d5f1cf44eb3df8d24c6f029d, type: 2}
+--- !u!114 &1970284868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1970284864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54bcb6a180639c44e92bf5564bcc0591, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transparentMaterial: {fileID: 2100000, guid: dd757363e3c4608e1aee02a81b8cbcf0, type: 2}
+--- !u!114 &1970284869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1970284864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fb8b2a0582366f4fb6e85472de49942, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boundingBoxTexture: {fileID: 0}
+  defaultColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &2009580635
 GameObject:
   m_ObjectHideFlags: 0
