@@ -22,6 +22,12 @@ public class ArticulationGripperController : MonoBehaviour
     private float leftGripperCloseOffset = 0.0f;
     private float rightGripperCloseOffset = 0.0f;
 
+    // Gripper motion
+    [SerializeField] private float gripperMotionCompletionTime = 0.25f;
+    private float leftSpeed = 0.0f;
+    private float rightSpeed = 0.0f;
+    private Coroutine gripperMotionCoroutine = null;
+
     // Grasping
     [SerializeField] private Grasping grasping;
     [SerializeField] private float stableTimeToConsiderGrasping = 0.5f;
@@ -46,6 +52,14 @@ public class ArticulationGripperController : MonoBehaviour
         rightGripperCloseOffset = (
             rightFinger.xDrive.upperLimit - rightFinger.xDrive.lowerLimit
         ) * 0.1f;
+
+        // Set the speed for the gripper motion
+        leftSpeed = (
+            leftFinger.xDrive.upperLimit - leftFinger.xDrive.lowerLimit
+        ) / gripperMotionCompletionTime;
+        rightSpeed = (
+            rightFinger.xDrive.upperLimit - rightFinger.xDrive.lowerLimit
+        ) / gripperMotionCompletionTime;
     }
 
     void FixedUpdate()
@@ -123,8 +137,37 @@ public class ArticulationGripperController : MonoBehaviour
         );
 
         // Set values
-        ArticulationBodyUtils.SetJointTarget(leftFinger, leftValue);
-        ArticulationBodyUtils.SetJointTarget(rightFinger, rightValue);
+        if (gripperMotionCoroutine != null)
+        {
+            StopCoroutine(gripperMotionCoroutine);
+        }
+        gripperMotionCoroutine = StartCoroutine(
+            GripperMotionCoroutine(leftValue, rightValue)
+        );
+    }
+    
+    // Coroutine for gripper motion
+    private IEnumerator GripperMotionCoroutine(
+        float leftTarget, float rightTarget
+    )
+    {
+        while (
+            leftFinger.xDrive.target != leftTarget
+            || rightFinger.xDrive.target != rightTarget
+        )
+        {
+            ArticulationBodyUtils.SetJointTargetStep(
+                leftFinger, leftTarget, leftSpeed
+            );
+            ArticulationBodyUtils.SetJointTargetStep(
+                rightFinger, rightTarget, rightSpeed
+            );
+            // Wait for a certain amount of time
+            yield return new WaitForFixedUpdate();
+        }
+
+        // Clear coroutine
+        gripperMotionCoroutine = null;
     }
 
     // Grasping detection
