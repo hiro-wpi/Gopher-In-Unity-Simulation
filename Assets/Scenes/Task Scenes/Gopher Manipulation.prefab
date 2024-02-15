@@ -2276,7 +2276,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   armController: {fileID: 1271706237}
   grasping: {fileID: 7340697812366614354}
-  <ProximityGraspableCheck>k__BackingField: 0
+  ProximityGraspableCheck: 0
 --- !u!114 &442020490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8836,7 +8836,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   armController: {fileID: 12984549}
   grasping: {fileID: 4172144274368844524}
-  <ProximityGraspableCheck>k__BackingField: 0
+  ProximityGraspableCheck: 0
 --- !u!114 &2039149416
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18711,8 +18711,15 @@ MonoBehaviour:
   stiffness: 50000
   damping: 100
   forceLimit: 1000
-  assignToAllChildren: 1
-  robotChainLength: 0
+  specificJointsSettings:
+  - joints:
+    - {fileID: 192113879969002847}
+    - {fileID: 4231206811900086456}
+    - {fileID: 5322647020131956288}
+    - {fileID: 213131015288829517}
+    stiffness: 1000
+    damping: 100
+    forceLimit: 1000
 --- !u!1 &4823188892800124110
 GameObject:
   m_ObjectHideFlags: 0
@@ -26451,6 +26458,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftFinger: {fileID: 192113879969002847}
   rightFinger: {fileID: 4231206811900086456}
+  gripperMotionCompletionTime: 0.05
   grasping: {fileID: 4172144274368844524}
   stableTimeToConsiderGrasping: 0.5
 --- !u!114 &4172144274368844524
@@ -26874,6 +26882,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftFinger: {fileID: 5322647020131956288}
   rightFinger: {fileID: 213131015288829517}
+  gripperMotionCompletionTime: 0.05
   grasping: {fileID: 7340697812366614354}
   stableTimeToConsiderGrasping: 0.5
 --- !u!114 &7340697812366614354
