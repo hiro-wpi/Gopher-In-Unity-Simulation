@@ -31,6 +31,7 @@ public class ARNavigationAutomation : MonoBehaviour
 
     private bool passingInGlobalGoal = false;
 
+    [SerializeField] private bool autoMove = true;
 
     // Start is called before the first frame update
     void Start()
@@ -179,7 +180,10 @@ public class ARNavigationAutomation : MonoBehaviour
         {
 
             // Automatically Send the robot to the goal
-            baseController.MoveToAutonomyTarget();
+            if(autoMove)
+            {
+                baseController.MoveToAutonomyTarget();
+            }
         }
         passingInGlobalGoal = false;
     }

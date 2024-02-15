@@ -13,6 +13,7 @@ public class IVDeliveryAutonomy : MonoBehaviour
     // AR
     [SerializeField] private GenerateARGameObject arGenerator;
     [SerializeField] private HighlightObjectOnCanvas highlightObject;
+    // [SerializeField] private DrawWaypoints drawWaypoints;
     [SerializeField] private Sprite icon;
 
     // Autonomy
@@ -44,6 +45,9 @@ public class IVDeliveryAutonomy : MonoBehaviour
     // Obsticle
     private GameObject obsticle;  // For now, we are using the cart as an obsticle
     private Vector3 obsticleInitPosition;
+
+    // Draw Nav Goal
+    private bool isLineDrawn = false;
 
     // Start is called before the first frame update
     void Start()
@@ -93,10 +97,16 @@ public class IVDeliveryAutonomy : MonoBehaviour
         {
             return;
         }
+        
+        if(!isLineDrawn)
+        {
+            DrawLine();
+            isLineDrawn = true;
+        }
 
-        UpdateRobotLocation();
+        //UpdateRobotLocation();
         HandleObsticleState();
-        HandleChangeAutoState();
+        // HandleChangeAutoState();
 
         
         // Start Any Task Related Stuff Here
@@ -120,7 +130,8 @@ public class IVDeliveryAutonomy : MonoBehaviour
 
     IEnumerator ChangeControlInterface()
     {
-        yield return new WaitForSeconds(10);
+        // yield return new WaitForSeconds(10);
+        yield return null;
 
         GameObject controlInterfaces = GameObject.Find("Control Interface");
 
@@ -131,6 +142,13 @@ public class IVDeliveryAutonomy : MonoBehaviour
         xrControl.gameObject.SetActive(true);
 
         Debug.Log("Swaped Controls");
+
+
+    }
+
+    public void DrawLine()
+    {
+        arNavAuto.SetWaypoints(goalPosition, goalRotation);
     }
 
     public void InitTaskSetup()
@@ -171,7 +189,11 @@ public class IVDeliveryAutonomy : MonoBehaviour
                 // Create a box collider for the obsticle
                 AddCartCollider();
             }
+
         }
+
+        // SetTaskWaypoints();
+        // CancelAutonomy();
 
         // TODO Later Find the goal position
 
@@ -204,7 +226,7 @@ public class IVDeliveryAutonomy : MonoBehaviour
                 if(obsticleState == ObsticleState.Detected)
                 {
                     controlState = ControlState.Manual;  // No need to transition to ManualToAuto
-                    CancelAutonomy();
+                    // CancelAutonomy();
                 }
                 else
                 {
@@ -212,7 +234,7 @@ public class IVDeliveryAutonomy : MonoBehaviour
                     if(Input.GetKeyDown(KeyCode.Space))
                     {
                         controlState = ControlState.AutoToManual;
-                        CancelAutonomy();
+                        // CancelAutonomy();
                     }
                 }
 
@@ -258,11 +280,6 @@ public class IVDeliveryAutonomy : MonoBehaviour
         }
     }
     
-
-    public void CancelAutonomy()
-    {
-        arNavAuto.CancelAutonomy();
-    }
 
     public void SetTaskWaypoints()
     {
@@ -327,25 +344,12 @@ public class IVDeliveryAutonomy : MonoBehaviour
         if(Physics.Raycast(robot.transform.position + Vector3.up * 0.25f, direction, out hit, maxDistance))
         {
             // No obsticle detected between the robot cart
-            // Check if the robot is closer to the doorfront or doorback to determine if the robot is in the room or not
-
+            
             // Check that hit object is the cart
-            Debug.Log(hit.collider.gameObject.name);
-
-            // Transform child = obsticle.transform.Find(hit.collider.gameObject.name);
-
-            // if(child == null)
-            // {
-            //    return false;
-            // }
-            // else
-            // {
-            //     Debug.Log("Child Found");
-            //     return true;
-            // }
+            // Debug.Log(hit.collider.gameObject.name);
             if(hit.collider.gameObject == obsticle)
             {
-                Debug.Log("Obsticle Detected");
+                // Debug.Log("Obsticle Detected");
                 return true;
             }
         }
