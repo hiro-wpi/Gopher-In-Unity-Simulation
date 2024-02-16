@@ -120,13 +120,13 @@ public class ARManipulationAutomation : MonoBehaviour
 
     private void OnArmAutonomyComplete()
     {
-        Debug.Log("Arm Autonomy Complete");
+        // Debug.Log("Arm Autonomy Complete");
         waypointArmReachedGoal = true;
     }
 
     private void OnArmTrajectoryGenerated()
     {
-        Debug.Log("Arm trajectory generated");
+        // Debug.Log("Arm trajectory generated");
         armController.MoveToAutonomyTarget();
     }
 
@@ -170,11 +170,14 @@ public class ARManipulationAutomation : MonoBehaviour
             {
                 armController.SetGripperPosition(waypointGripperActions[i]);
             }
+
+            // Wait for gripper to be done
+            yield return new WaitForSeconds(0.1f);
             
         }
         reachedArmGoal = true;
 
-        Debug.Log("Finished Trajectory");
+        // Debug.Log("Finished Trajectory");
     }
 
     public void HomeJoints()

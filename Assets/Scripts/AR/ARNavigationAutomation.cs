@@ -13,7 +13,8 @@ public class ARNavigationAutomation : MonoBehaviour
     // AR Featrues 
     // [SerializeField] private FloorSelector floorSelector;
     // [SerializeField] private DrawWaypoints drawLocalWaypoints;
-    [SerializeField] private DrawWaypoints drawGlobalWaypoints;
+    [SerializeField] private DrawWaypoints drawGlobalWaypointsAR;
+    [SerializeField] private DrawWaypoints drawGlobalWaypointsMap;
 
     // private bool hideLocalPath = false;
 
@@ -170,36 +171,12 @@ public class ARNavigationAutomation : MonoBehaviour
         if(passingInGlobalGoal == true)
         {   
             // Clear old waypoints
-            drawGlobalWaypoints.RemoveLine("Global Path AR");
+            drawGlobalWaypointsAR.RemoveLine("Global Path AR");
+            drawGlobalWaypointsMap.RemoveLine("Global Path Map");
             // Add new waypoints
-            drawGlobalWaypoints.DrawLine("Global Path AR", globalWaypoints);
-
-            // Clear old waypoints
-            drawGlobalWaypoints.RemoveLine("Global Path Map");
-            // Add new waypoints
-            drawGlobalWaypoints.DrawLine("Global Path Map", globalWaypoints);
-
-            GameObject globalPathAR = GameObject.Find("Global Path AR");
-            GameObject globalPathMap = GameObject.Find("Global Path Map");
-
-            if(globalPathAR != null)
-            {
-                Debug.Log("We found the global ar path");
-
-                // Change the layer of the object
-                globalPathAR.layer = LayerMask.NameToLayer("ARObject");
-
-            }
-
-            if(globalPathMap != null)
-            {
-                Debug.Log("We found the global map path");
-
-                // Change the layer of the object
-                globalPathMap.layer = LayerMask.NameToLayer("Map");
-
-            }
-
+            drawGlobalWaypointsAR.DrawLine("Global Path AR", globalWaypoints);
+            drawGlobalWaypointsMap.DrawLine("Global Path Map", globalWaypoints);
+            
         }
         else
         {

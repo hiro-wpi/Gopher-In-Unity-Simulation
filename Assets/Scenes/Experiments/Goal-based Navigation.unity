@@ -992,7 +992,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b04703e3e02887a49b3f92cf2295afcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawGlobalWaypoints: {fileID: 1233093161}
+  drawGlobalWaypointsAR: {fileID: 1233093162}
+  drawGlobalWaypointsMap: {fileID: 1233093161}
   baseController: {fileID: 0}
   reachedGoal: 0
   autoReady: 0
@@ -3502,9 +3503,10 @@ GameObject:
   - component: {fileID: 1233093155}
   - component: {fileID: 1233093154}
   - component: {fileID: 1233093153}
-  - component: {fileID: 1233093161}
   - component: {fileID: 1233093152}
   - component: {fileID: 1233093157}
+  - component: {fileID: 1233093162}
+  - component: {fileID: 1233093161}
   m_Layer: 5
   m_Name: RegularGUI
   m_TagString: Untagged
@@ -3699,6 +3701,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultLineMaterial: {fileID: 2100000, guid: 15906be1180c2534fbc01b0d3c4a2f2c, type: 2}
+  layerName: Map
+--- !u!114 &1233093162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233093149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4abc1e833d64e124d82e2ddfb59c59c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultLineMaterial: {fileID: 2100000, guid: 15906be1180c2534fbc01b0d3c4a2f2c, type: 2}
+  layerName: ARObject
 --- !u!1 &1264190031
 GameObject:
   m_ObjectHideFlags: 0
@@ -4084,7 +4101,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No task assigned
+  m_text: Test
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 057498b96d8dfa903a918e311afd3f85, type: 2}
   m_sharedMaterial: {fileID: 2678541090263098255, guid: 057498b96d8dfa903a918e311afd3f85, type: 2}
@@ -5395,7 +5412,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1693264302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5652,8 +5669,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0
-  m_fontSizeBase: 0
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6008,8 +6025,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TaskName: Check Vitals and Rooms (Var1)
-  TaskDescription: 'The robot has been provided with several sets of patient rooms
-    and vital monitors to check and investigate. '
+  TaskDescription: 
   SceneName: NavigationTaskScene
   StaticObjectSpawnArray: []
   DynamicObjectSpawnArray: []

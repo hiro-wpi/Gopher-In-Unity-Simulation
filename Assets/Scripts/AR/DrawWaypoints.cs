@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,8 @@ public class DrawWaypoints : MonoBehaviour
 
     private Dictionary<string, LineRenderer> lineMap = new ();
     private Dictionary<string, GameObject> lineObjects = new ();
+
+    [SerializeField] private string layerName = "";
 
     void Start() {}
 
@@ -56,9 +59,13 @@ public class DrawWaypoints : MonoBehaviour
             // Make a game object to hold the line
             GameObject lineObject = new GameObject(id);
             lineObject.transform.SetParent(transform);
-            lineObjects.Add(id, lineObject);
 
+            if(layerName != "")
+            {
+                lineObject.layer = LayerMask.NameToLayer(layerName);
+            }
             
+            lineObjects.Add(id, lineObject);
 
             // LineRenderer componenet
             lineRenderer = lineObject.AddComponent<LineRenderer>();
@@ -90,7 +97,7 @@ public class DrawWaypoints : MonoBehaviour
 
     public void RemoveLine(string id)
     {
-        if (lineMap.ContainsKey(id))
+        if (lineMap.ContainsKey(id))    
         {
             Destroy(lineObjects[id]);
             lineMap.Remove(id);

@@ -299,9 +299,9 @@ public class GraphicalInterface : MonoBehaviour
     private void UpdateTaskStatus()
     {
         // Change UI according to task
-        if (currentTask == null)
-            return;
-        taskDescriptionPanelText.text = currentTask.TaskDescription;
+        // if (currentTask == null)
+        //     return;
+        // taskDescriptionPanelText.text = currentTask.TaskDescription;
         taskStatusPanelText.text = "Task Duration: " 
                                  + string.Format("{0:0.00}", currentTask.GetTaskDuration()) + " s."
                                  + "\n\n"
@@ -741,5 +741,19 @@ public class GraphicalInterface : MonoBehaviour
         FPS = (int)(FPSSum / FPSCount);
         FPSSum = 0;
         FPSCount = 0;
+    }
+
+    public void AddLogInfo(string info)
+    {
+        // Add new info on each line
+        taskDescriptionPanelText.text += info + "\n";
+
+        // If the info is 6 lines
+        if (taskDescriptionPanelText.text.Split('\n').Length > 7)
+        {
+            // Remove the first line
+            taskDescriptionPanelText.text = taskDescriptionPanelText.text.Substring(
+                taskDescriptionPanelText.text.IndexOf('\n') + 1);
+        }
     }
 }
