@@ -301,12 +301,26 @@ public class GraphicalInterface : MonoBehaviour
         // Change UI according to task
         if (currentTask == null)
             return;
-        taskDescriptionPanelText.text = currentTask.TaskDescription;
+        // taskDescriptionPanelText.text = currentTask.TaskDescription;
         taskStatusPanelText.text = "Task Duration: " 
-                                 + string.Format("{0:0.00}", currentTask.GetTaskDuration()) + " s."
-                                 + "\n\n"
-                                 + "Current Task Status: " + "\n"
-                                 + currentTask.GetTaskStatus();
+                                 + string.Format("{0:0.00}", currentTask.GetTaskDuration()) + " s.";
+                                //  + "\n\n"
+                                //  + "Current Task Status: " + "\n"
+                                //  + currentTask.GetTaskStatus();
+    }
+
+    public void AddLogInfo(string info)
+    {
+        // Add new info on each line
+        taskDescriptionPanelText.text += info + "\n";
+
+        // If the info is 6 lines
+        if (taskDescriptionPanelText.text.Split('\n').Length > 7)
+        {
+            // Remove the first line
+            taskDescriptionPanelText.text = taskDescriptionPanelText.text.Substring(
+                taskDescriptionPanelText.text.IndexOf('\n') + 1);
+        }
     }
 
     private void UpdateRobotStatus()
@@ -458,7 +472,7 @@ public class GraphicalInterface : MonoBehaviour
     {
         // location name
         string location = HospitalMapUtil.GetLocationName(position);
-        locationText.text = "Current - " + location;
+        locationText.text = "Current Position - " + location;
         // update map in minimap display
         map.transform.position = position - robot.transform.position + new Vector3(0f, -3f, 0f);
         map.transform.rotation = Quaternion.Euler(rotation - robot.transform.rotation.eulerAngles); 

@@ -9,20 +9,19 @@ public class RobotCollisionWarning : MonoBehaviour
     [SerializeField] private RobotCollisionDetection handCollisionDetection;
     [SerializeField] private RobotCollisionDetection smallForeArmCollisionDetection;
     [SerializeField] private RobotCollisionDetection smallHandCollisionDetection;
-
     [SerializeField] private HighlightObjectOnCanvas highlightObject;
     [SerializeField] private GraphicalInterface graphicalInterface;
     [SerializeField] private RectTransform displayRect;
     private Camera cam;
-
     [SerializeField] private GameObject warningIconObject;
     [SerializeField] private Sprite warningIcon;
     private GameObject warningIconCanvas;
     [SerializeField] private GameObject collisionIconObject;
     [SerializeField] private Sprite collisionIcon;
     private GameObject collisionIconCanvas;
-
     private GameObject robotBracelet;
+    [SerializeField] private GameObject warningUI;
+    [SerializeField] private GameObject collisionUI;
 
     private void Update()
     {
@@ -73,20 +72,26 @@ public class RobotCollisionWarning : MonoBehaviour
                 if (smallForeArmCollisionDetection.onRobotCollision || smallHandCollisionDetection.onRobotCollision)
                 {
                     HideWarningGameObject();
+                    warningUI.SetActive(false);
                     ShowCollisionGameObject();
+                    collisionUI.SetActive(true);
                 }
 
                 else
                 {
                     ShowWarningGameObject();
+                    warningUI.SetActive(true);
                     HideCollisionGameObject();
+                    collisionUI.SetActive(false);
                 }
             }
             
             else
             {
                 HideWarningGameObject();
+                warningUI.SetActive(false);
                 HideCollisionGameObject();
+                collisionUI.SetActive(false);
             } 
         }
     }

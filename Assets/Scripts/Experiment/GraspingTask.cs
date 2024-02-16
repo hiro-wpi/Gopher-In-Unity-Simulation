@@ -7,8 +7,31 @@ using UnityEngine;
 /// </summary>
 public class GraspingTask : Task 
 {
+    [SerializeField] private GraphicalInterface graphicalInterface;
     void Start()
-    {}
+    {
+    }
+
+    public override bool CheckTaskStart()
+    {
+        if (robot == null)
+        {
+            return false;
+        }
+
+        // if the enter key is pressed, start the task
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            graphicalInterface.AddLogInfo("Task Started!");
+            startTime = Time.time;
+            taskStarted = true;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
 
     public override bool CheckTaskCompletion()
@@ -22,6 +45,7 @@ public class GraspingTask : Task
                 return false;
         }
         goals[0].DisableGoalVisualEffect();
+        graphicalInterface.AddLogInfo("Task Completed!");
         GUI.ShowPopUpMessage("Current Task Completed!");
         return true;
     }

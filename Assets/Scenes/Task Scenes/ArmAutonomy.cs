@@ -149,6 +149,8 @@ public class ArmAutonomy : MonoBehaviour
             planFlag = true;
             currentState = AutonomyState.FirstHoverOverObject;
         }
+        
+        graphicalInterface.AddLogInfo("Object selected");
 
         selectedObject = gameObject;
         highlightObject.Highlight(selectedObject, cam, displayRect);
@@ -170,13 +172,15 @@ public class ArmAutonomy : MonoBehaviour
 
                 if (planFlag)
                 {
+                    graphicalInterface.AddLogInfo("Trajectory planned!");
                     armController.SetAutonomyTarget(hoverTransform.position, hoverTransform.rotation);
                     planFlag = false;
                     completed = false;                    
                 }
 
                 if (hasNewGoal && Input.GetKeyDown(KeyCode.Space))
-                {
+                {   
+                    graphicalInterface.AddLogInfo("Moving to hover over object");
                     hasNewGoal = false;
                     armController.MoveToAutonomyTarget();
                 }
@@ -191,6 +195,7 @@ public class ArmAutonomy : MonoBehaviour
             case AutonomyState.GraspObject:
                 if (planFlag)
                 {
+                    graphicalInterface.AddLogInfo("Trajectory planned!");
                     armController.SetAutonomyTarget(graspTransform.position, graspTransform.rotation);
                     planFlag = false;
                     completed = false;                    
@@ -198,6 +203,7 @@ public class ArmAutonomy : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
+                    graphicalInterface.AddLogInfo("Moving to grasp object");
                     hasNewGoal = false;
                     armController.MoveToAutonomyTarget();
                 }
@@ -212,6 +218,7 @@ public class ArmAutonomy : MonoBehaviour
             case AutonomyState.SecondHoverOverObject:
                 if (planFlag)
                 {
+                    graphicalInterface.AddLogInfo("Trajectory planned!");
                     armController.SetAutonomyTarget(hoverTransform.position, hoverTransform.rotation);
                     planFlag = false;
                     completed = false;                    
@@ -219,6 +226,7 @@ public class ArmAutonomy : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
+                    graphicalInterface.AddLogInfo("Moving to hover over object");
                     armController.SetGripperPosition(1.0f);
                     hasNewGoal = false;
                     armController.MoveToAutonomyTarget();
@@ -234,6 +242,7 @@ public class ArmAutonomy : MonoBehaviour
             case AutonomyState.DeliverToGoal:
                 if (planFlag)
                 {
+                    graphicalInterface.AddLogInfo("Trajectory planned!");
                     armController.SetAutonomyTarget(goalHoverTransform.position, goalHoverTransform.rotation);
                     planFlag = false;
                     completed = false;                    
@@ -241,6 +250,7 @@ public class ArmAutonomy : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
+                    graphicalInterface.AddLogInfo("Moving to hover over goal");
                     hasNewGoal = false;
                     armController.MoveToAutonomyTarget();
                 }
@@ -255,6 +265,7 @@ public class ArmAutonomy : MonoBehaviour
             case AutonomyState.OpenGripperAtGoal:
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
+                    graphicalInterface.AddLogInfo("Releasing object");
                     armController.SetGripperPosition(0.0f);
                     highlightObject.RemoveHighlight(selectedObject);
                     currentState = AutonomyState.FirstHoverOverObject;
