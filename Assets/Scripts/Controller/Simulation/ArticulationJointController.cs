@@ -80,7 +80,7 @@ public class ArticulationJointController : MonoBehaviour
         while (!CheckJointTargetReached(jointPositions))
         {
             SetJointTargetsStep(jointPositions);
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
+            yield return new WaitForFixedUpdate();
         }
 
         if (disableColliders)
@@ -220,7 +220,7 @@ public class ArticulationJointController : MonoBehaviour
             
             SetJointTargetsStep(targetPositions[currTrajectoryIndex]);
             // Introduce a delay for fixedDeltaTime pause between each frame
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
+            yield return new WaitForFixedUpdate();
             currTrajectoryIndex++;
         }
 

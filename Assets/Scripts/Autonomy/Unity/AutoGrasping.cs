@@ -20,8 +20,8 @@ public class AutoGrasping : MonoBehaviour
     [SerializeField] private Grasping grasping;
     private GameObject targetObject;
 
-    [field: SerializeField]
-    public bool ProximityGraspableCheck { get; set; } = true;
+    // Set to true to enable proximity graspable check
+    public bool ProximityGraspableCheck = false;
 
     // Container for hovering and grasping target
     private Transform targetHoverPoint;
