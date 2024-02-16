@@ -55,7 +55,6 @@ public class DrawWaypoints : MonoBehaviour
         {
             // Make a game object to hold the line
             GameObject lineObject = new GameObject(id);
-            lineObject.layer = LayerMask.NameToLayer("ARObject");
             lineObject.transform.SetParent(transform);
             lineObjects.Add(id, lineObject);
 

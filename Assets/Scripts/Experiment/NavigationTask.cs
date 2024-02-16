@@ -16,6 +16,8 @@ public class NavigationTask : Task
     protected float timePausedDuration = 0; // The duration that we paused the task
     protected float pausedTime = 0;
 
+    // private float initTimeScale = Time.timeScale;
+
 
     void Start() {}
 
@@ -95,6 +97,66 @@ public class NavigationTask : Task
 
     // TODO
     // Remove this from the navigation task script
+    // public override float GetTaskDuration()
+    // {
+    //     if(!taskStarted)
+    //     {
+    //         return 0;
+    //     }
+    //     else
+    //     {
+
+    //         //Handle the changes in the state via button press
+    //         switch(buttonState)
+    //         {
+    //             case 0:
+                    
+    //                 if(Input.GetKeyDown("space"))
+    //                 {
+    //                     buttonState = 1;
+    //                     isPaused = true;
+    //                     // pausedTime = Time.time;
+    //                     previousTimePaused = Time.time;
+    //                     Debug.Log("Pause");
+    //                 }
+
+    //                 // Normal Timer
+    //                 //return Time.time - timePausedDuration - startTime;
+    //                 break;
+                    
+    //             case 1:
+                    
+
+    //                 if(Input.GetKeyUp("space"))
+    //                 {
+    //                     buttonState = 2;
+    //                 }
+    //                 break;
+    //             case 2:
+    //                 if(Input.GetKeyDown("space"))
+    //                 {
+    //                     buttonState = 3;
+    //                     isPaused = false;
+    //                     previousPauseDuration += Time.time - previousTimePaused;
+    //                     Debug.Log("Resume");
+    //                 }
+    //                 break;
+    //             case 3:
+    //                 if(Input.GetKeyUp("space"))
+    //                 {
+    //                     buttonState = 0;
+    //                 }
+    //                 break;
+
+    //         }
+
+    //         float pauseDur = GetPauseDuration();
+    //         // Debug.Log(pauseDur);
+    //         return Time.time - pauseDur - startTime ;
+            
+    //     }
+    // }
+
     public override float GetTaskDuration()
     {
         if(!taskStarted)
@@ -113,18 +175,14 @@ public class NavigationTask : Task
                     {
                         buttonState = 1;
                         isPaused = true;
-                        // pausedTime = Time.time;
-                        previousTimePaused = Time.time;
+                        Time.timeScale = 0f;
                         Debug.Log("Pause");
                     }
 
-                    // Normal Timer
-                    //return Time.time - timePausedDuration - startTime;
                     break;
                     
                 case 1:
                     
-
                     if(Input.GetKeyUp("space"))
                     {
                         buttonState = 2;
@@ -135,7 +193,7 @@ public class NavigationTask : Task
                     {
                         buttonState = 3;
                         isPaused = false;
-                        previousPauseDuration += Time.time - previousTimePaused;
+                        Time.timeScale = 1f;
                         Debug.Log("Resume");
                     }
                     break;
@@ -148,44 +206,42 @@ public class NavigationTask : Task
 
             }
 
-            float pauseDur = GetPauseDuration();
-            // Debug.Log(pauseDur);
-            return Time.time - pauseDur - startTime ;
-            
+            return Time.time - startTime;
+
         }
     }
 
 
-    public override bool CheckTaskStart()
-    {
-        if (robot == null)
-        {
-            return false;
-        }
+    // public override bool CheckTaskStart()
+    // {
+    //     if (robot == null)
+    //     {
+    //         return false;
+    //     }
 
-        // Default - if robot moves more than 0.1m
-        if ((robot.transform.position - robotStartPosition).magnitude > 0.1)
-        {
-            startTime = Time.time;
-            pausedTime = startTime;
-            taskStarted = true;
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+    //     // Default - if robot moves more than 0.1m
+    //     if ((robot.transform.position - robotStartPosition).magnitude > 0.1)
+    //     {
+    //         startTime = Time.time;
+    //         pausedTime = startTime;
+    //         taskStarted = true;
+    //         return true;
+    //     }
+    //     else
+    //     {
+    //         return false;
+    //     }
+    // }
 
-    private float GetPauseDuration()
-    {
-        if(isPaused)
-        {
-            return Time.time - previousTimePaused + previousPauseDuration;
-        }
-        else
-        {
-            return previousPauseDuration; // should be done when switching from pause to resume;
-        }
-    }
+    // private float GetPauseDuration()
+    // {
+    //     if(isPaused)
+    //     {
+    //         return Time.time - previousTimePaused + previousPauseDuration;
+    //     }
+    //     else
+    //     {
+    //         return previousPauseDuration; // should be done when switching from pause to resume;
+    //     }
+    // }
 }
