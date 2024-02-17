@@ -11,6 +11,8 @@ public class ARManipulationAutomation : MonoBehaviour
 
     // AR Featrues
     [SerializeField] private GenerateARGameObject arGenerator;
+    private GameObject armWaypointParent;
+    [SerializeField] private GameObject arGripper;
 
     // Automation
 
@@ -29,9 +31,15 @@ public class ARManipulationAutomation : MonoBehaviour
     [SerializeField, ReadOnly] public bool reachedArmGoal = false;  // reached the whole goal
     [SerializeField, ReadOnly] public bool autoReady = false;  // reached the whole goal
 
+    
+
     void Start()
     {
-        
+
+        armWaypointParent = new GameObject("Arm Waypoints");
+        armWaypointParent.transform.SetParent(transform);
+        armWaypointParent.transform.localPosition = Vector3.zero;
+        armWaypointParent.transform.localRotation = Quaternion.identity;
     }
 
     // Update is called once per frame
@@ -88,12 +96,6 @@ public class ARManipulationAutomation : MonoBehaviour
     {
         // Subscribe to the event
 
-        // if (baseController != null)
-        // {
-        //     baseController.OnAutonomyTrajectory += OnBaseTrajectoryGenerated;
-        //     baseController.OnAutonomyComplete += OnBaseReachedGoal;
-        // }
-
         if (armController != null)
         {
             armController.OnAutonomyTrajectory += OnArmTrajectoryGenerated;
@@ -105,12 +107,6 @@ public class ARManipulationAutomation : MonoBehaviour
     {
         // Unsubscribe from the static event to clean up
 
-        // if (baseController != null)
-        // {
-        //     baseController.OnAutonomyTrajectory -= OnBaseTrajectoryGenerated;
-        //     baseController.OnAutonomyComplete -= OnBaseReachedGoal;
-        // }
-
         if (armController != null)
         {
             armController.OnAutonomyTrajectory -= OnArmTrajectoryGenerated;
@@ -118,17 +114,19 @@ public class ARManipulationAutomation : MonoBehaviour
         }
     }
 
-    private void OnArmAutonomyComplete()
-    {
-        // Debug.Log("Arm Autonomy Complete");
-        waypointArmReachedGoal = true;
-    }
+    // private void OnArmAutonomyComplete()
+    // {
+    //     // Debug.Log("Arm Autonomy Complete");
+    //     waypointArmReachedGoal = true;
+    // }
 
-    private void OnArmTrajectoryGenerated()
-    {
-        // Debug.Log("Arm trajectory generated");
-        armController.MoveToAutonomyTarget();
-    }
+    // private void OnArmTrajectoryGenerated()
+    // {
+
+
+    //     // Debug.Log("Arm trajectory generated");
+    //     armController.MoveToAutonomyTarget();
+    // }
 
     public void SetArmWaypoints(Vector3 position, Quaternion rotation, int gripperAction = 0)
     {
@@ -190,4 +188,68 @@ public class ARManipulationAutomation : MonoBehaviour
         // Get the hover and grasp transforms
         return autoGrasping.GetHoverAndGraspTransforms(obj);
     }
+
+    private void OnArmAutonomyComplete()
+    {
+        foreach (Transform child in armWaypointParent.transform)
+        {
+            arGenerator.Destroy(child.gameObject);
+            Destroy(child.gameObject);
+        }
+
+        waypointArmReachedGoal = true;
+    }
+
+    private void OnArmTrajectoryGenerated()
+    {
+        var (time, angles, velocities, accelerations) = 
+            armController.GetAutonomyTrajectory();
+
+        foreach (Transform child in armWaypointParent.transform)
+        {
+            arGenerator.Destroy(child.gameObject);
+            Destroy(child.gameObject);
+        }
+
+        for (int i = 0; i < time.Length; i++)
+        {
+            GameObject waypoint;
+            if (i == 0 || i == time.Length - 1)
+            {
+                waypoint = Instantiate(arGripper);
+            }
+            else
+            {
+                waypoint = new GameObject("waypoint" + i);
+            }
+
+
+            waypoint.transform.SetParent(armWaypointParent.transform);
+
+            (waypoint.transform.position, waypoint.transform.rotation) =
+                armController.GetEETargetPose(angles[i]);
+
+            if (i == 0 || i == time.Length - 1)
+            {
+                arGenerator.Instantiate(
+                    waypoint,
+                    arGripper
+                );
+            }
+            else 
+            {
+                arGenerator.Instantiate(
+                    waypoint,
+                    GenerateARGameObject.ARObjectType.Sphere,
+                    color: Color.red,
+                    transparency: 0.35f,
+                    scale: new Vector3(0.05f, 0.05f, 0.05f)
+                );
+            }
+        }
+
+        armController.MoveToAutonomyTarget();
+    }
+
+    
 }

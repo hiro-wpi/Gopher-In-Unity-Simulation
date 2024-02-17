@@ -37,7 +37,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     [SerializeField] private GenerateARGameObject arGenerator;
     [SerializeField] private HighlightObjectOnCanvas highlightObject;
 
-    private bool hideLocalPath = false;
     [SerializeField] private Sprite icon1;
     [SerializeField] private Sprite icon2;
     [SerializeField] private Sprite icon3;

@@ -190,7 +190,7 @@ public class ArticulationArmController : ArmController
         targetRotation = rotation;
 
         // Try to plan a path to the target
-        Debug.Log("Sending request to move to the manipulation target.");
+        // Debug.Log("Sending request to move to the manipulation target.");
         jointAngles = jointController.GetCurrentJointTargets();
         autoManipulation.PlanTrajectory(
             jointAngles, targetPosition, targetRotation, TrajectoryGenerated
