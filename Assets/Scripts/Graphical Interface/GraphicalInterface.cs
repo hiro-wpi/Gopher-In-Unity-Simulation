@@ -172,6 +172,9 @@ public class GraphicalInterface : MonoBehaviour
         FPSCount = 0;
         FPSSum = 0;
         InvokeRepeating("UpdateFPS", 1.0f, 0.5f);
+
+        // TODO Remove Section
+        StartCoroutine(InitSecondaryCamera());
     }
 
 
@@ -182,6 +185,12 @@ public class GraphicalInterface : MonoBehaviour
         {
             component.SetActive(active);
         }
+    }
+
+    IEnumerator InitSecondaryCamera()
+    {
+        yield return new WaitUntil(() => active);
+        ChangeCameraView(false, "Left");
     }
 
     void Update()
@@ -237,6 +246,8 @@ public class GraphicalInterface : MonoBehaviour
             ChangeCameraView(!Input.GetKey(KeyCode.Keypad0), "Left");
         else if (Input.GetKeyDown(KeyCode.Keypad6))
             ChangeCameraView(!Input.GetKey(KeyCode.Keypad0), "Right");
+
+        
 
         MonitorKeyPressed();
     }

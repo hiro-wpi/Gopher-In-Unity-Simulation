@@ -80,7 +80,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     // Pause and Resume Automation
 
     private int buttonState = 0;
-    private bool isPaused = false;
+    // private bool isPaused = false;
 
     void Start(){}
 
@@ -391,7 +391,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 if(Input.GetKeyDown("space"))
                 {
                     buttonState = 1;
-                    isPaused = true;
+                    // isPaused = true;
                     Time.timeScale = 0f;
                     // Debug.Log("Pause");
                 }
@@ -409,7 +409,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 if(Input.GetKeyDown("space"))
                 {
                     buttonState = 3;
-                    isPaused = false;
+                    // isPaused = false;
                     Time.timeScale = 1f;
                     // Debug.Log("Resume");
                 }
@@ -441,7 +441,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 new Vector3(180, 0, 90),
                 new Vector3(0.025f, 0.35f, 0.5f),
                 Color.cyan,
-                0.7f
+                0.35f
             );
 
         // Get the cart ar feature
