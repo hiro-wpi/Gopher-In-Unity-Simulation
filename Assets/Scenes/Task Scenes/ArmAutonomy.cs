@@ -187,6 +187,7 @@ public class ArmAutonomy : MonoBehaviour
 
                 if (completed)
                 {
+                    graphicalInterface.AddLogInfo("Hovering over object");
                     currentState = AutonomyState.GraspObject;
                     planFlag = true;
                 }
@@ -210,6 +211,7 @@ public class ArmAutonomy : MonoBehaviour
 
                 if (completed)
                 {
+                    graphicalInterface.AddLogInfo("Grasping object");
                     currentState = AutonomyState.SecondHoverOverObject;
                     planFlag = true;
                 }
@@ -226,7 +228,7 @@ public class ArmAutonomy : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    graphicalInterface.AddLogInfo("Moving to hover over object");
+                    graphicalInterface.AddLogInfo("Moving to hover");
                     armController.SetGripperPosition(1.0f);
                     hasNewGoal = false;
                     armController.MoveToAutonomyTarget();
@@ -234,6 +236,7 @@ public class ArmAutonomy : MonoBehaviour
 
                 if (completed)
                 {
+                    graphicalInterface.AddLogInfo("Hovering");
                     currentState = AutonomyState.DeliverToGoal;
                     planFlag = true;
                 }
@@ -257,6 +260,7 @@ public class ArmAutonomy : MonoBehaviour
 
                 if (completed)
                 {
+                    graphicalInterface.AddLogInfo("Hovering over goal");
                     currentState = AutonomyState.OpenGripperAtGoal;
                     planFlag = true;
                 }
@@ -265,7 +269,7 @@ public class ArmAutonomy : MonoBehaviour
             case AutonomyState.OpenGripperAtGoal:
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    graphicalInterface.AddLogInfo("Releasing object");
+                    graphicalInterface.AddLogInfo("Releasing object on goal");
                     armController.SetGripperPosition(0.0f);
                     highlightObject.RemoveHighlight(selectedObject);
                     currentState = AutonomyState.FirstHoverOverObject;
@@ -312,16 +316,18 @@ public class ArmAutonomy : MonoBehaviour
             (goalHoverTransform, goalGraspTransform) = autoGrasping.GetHoverAndGraspTransforms(goalObject);
         }
 
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            autoGrasping.CancelCurrentTargetObject();
-            armController.CancelAutonomyTarget();
-            highlightObject.RemoveHighlight(selectedObject);
-            armController.SetGripperPosition(0.0f);
-            hasNewGoal = false;
-            planFlag = true;
-            currentState = AutonomyState.FirstHoverOverObject;
-        }
+        // if (Input.GetKeyDown(KeyCode.C))
+        // {
+        //     graphicalInterface.AddLogInfo("Cancelling autonomy");
+        //     graphicalInterface.AddLogInfo("Select new object");
+        //     autoGrasping.CancelCurrentTargetObject();
+        //     armController.CancelAutonomyTarget();
+        //     highlightObject.RemoveHighlight(selectedObject);
+        //     armController.SetGripperPosition(0.0f);
+        //     hasNewGoal = false;
+        //     planFlag = true;
+        //     currentState = AutonomyState.FirstHoverOverObject;
+        // }
 
         TaskSchedule();
     }
