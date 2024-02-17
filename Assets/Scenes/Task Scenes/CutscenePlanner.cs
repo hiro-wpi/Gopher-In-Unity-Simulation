@@ -32,9 +32,7 @@ public class CutscenePlanner : MonoBehaviour
     private float raiseTimer = 0.0f;
     private float raiseDuration = 1.5f;
     private float eyeARTimer = 0.0f;
-    private float eyeARDuration = 1.0f;
-    // private float startTimer = 0.0f;
-    // private float startDuration = 4.0f;
+    private float eyeARDuration = 2.0f;
 
     private float headTurnSpeed = 10.0f;
     private float armMoveSpeed = 0.3f; 
@@ -65,13 +63,6 @@ public class CutscenePlanner : MonoBehaviour
         switch (currentState)
         {
             case CutsceneState.StartState:
-                // startTimer += Time.deltaTime;
-                // if (startTimer < startDuration)
-                // {
-                //     return;
-                // }
-                // startTimer = 0.0f;
-
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     currentState = CutsceneState.WaitingBeforeMedicine;
@@ -144,6 +135,8 @@ public class CutscenePlanner : MonoBehaviour
             return;
         }
         raiseTimer = 0.0f;
+        
+        ikController.LookAtTarget(medicineHeadPositions[currentMedicineIndex].position, headTurnSpeed);
 
         eyeAR = Instantiate(eyeARPrefab, medicineBottles[currentMedicineIndex].transform.position + new Vector3(0f, eyeAROffset, 0f), eyeARPrefab.transform.rotation);
         eyeAR.transform.SetParent(medicineBottles[currentMedicineIndex].transform);
@@ -166,8 +159,6 @@ public class CutscenePlanner : MonoBehaviour
 
     private void GoingToMedicine()
     {
-        ikController.LookAtTarget(medicineHeadPositions[currentMedicineIndex].position, headTurnSpeed);
-
         if (ikController.IsLeftHandReached(medicineHandPositions[currentMedicineIndex].position))
         {
             currentState = CutsceneState.WaitingAtMedicine;
