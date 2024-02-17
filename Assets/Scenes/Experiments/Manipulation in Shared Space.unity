@@ -2223,7 +2223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c887d05d041e3b34bbd15770acee731a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  task: {fileID: 770162957}
+  task: {fileID: 770162958}
   NavMeshGameObject: {fileID: 1548766715}
 --- !u!4 &722059225
 Transform:
@@ -2326,6 +2326,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 770162956}
+  - component: {fileID: 770162958}
   - component: {fileID: 770162957}
   m_Layer: 0
   m_Name: ManipulationTask
@@ -2356,7 +2357,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 770162955}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e8d0c55e8f34c6c4c957ce86632e47f0, type: 3}
   m_Name: 
@@ -2381,6 +2382,49 @@ MonoBehaviour:
     trajectory: []
   - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
     position: {x: -5.03, y: 0.8, z: -12.875}
+    rotation: {x: -90, y: 0, z: 0}
+    trajectory: []
+  GoalObjectSpawnArray:
+  - gameObject: {fileID: 4057350141855912022, guid: 9f582b48d920422749e33fcbc2bde462, type: 3}
+    position: {x: -5.165, y: 0.8000001, z: -13.175}
+    rotation: {x: 0, y: 0, z: 0}
+    trajectory: []
+  robotSpawnArray:
+  - gameObject: {fileID: 702946891374405994, guid: 820ec851419d8fc428d4a5a58a7a8ee5, type: 3}
+    position: {x: -5.65, y: 0, z: -12.6}
+    rotation: {x: 0, y: 90, z: 0}
+    trajectory: []
+  GUI: {fileID: 279664474}
+  CUI: {fileID: 0}
+  graphicalInterface: {fileID: 279664474}
+--- !u!114 &770162958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 770162955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0c55e8f34c6c4c957ce86632e47f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TaskName: DEMO Manipulation Task in Shared Space
+  TaskDescription: 
+  SceneName: ManipulationTaskDemo
+  StaticObjectSpawnArray: []
+  DynamicObjectSpawnArray: []
+  TaskObjectSpawnArray:
+  - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
+    position: {x: -5.135, y: 0.8, z: -12.6}
+    rotation: {x: -90, y: 0, z: 0}
+    trajectory: []
+  - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
+    position: {x: -5.135, y: 0.8, z: -12.7}
+    rotation: {x: -90, y: 0, z: 0}
+    trajectory: []
+  - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
+    position: {x: -5.135, y: 0.8, z: -12.9}
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   GoalObjectSpawnArray:
