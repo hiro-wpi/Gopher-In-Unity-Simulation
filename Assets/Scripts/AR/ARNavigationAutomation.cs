@@ -33,6 +33,9 @@ public class ARNavigationAutomation : MonoBehaviour
 
     private bool passingInGlobalGoal = false;
 
+    // Show or hide minimap path
+    [SerializeField] private bool VisualizeMapPath = true;
+
 
     // Start is called before the first frame update
     void Start()
@@ -171,12 +174,18 @@ public class ARNavigationAutomation : MonoBehaviour
         // Generate the global path
         if(passingInGlobalGoal == true)
         {   
-            // Clear old waypoints
+            // Clear and Create AR Path
             drawGlobalWaypointsAR.RemoveLine("Global Path AR");
-            drawGlobalWaypointsMap.RemoveLine("Global Path Map");
-            // Add new waypoints
             drawGlobalWaypointsAR.DrawLine("Global Path AR", globalWaypoints);
-            drawGlobalWaypointsMap.DrawLine("Global Path Map", globalWaypoints);
+
+            // Minimap Path
+            if(VisualizeMapPath)
+            {
+                // Clear and Create Map Path
+                drawGlobalWaypointsMap.RemoveLine("Global Path Map");
+                drawGlobalWaypointsMap.DrawLine("Global Path Map", globalWaypoints);
+            }
+            
             
         }
         else

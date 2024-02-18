@@ -112,6 +112,9 @@ public class GraphicalInterface : MonoBehaviour
     private float FPSSum;
     private int FPSCount;
 
+    // [SerializeField] private bool minimapPathVisable = true;
+    [SerializeField] private bool taskDescriptionUpdate = true;
+
     void Start() 
     {
         // Activation
@@ -756,6 +759,12 @@ public class GraphicalInterface : MonoBehaviour
 
     public void AddLogInfo(string info)
     {
+        // If we don't want to have the descrption updated
+        if(!taskDescriptionUpdate)
+        {
+            return;
+        }
+
         // Add new info on each line
         taskDescriptionPanelText.text += info + "\n";
 
