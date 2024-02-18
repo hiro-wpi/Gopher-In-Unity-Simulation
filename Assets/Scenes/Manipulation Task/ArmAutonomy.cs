@@ -27,6 +27,7 @@ public class ArmAutonomy : MonoBehaviour
     private GameObject goalObject;
     private bool planFlag = true;
     private bool completed = false;
+    [SerializeField] private string robotName = "Gopher Manipulation"; 
 
     private enum AutonomyState
     {
@@ -282,7 +283,7 @@ public class ArmAutonomy : MonoBehaviour
     {
         if (robot == null)
         {
-            robot = GameObject.Find("Gopher Manipulation(Clone)");
+            robot = GameObject.Find(robotName + "(Clone)");
             if (robot != null)
             {
                 Transform rightArmHardware = robot.transform.Find("Plugins/Hardware/Right Arm");

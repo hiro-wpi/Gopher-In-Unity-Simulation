@@ -206,12 +206,12 @@ GameObject:
   - component: {fileID: 13135397}
   - component: {fileID: 13135396}
   m_Layer: 0
-  m_Name: TaskRunner_Config_2
+  m_Name: TaskRunner_AR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &13135396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2853,6 +2853,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1854353515}
+  - {fileID: 2086921725}
   m_Father: {fileID: 279664473}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2930,6 +2931,7 @@ RectTransform:
   m_Children:
   - {fileID: 727039502}
   - {fileID: 1260242094}
+  - {fileID: 832894233}
   - {fileID: 1997113735}
   - {fileID: 2146091466}
   - {fileID: 351461127}
@@ -4800,7 +4802,7 @@ GameObject:
   - component: {fileID: 436633243}
   - component: {fileID: 436633242}
   m_Layer: 0
-  m_Name: TaskRunner_Config_1
+  m_Name: TaskRunner_GUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7294,7 +7296,7 @@ MonoBehaviour:
   smallHandCollisionDetection: {fileID: 0}
   highlightObject: {fileID: 1673669692}
   graphicalInterface: {fileID: 1673669690}
-  displayRect: {fileID: 927479807}
+  displayRect: {fileID: 898146228}
   warningIconObject: {fileID: 0}
   warningIcon: {fileID: 21300000, guid: a292009cdfc9086479f03b098addc1e9, type: 3}
   collisionIconObject: {fileID: 0}
@@ -7318,10 +7320,11 @@ MonoBehaviour:
   armController: {fileID: 0}
   autoGrasping: {fileID: 0}
   graphicalInterface: {fileID: 1673669690}
-  displayRect: {fileID: 927479807}
+  displayRect: {fileID: 898146228}
   highlightObject: {fileID: 1673669692}
   arGripper: {fileID: 2710091181654038673, guid: 735101cad7c4b704c802695827135a92, type: 3}
   hasNewGoal: 0
+  robotName: GUI Gopher Manipulation
 --- !u!1 &658298734
 GameObject:
   m_ObjectHideFlags: 0
@@ -7926,7 +7929,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &722059224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8464,7 +8467,7 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0}
     trajectory: []
   robotSpawnArray:
-  - gameObject: {fileID: 702946891374405994, guid: 820ec851419d8fc428d4a5a58a7a8ee5, type: 3}
+  - gameObject: {fileID: 532813655233050276, guid: 5b5c87a75626e594cbfe7f06e3e6eedf, type: 3}
     position: {x: -5.65, y: 0, z: -12.6}
     rotation: {x: 0, y: 90, z: 0}
     trajectory: []
@@ -8596,10 +8599,11 @@ MonoBehaviour:
   armController: {fileID: 0}
   autoGrasping: {fileID: 0}
   graphicalInterface: {fileID: 279664474}
-  displayRect: {fileID: 271174651}
+  displayRect: {fileID: 2086921725}
   highlightObject: {fileID: 279664475}
   arGripper: {fileID: 2710091181654038673, guid: 735101cad7c4b704c802695827135a92, type: 3}
   hasNewGoal: 0
+  robotName: GUI Gopher Manipulation
 --- !u!114 &778222208
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8619,7 +8623,7 @@ MonoBehaviour:
   smallHandCollisionDetection: {fileID: 0}
   highlightObject: {fileID: 279664475}
   graphicalInterface: {fileID: 279664474}
-  displayRect: {fileID: 271174651}
+  displayRect: {fileID: 2086921725}
   warningIconObject: {fileID: 0}
   warningIcon: {fileID: 21300000, guid: a292009cdfc9086479f03b098addc1e9, type: 3}
   collisionIconObject: {fileID: 0}
@@ -9301,6 +9305,81 @@ RectTransform:
   m_AnchoredPosition: {x: 540, y: -10}
   m_SizeDelta: {x: 120, y: 40}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!1 &832894232
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 832894233}
+  - component: {fileID: 832894235}
+  - component: {fileID: 832894234}
+  m_Layer: 5
+  m_Name: BackGroundTopNew
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &832894233
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 832894232}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 279664473}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1440, y: 255}
+  m_Pivot: {x: 0, y: 1}
+--- !u!114 &832894234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 832894232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.98039216, g: 0.5019608, b: 0.44705883, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &832894235
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 832894232}
+  m_CullTransparentMesh: 1
 --- !u!1 &842003238
 GameObject:
   m_ObjectHideFlags: 0
@@ -9566,6 +9645,79 @@ MonoBehaviour:
   highlightObject: {fileID: 1228960756}
   arGripper: {fileID: 2710091181654038673, guid: 735101cad7c4b704c802695827135a92, type: 3}
   hasNewGoal: 0
+  robotName: Gopher Manipulation
+--- !u!1 &898146227
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 898146228}
+  - component: {fileID: 898146230}
+  - component: {fileID: 898146229}
+  m_Layer: 5
+  m_Name: MainCameraDisplayChild
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &898146228
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898146227}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 927479807}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1440, y: 810}
+  m_Pivot: {x: 0, y: 0}
+--- !u!114 &898146229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898146227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 0}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!222 &898146230
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898146227}
+  m_CullTransparentMesh: 1
 --- !u!1 &898382044
 GameObject:
   m_ObjectHideFlags: 0
@@ -9881,6 +10033,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 408965405}
+  - {fileID: 898146228}
   m_Father: {fileID: 1673669691}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -11897,7 +12050,7 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0}
     trajectory: []
   robotSpawnArray:
-  - gameObject: {fileID: 702946891374405994, guid: 820ec851419d8fc428d4a5a58a7a8ee5, type: 3}
+  - gameObject: {fileID: 532813655233050276, guid: 5b5c87a75626e594cbfe7f06e3e6eedf, type: 3}
     position: {x: -5.65, y: 0, z: -12.6}
     rotation: {x: 0, y: 90, z: 0}
     trajectory: []
@@ -12660,6 +12813,7 @@ RectTransform:
   m_Children:
   - {fileID: 1987314947}
   - {fileID: 1843271185}
+  - {fileID: 1709821138}
   - {fileID: 262092184}
   - {fileID: 819482876}
   - {fileID: 161597435}
@@ -16853,7 +17007,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TaskName: Manipulation Task in Shared Space
   TaskDescription: 
-  SceneName: ManipulationTask2
+  SceneName: ManipulationTask1
   StaticObjectSpawnArray: []
   DynamicObjectSpawnArray: []
   TaskObjectSpawnArray:
@@ -17222,7 +17376,7 @@ GameObject:
   - component: {fileID: 1679904608}
   - component: {fileID: 1679904607}
   m_Layer: 0
-  m_Name: TaskRunner_Config_3
+  m_Name: TaskRunner_GUI_AR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17559,6 +17713,81 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1698911630}
+  m_CullTransparentMesh: 1
+--- !u!1 &1709821137
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1709821138}
+  - component: {fileID: 1709821140}
+  - component: {fileID: 1709821139}
+  m_Layer: 5
+  m_Name: BackGroundTopNew
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1709821138
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709821137}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1228960751}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1440, y: 255}
+  m_Pivot: {x: 0, y: 1}
+--- !u!114 &1709821139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709821137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.98039216, g: 0.5019608, b: 0.44705883, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1709821140
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709821137}
   m_CullTransparentMesh: 1
 --- !u!1 &1766531772
 GameObject:
@@ -18550,6 +18779,7 @@ MonoBehaviour:
   highlightObject: {fileID: 1271351638}
   arGripper: {fileID: 2710091181654038673, guid: 735101cad7c4b704c802695827135a92, type: 3}
   hasNewGoal: 0
+  robotName: Gopher Manipulation
 --- !u!1 &1881570890
 GameObject:
   m_ObjectHideFlags: 0
@@ -20210,7 +20440,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TaskName: Manipulation Task in Shared Space
   TaskDescription: 
-  SceneName: ManipulationTask3
+  SceneName: ManipulationTask1
   StaticObjectSpawnArray: []
   DynamicObjectSpawnArray: []
   TaskObjectSpawnArray:
@@ -20983,6 +21213,78 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2084431349}
+  m_CullTransparentMesh: 1
+--- !u!1 &2086921724
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2086921725}
+  - component: {fileID: 2086921727}
+  - component: {fileID: 2086921726}
+  m_Layer: 5
+  m_Name: MainCameraDisplayChild
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &2086921725
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2086921724}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 271174651}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1440, y: 810}
+  m_Pivot: {x: 0, y: 0}
+--- !u!114 &2086921726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2086921724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 0}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!222 &2086921727
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2086921724}
   m_CullTransparentMesh: 1
 --- !u!1 &2099725284
 GameObject:
