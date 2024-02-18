@@ -198,10 +198,10 @@ public class ArticulationArmController : ArmController
     }
 
     public override void CancelAutonomyTarget()
-    {
+    {        
         targetPosition = Vector3.zero;
         targetRotation = Quaternion.identity;
-
+        
         if (controlMode == ControlMode.Auto)
         {
             autoManipulation.StopManipulation();
