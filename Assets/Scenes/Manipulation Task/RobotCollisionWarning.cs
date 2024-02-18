@@ -71,16 +71,22 @@ public class RobotCollisionWarning : MonoBehaviour
             {
                 if (smallForeArmCollisionDetection.onRobotCollision || smallHandCollisionDetection.onRobotCollision)
                 {
+                    // Hide the warning
                     HideWarningGameObject();
                     warningUI.SetActive(false);
+
+                    // Show the collision
                     ShowCollisionGameObject();
                     collisionUI.SetActive(true);
                 }
 
                 else
                 {
+                    // Show the warning
                     ShowWarningGameObject();
                     warningUI.SetActive(true);
+
+                    // Hide the collision
                     HideCollisionGameObject();
                     collisionUI.SetActive(false);
                 }
@@ -88,8 +94,11 @@ public class RobotCollisionWarning : MonoBehaviour
             
             else
             {
+                // Hide the warning
                 HideWarningGameObject();
                 warningUI.SetActive(false);
+
+                // Hide the collision
                 HideCollisionGameObject();
                 collisionUI.SetActive(false);
             } 
@@ -98,76 +107,55 @@ public class RobotCollisionWarning : MonoBehaviour
 
     private void CreateWarningGameObject(Transform parent)
     {
-        warningIconObject = new GameObject("Warning Icon Object");
-        
-        GameObject warningSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        warningSphere.name = "Warning Sphere";
+        warningIconObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        warningIconObject.name = "Warning Icon Object";
 
-        warningSphere.GetComponent<MeshRenderer>().enabled = false;
-        warningSphere.GetComponent<Collider>().enabled = false;
-
-        warningSphere.transform.parent = warningIconObject.transform;
-        warningSphere.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        warningIconObject.GetComponent<MeshRenderer>().enabled = false;
+        warningIconObject.GetComponent<Collider>().enabled = false;
 
         warningIconObject.transform.parent = parent;
         warningIconObject.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
-
-        var warningIconLocation = HighlightObjectOnCanvas.ElementPosition.Center;
-        highlightObject.Highlight(warningSphere, cam, displayRect, warningIcon, Color.yellow, adjustUIScale: false, position: warningIconLocation);
-
-        List<GameObject> arWarningList = highlightObject.GetHighlightGameObject(warningSphere);
-
-        arWarningList[0].name = "Warning Icon";
-
-        arWarningList[0].SetActive(false);
-
-        warningIconCanvas = arWarningList[0];
+        warningIconObject.transform.localRotation = Quaternion.identity;
+        warningIconObject.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
     }
 
     private void ShowWarningGameObject()
     {
-        warningIconCanvas.SetActive(true);
+        highlightObject.RemoveHighlight(warningIconObject);
+
+        var warningIconLocation = HighlightObjectOnCanvas.ElementPosition.Center;
+        highlightObject.Highlight(warningIconObject, cam, displayRect, warningIcon, Color.yellow, adjustUIScale: false, position: warningIconLocation);
     }
 
     private void HideWarningGameObject()
     {
-        warningIconCanvas.SetActive(false);
+        highlightObject.RemoveHighlight(warningIconObject);
     }
 
     private void CreateCollisionGameObject(Transform parent)
     {
-        collisionIconObject = new GameObject("Collision Icon Object");
-        
-        GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        sphere.name = "Collision Sphere";
+        collisionIconObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        collisionIconObject.name = "Collision Icon Object";
 
-        sphere.GetComponent<MeshRenderer>().enabled = false;
-        sphere.GetComponent<Collider>().enabled = false;
-
-        sphere.transform.parent = collisionIconObject.transform;
-        sphere.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        collisionIconObject.GetComponent<MeshRenderer>().enabled = false;
+        collisionIconObject.GetComponent<Collider>().enabled = false;
 
         collisionIconObject.transform.parent = parent;
         collisionIconObject.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
-
-        var collisionIconLocation = HighlightObjectOnCanvas.ElementPosition.Center;
-        highlightObject.Highlight(sphere, cam, displayRect, collisionIcon, Color.red, adjustUIScale: false, position: collisionIconLocation);
-        List<GameObject> arList = highlightObject.GetHighlightGameObject(sphere);
-
-        arList[0].name = "Collision Icon";
-        arList[0].SetActive(false);
-
-        collisionIconCanvas = arList[0];
+        collisionIconObject.transform.localRotation = Quaternion.identity;
+        collisionIconObject.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
     }
 
     private void ShowCollisionGameObject()
     {
-        collisionIconCanvas.SetActive(true);
+        highlightObject.RemoveHighlight(collisionIconObject);
+
+        var collisionIconLocation = HighlightObjectOnCanvas.ElementPosition.Center;
+        highlightObject.Highlight(collisionIconObject, cam, displayRect, collisionIcon, Color.red, adjustUIScale: false, position: collisionIconLocation);
     }
 
     private void HideCollisionGameObject()
     {
-        collisionIconCanvas.SetActive(false);
+        highlightObject.RemoveHighlight(collisionIconObject);
     }
 }
-
