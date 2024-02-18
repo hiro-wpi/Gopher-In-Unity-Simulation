@@ -392,6 +392,9 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         default:
                             break;
                     }
+
+                    // Destroy the AR of the previous patient
+                    StartCoroutine(RemoveARForPatient(patientPosition[(int)currentpatient - 1]));
                 }
                 else
                 {
@@ -419,6 +422,9 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         default:
                             break;
                     }
+
+                    // Destroy the AR of the previous patient
+                    StartCoroutine(RemoveARForPatient(patientPosition[(int)currentpatient + 1]));
                 }
 
                 if(state == State.Done)
@@ -431,8 +437,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // Go to the next patient
                 arNavAuto.SetWaypoints(patientPosition[(int)currentpatient], patientRotations[(int)currentpatient]);
 
-                // Destroy the AR of the previous patient
-                StartCoroutine(RemoveARForPatient(patientPosition[(int)currentpatient - 1]));
+                // // Destroy the AR of the previous patient
+                // StartCoroutine(RemoveARForPatient(patientPosition[(int)currentpatient - 1]));
 
                 // Generate AR for the nearest cart
                 patientPos = patientPosition[(int)currentpatient];
