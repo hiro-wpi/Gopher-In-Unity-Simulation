@@ -79,12 +79,12 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     // Pause and Resume Automation
 
-    private int buttonState = 0;
     private bool isSimPaused = false;
     [SerializeField] private GameObject guiBlocker;
 
     private float waitTimer = 0.0f;
     private float waitDuration = 2.0f;
+    public AudioSource buzzSound;
 
     void Start(){}
 
@@ -111,6 +111,17 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             {
                 // Debug.Log("No robot found");
                 return;
+            }
+        }
+
+        // Ensure AudioSource is assigned
+        if (buzzSound == null)
+        {
+            buzzSound = GetComponent<AudioSource>();
+            if (buzzSound == null)
+            {
+                return;
+                // Debug.LogError("AudioSource is not assigned to the BuzzSoundController.");
             }
         }
 
@@ -627,6 +638,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         Time.timeScale = 0f;
         // isSimPaused = true;
         // Buzz user
+        PlayBuzzSound();
         yield return new WaitForSecondsRealtime(inspectionTime);
         ShowGuiBlocker();
     }
@@ -656,6 +668,14 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             return;
         }
         waitTimer = 0.0f;
+    }
+    public void PlayBuzzSound()
+    {
+        if (buzzSound != null)
+        {
+            buzzSound.time = 1f; // Where in the wav file to start playing audio
+            buzzSound.Play();
+        }
     }
 
 }
