@@ -760,7 +760,7 @@ public class GraphicalInterface : MonoBehaviour
         taskDescriptionPanelText.text += info + "\n";
 
         // If the info is 6 lines
-        if (taskDescriptionPanelText.text.Split('\n').Length > 7)
+        if (taskDescriptionPanelText.text.Split('\n').Length > 9)
         {
             // Remove the first line
             taskDescriptionPanelText.text = taskDescriptionPanelText.text.Substring(

@@ -80,7 +80,11 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     // Pause and Resume Automation
 
     private int buttonState = 0;
-    // private bool isPaused = false;
+    private bool isSimPaused = false;
+    [SerializeField] private GameObject guiBlocker;
+
+    private float waitTimer = 0.0f;
+    private float waitDuration = 2.0f;
 
     void Start(){}
 
@@ -168,7 +172,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
             case State.SetFirstpatient:
 
                 // Autonomy starts here
-                graphicalInterface.AddLogInfo("Starting Nurse Request - Check on Patients");
+                graphicalInterface.AddLogInfo("Starting nurse request: check patient medicines");
+                graphicalInterface.AddLogInfo("Going to first patient");
                 // Create the waypoints to get to the first patient
                 posTraj = new List<Vector3>(transfereWaypointPositions);
                 rotTraj = new List<Vector3>(transferWaypointRotations);
@@ -182,6 +187,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
                 state = State.Checkpatient;
 
+                PauseSim(5f);
+
                 break;
 
             case State.Checkpatient:
@@ -189,20 +196,22 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // Check if the patient has all their medications
                 if (arNavAuto.reachedGoal)
                 {
-                    graphicalInterface.AddLogInfo("We have arived at our destination - Checking Patient!");
+                    graphicalInterface.AddLogInfo("Arrived at destination");
+                    graphicalInterface.AddLogInfo("Checking patient medicines");
+                    
                     // Debug.Log("Checking the patient");
                     // TODO: Do this actually properly
                     if (patientMissingMeds[(int)currentpatient])
                     {   
                         
                         // Change AR to indicate an issue
-                        graphicalInterface.AddLogInfo("Patient is missing Meds");
+                        graphicalInterface.AddLogInfo("Patient is missing an expected medicine");
                         patientPos = patientPosition[(int)currentpatient];
                         ChangeNearestCartARColor(patientPos, Color.red);
                         ChangeNearestCartCanvasHighlightIcon(patientPos, icon3);
 
                         // Create the waypoints to get to the pharmacy
-                        graphicalInterface.AddLogInfo("Going to the Parmacy");
+                        graphicalInterface.AddLogInfo("Going to pharmacy");
                         posTraj = new List<Vector3>{transfereWaypointPositions[1],transfereWaypointPositions[0]} ;
                         rotTraj = new List<Vector3>{transferReturnWaypointRotations[1], transferReturnWaypointRotations[0]};
                         posTraj.Add(pharmacyPosition);
@@ -214,12 +223,12 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     else
                     {
                         // Change AR to indicate no issue
-                        graphicalInterface.AddLogInfo("Patient has all expected Meds");
+                        graphicalInterface.AddLogInfo("Patient has expected medicines");
                         patientPos = patientPosition[(int)currentpatient];
                         ChangeNearestCartARColor(patientPos, Color.green);
                         ChangeNearestCartCanvasHighlightIcon(patientPos, icon2);
 
-                        graphicalInterface.AddLogInfo("Checking Next Patient");
+                        graphicalInterface.AddLogInfo("Going to next patient");
                         state = State.ChangePatient;
                     }
                     // state = State.ChangePatient;
@@ -233,7 +242,9 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // if we arrive at the pharmacy, get the medicine
                 if (arNavAuto.reachedGoal)
                 {
-                    graphicalInterface.AddLogInfo("We have arrived, picking up Meds");
+                    graphicalInterface.AddLogInfo("Arrived at destination");
+                    graphicalInterface.AddLogInfo("Retrieving medicine");    
+                    
                     SetArmToMedTarget();
                     state = State.GetMedicine;
                 }
@@ -246,7 +257,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 if (arManipAuto.reachedArmGoal)
                 {
                     // Debug.Log("Got Medicine");
-                    graphicalInterface.AddLogInfo("Med in posession. Delivering to Patient");
+                    graphicalInterface.AddLogInfo("Medicine in posession");
+                    graphicalInterface.AddLogInfo("Delivering medicine to patient");
                     arManipAuto.HomeJoints();
                     posTraj = new List<Vector3>(transfereWaypointPositions);
                     rotTraj = new List<Vector3>(transferWaypointRotations);
@@ -266,7 +278,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 if (arNavAuto.reachedGoal)
                 {
 
-                    graphicalInterface.AddLogInfo("Arrived back to Patient");
+                    graphicalInterface.AddLogInfo("Arrived at destination");
 
                     patientPos = patientPosition[(int)currentpatient];
                     GameObject nearestCart = GetNearestCart(patientPos);
@@ -289,7 +301,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         List<Quaternion> rotations = new List<Quaternion>{hoverDropOffRot1, hoverDropOffRot2, hoverDropOffRot1};
                         List<int> gripperActions = new List<int>{-1, 0, -1, };
                         
-                        graphicalInterface.AddLogInfo("Dropping Off Meds");
+                        graphicalInterface.AddLogInfo("Delivering medicine");
                         arManipAuto.SetArmWaypoints(positions, rotations, gripperActions);
                     }
 
@@ -304,14 +316,15 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 if(arManipAuto.reachedArmGoal)
                 {
 
-                    graphicalInterface.AddLogInfo("Dropped Off Meds. Issue resolved");
+                    graphicalInterface.AddLogInfo("Delivered medicine");
+                    graphicalInterface.AddLogInfo("Issue resolved");
                     patientPos = patientPosition[(int)currentpatient];
                     ChangeNearestCartARColor(patientPos, Color.green);
                     ChangeNearestCartCanvasHighlightIcon(patientPos, icon2);
 
                     arManipAuto.HomeJoints();
                     
-                    graphicalInterface.AddLogInfo("Checking Next Patient");
+                    graphicalInterface.AddLogInfo("Checking next patient medicines");
                     state = State.ChangePatient;
                 }
                 break;
@@ -341,7 +354,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         break;
                     case patient.patient4:
                         // Set the next patient
-                        graphicalInterface.AddLogInfo("All Patients have been checked. ");
+                        graphicalInterface.AddLogInfo("All patient medicines have been checked");
                         // Debug.Log("All patients have been checked");
                         state = State.Done;
                         break;
@@ -381,48 +394,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         }
     }
 
-    private void HandleStopResumeAuto()
-    {
-        //Handle the changes in the state via button press
-        switch(buttonState)
-        {
-            case 0:
-                
-                if(Input.GetKeyDown("space"))
-                {
-                    buttonState = 1;
-                    // isPaused = true;
-                    Time.timeScale = 0f;
-                    // Debug.Log("Pause");
-                }
-
-                break;
-                
-            case 1:
-                
-                if(Input.GetKeyUp("space"))
-                {
-                    buttonState = 2;
-                }
-                break;
-            case 2:
-                if(Input.GetKeyDown("space"))
-                {
-                    buttonState = 3;
-                    // isPaused = false;
-                    Time.timeScale = 1f;
-                    // Debug.Log("Resume");
-                }
-                break;
-            case 3:
-                if(Input.GetKeyUp("space"))
-                {
-                    buttonState = 0;
-                }
-                break;
-
-        }
-    }
 
     // AR Functions //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -624,6 +595,67 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         GameObject medPrefab = Instantiate(patientMedGameObjects[medStateInt], nearestCart.transform);
         medPrefab.transform.localPosition = new Vector3(-0.002f, 0.87f, -0.1f);
         // medPrefab.transform.localRotation = Quaternion.Euler(180, 0, 90);
+    }
+
+    // Task Pausing and Resuming Logic
+
+    private void ShowGuiBlocker()
+    {
+        guiBlocker.SetActive(true);
+    }
+
+    private void HideGuiBlocker()
+    {
+        guiBlocker.SetActive(false);
+    }
+
+
+    // Best Practice, Send the Pause Sim Function only During transitions to another state
+    private void PauseSim(float delayTimeBeforePause)
+    {
+        if(isSimPaused)
+        {
+            return;
+        }
+        isSimPaused = true;
+        StartCoroutine(PauseSimForTime(delayTimeBeforePause, 4f));
+    }
+
+    IEnumerator PauseSimForTime(float delayTimeBeforePause, float inspectionTime)
+    {
+        yield return new WaitForSeconds(delayTimeBeforePause);
+        Time.timeScale = 0f;
+        // isSimPaused = true;
+        // Buzz user
+        yield return new WaitForSecondsRealtime(inspectionTime);
+        ShowGuiBlocker();
+    }
+
+    private void ResumeSim()
+    {
+        Time.timeScale = 1f;
+        isSimPaused = false;
+        HideGuiBlocker();
+    }
+
+    private void HandleStopResumeAuto()
+    {
+        //Handle the changes in the state via button press
+        if(isSimPaused && Input.GetKeyDown("space"))
+        {
+            ResumeSim();
+        }
+        
+    }
+
+    private void DelayDebugMessage()
+    {
+        waitTimer += Time.deltaTime;
+        if (waitTimer < waitDuration)
+        {
+            return;
+        }
+        waitTimer = 0.0f;
     }
 
 }

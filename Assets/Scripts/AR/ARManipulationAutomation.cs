@@ -170,7 +170,7 @@ public class ARManipulationAutomation : MonoBehaviour
             }
 
             // Wait for gripper to be done
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.5f);
             
         }
         reachedArmGoal = true;
