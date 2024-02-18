@@ -81,6 +81,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     [SerializeField] private GameObject[] patientMedGameObjects;  // 0 load missing meds, 1 load all meds
 
     private GameObject pluckedMed;
+    [SerializeField] private bool reverseCheckingOrder = false;
 
     // Pause and Resume Automation
 
@@ -92,8 +93,15 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     public AudioSource buzzSound;
 
     private bool allowResume = false;
+    
 
-    void Start(){}
+    void Start()
+    {
+        if(reverseCheckingOrder)
+        {
+            currentpatient = patient.patient4;
+        }
+    }
 
     // Update is called once per frame
     void Update()
@@ -205,7 +213,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
                 state = State.Checkpatient;
 
-                PauseSim(5f);
+                PauseSim(14f);
 
                 break;
 
@@ -216,12 +224,14 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 {
                     graphicalInterface.AddLogInfo("Arrived at destination");
                     graphicalInterface.AddLogInfo("Checking patient medicines");
+
+                    PauseSim(0f);
                     
                     // Debug.Log("Checking the patient");
                     // TODO: Do this actually properly
                     if (patientMissingMeds[(int)currentpatient])
                     {   
-                        
+
                         // Change AR to indicate an issue
                         graphicalInterface.AddLogInfo("Patient is missing an expected medicine");
                         patientPos = patientPosition[(int)currentpatient];
@@ -264,6 +274,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     graphicalInterface.AddLogInfo("Retrieving medicine");    
                     
                     SetArmToMedTarget();
+                    PauseSim(0.5f);
                     state = State.GetMedicine;
                 }
                 
@@ -285,6 +296,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     arNavAuto.SetWaypoints(posTraj, rotTraj);
 
                     state = State.GoDeliverMedicine;
+
+                    PauseSim(10f);
                 }
                 
                 break;
@@ -323,7 +336,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         arManipAuto.SetArmWaypoints(positions, rotations, gripperActions);
                     }
 
-
+                    // PauseSim(0.5f);
                     state = State.DropOffMedicine;
                 }
                 
@@ -333,7 +346,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // Drop off the medicine
                 if(arManipAuto.reachedArmGoal)
                 {
-
+                    PauseSim(0.25f);
                     graphicalInterface.AddLogInfo("Delivered medicine");
                     graphicalInterface.AddLogInfo("Issue resolved");
                     patientPos = patientPosition[(int)currentpatient];
@@ -353,31 +366,59 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
                 // if all the patients have been checked, we are done
                 // if we have changed the patient, go back to check the patient
-                switch (currentpatient)
+                if(!reverseCheckingOrder)
                 {
-                    case patient.patient1:
-                        // Set the next 
-                        // Debug.Log("Changing to patient 2");
-                        currentpatient = patient.patient2;
-                        break;
-                    case patient.patient2:
-                        // Set the next patient
-                        // Debug.Log("Changing to patient 3");
-                        currentpatient = patient.patient3;
-                        break;
-                    case patient.patient3:
-                        // Set the next patient
-                        // Debug.Log("Changing to patient 4");
-                        currentpatient = patient.patient4;
-                        break;
-                    case patient.patient4:
-                        // Set the next patient
-                        graphicalInterface.AddLogInfo("All patient medicines have been checked");
-                        // Debug.Log("All patients have been checked");
-                        state = State.Done;
-                        break;
-                    default:
-                        break;
+                    // Do the normal checking order
+                    switch (currentpatient)
+                    {
+                        case patient.patient1:
+                            // Set the next
+                            currentpatient = patient.patient2;
+                            break;
+                        case patient.patient2:
+                            // Set the next patient
+                            currentpatient = patient.patient3;
+                            break;
+                        case patient.patient3:
+                            // Set the next patient
+                            currentpatient = patient.patient4;
+                            break;
+                        case patient.patient4:
+                            // Set the next patient
+                            graphicalInterface.AddLogInfo("All patient medicines have been checked");
+                            // Debug.Log("All patients have been checked");
+                            state = State.Done;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                    // Reverse the order
+                    switch (currentpatient)
+                    {
+                        case patient.patient4:
+                            // Set the next 
+                            currentpatient = patient.patient3;
+                            break;
+                        case patient.patient3:
+                            // Set the next patient
+                            currentpatient = patient.patient2;
+                            break;
+                        case patient.patient2:
+                            // Set the next patient
+                            currentpatient = patient.patient1;
+                            break;
+                        case patient.patient1:
+                            // Set the next patient
+                            graphicalInterface.AddLogInfo("All patient medicines have been checked");
+                            // Debug.Log("All patients have been checked");
+                            state = State.Done;
+                            break;
+                        default:
+                            break;
+                    }
                 }
 
                 if(state == State.Done)
