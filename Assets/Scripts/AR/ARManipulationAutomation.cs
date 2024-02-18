@@ -8,6 +8,7 @@ public class ARManipulationAutomation : MonoBehaviour
 
     // Task setup
     private GameObject robot;
+    [SerializeField] private string robotName = "Gopher";
 
     // AR Featrues
     [SerializeField] private GenerateARGameObject arGenerator;
@@ -63,7 +64,7 @@ public class ARManipulationAutomation : MonoBehaviour
 
         if(robot == null)
         {
-            robot = GameObject.Find("Gopher(Clone)");
+            robot = GameObject.Find(robotName + "(Clone)");
             
             // Set the articulation base controller
             if(robot == null)

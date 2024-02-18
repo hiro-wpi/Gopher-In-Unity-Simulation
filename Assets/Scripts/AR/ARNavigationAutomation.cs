@@ -9,6 +9,7 @@ public class ARNavigationAutomation : MonoBehaviour
     // [SerializeField] private RectTransform displayRect;
     // private Camera cam;
     private GameObject robot;
+    [SerializeField] private string robotName = "Gopher";
 
     // AR Featrues 
     // [SerializeField] private FloorSelector floorSelector;
@@ -55,7 +56,7 @@ public class ARNavigationAutomation : MonoBehaviour
 
         if(robot == null)
         {
-            robot = GameObject.Find("Gopher(Clone)");
+            robot = GameObject.Find(robotName + "(Clone)");
             
             // Set the articulation base controller
             if(robot == null)

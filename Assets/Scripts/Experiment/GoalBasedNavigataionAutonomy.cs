@@ -46,6 +46,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     [SerializeField] private Sprite icon3;
 
     private GameObject robot;
+    [SerializeField] private string robotName = "Gopher";
 
     // State Machines
     private enum State { SetFirstpatient, Checkpatient, GoToPharmacy, GetMedicine, GoDeliverMedicine, DropOffMedicine, ChangePatient, Done};
@@ -111,7 +112,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
         if(robot == null)
         {
-            robot = GameObject.Find("Gopher(Clone)");
+            robot = GameObject.Find(robotName + "(Clone)");
             
             if(robot == null)
             {
