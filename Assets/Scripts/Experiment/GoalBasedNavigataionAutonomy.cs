@@ -1,6 +1,10 @@
 // using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Policy;
+using Unity.XR.CoreUtils;
+
+
 // using System.Numerics;
 using UnityEngine;
 
@@ -85,6 +89,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     private float waitTimer = 0.0f;
     private float waitDuration = 2.0f;
     public AudioSource buzzSound;
+
+    private bool allowResume = false;
 
     void Start(){}
 
@@ -640,6 +646,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         // Buzz user
         PlayBuzzSound();
         yield return new WaitForSecondsRealtime(inspectionTime);
+        allowResume = true;
         ShowGuiBlocker();
     }
 
@@ -647,13 +654,14 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     {
         Time.timeScale = 1f;
         isSimPaused = false;
+        allowResume = false;
         HideGuiBlocker();
     }
 
     private void HandleStopResumeAuto()
     {
         //Handle the changes in the state via button press
-        if(isSimPaused && Input.GetKeyDown("space"))
+        if(isSimPaused && allowResume && Input.GetKeyDown("space"))
         {
             ResumeSim();
         }
