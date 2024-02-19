@@ -81,7 +81,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     [SerializeField] private GameObject[] patientMedGameObjects;  // 0 load missing meds, 1 load all meds
 
     private GameObject pluckedMed;
-    [SerializeField] private bool reverseCheckingOrder = false;
+    public bool reverseCheckingOrder = false;
 
     // Pause and Resume Automation
 
@@ -94,7 +94,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     // private bool allowResume = false;
 
-    [SerializeField] private AskQuestionGUI askQuestionGUI;
+    // [SerializeField] private AskQuestionGUI askQuestionGUI;
     
 
     void Start()
@@ -215,7 +215,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
                 state = State.Checkpatient;
 
-                StartCoroutine(askQuestionGUI.HandleTimingQuestions());
+                // StartCoroutine(askQuestionGUI.HandleTimingQuestions());
 
                 // askQuestionGUI.AskQuestion(1, 14f);
 
@@ -365,7 +365,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // Drop off the medicine
                 if(arManipAuto.reachedArmGoal)
                 {
-                    askQuestionGUI.AskQuestion(8, 0.25f);
+                    // askQuestionGUI.AskQuestion(8, 0.25f);
                     graphicalInterface.AddLogInfo("Delivered medicine");
                     graphicalInterface.AddLogInfo("Issue resolved");
                     patientPos = patientPosition[(int)currentpatient];
@@ -681,78 +681,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         GameObject medPrefab = Instantiate(patientMedGameObjects[medStateInt], nearestCart.transform);
         medPrefab.transform.localPosition = new Vector3(-0.002f, 0.87f, -0.1f);
         // medPrefab.transform.localRotation = Quaternion.Euler(180, 0, 90);
-    }
-
-    // Task Pausing and Resuming Logic
-
-    // private void ShowGuiBlocker()
-    // {
-    //     guiBlocker.SetActive(true);
-    // }
-
-    // private void HideGuiBlocker()
-    // {
-    //     guiBlocker.SetActive(false);
-    // }
-
-
-    // Best Practice, Send the Pause Sim Function only During transitions to another state
-    // private void PauseSim(float delayTimeBeforePause)
-    // {
-    //     if(isSimPaused)
-    //     {
-    //         return;
-    //     }
-    //     isSimPaused = true;
-    //     StartCoroutine(PauseSimForTime(delayTimeBeforePause, 4f));
-    // }
-
-    // IEnumerator PauseSimForTime(float delayTimeBeforePause, float inspectionTime)
-    // {
-    //     yield return new WaitForSeconds(delayTimeBeforePause);
-    //     Time.timeScale = 0f;
-    //     // isSimPaused = true;
-    //     // Buzz user
-    //     PlayBuzzSound();
-    //     yield return new WaitForSecondsRealtime(inspectionTime);
-    //     allowResume = true;
-    //     ShowGuiBlocker();
-    // }
-
-    // private void ResumeSim()
-    // {
-    //     Time.timeScale = 1f;
-    //     isSimPaused = false;
-    //     allowResume = false;
-    //     HideGuiBlocker();
-    // }
-
-    // private void HandleStopResumeAuto()
-    // {
-    //     //Handle the changes in the state via button press
-    //     if(isSimPaused && allowResume && Input.GetKeyDown("space"))
-    //     {
-    //         ResumeSim();
-    //     }
-        
-    // }
-
-    // private void DelayDebugMessage()
-    // {
-    //     waitTimer += Time.deltaTime;
-    //     if (waitTimer < waitDuration)
-    //     {
-    //         return;
-    //     }
-    //     waitTimer = 0.0f;
-    // }
-    // public void PlayBuzzSound()
-    // {
-    //     if (buzzSound != null)
-    //     {
-    //         buzzSound.time = 1f; // Where in the wav file to start playing audio
-    //         buzzSound.Play();
-    //     }
-    // }
+    }    
 
 }
