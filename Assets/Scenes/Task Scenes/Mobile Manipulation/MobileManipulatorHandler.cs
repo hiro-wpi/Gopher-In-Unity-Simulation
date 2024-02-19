@@ -39,10 +39,10 @@ public class MobileManipulatorHandler : MonoBehaviour
     void Update()
     {
         // Update left and right
-        left.transform.position = leftController.outPosition;
-        left.transform.rotation = leftController.outRotation;
-        right.transform.position = rightController.outPosition;
-        right.transform.rotation = rightController.outRotation;
+        // left.transform.position = leftController.outPosition;
+        // left.transform.rotation = leftController.outRotation;
+        // right.transform.position = rightController.outPosition;
+        // right.transform.rotation = rightController.outRotation;
 
         // Check replan
         timer += Time.deltaTime;

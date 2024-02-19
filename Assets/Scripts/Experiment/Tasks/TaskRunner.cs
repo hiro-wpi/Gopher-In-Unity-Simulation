@@ -40,17 +40,19 @@ public class TaskRunner : MonoBehaviour
             surface.BuildNavMesh();
         }
 
-        task.SetRobots(new GameObject[1] {robot});
-        task.SetStaticObjects(staticObjects);
-        task.SetDynamicObjects(dynamicObjects);
-        task.SetTaskObjects(taskObjects);
-        task.SetGoalObjects(goalObjects);
-
+        // Set GUI
         task.GUI = GUI;
         GUI.SetUIActive(true);
         // This is already done in task.SetRobots()
         // GUI.SetRobot(robot, true);
         // GUI.SetTask(task);
+
+        // Set Robot and Objects
+        task.SetRobots(new GameObject[1] {robot});
+        task.SetStaticObjects(staticObjects);
+        task.SetDynamicObjects(dynamicObjects);
+        task.SetTaskObjects(taskObjects);
+        task.SetGoalObjects(goalObjects);
     }
 
     void Update() 

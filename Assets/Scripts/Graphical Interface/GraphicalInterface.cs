@@ -51,8 +51,8 @@ public class GraphicalInterface : MonoBehaviour
     private RenderTexture minimapRendertexture;
     private GameObject minimapCameraObject;
     private Camera minimapCamera;
-    private float[] minimapSizes;
-    private int minimapSizeIndex;
+    private float[] minimapSizes = new float[] {3f, 6f, 9f};
+    private int minimapSizeIndex = 0;
 
     // Map
     private RenderTexture mapRendertexture;
@@ -118,7 +118,7 @@ public class GraphicalInterface : MonoBehaviour
     // [SerializeField] private bool minimapPathVisable = true;
     [SerializeField] private bool taskDescriptionUpdate = true;
 
-    void Start() 
+    void Awake() 
     {
         // Activation
         SetUIActive(false);
@@ -182,7 +182,8 @@ public class GraphicalInterface : MonoBehaviour
         // TODO Remove Section
         StartCoroutine(InitSecondaryCamera());
     }
-
+    
+    void Start() {}
 
     public void SetUIActive(bool active)
     {
