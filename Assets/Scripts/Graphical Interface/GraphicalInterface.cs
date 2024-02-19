@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+/// <summary>
+///     TODO: Rewrite this scirpt.
+/// </summary>
 public class GraphicalInterface : MonoBehaviour
 {
     // Active
@@ -112,6 +115,9 @@ public class GraphicalInterface : MonoBehaviour
     private float FPSSum;
     private int FPSCount;
 
+    // [SerializeField] private bool minimapPathVisable = true;
+    [SerializeField] private bool taskDescriptionUpdate = true;
+
     void Start() 
     {
         // Activation
@@ -172,6 +178,9 @@ public class GraphicalInterface : MonoBehaviour
         FPSCount = 0;
         FPSSum = 0;
         InvokeRepeating("UpdateFPS", 1.0f, 0.5f);
+
+        // TODO Remove Section
+        StartCoroutine(InitSecondaryCamera());
     }
 
 
@@ -182,6 +191,12 @@ public class GraphicalInterface : MonoBehaviour
         {
             component.SetActive(active);
         }
+    }
+
+    IEnumerator InitSecondaryCamera()
+    {
+        yield return new WaitUntil(() => active);
+        ChangeCameraView(false, "Left");
     }
 
     void Update()
@@ -237,6 +252,8 @@ public class GraphicalInterface : MonoBehaviour
             ChangeCameraView(!Input.GetKey(KeyCode.Keypad0), "Left");
         else if (Input.GetKeyDown(KeyCode.Keypad6))
             ChangeCameraView(!Input.GetKey(KeyCode.Keypad0), "Right");
+
+        
 
         MonitorKeyPressed();
     }
@@ -299,9 +316,9 @@ public class GraphicalInterface : MonoBehaviour
     private void UpdateTaskStatus()
     {
         // Change UI according to task
-        if (currentTask == null)
-            return;
-        taskDescriptionPanelText.text = currentTask.TaskDescription;
+        // if (currentTask == null)
+        //     return;
+        // taskDescriptionPanelText.text = currentTask.TaskDescription;
         taskStatusPanelText.text = "Task Duration: " 
                                  + string.Format("{0:0.00}", currentTask.GetTaskDuration()) + " s."
                                  + "\n\n"
@@ -741,5 +758,25 @@ public class GraphicalInterface : MonoBehaviour
         FPS = (int)(FPSSum / FPSCount);
         FPSSum = 0;
         FPSCount = 0;
+    }
+
+    public void AddLogInfo(string info)
+    {
+        // If we don't want to have the descrption updated
+        if(!taskDescriptionUpdate)
+        {
+            return;
+        }
+
+        // Add new info on each line
+        taskDescriptionPanelText.text += info + "\n";
+
+        // If the info is 6 lines
+        if (taskDescriptionPanelText.text.Split('\n').Length > 9)
+        {
+            // Remove the first line
+            taskDescriptionPanelText.text = taskDescriptionPanelText.text.Substring(
+                taskDescriptionPanelText.text.IndexOf('\n') + 1);
+        }
     }
 }

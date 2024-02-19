@@ -2,16 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using UnityEngine.AI;
 using Unity.AI.Navigation;
-using UnityEngine.SceneManagement;
 
+/// <summary>
+///     A Task Loader script, used to run a task.
+///     The scene, robot, and obejcts and loaded by the script.
+///     
+///     The other task runner is TaskRunner.cs.
+///     The main difference is that in the other script,
+///     one needs to set the robot and objects manually,
+///     and the scene is also assumed to be already there.
+/// </summary>
+// TaskLoader
 public class RunTask : MonoBehaviour
 {
+    [Header("Task")]
     [SerializeField] private Task task;
     [SerializeField] private GameObject NavMeshGameObject;
     private NavMeshSurface[] navMeshSurfaces;
-
     private bool taskStarted = false;
 
     void Start()
@@ -24,10 +32,10 @@ public class RunTask : MonoBehaviour
     private IEnumerator LoadTaskCoroutine()
     {
         Time.timeScale = 1f;
-        DontDestroyOnLoad(gameObject);
 
-        SceneManager.LoadScene(task.SceneName);
-        yield return new WaitForSeconds(0.3f);
+        // Load scene
+        task.LoadScene();
+        yield return new WaitForSeconds(0.5f);
 
         // Generate static objects
         task.GenerateStaticObjects();
@@ -43,6 +51,7 @@ public class RunTask : MonoBehaviour
         task.GenerateGoalObjects();
         yield return new WaitForSeconds(0.2f);
 
+        // Generate robots
         task.GenerateRobots();
         yield return new WaitForSeconds(0.5f);
 

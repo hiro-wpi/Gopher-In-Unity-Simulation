@@ -162,7 +162,7 @@ public class TestExperiment : Experiment
         }
 
         // robot, object, and human spawn array
-        task.robotSpawnArray = robotSpawnArray;
+        task.RobotSpawnArray = robotSpawnArray;
         task.StaticObjectSpawnArray = staticObjectSpawnArray;
         task.DynamicObjectSpawnArray = humanSpawnArray;
 

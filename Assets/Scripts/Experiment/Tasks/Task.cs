@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Remoting.Messaging;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 ///     Abstract task class for defining task in different types
@@ -22,6 +23,13 @@ using UnityEngine;
 ///         GenerateTaskObjects(),
 ///         GenerateGoalObjects(),
 ///         GenerateRobots()
+///     Instead of generating it, it could also take the existing robots
+///     or objects and set them to the task:
+///         SetRobots()
+///         SetStaticObjects()
+///         SetDynamicObjects()
+///         SetTaskObjects()
+///         SetGoalObjects()
 /// </summary>
 public abstract class Task : MonoBehaviour 
 {
@@ -41,9 +49,8 @@ public abstract class Task : MonoBehaviour
 
     [Header("Robot")]
     // Robot
-    public SpawnInfo[] robotSpawnArray;
+    public SpawnInfo[] RobotSpawnArray;
     public GraphicalInterface GUI;
-    public ControlInterface CUI;
 
     // Task status
     // start
@@ -56,7 +63,7 @@ public abstract class Task : MonoBehaviour
     protected string result;
     protected Goal[] goals = new Goal[0];
     protected int goalIndex;
-    protected float endTime;
+    protected float endTime = 100f;
 
     // Scene objects
     protected GameObject[] staticObjects;
@@ -66,15 +73,9 @@ public abstract class Task : MonoBehaviour
 
     // Robot
     protected GameObject[] robots;
-    protected GameObject robot; 
+    protected GameObject robot;
     protected Vector3 robotStartPosition;
     protected Quaternion robotStartRotation;
-
-    // // Data to record
-    // protected string[] valueToRecordHeader;
-    // protected string[] stringToRecordHeader;
-    // protected float[] valueToRecord;
-    // protected string[] stringToRecord;
 
     // User input
     protected string userInput;
@@ -105,23 +106,32 @@ public abstract class Task : MonoBehaviour
     public virtual float GetTaskDuration()
     {
         if (!taskStarted)
+        {
             return 0;
+        }
         else
+        {
             return Time.time - startTime;
+        }
     }
 
     // Check if the current task is done
     public virtual bool CheckTaskCompletion()
     {
-        // Default - 10 minutes time out
-        if (GetTaskDuration() > 600)
+        if (robot == null)
+        {
+            return true;
+        }
+
+        // Default - time out
+        if (GetTaskDuration() > endTime)
         {
             return true;
         }
         return false;
     }
 
-    // Task status - will be displayed in the GUI
+    // Task status - can be displayed in the GUI
     public virtual string GetTaskStatus()
     {
         return "";
@@ -144,6 +154,9 @@ public abstract class Task : MonoBehaviour
     {
         userInput = input;
         userInputReceived = true;
+
+        // Could check the result here
+        // if (input == result)
     }
 
     // Reset task - for reloading the task
@@ -152,40 +165,15 @@ public abstract class Task : MonoBehaviour
         taskStarted = false;
     }
 
-    // // The header of extra task data to record besides robot's
-    // public virtual string[] GetTaskValueToRecordHeader()
-    // {
-    //     valueToRecordHeader = new string[0];
-    //     return valueToRecordHeader;
-    // }
-
-    // public virtual string[] GetTaskStringToRecordHeader()
-    // {
-    //     stringToRecordHeader = new string[2];
-    //     stringToRecordHeader[0] = "game_time";
-    //     stringToRecordHeader[1] = "user_inputs";
-    //     return stringToRecordHeader;
-    // }
-
-    // // Extra task data to record besides robot's
-    // public virtual float[] GetTaskValueToRecord()
-    // {
-    //     valueToRecord = new float[0];
-    //     return valueToRecord;
-    // }
-
-    // public virtual string[] GetTaskStringToRecord()
-    // {
-    //     stringToRecord = new string[0];
-    //     if (userInputReceived)
-    //     {
-    //         stringToRecord = new string[2];
-    //         stringToRecord[0] = string.Format("{0:0.000}", Time.time);
-    //         stringToRecord[1] = userInput;
-    //     }
-    //     userInputReceived = false;
-    //     return stringToRecord;
-    // }
+    // Load the scene
+    // Be careful: this would destroy all the existing objects
+    // that is not a child of this game object
+    public virtual void LoadScene()
+    {
+        // Load the scene
+        SceneManager.LoadScene(SceneName);
+        DontDestroyOnLoad(gameObject);
+    }
 
     // Generate static objects for this task
     public virtual GameObject[] GenerateStaticObjects()
@@ -240,7 +228,7 @@ public abstract class Task : MonoBehaviour
     public virtual GameObject[] GenerateRobots()
     {
         // Spawn robot
-        robots = SpawnGameObjectArray(robotSpawnArray);
+        robots = SpawnGameObjectArray(RobotSpawnArray);
         robot = robots[0];
         robotStartPosition = robot.transform.position;
 
@@ -250,7 +238,7 @@ public abstract class Task : MonoBehaviour
         return robots;
     }
 
-    // In the case that same existed robots are used
+    // Existed robots are used
     public virtual void SetRobots(GameObject[] existingRobots)
     {
         // Set existing robots
@@ -262,6 +250,30 @@ public abstract class Task : MonoBehaviour
         // GUI set output
         GUI.SetRobot(robot, false);
         GUI.SetTask(this);
+    }
+
+    // Existed static objects are used
+    public virtual void SetStaticObjects(GameObject[] existingStaticObjects)
+    {
+        staticObjects = existingStaticObjects;
+    }
+
+    // Existed dynamic objects are used
+    public virtual void SetDynamicObjects(GameObject[] existingDynamicObjects)
+    {
+        dynamicObjects = existingDynamicObjects;
+    }
+
+    // Existed task objects are used
+    public virtual void SetTaskObjects(GameObject[] existingTaskObjects)
+    {
+        taskObjects = existingTaskObjects;
+    }
+
+    // Existed goal objects are used
+    public virtual void SetGoalObjects(GameObject[] existingGoalObjects)
+    {
+        goalObjects = existingGoalObjects;
     }
 
     // Destroy all spawned objects
