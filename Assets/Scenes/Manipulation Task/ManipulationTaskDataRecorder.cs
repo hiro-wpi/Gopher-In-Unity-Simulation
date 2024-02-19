@@ -7,6 +7,7 @@ public class ManipulationTaskDataRecorder : MonoBehaviour
     [SerializeField] private RobotCollisionWarning robotCollisionWarning;
     [SerializeField] private GraspingTask graspingTask;
     bool isDataRecorded = false;
+    private string dataString = "";
 
     private void Update()
     {
@@ -14,8 +15,8 @@ public class ManipulationTaskDataRecorder : MonoBehaviour
         if (!isDataRecorded && graspingTask.CheckTaskCompletion())
         {
             isDataRecorded = true;
-            Debug.Log("Completion Time: " + graspingTask.taskDuration);
-            Debug.Log("Number of Collisions: " + robotCollisionWarning.collisionCounter);
+            dataString = "Completion Time: " + graspingTask.taskDuration + " seconds, Number of Collisions: " + robotCollisionWarning.collisionCounter;
+            Debug.Log(dataString);
         }
     }
 }
