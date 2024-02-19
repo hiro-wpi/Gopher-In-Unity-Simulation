@@ -16,6 +16,8 @@ public class Laser : MonoBehaviour
 {
     // General
     [SerializeField] private GameObject laserGameObject;
+    private Vector3 lastScanPosition;
+    private Quaternion lastScanRotation;
     [SerializeField] private bool enableHumanDetection = true;
     [SerializeField] private bool debugVisualization = false;
 
@@ -53,20 +55,20 @@ public class Laser : MonoBehaviour
             RaycastCommands[i] = new RaycastCommand(
                 Position,
                 RaycastRotations[i] * Forward,
-                QueryParameters.Default, 
-                distance:MaxDistance
+                QueryParameters.Default,
+                distance: MaxDistance
             );
         }
     }
     // Scan reading
     private NativeArray<RaycastHit> raycastHits;
-    
+
     // Scan processing
     private JobHandle ProcessHitsJobHandle;
     private NativeArray<float> obstacleDistances;
     private NativeArray<float> humanDistances;
     // create a batch for collision callbacks
-    private struct ProcessHits : IJobParallelFor 
+    private struct ProcessHits : IJobParallelFor
     {
         public NativeArray<RaycastHit> RaycastHits;
         public float MinDistance;
@@ -80,12 +82,6 @@ public class Laser : MonoBehaviour
         {
             RaycastHit hit = RaycastHits[i];
 
-            // if(hit.collider.attachedArticulationBody != null)
-            // {
-            //     Debug.Log("Yes");
-            //     // || IsNameEqual(hit.articulationBody.gameObject.name)
-            // }
-
             // No hit or is the object we want to ignore
             if (hit.distance < MinDistance || hit.distance == 0f)
             {
@@ -98,14 +94,6 @@ public class Laser : MonoBehaviour
                 ObstacleDistances[i] = hit.distance;
             }
         }
-
-        // private bool IsNameEqual(string gameObjectName)
-        // {
-        //     // Convert NativeArry to sting
-        //     string ignoredName = new string(ignoredGameObjectName.ToArray());
-        //     // Compare the game object name with the ignored name
-        //     return gameObjectName == ignoredName;
-        // }
     };
 
     // Results
@@ -120,7 +108,7 @@ public class Laser : MonoBehaviour
     public delegate void ScanFinishedHandler();
     public event ScanFinishedHandler ScanFinishedEvent;
 
-    void Start() 
+    void Start()
     {
         // Initialize result containers
         ObstacleRanges = new float[samples];
@@ -169,7 +157,7 @@ public class Laser : MonoBehaviour
 
         // Schedule jobs to send raycast commands
         raycastCommands = new(samples, Allocator.TempJob);
-        PrepareRaycastCommands setupRaycastsJob = new() 
+        PrepareRaycastCommands setupRaycastsJob = new()
         {
             Position = laserGameObject.transform.position,
             Forward = laserGameObject.transform.forward,
@@ -186,7 +174,7 @@ public class Laser : MonoBehaviour
         );
 
         // Schedule jobs to process raycast results
-        var processHitsJob = new ProcessHits() 
+        var processHitsJob = new ProcessHits()
         {
             RaycastHits = raycastHits,
             MinDistance = rangeMin,
@@ -216,9 +204,7 @@ public class Laser : MonoBehaviour
             }
         }
 
-        // filtering the raycast for dynamic footprint
-        // Used in cart pushing task
-
+        // filtering the object we want to ignore
         if (filteredGraspedObject != null)
         {
             for (int i = 0; i < samples; ++i)
@@ -226,15 +212,14 @@ public class Laser : MonoBehaviour
                 RaycastHit hit = raycastHits[i];
                 if (hit.collider != null)
                 {
-                   if (hit.collider.transform.IsChildOf(filteredGraspedObject.transform))
+                    if (hit.collider.transform.IsChildOf(filteredGraspedObject.transform))
                     {
                         obstacleDistances[i] = float.PositiveInfinity;
                         humanDistances[i] = float.PositiveInfinity;
-                    } 
+                    }
                 }
-                
-            }
 
+            }
         }
         raycastHits.Dispose();
 
@@ -243,6 +228,9 @@ public class Laser : MonoBehaviour
         HumanRanges = humanDistances.ToArray();
         // Trigger event
         ScanFinishedEvent?.Invoke();
+
+        lastScanPosition = laserGameObject.transform.position;
+        lastScanRotation = laserGameObject.transform.rotation;
         // Visualization
         if (debugVisualization)
         {
@@ -259,15 +247,44 @@ public class Laser : MonoBehaviour
             Vector3 rotation = (
                 raycastRotations[i] * laserGameObject.transform.forward
             );
-            if (ranges[i] != float.PositiveInfinity || ranges[i] != 0.0f)
+            if (ranges[i] != float.PositiveInfinity && ranges[i] != 0.0f)
             {
                 Debug.DrawRay(
-                    laserGameObject.transform.position, 
-                    ranges[i] * rotation, 
-                    color, 
+                    laserGameObject.transform.position,
+                    ranges[i] * rotation,
+                    color,
                     1f / updateRate
                 );
             }
         }
+    }
+
+    public (bool[], Vector3[]) GetObstaclePositions()
+    {
+        Vector3[] positions = new Vector3[samples];
+        bool[] detected = new bool[samples];
+        for (int i = 0; i < samples; ++i)
+        {
+            Vector3 rotation = (
+                raycastRotations[i] * (lastScanRotation * Vector3.forward)
+            );
+
+            // Check if the range is valid (not infinity or zero)
+            if (
+                ObstacleRanges[i] != float.PositiveInfinity
+                && ObstacleRanges[i] != 0.0f
+            )
+            {
+                // Calculate the position based on the laser's position,
+                // the direction, and the range
+                positions[i] = lastScanPosition + rotation * ObstacleRanges[i];
+                detected[i] = true;
+            }
+            else
+            {
+                detected[i] = false;
+            }
+        }
+        return (detected, positions);
     }
 }
