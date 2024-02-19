@@ -215,7 +215,21 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
                 state = State.Checkpatient;
 
-                askQuestionGUI.AskQuestion(0, 14f);
+                StartCoroutine(askQuestionGUI.HandleTimingQuestions());
+
+                // askQuestionGUI.AskQuestion(1, 14f);
+
+                // if(!reverseCheckingOrder)
+                // {
+                //     // Normal order
+                //     askQuestionGUI.AskQuestion(0, 16f);
+                // }
+                // else
+                // {
+                //     // Reverse Order
+                //     askQuestionGUI.AskQuestion(0, 18f);
+                // }
+
                 // PauseSim(14f);
 
                 break;
@@ -234,7 +248,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     // TODO: Do this actually properly
                     if (patientMissingMeds[(int)currentpatient])
                     {   
-                        askQuestionGUI.AskQuestion(1, 0.2f);
+                        // askQuestionGUI.AskQuestion(2, 0.2f);
 
                         // Change AR to indicate an issue
                         graphicalInterface.AddLogInfo("Patient is missing an expected medicine");
@@ -254,7 +268,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     }
                     else
                     {
-                        askQuestionGUI.AskQuestion(1, 0.2f);
+                        // askQuestionGUI.AskQuestion(2, 0.2f);
                         // Change AR to indicate no issue
                         graphicalInterface.AddLogInfo("Patient has expected medicines");
                         patientPos = patientPosition[(int)currentpatient];
@@ -279,7 +293,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     graphicalInterface.AddLogInfo("Retrieving medicine");    
                     
                     SetArmToMedTarget();
-                    askQuestionGUI.AskQuestion(6, 0.5f);
+                    // askQuestionGUI.AskQuestion(7, 0.5f);
                     state = State.GetMedicine;
                 }
                 
@@ -302,7 +316,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
                     state = State.GoDeliverMedicine;
                     
-                    askQuestionGUI.AskQuestion(3, 10f);
+                    // askQuestionGUI.AskQuestion(4, 10f);
                 }
                 
                 break;
@@ -351,7 +365,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // Drop off the medicine
                 if(arManipAuto.reachedArmGoal)
                 {
-                    askQuestionGUI.AskQuestion(7, 0.25f);
+                    askQuestionGUI.AskQuestion(8, 0.25f);
                     graphicalInterface.AddLogInfo("Delivered medicine");
                     graphicalInterface.AddLogInfo("Issue resolved");
                     patientPos = patientPosition[(int)currentpatient];
@@ -437,7 +451,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     // Remove the AR for the last patient
                     StartCoroutine(RemoveARForPatient(patientPosition[(int)currentpatient]));
                     // askQuestionGUI.DebugLogResponses();
-                    askQuestionGUI.PrintResponses();
+                    // askQuestionGUI.PrintResponses();
                     return;
                 }
 
