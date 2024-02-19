@@ -85,14 +85,16 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     // Pause and Resume Automation
 
-    private bool isSimPaused = false;
-    [SerializeField] private GameObject guiBlocker;
+    // private bool isSimPaused = false;
+    // [SerializeField] private GameObject guiBlocker;
 
-    private float waitTimer = 0.0f;
-    private float waitDuration = 2.0f;
-    public AudioSource buzzSound;
+    // private float waitTimer = 0.0f;
+    // private float waitDuration = 2.0f;
+    // public AudioSource buzzSound;
 
-    private bool allowResume = false;
+    // private bool allowResume = false;
+
+    [SerializeField] private AskQuestionGUI askQuestionGUI;
     
 
     void Start()
@@ -130,15 +132,15 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         }
 
         // Ensure AudioSource is assigned
-        if (buzzSound == null)
-        {
-            buzzSound = GetComponent<AudioSource>();
-            if (buzzSound == null)
-            {
-                return;
-                // Debug.LogError("AudioSource is not assigned to the BuzzSoundController.");
-            }
-        }
+        // if (buzzSound == null)
+        // {
+        //     buzzSound = GetComponent<AudioSource>();
+        //     if (buzzSound == null)
+        //     {
+        //         return;
+        //         // Debug.LogError("AudioSource is not assigned to the BuzzSoundController.");
+        //     }
+        // }
 
         if(!(arNavAuto.autoReady && arManipAuto.autoReady))
         {
@@ -182,7 +184,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         }
 
         ScheuldeNextTask();
-        HandleStopResumeAuto();
+        // HandleStopResumeAuto();
 
     }
 
@@ -213,7 +215,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
                 state = State.Checkpatient;
 
-                PauseSim(14f);
+                askQuestionGUI.AskQuestion(0, 14f);
+                // PauseSim(14f);
 
                 break;
 
@@ -225,12 +228,13 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     graphicalInterface.AddLogInfo("Arrived at destination");
                     graphicalInterface.AddLogInfo("Checking patient medicines");
 
-                    PauseSim(0f);
+                    
                     
                     // Debug.Log("Checking the patient");
                     // TODO: Do this actually properly
                     if (patientMissingMeds[(int)currentpatient])
                     {   
+                        askQuestionGUI.AskQuestion(1, 0.2f);
 
                         // Change AR to indicate an issue
                         graphicalInterface.AddLogInfo("Patient is missing an expected medicine");
@@ -250,6 +254,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     }
                     else
                     {
+                        askQuestionGUI.AskQuestion(1, 0.2f);
                         // Change AR to indicate no issue
                         graphicalInterface.AddLogInfo("Patient has expected medicines");
                         patientPos = patientPosition[(int)currentpatient];
@@ -274,7 +279,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     graphicalInterface.AddLogInfo("Retrieving medicine");    
                     
                     SetArmToMedTarget();
-                    PauseSim(0.5f);
+                    askQuestionGUI.AskQuestion(6, 0.5f);
                     state = State.GetMedicine;
                 }
                 
@@ -296,8 +301,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     arNavAuto.SetWaypoints(posTraj, rotTraj);
 
                     state = State.GoDeliverMedicine;
-
-                    PauseSim(10f);
+                    
+                    askQuestionGUI.AskQuestion(3, 10f);
                 }
                 
                 break;
@@ -336,7 +341,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         arManipAuto.SetArmWaypoints(positions, rotations, gripperActions);
                     }
 
-                    // PauseSim(0.5f);
+                    // askQuestionGUI.AskQuestion(0.5f);
                     state = State.DropOffMedicine;
                 }
                 
@@ -346,7 +351,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // Drop off the medicine
                 if(arManipAuto.reachedArmGoal)
                 {
-                    PauseSim(0.25f);
+                    askQuestionGUI.AskQuestion(7, 0.25f);
                     graphicalInterface.AddLogInfo("Delivered medicine");
                     graphicalInterface.AddLogInfo("Issue resolved");
                     patientPos = patientPosition[(int)currentpatient];
@@ -431,6 +436,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 {
                     // Remove the AR for the last patient
                     StartCoroutine(RemoveARForPatient(patientPosition[(int)currentpatient]));
+                    // askQuestionGUI.DebugLogResponses();
+                    askQuestionGUI.PrintResponses();
                     return;
                 }
 
@@ -664,74 +671,74 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     // Task Pausing and Resuming Logic
 
-    private void ShowGuiBlocker()
-    {
-        guiBlocker.SetActive(true);
-    }
+    // private void ShowGuiBlocker()
+    // {
+    //     guiBlocker.SetActive(true);
+    // }
 
-    private void HideGuiBlocker()
-    {
-        guiBlocker.SetActive(false);
-    }
+    // private void HideGuiBlocker()
+    // {
+    //     guiBlocker.SetActive(false);
+    // }
 
 
     // Best Practice, Send the Pause Sim Function only During transitions to another state
-    private void PauseSim(float delayTimeBeforePause)
-    {
-        if(isSimPaused)
-        {
-            return;
-        }
-        isSimPaused = true;
-        StartCoroutine(PauseSimForTime(delayTimeBeforePause, 4f));
-    }
+    // private void PauseSim(float delayTimeBeforePause)
+    // {
+    //     if(isSimPaused)
+    //     {
+    //         return;
+    //     }
+    //     isSimPaused = true;
+    //     StartCoroutine(PauseSimForTime(delayTimeBeforePause, 4f));
+    // }
 
-    IEnumerator PauseSimForTime(float delayTimeBeforePause, float inspectionTime)
-    {
-        yield return new WaitForSeconds(delayTimeBeforePause);
-        Time.timeScale = 0f;
-        // isSimPaused = true;
-        // Buzz user
-        PlayBuzzSound();
-        yield return new WaitForSecondsRealtime(inspectionTime);
-        allowResume = true;
-        ShowGuiBlocker();
-    }
+    // IEnumerator PauseSimForTime(float delayTimeBeforePause, float inspectionTime)
+    // {
+    //     yield return new WaitForSeconds(delayTimeBeforePause);
+    //     Time.timeScale = 0f;
+    //     // isSimPaused = true;
+    //     // Buzz user
+    //     PlayBuzzSound();
+    //     yield return new WaitForSecondsRealtime(inspectionTime);
+    //     allowResume = true;
+    //     ShowGuiBlocker();
+    // }
 
-    private void ResumeSim()
-    {
-        Time.timeScale = 1f;
-        isSimPaused = false;
-        allowResume = false;
-        HideGuiBlocker();
-    }
+    // private void ResumeSim()
+    // {
+    //     Time.timeScale = 1f;
+    //     isSimPaused = false;
+    //     allowResume = false;
+    //     HideGuiBlocker();
+    // }
 
-    private void HandleStopResumeAuto()
-    {
-        //Handle the changes in the state via button press
-        if(isSimPaused && allowResume && Input.GetKeyDown("space"))
-        {
-            ResumeSim();
-        }
+    // private void HandleStopResumeAuto()
+    // {
+    //     //Handle the changes in the state via button press
+    //     if(isSimPaused && allowResume && Input.GetKeyDown("space"))
+    //     {
+    //         ResumeSim();
+    //     }
         
-    }
+    // }
 
-    private void DelayDebugMessage()
-    {
-        waitTimer += Time.deltaTime;
-        if (waitTimer < waitDuration)
-        {
-            return;
-        }
-        waitTimer = 0.0f;
-    }
-    public void PlayBuzzSound()
-    {
-        if (buzzSound != null)
-        {
-            buzzSound.time = 1f; // Where in the wav file to start playing audio
-            buzzSound.Play();
-        }
-    }
+    // private void DelayDebugMessage()
+    // {
+    //     waitTimer += Time.deltaTime;
+    //     if (waitTimer < waitDuration)
+    //     {
+    //         return;
+    //     }
+    //     waitTimer = 0.0f;
+    // }
+    // public void PlayBuzzSound()
+    // {
+    //     if (buzzSound != null)
+    //     {
+    //         buzzSound.time = 1f; // Where in the wav file to start playing audio
+    //         buzzSound.Play();
+    //     }
+    // }
 
 }
