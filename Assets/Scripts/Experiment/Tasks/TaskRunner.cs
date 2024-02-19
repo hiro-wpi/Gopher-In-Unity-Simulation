@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,16 +26,17 @@ public class TaskRunner : MonoBehaviour
     [Header("Robot")]
     [SerializeField] private GameObject robot;
     [SerializeField] private GraphicalInterface GUI;
+    [SerializeField] private DataRecorder recorder;
 
     [Header("Objects")]
     [SerializeField] private GameObject[] staticObjects = new GameObject[0];
     [SerializeField] private GameObject[] dynamicObjects = new GameObject[0];
     [SerializeField] private GameObject[] taskObjects = new GameObject[0];
     [SerializeField] private GameObject[] goalObjects = new GameObject[0];
-    
+
     void Start()
     {
-        navMeshSurfaces = 
+        navMeshSurfaces =
             NavMeshGameObject.GetComponentsInChildren<NavMeshSurface>();
         foreach (NavMeshSurface surface in navMeshSurfaces)
         {
@@ -48,30 +51,55 @@ public class TaskRunner : MonoBehaviour
         // GUI.SetTask(task);
 
         // Set Robot and Objects
-        task.SetRobots(new GameObject[1] {robot});
+        task.SetRobots(new GameObject[1] { robot });
         task.SetStaticObjects(staticObjects);
         task.SetDynamicObjects(dynamicObjects);
         task.SetTaskObjects(taskObjects);
         task.SetGoalObjects(goalObjects);
+
+        // Set Recorder
+        recorder.SetRobot(robot);
+        recorder.SetObjects(taskObjects);
     }
 
-    void Update() 
+    void Update()
     {
         // Check if the task starts
         if (!taskStarted && task.CheckTaskStart())
         {
             taskStarted = true;
-            // check current task status until completion every 0.5s
+
+            // Start recording
+            string recordFolder =
+                Application.dataPath
+                + "/Data/"
+                + DateTime.Now.ToString("MM-dd HH-mm-ss")
+                + "/";
+            if (!Directory.Exists(recordFolder))
+            {
+                Directory.CreateDirectory(recordFolder);
+            }
+            recorder.StartRecording(recordFolder + "Task", task);
+
+            // Check current task status until completion every 0.5s
             InvokeRepeating("CheckTaskCompletion", 0f, 0.5f);
         }
     }
 
-    private void CheckTaskCompletion() 
+    private void CheckTaskCompletion()
     {
         if (task.CheckTaskCompletion())
         {
+            // stop recording
+            recorder.StopRecording();
             // stop
             CancelInvoke("CheckTaskCompletion");
         }
+    }
+
+    void OnDestroy()
+    {
+        // stop recording in case the task is never completed
+        recorder.StopRecording();
     }
 }

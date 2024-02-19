@@ -31,7 +31,7 @@ using UnityEngine.SceneManagement;
 ///         SetTaskObjects()
 ///         SetGoalObjects()
 /// </summary>
-public abstract class Task : MonoBehaviour 
+public abstract class Task : MonoBehaviour
 {
     [Header("Task Properties")]
     // Task-related properties
@@ -188,11 +188,11 @@ public abstract class Task : MonoBehaviour
     {
         // Spawn dynamic objects - Humans
         dynamicObjects = SpawnGameObjectArray(DynamicObjectSpawnArray);
-        
+
         // set trajectory for each human
         for (int i = 0; i < dynamicObjects.Length; i++)
         {
-            CharacterNavigation charNav = 
+            CharacterNavigation charNav =
                 dynamicObjects[i].GetComponent<CharacterNavigation>();
             charNav.SetTrajectory(DynamicObjectSpawnArray[i].trajectory, true);
         }
@@ -274,16 +274,24 @@ public abstract class Task : MonoBehaviour
     public virtual void SetGoalObjects(GameObject[] existingGoalObjects)
     {
         goalObjects = existingGoalObjects;
+
+        // Goals
+        goals = new Goal[goalObjects.Length];
+        for (int i = 0; i < goalObjects.Length; ++i)
+        {
+            goals[i] = goalObjects[i].GetComponent<Goal>();
+        }
     }
 
     // Destroy all spawned objects
     public virtual void DestroyObjects(
-        bool destroyStatic = true, 
+        bool destroyStatic = true,
         bool destroyTask = true,
-        bool destroyGoal = true, 
-        bool destroyDynamic = true, 
+        bool destroyGoal = true,
+        bool destroyDynamic = true,
         float delayTime = 0f
-    ) {
+    )
+    {
         if (destroyStatic)
         {
             DestoryGameObjects(staticObjects, delayTime);
@@ -304,11 +312,12 @@ public abstract class Task : MonoBehaviour
 
     protected void DestoryGameObjects(
         GameObject[] gameObjects, float delayTime
-    ) {
+    )
+    {
         foreach (GameObject obj in gameObjects)
         {
             Destroy(obj, delayTime);
-        }     
+        }
     }
 
     // Define SpawnInfo for spawning objects in the scene
@@ -327,7 +336,8 @@ public abstract class Task : MonoBehaviour
         Vector3 position,
         Vector3 rotation,
         Vector3[] trajectory = null
-    ) {
+    )
+    {
         SpawnInfo spawnInfo;
         spawnInfo.gameObject = gameObject;
         spawnInfo.position = position;
@@ -346,7 +356,7 @@ public abstract class Task : MonoBehaviour
 
         // Spawn a list of objects
         GameObject[] gameObjects = new GameObject[spawnInfos.Length];
-        for (int i=0; i < spawnInfos.Length; ++i)
+        for (int i = 0; i < spawnInfos.Length; ++i)
         {
             SpawnInfo spawnInfo = spawnInfos[i];
             GameObject gameObject = Instantiate(

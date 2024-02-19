@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.AI;
 
 public class ExperimentManager : MonoBehaviour
-{   
+{
     // Experiment
     public Experiment[] experiments;
     public FreePlayTask freePlayTask;
@@ -66,8 +66,8 @@ public class ExperimentManager : MonoBehaviour
             LoadQuitMenus();
 
         // Check if user starts to move the robot
-        if (currentTask != null && 
-            taskLoaded && !taskStarted && 
+        if (currentTask != null &&
+            taskLoaded && !taskStarted &&
             currentTask.CheckTaskStart())
         {
             // start
@@ -77,7 +77,7 @@ public class ExperimentManager : MonoBehaviour
             InvokeRepeating("CheckTaskCompletion", 0f, 0.5f);
         }
     }
-    private void CheckTaskCompletion() 
+    private void CheckTaskCompletion()
     {
         if (currentTask.CheckTaskCompletion())
         {
@@ -99,7 +99,7 @@ public class ExperimentManager : MonoBehaviour
     {
         // Randomize task orders
         // count total task number
-        for (int i=0; i<experiments.Length; ++i)
+        for (int i = 0; i < experiments.Length; ++i)
         {
             Experiment experiment = experiments[i];
             // experiment.RandomizeTasks(); // handled in this script now
@@ -107,7 +107,7 @@ public class ExperimentManager : MonoBehaviour
 
             cumulativeSumNumTask[i] = experiment.GetNumTasks();
             if (i != 0)
-                cumulativeSumNumTask[i] += cumulativeSumNumTask[i-1];
+                cumulativeSumNumTask[i] += cumulativeSumNumTask[i - 1];
         }
         // randomize index
         randomizedIndices = Enumerable.Range(0, totalNumTask).ToArray();
@@ -123,7 +123,7 @@ public class ExperimentManager : MonoBehaviour
         // Initialize data recorder
         if (dataRecorder == null)
             dataRecorder = gameObject.AddComponent<DataRecorder>();
-        recordFolder = Application.dataPath + "/Data" + "/" + 
+        recordFolder = Application.dataPath + "/Data" + "/" +
                        System.DateTime.Now.ToString("MM-dd HH-mm-ss");
         if (!Directory.Exists(recordFolder))
             Directory.CreateDirectory(recordFolder);
@@ -131,7 +131,7 @@ public class ExperimentManager : MonoBehaviour
 
     // Free play mode
     public void FreePlay()
-    {   
+    {
         // Load free play task
         currentTask = freePlayTask;
         experimentMenus.LoadLoading();
@@ -141,7 +141,7 @@ public class ExperimentManager : MonoBehaviour
         taskStarted = false;
     }
 
-    
+
     // RECORDER //
     // Start or stop recording
     public void StartRecording()
@@ -149,11 +149,12 @@ public class ExperimentManager : MonoBehaviour
         if (!dataRecorder.isRecording)
         {
             string fileName = recordFolder + "/" + currentTask.TaskName;
-            dataRecorder.StartRecording(fileName, spawnedRobots, currentTask);
+            dataRecorder.SetRobot(spawnedRobots[0]);
+            dataRecorder.StartRecording(fileName, currentTask);
         }
         else
             return;
-        
+
         // show icon
         gUI.SetRecordIconActive(true);
     }
@@ -163,7 +164,7 @@ public class ExperimentManager : MonoBehaviour
             return;
         else
             dataRecorder.StopRecording();
-        
+
         // show icon
         gUI.SetRecordIconActive(false);
     }
@@ -175,7 +176,7 @@ public class ExperimentManager : MonoBehaviour
     {
         if (totalTaskIndex == totalNumTask)
             return false;
-        
+
         // Randomly get the next task index
         int randomizedIndex = randomizedIndices[totalTaskIndex];
         totalTaskIndex++;
@@ -187,14 +188,14 @@ public class ExperimentManager : MonoBehaviour
                 experimentIndex = i;
                 taskIndex = randomizedIndex;
                 if (i != 0)
-                    taskIndex = randomizedIndex - cumulativeSumNumTask[i-1];
+                    taskIndex = randomizedIndex - cumulativeSumNumTask[i - 1];
             }
         }
 
         // Load loading UI
-        if (!keepSameSceneAndRobot || !experimentStarted )
+        if (!keepSameSceneAndRobot || !experimentStarted)
             experimentMenus.LoadLoading();
-        
+
         // Destroy previous task
         if (currentTask != null)
         {
@@ -205,12 +206,12 @@ public class ExperimentManager : MonoBehaviour
         // Get a new task
         taskLoaded = false;
         currentTask = experiments[experimentIndex].GetTask(taskIndex);
-        
+
         // Load new scene and 
         // other game objects (objects, humans, robots, etc.)
         Debug.Log("Task " + currentTask.TaskName + " is loading.");
         StartCoroutine(LoadTaskCoroutine());
-        
+
         // Task flag
         taskStarted = false;
         return true;
@@ -229,7 +230,7 @@ public class ExperimentManager : MonoBehaviour
 
             // Generate robots
             currentTask.GenerateRobots();
-            yield return new WaitForSeconds(0.3f); 
+            yield return new WaitForSeconds(0.3f);
 
             // Generate static objects
             currentTask.GenerateStaticObjects();
@@ -277,7 +278,7 @@ public class ExperimentManager : MonoBehaviour
             // Generate static objects
             currentTask.GenerateStaticObjects();
             yield return new WaitForSeconds(0.1f);
-             // TODO
+            // TODO
             // // Remake nav mesh
             // navMeshRobot.BuildNavMesh();
             // yield return new WaitForSeconds(0.4f);
@@ -286,7 +287,7 @@ public class ExperimentManager : MonoBehaviour
             currentTask.GenerateTaskObjects();
             currentTask.GenerateGoalObjects();
             yield return new WaitForSeconds(0.1f);
-             // TODO
+            // TODO
             // // Remake nav mesh
             // navMeshHuman.BuildNavMesh();
             // yield return new WaitForSeconds(0.4f);
@@ -309,13 +310,13 @@ public class ExperimentManager : MonoBehaviour
         // Stop recording
         if (dataRecorder.isRecording)
             StopRecording();
-        
+
         // Reload currentTask
         // Ensure time is running and load loading UI
         ResumeFromQuitMenus();
         if (!keepSameSceneAndRobot)
             experimentMenus.LoadLoading();
-        
+
         // Temp
         Debug.Log("Reload task " + currentTask.TaskName);
         // Load scene and 
@@ -335,10 +336,10 @@ public class ExperimentManager : MonoBehaviour
     private IEnumerator RespawnRobotCoroutine()
     {
         // Destory existing robot
-        foreach(GameObject robot in spawnedRobots)
+        foreach (GameObject robot in spawnedRobots)
             Destroy(robot);
         yield return new WaitForSeconds(0.5f);
-        
+
         // Generate robots
         spawnedRobots = currentTask.GenerateRobots();
         // Set up the existing robot
