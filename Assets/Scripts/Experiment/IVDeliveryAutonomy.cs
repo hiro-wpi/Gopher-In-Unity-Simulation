@@ -141,7 +141,7 @@ public class IVDeliveryAutonomy : MonoBehaviour
         keyboardControl.gameObject.SetActive(false);
         xrControl.gameObject.SetActive(true);
 
-        Debug.Log("Swaped Controls");
+        Debug.Log("Swapped Controls");
 
 
     }
