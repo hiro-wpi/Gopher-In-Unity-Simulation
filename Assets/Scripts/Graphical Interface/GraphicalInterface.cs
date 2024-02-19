@@ -21,7 +21,7 @@ public class GraphicalInterface : MonoBehaviour
     public GameObject locationInfo;
     public GameObject recordIcon;
     public GameObject helpDisplay;
-    
+
     // Robot
     private GameObject robot;
     private FakeLocalization localization;
@@ -51,7 +51,7 @@ public class GraphicalInterface : MonoBehaviour
     private RenderTexture minimapRendertexture;
     private GameObject minimapCameraObject;
     private Camera minimapCamera;
-    private float[] minimapSizes = new float[] {3f, 6f, 9f};
+    private float[] minimapSizes = new float[] { 3f, 6f, 9f };
     private int minimapSizeIndex = 0;
 
     // Map
@@ -59,7 +59,7 @@ public class GraphicalInterface : MonoBehaviour
     private GameObject mapCameraObject;
     private Camera mapCamera;
     private Vector3 prevClickPoint = Vector3.zero;
-    
+
     // battery
     private float robotSpawnedTime;
     private Slider batterySlider;
@@ -76,9 +76,9 @@ public class GraphicalInterface : MonoBehaviour
     public GameObject rightCameraViewingDisplay;
     public GameObject backCameraViewingDisplay;
     // ik
-    private GameObject leftEndEffectorRef; 
+    private GameObject leftEndEffectorRef;
     private GameObject rightEndEffectorRef;
-    private JacobianIK leftIKSolver; 
+    private JacobianIK leftIKSolver;
     private JacobianIK rightIKSolver;
 
     // localization
@@ -106,7 +106,7 @@ public class GraphicalInterface : MonoBehaviour
 
     // Help
     private TextMeshProUGUI helpDisplayText;
-    
+
     // Timer
     public GameObject timerPanel;
     private TextMeshProUGUI timerPanelText;
@@ -118,7 +118,7 @@ public class GraphicalInterface : MonoBehaviour
     // [SerializeField] private bool minimapPathVisable = true;
     [SerializeField] private bool taskDescriptionUpdate = true;
 
-    void Awake() 
+    void Awake()
     {
         // Activation
         SetUIActive(false);
@@ -126,28 +126,28 @@ public class GraphicalInterface : MonoBehaviour
         // Camera displays
         // main render texture
         cameraDisplayRect = cameraDisplay.GetComponent<RectTransform>();
-        cameraResolution = new Vector2((int)cameraDisplayRect.rect.width, 
+        cameraResolution = new Vector2((int)cameraDisplayRect.rect.width,
                                        (int)cameraDisplayRect.rect.height);
-        cameraRendertexture = new RenderTexture((int)cameraResolution.x, 
+        cameraRendertexture = new RenderTexture((int)cameraResolution.x,
                                                 (int)cameraResolution.y, 24);
         cameraDisplay.GetComponent<RawImage>().texture = cameraRendertexture;
 
         // secondary render texture
         secondayCameraDisplayRect = secondayCameraDisplay.GetComponent<RectTransform>();
-        secondayCameraRendertexture = new RenderTexture((int)secondayCameraDisplayRect.rect.width, 
+        secondayCameraRendertexture = new RenderTexture((int)secondayCameraDisplayRect.rect.width,
                                                         (int)secondayCameraDisplayRect.rect.height, 24);
         secondayCameraDisplay.GetComponent<RawImage>().texture = secondayCameraRendertexture;
-        
+
         // minimap render texture
         minimapDisplayRect = minimapDisplay.GetComponent<RectTransform>();
-        minimapResolution = new Vector2(minimapDisplayRect.rect.width, 
+        minimapResolution = new Vector2(minimapDisplayRect.rect.width,
                                         minimapDisplayRect.rect.height);
-        minimapRendertexture = new RenderTexture((int)minimapResolution.x, 
+        minimapRendertexture = new RenderTexture((int)minimapResolution.x,
                                                  (int)minimapResolution.y, 24);
         minimapDisplay.GetComponent<RawImage>().texture = minimapRendertexture;
 
         // map
-        mapRendertexture = new RenderTexture((int)cameraResolution.x, 
+        mapRendertexture = new RenderTexture((int)cameraResolution.x,
                                              (int)cameraResolution.y, 24);
 
         // Robot status UI
@@ -156,7 +156,7 @@ public class GraphicalInterface : MonoBehaviour
         // Location
         locationText = locationInfo.GetComponentInChildren<TextMeshProUGUI>();
         // minimap
-        minimapSizes = new float[] {3f, 6f, 9f};
+        minimapSizes = new float[] { 3f, 6f, 9f };
         minimapSizeIndex = 0;
 
         // task status UI
@@ -182,8 +182,8 @@ public class GraphicalInterface : MonoBehaviour
         // TODO Remove Section
         StartCoroutine(InitSecondaryCamera());
     }
-    
-    void Start() {}
+
+    void Start() { }
 
     public void SetUIActive(bool active)
     {
@@ -197,7 +197,7 @@ public class GraphicalInterface : MonoBehaviour
     IEnumerator InitSecondaryCamera()
     {
         yield return new WaitUntil(() => active);
-        ChangeCameraView(false, "Left");
+        ChangeCameraView(false, "Right");
     }
 
     void Update()
@@ -223,10 +223,10 @@ public class GraphicalInterface : MonoBehaviour
         if (input.isFocused)
             return;
         // help panel
-        if (Input.GetKeyDown(KeyCode.H)) 
+        if (Input.GetKeyDown(KeyCode.H))
             ChangeHelpDisplay();
         // minimap
-        if(Input.GetKeyDown(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.M))
             if (Input.GetKey(KeyCode.LeftShift))
                 ChangeMinimapView();
             else
@@ -254,7 +254,7 @@ public class GraphicalInterface : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Keypad6))
             ChangeCameraView(!Input.GetKey(KeyCode.Keypad0), "Right");
 
-        
+
 
         MonitorKeyPressed();
     }
@@ -265,7 +265,7 @@ public class GraphicalInterface : MonoBehaviour
     {
         if (currentTask == null || robot == null)
             return;
-        
+
         // Control modes
         if (Input.GetKeyDown(KeyCode.DownArrow))
             RecordKey("DownArrow");
@@ -311,7 +311,7 @@ public class GraphicalInterface : MonoBehaviour
         // Record keys but not for checking result
         currentTask.CheckInput(key);
     }
-    
+
 
     // UPDATE INFO
     private void UpdateTaskStatus()
@@ -320,7 +320,7 @@ public class GraphicalInterface : MonoBehaviour
         // if (currentTask == null)
         //     return;
         // taskDescriptionPanelText.text = currentTask.TaskDescription;
-        taskStatusPanelText.text = "Task Duration: " 
+        taskStatusPanelText.text = "Task Duration: "
                                  + string.Format("{0:0.00}", currentTask.GetTaskDuration()) + " s."
                                  + "\n\n"
                                  + "Current Task Status: " + "\n"
@@ -343,19 +343,19 @@ public class GraphicalInterface : MonoBehaviour
         UpdateLocalization(localization.Position, localization.RotationEuler);
     }
 
-    private void UpdateLinearSpeed(float linearSpeed, float multiplier=1f)
+    private void UpdateLinearSpeed(float linearSpeed, float multiplier = 1f)
     {
         // linear speed range from 0 -> 1.5 m/s / 0 -> 270°
         linearSpeed = Mathf.Abs(Mathf.Clamp(linearSpeed, -1.5f, 1.5f));
-        linearSpeed = - multiplier * linearSpeed * 180f;
+        linearSpeed = -multiplier * linearSpeed * 180f;
         // update
         speedometerPointer.transform.rotation = Quaternion.Euler(0, 0, linearSpeed);
     }
-    private void UpdateAngularSpeed(float angularSpeed, float multiplier=1f)
+    private void UpdateAngularSpeed(float angularSpeed, float multiplier = 1f)
     {
         // angular speed range from -1 -> 1 rad/s / -57° -> 57°
         angularSpeed = Mathf.Clamp(angularSpeed, -2f, 2f);
-        angularSpeed = - multiplier * angularSpeed * Mathf.Rad2Deg;
+        angularSpeed = -multiplier * angularSpeed * Mathf.Rad2Deg;
         // update
         steeringWheel.transform.rotation = Quaternion.Euler(0, 0, angularSpeed);
     }
@@ -366,7 +366,7 @@ public class GraphicalInterface : MonoBehaviour
     {
         // Camera
         controlModeCameraDisplay.SetActive(cameraControlEnabled);
-        
+
         // Control mode display
         controlModeLeftDisplay.SetActive(false);
         controlModeRightDisplay.SetActive(false);
@@ -403,22 +403,22 @@ public class GraphicalInterface : MonoBehaviour
         {
             case "HEAD":
                 headCameraViewingDisplay.SetActive(true);
-                headCameraViewingDisplay.GetComponent<RectTransform>().localScale = 
+                headCameraViewingDisplay.GetComponent<RectTransform>().localScale =
                     new Vector3(0.6f, 0.6f, 0f);
                 break;
             case "LEFT":
                 leftCameraViewingDisplay.SetActive(true);
-                leftCameraViewingDisplay.GetComponent<RectTransform>().localScale = 
+                leftCameraViewingDisplay.GetComponent<RectTransform>().localScale =
                     new Vector3(0.6f, 0.6f, 0f);
                 break;
             case "RIGHT":
                 rightCameraViewingDisplay.SetActive(true);
-                rightCameraViewingDisplay.GetComponent<RectTransform>().localScale = 
+                rightCameraViewingDisplay.GetComponent<RectTransform>().localScale =
                     new Vector3(0.6f, 0.6f, 0f);
                 break;
             case "BACK":
                 backCameraViewingDisplay.SetActive(true);
-                backCameraViewingDisplay.GetComponent<RectTransform>().localScale = 
+                backCameraViewingDisplay.GetComponent<RectTransform>().localScale =
                     new Vector3(0.6f, 0.6f, 0f);
                 break;
             default:
@@ -479,7 +479,7 @@ public class GraphicalInterface : MonoBehaviour
         locationText.text = "Current - " + location;
         // update map in minimap display
         map.transform.position = position - robot.transform.position + new Vector3(0f, -3f, 0f);
-        map.transform.rotation = Quaternion.Euler(rotation - robot.transform.rotation.eulerAngles); 
+        map.transform.rotation = Quaternion.Euler(rotation - robot.transform.rotation.eulerAngles);
     }
 
     private void UpdateBattery(float duration)
@@ -490,7 +490,7 @@ public class GraphicalInterface : MonoBehaviour
         batterySlider.value = Mathf.Clamp(value, 0f, 1f);
     }
 
-    
+
     // Setup ROBOT AND TASK
     public void SetRobot(GameObject robot, bool isNewRobot)
     {
@@ -518,7 +518,7 @@ public class GraphicalInterface : MonoBehaviour
         // TODO 2 The proper reference is different from the tool frame...
         leftEndEffectorRef.transform.localRotation = Quaternion.Euler(new Vector3(0f, -90f, 180f));
         rightEndEffectorRef.transform.localRotation = Quaternion.Euler(new Vector3(0f, -90f, 180f));
-        
+
         // Cameras
         cameraSystem.enabled = true;
         numCameras = cameraSystem.Cameras.Length;
@@ -538,7 +538,7 @@ public class GraphicalInterface : MonoBehaviour
         // Hide laser scan in the cameras
         foreach (Camera cam in cameraSystem.Cameras)
             cam.cullingMask = cam.cullingMask & ~(1 << LayerMask.NameToLayer("Laser"));
-        
+
         // Map
         map = GameObject.FindGameObjectWithTag("Map");
 
@@ -551,7 +551,7 @@ public class GraphicalInterface : MonoBehaviour
         minimapCamera = minimapCameraObject.AddComponent<Camera>();
         minimapCamera.orthographic = true;
         minimapCamera.orthographicSize = minimapSizes[minimapSizeIndex];
-        minimapCamera.cullingMask = LayerMask.GetMask("Robot", "Laser", "Map");
+        minimapCamera.cullingMask = LayerMask.GetMask("Robot", "Laser", "Map", "ARObject");
         // minimap framerate
         minimapCamera.targetTexture = minimapRendertexture;
         CameraFrameRate fr = minimapCameraObject.AddComponent<CameraFrameRate>();
@@ -608,7 +608,7 @@ public class GraphicalInterface : MonoBehaviour
     {
         if (index < 0 || index >= cameraSystem.Cameras.Length)
             return;
-        
+
         // Change main camera view
         if (mainCamera)
         {
@@ -718,7 +718,7 @@ public class GraphicalInterface : MonoBehaviour
         }
     }
 
-    public void ShowPopUpMessage(string message, float duration=1.5f)
+    public void ShowPopUpMessage(string message, float duration = 1.5f)
     {
         messagePanelText.text = message;
         StartCoroutine(PopUpMessageCoroutine(duration));
@@ -764,7 +764,7 @@ public class GraphicalInterface : MonoBehaviour
     public void AddLogInfo(string info)
     {
         // If we don't want to have the descrption updated
-        if(!taskDescriptionUpdate)
+        if (!taskDescriptionUpdate)
         {
             return;
         }

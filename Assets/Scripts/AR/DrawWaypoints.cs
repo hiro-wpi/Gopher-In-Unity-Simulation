@@ -14,12 +14,12 @@ public class DrawWaypoints : MonoBehaviour
 {
     [SerializeField] private Material defaultLineMaterial;
 
-    private Dictionary<string, LineRenderer> lineMap = new ();
-    private Dictionary<string, GameObject> lineObjects = new ();
+    private Dictionary<string, LineRenderer> lineMap = new();
+    private Dictionary<string, GameObject> lineObjects = new();
 
-    void Start() {}
+    void Start() { }
 
-    void Update() {}
+    void Update() { }
 
     public void DrawLine(
         string id,
@@ -56,6 +56,7 @@ public class DrawWaypoints : MonoBehaviour
             // Make a game object to hold the line
             GameObject lineObject = new GameObject(id);
             lineObject.transform.SetParent(transform);
+            lineObject.layer = LayerMask.NameToLayer("ARObject");
             lineObjects.Add(id, lineObject);
 
             // LineRenderer componenet
