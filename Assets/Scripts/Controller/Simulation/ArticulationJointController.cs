@@ -230,6 +230,7 @@ public class ArticulationJointController : MonoBehaviour
     // Stop joints
     public void StopJoints()
     {
+        StopCoroutine(currCoroutine);
         foreach (ArticulationBody joint in articulationChain)
         {
             ArticulationBodyUtils.StopJoint(joint);
