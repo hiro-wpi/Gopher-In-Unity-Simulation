@@ -551,7 +551,7 @@ public class GraphicalInterface : MonoBehaviour
         minimapCamera = minimapCameraObject.AddComponent<Camera>();
         minimapCamera.orthographic = true;
         minimapCamera.orthographicSize = minimapSizes[minimapSizeIndex];
-        minimapCamera.cullingMask = LayerMask.GetMask("Robot", "Laser", "Map", "ARObject");
+        minimapCamera.cullingMask = LayerMask.GetMask("Robot", "Map", "ARObject");
         // minimap framerate
         minimapCamera.targetTexture = minimapRendertexture;
         CameraFrameRate fr = minimapCameraObject.AddComponent<CameraFrameRate>();
@@ -570,7 +570,7 @@ public class GraphicalInterface : MonoBehaviour
         mapCamera.enabled = false;
         mapCamera.orthographic = true;
         mapCamera.orthographicSize = 14f;
-        mapCamera.cullingMask = LayerMask.GetMask("Robot", "Map");
+        mapCamera.cullingMask = LayerMask.GetMask("Robot", "Map", "ARObject");
         mapCamera.targetTexture = mapRendertexture;
 
         SetUIActive(true);
