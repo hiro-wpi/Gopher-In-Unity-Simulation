@@ -72,14 +72,18 @@ public class TaskRunner : MonoBehaviour
             // Start recording
             string recordFolder =
                 Application.dataPath
-                + "/Data/"
-                + DateTime.Now.ToString("MM-dd HH-mm-ss")
-                + "/";
+                + "/Data/";
             if (!Directory.Exists(recordFolder))
             {
                 Directory.CreateDirectory(recordFolder);
             }
-            recorder.StartRecording(recordFolder + "Task", task);
+            recorder.StartRecording(
+                recordFolder
+                + task.TaskName
+                + "_"
+                + DateTime.Now.ToString("MM-dd HH-mm-ss"),
+                task
+            );
 
             // Check current task status until completion every 0.5s
             InvokeRepeating("CheckTaskCompletion", 0f, 0.5f);
