@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
 public class MobileManipulatorAR : MonoBehaviour
 {
     [Header("Robot")]
+    [SerializeField] private GameObject robot;
     [SerializeField] private GameObject leftArmRoot;
     [SerializeField] private GameObject rightArmRoot;
     [SerializeField] private GameObject leftArmGripper;
@@ -13,7 +15,7 @@ public class MobileManipulatorAR : MonoBehaviour
     [SerializeField] private ArticulationEndEffectorController leftController;
     [SerializeField] private ArticulationEndEffectorController rightController;
 
-    [Header("AR")]
+    [Header("AR Rechability")]
     [SerializeField] private GenerateARGameObject arGenerator;
     [SerializeField] private DrawWaypoints drawWaypoints;
     [SerializeField] private GameObject gripper;
@@ -35,6 +37,16 @@ public class MobileManipulatorAR : MonoBehaviour
     private GameObject[] arReachability;
     private bool arReachabilityEnabled = true;
 
+    // Obstacles
+    [Header("AR Obstacles")]
+    private Camera cam;
+    private RenderTexture rendererTexture;
+    [SerializeField] private Laser laser;
+    [SerializeField] private GameObject canvas;
+    private GameObject obstacleDisplay;
+    private bool obstacleDisplayEnabled = false;
+    private Coroutine obstacleStopCoroutine;
+
     [Header("Task")]
     [SerializeField] private GameObject goal;
     [SerializeField] private AutoNavigation autoNavigation;
@@ -47,6 +59,31 @@ public class MobileManipulatorAR : MonoBehaviour
 
     void Start()
     {
+        // Obstacle camera
+        // Camera
+        GameObject obstacleCamera = new GameObject("ObstacleCamera");
+        obstacleCamera.transform.parent = robot.transform;
+        obstacleCamera.transform.localPosition = new Vector3(0, 2.5f, 0);
+        obstacleCamera.transform.localRotation = Quaternion.Euler(90, 0, 0);
+        cam = obstacleCamera.AddComponent<Camera>();
+        cam.cullingMask = LayerMask.GetMask("Robot", "ARObject");
+        cam.orthographic = true;
+        cam.orthographicSize = 2.5f;
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = new Color(0.7f, 0.7f, 0.7f, 0.6f);
+        rendererTexture = new RenderTexture(512, 512, 24);
+        cam.targetTexture = rendererTexture;
+
+        // RectTransform Canvas
+        obstacleDisplay = new GameObject("ObstacleDisplay");
+        obstacleDisplay.transform.parent = canvas.transform;
+        RectTransform rect = obstacleDisplay.AddComponent<RectTransform>();
+        rect.sizeDelta = new Vector2(420, 420);
+        rect.anchoredPosition = new Vector2(-230, 60);
+        RawImage image = obstacleDisplay.AddComponent<RawImage>();
+        image.texture = rendererTexture;
+        obstacleDisplay.SetActive(false);
+
         // Instantiate two game objects for motion tracking
         leftGripperMapping = new GameObject("MotionMappingLeft");
         rightGripperMapping = new GameObject("MotionMappingRight");
@@ -74,6 +111,28 @@ public class MobileManipulatorAR : MonoBehaviour
 
     void Update()
     {
+        // Check if the obstacle map is needed
+        if (CheckObstacleDistance())
+        {
+            obstacleDisplay.SetActive(true);
+            obstacleDisplayEnabled = true;
+        }
+        else
+        {
+            if (obstacleDisplayEnabled)
+            {
+                if (obstacleStopCoroutine != null)
+                {
+                    StopCoroutine(obstacleStopCoroutine);
+                }
+                obstacleStopCoroutine = StartCoroutine(
+                    DisableObstacleDisplay(1.0f)
+                );
+
+                obstacleDisplayEnabled = false;
+            }
+        }
+
         // Update leftGripper and rightGripper
         // leftGripper.transform.position = leftController.outPosition;
         // leftGripper.transform.rotation = leftController.outRotation;
@@ -129,12 +188,44 @@ public class MobileManipulatorAR : MonoBehaviour
         }
     }
 
+    private IEnumerator DisableObstacleDisplay(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        obstacleDisplay.SetActive(false);
+    }
+
     private void trajectoryReceived(Vector3[] waypoints)
     {
         drawWaypoints.DrawLine(
             "mm-trajectory",
             waypoints
         );
+    }
+
+    private bool CheckObstacleDistance()
+    {
+        bool leftClose = false;
+        bool rightClose = false;
+        for (int i = 0; i < laser.Directions.Length; ++i)
+        {
+            if (
+                laser.Directions[i] < -0.7854f
+                && laser.ObstacleRanges[i] < 0.8f
+            )
+            {
+                leftClose = true;
+            }
+
+            if (
+                laser.Directions[i] > 0.7854f
+                && laser.ObstacleRanges[i] < 0.8f
+            )
+            {
+                rightClose = true;
+            }
+        }
+
+        return leftClose && rightClose;
     }
 
     private void OnChangeVisibility()
