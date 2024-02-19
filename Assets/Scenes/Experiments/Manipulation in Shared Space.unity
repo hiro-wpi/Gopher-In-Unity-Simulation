@@ -211,7 +211,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &13135396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1607,7 +1607,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &133213209
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4733,7 +4733,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &420675244
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6584,7 +6584,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &580281361
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7255,6 +7255,7 @@ GameObject:
   - component: {fileID: 646883588}
   - component: {fileID: 646883590}
   - component: {fileID: 646883589}
+  - component: {fileID: 646883591}
   m_Layer: 0
   m_Name: Arm Autonomy
   m_TagString: Untagged
@@ -7303,6 +7304,7 @@ MonoBehaviour:
   collisionIcon: {fileID: 21300000, guid: be8aa7a88dd5a5c499bc64d84e6dfb6e, type: 3}
   warningUI: {fileID: 420675243}
   collisionUI: {fileID: 1864778941}
+  collisionCounter: 0
 --- !u!114 &646883590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7325,6 +7327,20 @@ MonoBehaviour:
   arGripper: {fileID: 2710091181654038673, guid: 735101cad7c4b704c802695827135a92, type: 3}
   hasNewGoal: 0
   robotName: GUI Gopher Manipulation
+--- !u!114 &646883591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 646883587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 804404bcbb40b6149afb8f008821c7b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  robotCollisionWarning: {fileID: 646883589}
+  graspingTask: {fileID: 1138942512}
 --- !u!1 &658298734
 GameObject:
   m_ObjectHideFlags: 0
@@ -8474,6 +8490,7 @@ MonoBehaviour:
   GUI: {fileID: 279664474}
   CUI: {fileID: 0}
   graphicalInterface: {fileID: 279664474}
+  taskDuration: 0
 --- !u!1 &777051855
 GameObject:
   m_ObjectHideFlags: 0
@@ -8630,6 +8647,7 @@ MonoBehaviour:
   collisionIcon: {fileID: 21300000, guid: be8aa7a88dd5a5c499bc64d84e6dfb6e, type: 3}
   warningUI: {fileID: 1478462440}
   collisionUI: {fileID: 30821300}
+  collisionCounter: 0
 --- !u!1 &797428868
 GameObject:
   m_ObjectHideFlags: 0
@@ -9576,6 +9594,7 @@ GameObject:
   - component: {fileID: 870054530}
   - component: {fileID: 870054532}
   - component: {fileID: 870054531}
+  - component: {fileID: 870054533}
   m_Layer: 0
   m_Name: Arm Autonomy
   m_TagString: Untagged
@@ -9624,6 +9643,7 @@ MonoBehaviour:
   collisionIcon: {fileID: 21300000, guid: be8aa7a88dd5a5c499bc64d84e6dfb6e, type: 3}
   warningUI: {fileID: 777051855}
   collisionUI: {fileID: 1675343977}
+  collisionCounter: 0
 --- !u!114 &870054532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9646,6 +9666,20 @@ MonoBehaviour:
   arGripper: {fileID: 2710091181654038673, guid: 735101cad7c4b704c802695827135a92, type: 3}
   hasNewGoal: 0
   robotName: Gopher Manipulation
+--- !u!114 &870054533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 870054529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 804404bcbb40b6149afb8f008821c7b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  robotCollisionWarning: {fileID: 870054531}
+  graspingTask: {fileID: 1650991239}
 --- !u!1 &898146227
 GameObject:
   m_ObjectHideFlags: 0
@@ -12033,15 +12067,19 @@ MonoBehaviour:
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
-    position: {x: -5.135, y: 0.8, z: -12.78}
+    position: {x: -5.135, y: 0.8, z: -12.85}
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
-    position: {x: -5.135, y: 0.8, z: -12.59}
+    position: {x: -5.135, y: 0.8, z: -12.725}
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
-    position: {x: -5.03, y: 0.8, z: -12.875}
+    position: {x: -5.085, y: 0.8, z: -12.915}
+    rotation: {x: -90, y: 0, z: 0}
+    trajectory: []
+  - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
+    position: {x: -5.045, y: 0.8, z: -12.85}
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   GoalObjectSpawnArray:
@@ -12051,12 +12089,13 @@ MonoBehaviour:
     trajectory: []
   robotSpawnArray:
   - gameObject: {fileID: 532813655233050276, guid: 5b5c87a75626e594cbfe7f06e3e6eedf, type: 3}
-    position: {x: -5.65, y: 0, z: -12.6}
+    position: {x: -5.65, y: 0, z: -12.65}
     rotation: {x: 0, y: 90, z: 0}
     trajectory: []
   GUI: {fileID: 1673669690}
   CUI: {fileID: 0}
   graphicalInterface: {fileID: 1673669690}
+  taskDuration: 0
 --- !u!4 &1138942513
 Transform:
   m_ObjectHideFlags: 0
@@ -17007,7 +17046,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TaskName: Manipulation Task in Shared Space
   TaskDescription: 
-  SceneName: ManipulationTask1
+  SceneName: ManipulationTask2
   StaticObjectSpawnArray: []
   DynamicObjectSpawnArray: []
   TaskObjectSpawnArray:
@@ -17016,15 +17055,19 @@ MonoBehaviour:
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
-    position: {x: -5.135, y: 0.8, z: -12.78}
+    position: {x: -5.135, y: 0.8, z: -12.85}
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
-    position: {x: -5.135, y: 0.8, z: -12.59}
+    position: {x: -5.135, y: 0.8, z: -12.725}
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
-    position: {x: -5.03, y: 0.8, z: -12.875}
+    position: {x: -5.085, y: 0.8, z: -12.915}
+    rotation: {x: -90, y: 0, z: 0}
+    trajectory: []
+  - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
+    position: {x: -5.045, y: 0.8, z: -12.85}
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   GoalObjectSpawnArray:
@@ -17034,12 +17077,13 @@ MonoBehaviour:
     trajectory: []
   robotSpawnArray:
   - gameObject: {fileID: 702946891374405994, guid: 820ec851419d8fc428d4a5a58a7a8ee5, type: 3}
-    position: {x: -5.65, y: 0, z: -12.6}
+    position: {x: -5.65, y: 0, z: -12.65}
     rotation: {x: 0, y: 90, z: 0}
     trajectory: []
   GUI: {fileID: 1228960755}
   CUI: {fileID: 0}
   graphicalInterface: {fileID: 1228960755}
+  taskDuration: 0
 --- !u!1 &1666640046
 GameObject:
   m_ObjectHideFlags: 0
@@ -17381,7 +17425,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1679904607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18641,7 +18685,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1864778942
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18710,6 +18754,7 @@ GameObject:
   - component: {fileID: 1876004537}
   - component: {fileID: 1876004539}
   - component: {fileID: 1876004538}
+  - component: {fileID: 1876004540}
   m_Layer: 0
   m_Name: Arm Autonomy
   m_TagString: Untagged
@@ -18758,6 +18803,7 @@ MonoBehaviour:
   collisionIcon: {fileID: 21300000, guid: be8aa7a88dd5a5c499bc64d84e6dfb6e, type: 3}
   warningUI: {fileID: 133213208}
   collisionUI: {fileID: 580281360}
+  collisionCounter: 0
 --- !u!114 &1876004539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18780,6 +18826,20 @@ MonoBehaviour:
   arGripper: {fileID: 2710091181654038673, guid: 735101cad7c4b704c802695827135a92, type: 3}
   hasNewGoal: 0
   robotName: Gopher Manipulation
+--- !u!114 &1876004540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1876004536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 804404bcbb40b6149afb8f008821c7b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  robotCollisionWarning: {fileID: 1876004538}
+  graspingTask: {fileID: 2021986352}
 --- !u!1 &1881570890
 GameObject:
   m_ObjectHideFlags: 0
@@ -20440,7 +20500,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TaskName: Manipulation Task in Shared Space
   TaskDescription: 
-  SceneName: ManipulationTask1
+  SceneName: ManipulationTask3
   StaticObjectSpawnArray: []
   DynamicObjectSpawnArray: []
   TaskObjectSpawnArray:
@@ -20449,15 +20509,19 @@ MonoBehaviour:
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
-    position: {x: -5.135, y: 0.8, z: -12.78}
+    position: {x: -5.135, y: 0.8, z: -12.85}
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
-    position: {x: -5.135, y: 0.8, z: -12.59}
+    position: {x: -5.135, y: 0.8, z: -12.725}
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
-    position: {x: -5.03, y: 0.8, z: -12.875}
+    position: {x: -5.085, y: 0.8, z: -12.915}
+    rotation: {x: -90, y: 0, z: 0}
+    trajectory: []
+  - gameObject: {fileID: 8478501330516704532, guid: ef9c1b2842e53474e850dba6cd645dce, type: 3}
+    position: {x: -5.045, y: 0.8, z: -12.85}
     rotation: {x: -90, y: 0, z: 0}
     trajectory: []
   GoalObjectSpawnArray:
@@ -20467,12 +20531,13 @@ MonoBehaviour:
     trajectory: []
   robotSpawnArray:
   - gameObject: {fileID: 702946891374405994, guid: 820ec851419d8fc428d4a5a58a7a8ee5, type: 3}
-    position: {x: -5.65, y: 0, z: -12.6}
+    position: {x: -5.65, y: 0, z: -12.65}
     rotation: {x: 0, y: 90, z: 0}
     trajectory: []
   GUI: {fileID: 1271351636}
   CUI: {fileID: 0}
   graphicalInterface: {fileID: 1271351636}
+  taskDuration: 0
 --- !u!4 &2021986353
 Transform:
   m_ObjectHideFlags: 0

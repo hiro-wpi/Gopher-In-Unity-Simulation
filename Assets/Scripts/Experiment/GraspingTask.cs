@@ -8,6 +8,8 @@ using UnityEngine;
 public class GraspingTask : Task 
 {
     [SerializeField] private GraphicalInterface graphicalInterface;
+    public float taskDuration;
+
     void Start()
     {
     }
@@ -44,6 +46,10 @@ public class GraspingTask : Task
             if (!goals[0].CheckIfObjectReachedGoal(taskObject))
                 return false;
         }
+
+        // Calculate and store the task duration
+        taskDuration = Time.time - startTime;
+
         goals[0].DisableGoalVisualEffect();
         graphicalInterface.AddLogInfo("Task Completed!");
         GUI.ShowPopUpMessage("Current Task Completed!");

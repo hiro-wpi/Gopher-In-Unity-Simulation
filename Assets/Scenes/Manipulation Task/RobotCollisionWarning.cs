@@ -22,6 +22,8 @@ public class RobotCollisionWarning : MonoBehaviour
     private GameObject robotBracelet;
     [SerializeField] private GameObject warningUI;
     [SerializeField] private GameObject collisionUI;
+    public int collisionCounter = 0;
+    private bool wasInCollision = false;  // New variable to track previous collision state
 
     private void Update()
     {
@@ -65,21 +67,70 @@ public class RobotCollisionWarning : MonoBehaviour
 
         }
 
+        // if (foreArmCollisionDetection != null && handCollisionDetection != null && smallForeArmCollisionDetection != null && smallHandCollisionDetection != null)
+        // {
+        //     if (foreArmCollisionDetection.onRobotCollision || handCollisionDetection.onRobotCollision) 
+        //     {
+        //         if (smallForeArmCollisionDetection.onRobotCollision || smallHandCollisionDetection.onRobotCollision)
+        //         {
+        //             // Hide the warning
+        //             HideWarningGameObject();
+        //             warningUI.SetActive(false);
+
+        //             // Show the collision
+        //             ShowCollisionGameObject();
+        //             collisionUI.SetActive(true);
+                    
+        //             // Increase the collision counter
+        //             collisionCounter++;
+        //         }
+
+        //         else
+        //         {
+        //             // Show the warning
+        //             ShowWarningGameObject();
+        //             warningUI.SetActive(true);
+
+        //             // Hide the collision
+        //             HideCollisionGameObject();
+        //             collisionUI.SetActive(false);
+        //         }
+        //     }
+            
+        //     else
+        //     {
+        //         // Hide the warning
+        //         HideWarningGameObject();
+        //         warningUI.SetActive(false);
+
+        //         // Hide the collision
+        //         HideCollisionGameObject();
+        //         collisionUI.SetActive(false);
+        //     } 
+        // }
+
         if (foreArmCollisionDetection != null && handCollisionDetection != null && smallForeArmCollisionDetection != null && smallHandCollisionDetection != null)
         {
-            if (foreArmCollisionDetection.onRobotCollision || handCollisionDetection.onRobotCollision) 
+            bool isInCollision = foreArmCollisionDetection.onRobotCollision || handCollisionDetection.onRobotCollision;
+
+            if (isInCollision)
             {
                 if (smallForeArmCollisionDetection.onRobotCollision || smallHandCollisionDetection.onRobotCollision)
                 {
-                    // Hide the warning
-                    HideWarningGameObject();
-                    warningUI.SetActive(false);
+                    if (!wasInCollision)  // Check if entering the collision state
+                    {
+                        // Hide the warning
+                        HideWarningGameObject();
+                        warningUI.SetActive(false);
 
-                    // Show the collision
-                    ShowCollisionGameObject();
-                    collisionUI.SetActive(true);
+                        // Show the collision
+                        ShowCollisionGameObject();
+                        collisionUI.SetActive(true);
+
+                        // Increase the collision counter
+                        collisionCounter++;
+                    }
                 }
-
                 else
                 {
                     // Show the warning
@@ -91,18 +142,22 @@ public class RobotCollisionWarning : MonoBehaviour
                     collisionUI.SetActive(false);
                 }
             }
-            
             else
             {
-                // Hide the warning
-                HideWarningGameObject();
-                warningUI.SetActive(false);
+                if (wasInCollision)  // Check if leaving the collision state
+                {
+                    // Hide the warning
+                    HideWarningGameObject();
+                    warningUI.SetActive(false);
 
-                // Hide the collision
-                HideCollisionGameObject();
-                collisionUI.SetActive(false);
-            } 
-        }
+                    // Hide the collision
+                    HideCollisionGameObject();
+                    collisionUI.SetActive(false);
+                }
+            }
+
+            wasInCollision = isInCollision;  // Update the previous collision state
+        }       
     }
 
     private void CreateWarningGameObject(Transform parent)

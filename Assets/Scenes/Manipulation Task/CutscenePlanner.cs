@@ -28,14 +28,14 @@ public class CutscenePlanner : MonoBehaviour
     private float holdTimer = 0.0f;
     private float holdDuration = 0.5f;
     private float waitTimer = 0.0f;
-    private float waitDuration = 2.0f;
+    private float waitDuration = 1.0f;
     private float raiseTimer = 0.0f;
-    private float raiseDuration = 1.5f;
+    private float raiseDuration = 1.0f;
     private float eyeARTimer = 0.0f;
-    private float eyeARDuration = 2.0f;
+    private float eyeARDuration = 1.5f;
 
     private float headTurnSpeed = 10.0f;
-    private float armMoveSpeed = 0.3f; 
+    private float armMoveSpeed = 0.4f; 
     private int currentMedicineIndex = 0;
 
     private enum CutsceneState
