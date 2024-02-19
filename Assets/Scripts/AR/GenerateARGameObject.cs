@@ -38,9 +38,16 @@ public class GenerateARGameObject : MonoBehaviour
         float transparency = 0.5f
     )
     {
-        GameObject arObject = GameObject.Instantiate(arObjectPrefab);
+        GameObject arObject = Instantiate(arObjectPrefab);
         arObject.tag = "ARObject";
         arObject.layer = LayerMask.NameToLayer("ARObject");
+        for (int i = 0; i < arObject.transform.childCount; i++)
+        {
+            GameObject child = arObject.transform.GetChild(i).gameObject;
+            child.tag = "ARObject";
+            child.layer = LayerMask.NameToLayer("ARObject");
+        }
+
         if (Highlights.ContainsKey(gameObject))
         {
             Highlights[gameObject].Add(arObject);
