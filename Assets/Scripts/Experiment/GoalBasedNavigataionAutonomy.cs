@@ -78,12 +78,16 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     // public GameObject[] graspableMeds;
     public List<GameObject> graspableMeds = new List<GameObject>();
 
-    public List<bool> patientMissingMeds = new List<bool>{false, true, false, false}; 
+    public List<bool> patientMissingMeds = new List<bool>{false, true, false, false}; // which patients are missing meds. true = missing meds
+    public List<string> patientMissingMedsColors = new List<string>{"None", "None", "None", "None"}; 
 
     [SerializeField] private GameObject[] patientMedGameObjects;  // 0 load missing meds, 1 load all meds
 
     private GameObject pluckedMed;
     public bool reverseCheckingOrder = false;
+
+    public float simSpeed = 2.0f;
+
 
     // Pause and Resume Automation
 
@@ -101,6 +105,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = simSpeed;
+
         if(reverseCheckingOrder)
         {
             currentpatient = patient.patient4;
@@ -217,8 +223,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
                 state = State.Checkpatient;
 
-                // StartCoroutine(askQuestionGUI.HandleTimingQuestions());
-
                 // askQuestionGUI.AskQuestion(1, 14f);
 
                 // if(!reverseCheckingOrder)
@@ -294,7 +298,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     graphicalInterface.AddLogInfo("Arrived at destination");
                     graphicalInterface.AddLogInfo("Retrieving medicine");    
                     
-                    SetArmToMedTarget();
+                    // SetArmToMedTarget();
+                    SetArmToMedTarget(patientMissingMedsColors[(int)currentpatient]);
                     // askQuestionGUI.AskQuestion(7, 0.5f);
                     state = State.GetMedicine;
                 }
@@ -309,7 +314,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     // Debug.Log("Got Medicine");
                     graphicalInterface.AddLogInfo("Medicine in posession");
                     graphicalInterface.AddLogInfo("Delivering medicine to patient");
-                    arManipAuto.HomeJoints();
+                    // arManipAuto.HomeJoints();
                     posTraj = new List<Vector3>(transfereWaypointPositions);
                     rotTraj = new List<Vector3>(transferWaypointRotations);
                     posTraj.Add(patientPosition[(int)currentpatient]);
@@ -622,6 +627,28 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         List<Vector3> positions = new List<Vector3>{hoverTransform.position, graspingTransform.position, hoverTransform.position};
         List<Quaternion> rotations = new List<Quaternion>{hoverTransform.rotation, graspingTransform.rotation, hoverTransform.rotation};
         List<int> gripperActions = new List<int>{-1, 1, -1};
+        // SetArmTarget(med);
+        arManipAuto.SetArmWaypoints(positions, rotations, gripperActions);
+    }
+
+    private void SetArmToMedTarget(string color)
+    {
+        // pluckedMed = PickGraspableMed();
+        pluckedMed = PickGraspableMed(color);
+
+        
+
+        var (hoverTransform, graspingTransform) = arManipAuto.GetHoverAndGraspTransforms(pluckedMed);
+
+        // Create a location that is close to the home position
+        GameObject homeEE = new GameObject("EEHomePosition");
+        homeEE.transform.parent = robot.transform;
+        homeEE.transform.localPosition = new Vector3(-0.085f, 0.75f, 0.45f);
+        homeEE.transform.rotation = hoverTransform.rotation;
+
+        List<Vector3> positions = new List<Vector3>{hoverTransform.position, graspingTransform.position, hoverTransform.position, homeEE.transform.position};
+        List<Quaternion> rotations = new List<Quaternion>{hoverTransform.rotation, graspingTransform.rotation, hoverTransform.rotation, homeEE.transform.rotation};
+        List<int> gripperActions = new List<int>{-1, 1, -1, -1};
         // SetArmTarget(med);
         arManipAuto.SetArmWaypoints(positions, rotations, gripperActions);
     }

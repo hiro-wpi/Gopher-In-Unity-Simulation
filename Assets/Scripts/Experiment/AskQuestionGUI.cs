@@ -127,7 +127,7 @@ public class AskQuestionGUI : MonoBehaviour
 
         initNavigationTaskConfig();
         
-        StartCoroutine(HandleTimingQuestions());
+        // StartCoroutine(HandleTimingQuestions());
     }
 
     private void Update()
@@ -406,7 +406,8 @@ public class AskQuestionGUI : MonoBehaviour
                 // Reversed = false; -> Normal
                 navigationTask.reverseCheckingOrder = false;
                 // MissingPatientMeds = 1001
-                navigationTask.patientMissingMeds = new List<bool>{true, false, false, true};
+                navigationTask.patientMissingMeds = new List<bool>{false, true, false, true};
+                navigationTask.patientMissingMedsColors = new List<string>{"None", "Blue", "None", "Yellow"};
                 break;
             case Configuration.Config2:
                 SetupConfig2();
@@ -414,7 +415,8 @@ public class AskQuestionGUI : MonoBehaviour
                 // Reversed = false; -> Normal
                 navigationTask.reverseCheckingOrder = false;
                 // MissingPatientMeds = 0110
-                navigationTask.patientMissingMeds = new List<bool>{false, true, true, false};
+                navigationTask.patientMissingMeds = new List<bool>{true, false, true, false};
+                navigationTask.patientMissingMedsColors = new List<string>{"Red", "None", "Blue", "None"};
                 break;
             case Configuration.Config3:
                 SetupCongig3();
@@ -422,7 +424,8 @@ public class AskQuestionGUI : MonoBehaviour
                 // Reversed = true;
                 navigationTask.reverseCheckingOrder = true;
                 // MissingPatientMeds = 0101
-                navigationTask.patientMissingMeds = new List<bool>{false, true, false, true};
+                navigationTask.patientMissingMeds = new List<bool>{false, true, true, false};
+                navigationTask.patientMissingMedsColors = new List<string>{"None", "Red", "Yellow", "None"};
                 break;
         }
     }

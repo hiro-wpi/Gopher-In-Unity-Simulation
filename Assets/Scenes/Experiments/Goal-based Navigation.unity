@@ -913,7 +913,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.093333334
+  m_VoxelSize: 0.083333336
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
@@ -2696,7 +2696,7 @@ MonoBehaviour:
   - {x: -10.85, y: 0.1, z: 7.8}
   - {x: -10.85, y: 0.1, z: 4.4}
   - {x: -10.85, y: 0.1, z: 1.42}
-  - {x: -10.85, y: 0.1, z: -2}
+  - {x: -10.85, y: 0.1, z: -1.75}
   patientRotations:
   - {x: 0, y: -90, z: 0}
   - {x: 0, y: -90, z: 0}
@@ -2713,11 +2713,18 @@ MonoBehaviour:
   transferReturnWaypointRotations:
   - {x: 0, y: 90, z: 0}
   - {x: 0, y: 90, z: 0}
-  patientMissingMeds: 00010001
+  graspableMeds: []
+  patientMissingMeds: 00000000
+  patientMissingMedsColors:
+  - None
+  - None
+  - None
+  - None
   patientMedGameObjects:
   - {fileID: 5931222874406895172, guid: 8a224b3a9f0312c418b51fc9c8daf0b7, type: 3}
   - {fileID: 1301469043717798922, guid: 1378e3e5e04df4f4cac79eda43433921, type: 3}
-  reverseCheckingOrder: 1
+  reverseCheckingOrder: 0
+  simSpeed: 2
 --- !u!114 &272281206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5277,7 +5284,7 @@ MonoBehaviour:
   - {x: -10.85, y: 0.1, z: 7.8}
   - {x: -10.85, y: 0.1, z: 4.4}
   - {x: -10.85, y: 0.1, z: 1.42}
-  - {x: -10.85, y: 0.1, z: -2}
+  - {x: -10.85, y: 0.1, z: -1.75}
   patientRotations:
   - {x: 0, y: -90, z: 0}
   - {x: 0, y: -90, z: 0}
@@ -5294,11 +5301,18 @@ MonoBehaviour:
   transferReturnWaypointRotations:
   - {x: 0, y: 90, z: 0}
   - {x: 0, y: 90, z: 0}
-  patientMissingMeds: 01000001
+  graspableMeds: []
+  patientMissingMeds: 00000000
+  patientMissingMedsColors:
+  - None
+  - None
+  - None
+  - None
   patientMedGameObjects:
   - {fileID: 5931222874406895172, guid: 8a224b3a9f0312c418b51fc9c8daf0b7, type: 3}
   - {fileID: 1301469043717798922, guid: 1378e3e5e04df4f4cac79eda43433921, type: 3}
   reverseCheckingOrder: 0
+  simSpeed: 2
 --- !u!114 &416695944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11867,7 +11881,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.093333334
+  m_VoxelSize: 0.083333336
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
@@ -19258,7 +19272,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.093333334
+  m_VoxelSize: 0.083333336
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
@@ -21452,7 +21466,7 @@ MonoBehaviour:
   - {x: -10.85, y: 0.1, z: 7.8}
   - {x: -10.85, y: 0.1, z: 4.4}
   - {x: -10.85, y: 0.1, z: 1.42}
-  - {x: -10.85, y: 0.1, z: -2}
+  - {x: -10.85, y: 0.1, z: -1.75}
   patientRotations:
   - {x: 0, y: -90, z: 0}
   - {x: 0, y: -90, z: 0}
@@ -21469,11 +21483,18 @@ MonoBehaviour:
   transferReturnWaypointRotations:
   - {x: 0, y: 90, z: 0}
   - {x: 0, y: 90, z: 0}
+  graspableMeds: []
   patientMissingMeds: 00000000
+  patientMissingMedsColors:
+  - None
+  - None
+  - None
+  - None
   patientMedGameObjects:
   - {fileID: 5931222874406895172, guid: 8a224b3a9f0312c418b51fc9c8daf0b7, type: 3}
   - {fileID: 1301469043717798922, guid: 1378e3e5e04df4f4cac79eda43433921, type: 3}
   reverseCheckingOrder: 0
+  simSpeed: 2
 --- !u!114 &1964184700
 MonoBehaviour:
   m_ObjectHideFlags: 0

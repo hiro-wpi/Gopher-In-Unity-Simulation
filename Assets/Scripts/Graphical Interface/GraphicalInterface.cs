@@ -222,11 +222,11 @@ public class GraphicalInterface : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.H)) 
             ChangeHelpDisplay();
         // minimap
-        if(Input.GetKeyDown(KeyCode.M))
-            if (Input.GetKey(KeyCode.LeftShift))
-                ChangeMinimapView();
-            else
-                ZoomMap();
+        // if(Input.GetKeyDown(KeyCode.M))
+        //     if (Input.GetKey(KeyCode.LeftShift))
+        //         ChangeMinimapView();
+        //     else
+        //         ZoomMap();
         // map navigation
         if (displayMapInMain && autoNavigation != null &&
             Input.GetMouseButtonDown(0))
@@ -317,7 +317,7 @@ public class GraphicalInterface : MonoBehaviour
         //     return;
         // taskDescriptionPanelText.text = currentTask.TaskDescription;
         taskStatusPanelText.text = "Task Duration: " 
-                                 + string.Format("{0:0.00}", currentTask.GetTaskDuration()) + " s."
+                                 + string.Format("{0:0.00}", (currentTask.GetTaskDuration())/Time.timeScale) + " s."
                                  + "\n\n"
                                  + "Current Task Status: " + "\n"
                                  + currentTask.GetTaskStatus();
