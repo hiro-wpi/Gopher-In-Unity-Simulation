@@ -15,13 +15,31 @@ public class ManipulationTaskDataRecorder : MonoBehaviour
     private void Update()
     {
         // if the task is completed, print the task duration and the number of collisions
-        if (!isDataRecorded && graspingTask.CheckTaskCompletion())
+        if (graspingTask.CheckTaskCompletion())
+        {
+            RecordData();
+        }
+    }
+
+    void OnDestroy()
+    {
+        RecordData();
+    }
+
+    private void RecordData()
+    {
+        if (!isDataRecorded)
         {
             isDataRecorded = true;
-            dataString = "Completion Time: " + graspingTask.taskDuration + " seconds, Number of Collisions: " + robotCollisionWarning.collisionCounter;
+            dataString = "Completion Time, Number of Collisions\n" + graspingTask.taskDuration + "," + robotCollisionWarning.collisionCounter;
             Debug.Log(dataString);
+
             textWriter = new StreamWriter(fileName + "_manipulation_task.csv", false);
             textWriter.WriteLine(dataString);
+            textWriter.Close();
+
+            textWriter = new StreamWriter(fileName + "_manipulation_task_collision.csv", false);
+            textWriter.WriteLine(robotCollisionWarning.collisionReport);
             textWriter.Close();
         }
     }

@@ -23,6 +23,7 @@ public class RobotCollisionWarning : MonoBehaviour
     [SerializeField] private GameObject warningUI;
     [SerializeField] private GameObject collisionUI;
     public int collisionCounter = 0;
+    public string collisionReport = "";
     private bool wasInCollision = false;  // New variable to track previous collision state
 
     private void Update()
@@ -129,8 +130,30 @@ public class RobotCollisionWarning : MonoBehaviour
 
                         // Increase the collision counter
                         collisionCounter++;
+
+                        // Add to the collision report
+                        string name;
+                        if (smallForeArmCollisionDetection.onRobotCollision)
+                        {
+                            name = smallForeArmCollisionDetection.collisionName;
+                        }
+                        else
+                        {
+                            name = smallHandCollisionDetection.collisionName;
+                        }
+                        if (collisionReport == "")
+                        {
+                            collisionReport = Time.realtimeSinceStartup.ToString() + "," + name;
+                        }
+                        else
+                        {
+                            collisionReport += "\n" + Time.realtimeSinceStartup.ToString() + "," + name;
+                        }
                     }
+
+                    wasInCollision = true;
                 }
+
                 else
                 {
                     // Show the warning
@@ -140,8 +163,12 @@ public class RobotCollisionWarning : MonoBehaviour
                     // Hide the collision
                     HideCollisionGameObject();
                     collisionUI.SetActive(false);
+
+                    wasInCollision = false;
                 }
+
             }
+
             else
             {
                 if (wasInCollision)  // Check if leaving the collision state
@@ -154,9 +181,9 @@ public class RobotCollisionWarning : MonoBehaviour
                     HideCollisionGameObject();
                     collisionUI.SetActive(false);
                 }
-            }
 
-            wasInCollision = isInCollision;  // Update the previous collision state
+                wasInCollision = false;
+            }
         }       
     }
 
