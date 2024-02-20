@@ -1,7 +1,9 @@
 // using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Policy;
+using Assimp.Unmanaged;
 using Unity.XR.CoreUtils;
 
 
@@ -74,7 +76,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     private GameObject[] patientMedCarts;
 
     // public GameObject[] graspableMeds;
-    private List<GameObject> graspableMeds = new List<GameObject>();
+    public List<GameObject> graspableMeds = new List<GameObject>();
 
     public List<bool> patientMissingMeds = new List<bool>{false, true, false, false}; 
 
@@ -563,7 +565,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         );
     }
 
-    private GameObject ChooseMedToPickUp()
+    private GameObject PickGraspableMed()
     {
         // Get a med
         GameObject med = graspableMeds[0];
@@ -579,10 +581,42 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         return med;
     }
 
+    private GameObject PickGraspableMed(string color)
+    {
+        // Get a med
+        foreach(GameObject med in graspableMeds)
+        {
+            if(med.name.Contains(color))
+            {
+                // Remvove the med from the list
+                graspableMeds.Remove(med);
+
+                // Generate AR for the nearest med
+                GenerateARForMed(med);
+                return med;
+            }
+        }
+
+        Debug.LogWarning("Medicine with color not found, will return another medicine");
+        
+        GameObject med_alt = graspableMeds[0];
+
+        // Remvove the med from the list
+        graspableMeds.Remove(med_alt);
+
+        // Generate AR for the nearest med
+        GenerateARForMed(med_alt);
+
+        return med_alt;
+    }
+
+    
+
 
     private void SetArmToMedTarget()
     {
-        pluckedMed = ChooseMedToPickUp();
+        // pluckedMed = PickGraspableMed();
+        pluckedMed = PickGraspableMed("Red");
 
         var (hoverTransform, graspingTransform) = arManipAuto.GetHoverAndGraspTransforms(pluckedMed);
         List<Vector3> positions = new List<Vector3>{hoverTransform.position, graspingTransform.position, hoverTransform.position};
