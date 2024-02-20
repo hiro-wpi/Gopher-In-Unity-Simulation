@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.IO;
 
 /// <summary>
 /// Handles the GUI for asking questions to the user, and getting their responses recorded
@@ -45,8 +46,6 @@ public class AskQuestionGUI : MonoBehaviour
     private float simStartTime = 0.0f;   // Get the simulation time when the question was asked
     private float realStartTime = 0.0f;  // Get the the time when we start asking the question
 
-    
-
     // Log GUI
 
     public enum Configuration
@@ -69,6 +68,9 @@ public class AskQuestionGUI : MonoBehaviour
     public List<List<float>> questionairOrder = new List<List<float>>(); // List of questions and answers
     // list<float> will have the simulation time to ask the question, and the question number
     private float simStartDelay = 3.0f;  // Delay before the simulation starts
+
+    public string fileName;
+    private TextWriter textWriter;
 
     // States
 
@@ -362,17 +364,34 @@ public class AskQuestionGUI : MonoBehaviour
 
         yield return new WaitUntil(() => isSimPaused == false);
         // Debug.Log("Responses: ");
+        LogResponse();
+    }
+
+    public void LogResponse()
+    {
         string responseString = "";
         // Add which configuration we are using
-        responseString += "GUI: " + gui + "\n";
-        responseString += "Configuration: " + config + "\n";
+        responseString += "GUI: ," + gui + "\n";
+        responseString += "Configuration: ," + config + "\n\n";
         
+        responseString += "Start Time, Duration, Question, Response\n";
+
         foreach(List<float> response in responses)
         {
-            responseString += "Sim Start Time: " + (response[0]-3f) + ", Real Duration: " + response[1] + ", Question: " + response[2] + ", Response: " + response[3] + "\n";
+            // responseString += "Sim Start Time: " + (response[0]-3f) + ", Real Duration: " + response[1] + ", Question: " + response[2] + ", Response: " + response[3] + "\n";
+            responseString += response[0] + ", " + response[1] + ", " + response[2] + ", " + (response[3]+1) + "\n";
         }
 
-        Debug.Log(responseString);
+        textWriter = new StreamWriter(fileName + "_navigation_task.csv", false);
+        textWriter.WriteLine(responseString);
+        textWriter.Close();
+
+        // Debug.Log(responseString);
+    }
+
+    void OnDestroy()
+    {
+        LogResponse();
     }
 
     public void initNavigationTaskConfig()
