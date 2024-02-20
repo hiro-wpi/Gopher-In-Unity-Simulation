@@ -203,7 +203,7 @@ public class GraphicalInterface : MonoBehaviour
     void Update()
     {
         // Timer
-        timerPanelText.text = Time.unscaledTime.ToString("0.0");
+        timerPanelText.text = Time.realtimeSinceStartup.ToString("0.00");
         // FPS
         FPSCount += 1;
         FPSSum += 1.0f / Time.deltaTime;
