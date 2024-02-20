@@ -70,18 +70,13 @@ public class TaskRunner : MonoBehaviour
             taskStarted = true;
 
             // Start recording
-            string recordFolder =
-                Application.dataPath
-                + "/Data/";
+            string recordFolder = Application.dataPath + "/Data/";
             if (!Directory.Exists(recordFolder))
             {
                 Directory.CreateDirectory(recordFolder);
             }
             recorder.StartRecording(
-                recordFolder
-                + task.TaskName
-                + "_"
-                + DateTime.Now.ToString("MM-dd HH-mm-ss"),
+                recordFolder + task.TaskName,
                 task
             );
 
