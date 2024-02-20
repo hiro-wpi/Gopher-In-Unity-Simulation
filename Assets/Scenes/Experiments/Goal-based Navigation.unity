@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17276844, g: 0.21589246, b: 0.2978263, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -475,7 +475,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &46239019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6307,6 +6307,7 @@ GameObject:
   m_Component:
   - component: {fileID: 549620247}
   - component: {fileID: 549620248}
+  - component: {fileID: 549620249}
   m_Layer: 5
   m_Name: Config3
   m_TagString: Untagged
@@ -6355,6 +6356,21 @@ MonoBehaviour:
   answerDPanel: {fileID: 1188009628}
   config: 2
   gui: 1
+  eyeTracking: {fileID: 549620249}
+  fileName: AR
+--- !u!114 &549620249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 549620246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f514777e69e894b95a325d01595c51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Pixel: {x: 0, y: 0}
   fileName: AR
 --- !u!1 &550526386
 GameObject:
@@ -7012,6 +7028,7 @@ GameObject:
   m_Component:
   - component: {fileID: 608779718}
   - component: {fileID: 608779719}
+  - component: {fileID: 608779720}
   m_Layer: 5
   m_Name: 'Config2 '
   m_TagString: Untagged
@@ -7060,6 +7077,21 @@ MonoBehaviour:
   answerDPanel: {fileID: 1188009628}
   config: 1
   gui: 1
+  eyeTracking: {fileID: 608779720}
+  fileName: AR
+--- !u!114 &608779720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 608779717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f514777e69e894b95a325d01595c51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Pixel: {x: 0, y: 0}
   fileName: AR
 --- !u!1 &613521058
 GameObject:
@@ -10801,6 +10833,7 @@ GameObject:
   m_Component:
   - component: {fileID: 921506929}
   - component: {fileID: 921506930}
+  - component: {fileID: 921506931}
   m_Layer: 5
   m_Name: Config3
   m_TagString: Untagged
@@ -10849,6 +10882,21 @@ MonoBehaviour:
   answerDPanel: {fileID: 749572757}
   config: 2
   gui: 0
+  eyeTracking: {fileID: 921506931}
+  fileName: GUI
+--- !u!114 &921506931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 921506928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f514777e69e894b95a325d01595c51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Pixel: {x: 0, y: 0}
   fileName: GUI
 --- !u!1 &922538796
 GameObject:
@@ -11603,6 +11651,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1042322627}
   - component: {fileID: 1042322628}
+  - component: {fileID: 1042322629}
   m_Layer: 5
   m_Name: Config3
   m_TagString: Untagged
@@ -11651,6 +11700,21 @@ MonoBehaviour:
   answerDPanel: {fileID: 318957892}
   config: 2
   gui: 2
+  eyeTracking: {fileID: 1042322629}
+  fileName: GUI_AR
+--- !u!114 &1042322629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1042322626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f514777e69e894b95a325d01595c51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Pixel: {x: 0, y: 0}
   fileName: GUI_AR
 --- !u!1 &1050560555
 GameObject:
@@ -11982,6 +12046,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1069873754}
   - component: {fileID: 1069873755}
+  - component: {fileID: 1069873756}
   m_Layer: 5
   m_Name: Config1
   m_TagString: Untagged
@@ -12030,6 +12095,21 @@ MonoBehaviour:
   answerDPanel: {fileID: 749572757}
   config: 0
   gui: 0
+  eyeTracking: {fileID: 1069873756}
+  fileName: GUI
+--- !u!114 &1069873756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1069873753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f514777e69e894b95a325d01595c51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Pixel: {x: 0, y: 0}
   fileName: GUI
 --- !u!1 &1089257540
 GameObject:
@@ -12041,6 +12121,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1089257541}
   - component: {fileID: 1089257542}
+  - component: {fileID: 1089257543}
   m_Layer: 5
   m_Name: Config1
   m_TagString: Untagged
@@ -12089,6 +12170,21 @@ MonoBehaviour:
   answerDPanel: {fileID: 318957892}
   config: 0
   gui: 2
+  eyeTracking: {fileID: 1089257543}
+  fileName: GUI_AR
+--- !u!114 &1089257543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1089257540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f514777e69e894b95a325d01595c51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Pixel: {x: 0, y: 0}
   fileName: GUI_AR
 --- !u!1 &1089883546
 GameObject:
@@ -15456,6 +15552,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1482878756}
   - component: {fileID: 1482878757}
+  - component: {fileID: 1482878758}
   m_Layer: 5
   m_Name: 'Config2 '
   m_TagString: Untagged
@@ -15504,6 +15601,21 @@ MonoBehaviour:
   answerDPanel: {fileID: 318957892}
   config: 1
   gui: 2
+  eyeTracking: {fileID: 1482878758}
+  fileName: GUI_AR
+--- !u!114 &1482878758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482878755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f514777e69e894b95a325d01595c51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Pixel: {x: 0, y: 0}
   fileName: GUI_AR
 --- !u!1 &1485314562
 GameObject:
@@ -16509,6 +16621,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1537716350}
   - component: {fileID: 1537716351}
+  - component: {fileID: 1537716352}
   m_Layer: 5
   m_Name: 'Config2 '
   m_TagString: Untagged
@@ -16557,6 +16670,21 @@ MonoBehaviour:
   answerDPanel: {fileID: 749572757}
   config: 1
   gui: 0
+  eyeTracking: {fileID: 1537716352}
+  fileName: GUI
+--- !u!114 &1537716352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1537716349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f514777e69e894b95a325d01595c51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Pixel: {x: 0, y: 0}
   fileName: GUI
 --- !u!1 &1538371428
 GameObject:
@@ -22030,6 +22158,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2134079127}
   - component: {fileID: 2134079128}
+  - component: {fileID: 2134079129}
   m_Layer: 5
   m_Name: Config1
   m_TagString: Untagged
@@ -22078,6 +22207,21 @@ MonoBehaviour:
   answerDPanel: {fileID: 1188009628}
   config: 0
   gui: 1
+  eyeTracking: {fileID: 2134079129}
+  fileName: AR
+--- !u!114 &2134079129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2134079126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f514777e69e894b95a325d01595c51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Pixel: {x: 0, y: 0}
   fileName: AR
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

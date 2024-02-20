@@ -69,6 +69,7 @@ public class AskQuestionGUI : MonoBehaviour
     // list<float> will have the simulation time to ask the question, and the question number
     private float simStartDelay = 3.0f;  // Delay before the simulation starts
 
+    [SerializeField] private EyeTrackingNavigation eyeTracking;
     public string fileName;
     private TextWriter textWriter;
 
@@ -279,7 +280,7 @@ public class AskQuestionGUI : MonoBehaviour
                 }
 
             }
-            catch(System.Exception e)
+            catch
             {
                 // If we can add the text, hide the answer panel
                 if(i == 0)
@@ -365,6 +366,7 @@ public class AskQuestionGUI : MonoBehaviour
         yield return new WaitUntil(() => isSimPaused == false);
         // Debug.Log("Responses: ");
         LogResponse();
+        eyeTracking.LogResponse();
     }
 
     public void LogResponse()
