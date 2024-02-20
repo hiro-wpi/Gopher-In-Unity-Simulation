@@ -2309,8 +2309,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberOfWaypoints: 5
-  cartesianSpeed: 0.2
-  jointSpeed: 0.5
+  cartesianSpeed: 0.4
+  jointSpeed: 1
   forwardKinematics: {fileID: 5915472104543767608}
   inverseKinematics: {fileID: 7628781304563526181}
 --- !u!1 &404627483431758287
@@ -8869,8 +8869,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberOfWaypoints: 5
-  cartesianSpeed: 0.2
-  jointSpeed: 0.5
+  cartesianSpeed: 0.4
+  jointSpeed: 1
   forwardKinematics: {fileID: 7354815183373339855}
   inverseKinematics: {fileID: 7939491165433940371}
 --- !u!1 &890962698427272579
@@ -12714,8 +12714,8 @@ MonoBehaviour:
   baseController: {fileID: 7628781304040955774}
   agent: {fileID: 7311777528451885136}
   purePursuitPlanner: {fileID: 1261662524339753221}
-  maxLinearSpeed: 2
-  maxAngularSpeed: 90
+  maxLinearSpeed: 4
+  maxAngularSpeed: 135
 --- !u!114 &1261662524339753221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12735,7 +12735,7 @@ MonoBehaviour:
   lookAheadDistance: 0.5
   positionTolerance: 0.2
   rotationTolerance: 2
-  Kp: 2
+  Kp: 3
   Kd: 0.1
 --- !u!1 &2577984059734556571
 GameObject:
