@@ -25,7 +25,7 @@ public class GraspingTask : Task
         if (Input.GetKeyDown(KeyCode.Space))
         {
             graphicalInterface.AddLogInfo("Task Started!");
-            startTime = Time.time;
+            startTime = Time.realtimeSinceStartup;
             taskStarted = true;
             return true;
         }
