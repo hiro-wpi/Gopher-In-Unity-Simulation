@@ -42,8 +42,10 @@ public class AskQuestionGUI : MonoBehaviour
 
     // Assume the first item in the list is the question, the rest are the answers
 
-    private float simStartTime = 0.0f;
-    private float realStartTime = 0.0f;
+    private float simStartTime = 0.0f;   // Get the simulation time when the question was asked
+    private float realStartTime = 0.0f;  // Get the the time when we start asking the question
+
+    
 
     // Log GUI
 
@@ -54,8 +56,6 @@ public class AskQuestionGUI : MonoBehaviour
         Config3
     }
 
-    public Configuration config = Configuration.Config1;
-    
     public enum GUI
     {
         Regular,
@@ -63,7 +63,12 @@ public class AskQuestionGUI : MonoBehaviour
         RegularAR
     }
 
+    public Configuration config = Configuration.Config1;
     public GUI gui = GUI.Regular;
+
+    public List<List<float>> questionairOrder = new List<List<float>>(); // List of questions and answers
+    // list<float> will have the simulation time to ask the question, and the question number
+    private float simStartDelay = 3.0f;  // Delay before the simulation starts
 
     // States
 
@@ -91,7 +96,7 @@ public class AskQuestionGUI : MonoBehaviour
         AddQuestion("[3] Does the robot have the medicine in hand?", new List<string> { "Yes", "No"});
         
         // [4] Can do it max 2 times, it can be only done when it picked up the medicine and is delivering it
-        AddQuestion("[4] Does the robot think it successfully picked up the medicine?", new List<string> { "Yes - The robot thinks it picked up the medicine", "No - the robot thinks it failed picking up the medicine"});
+        AddQuestion("[4] Does the robot think it has successfully picked up the medicine?", new List<string> { "Yes - The robot thinks it picked up the medicine", "No - the robot thinks it failed picking up the medicine"});
         
         // [5] Can do it max 1 times, it can be ran at any point in the simulation
         AddQuestion("[5] How many patients left does the robot need to check on?", new List<string> { "1", "2", "3", "4"});
@@ -339,7 +344,7 @@ public class AskQuestionGUI : MonoBehaviour
         // simStartTime
         // duration
         float duration = Time.realtimeSinceStartup - realStartTime;
-        responses.Add(new List<float> {simStartTime, duration, questionIndex, responseIndex});
+        responses.Add(new List<float> {realStartTime, duration, questionIndex, responseIndex});
     }
 
     public void SaveResponses()
@@ -369,11 +374,6 @@ public class AskQuestionGUI : MonoBehaviour
 
         Debug.Log(responseString);
     }
-
-
-    public List<List<float>> questionairOrder = new List<List<float>>(); // List of questions and answers
-    // list<float> will have the simulation time to ask the question, and the question number
-    private float simStartDelay = 3.0f;
 
     public void initNavigationTaskConfig()
     {
@@ -439,116 +439,11 @@ public class AskQuestionGUI : MonoBehaviour
         questionairOrder.Add(new List<float> { simTime + simStartDelay, questionNum });
     }
 
-    // List out the states from the goal based naviation autonomy scheulder
-    /*  
-        SetFirstPatient
-            [1]
-        CheckPatient
-            [2][5][6][10]
-        GoToPharmacy
-            [2]
-        GetMedicine
-            [7]
-        GoDDeliverMedicine
-            [3][4][11]
-        DropOffMedicine
-            [2][8][9][11][12]
-        ChangePatient
-        Done
-    */
-
-    // Config 1
-    public void SetupConfig2()
-    {
-        // Init Condition
-
-        // Add the questions to the questionairOrder
-
-        // Init Condition
-        // Reversed = false; -> Normal
-        // MissingPatientMeds = 0110
-
-        // List out the states from the goal based naviation autonomy scheulde
-
-        // Order of events ///////////////////////////
-
-        // Go to the first patient
-        // Check Patient 1 (Has Meds)
-        //   [10] after checking
-        // Check Patient 2 (Missing Meds)
-        //   [1]
-        // Go to Pharmacy
-        // Get Medicine (success picking up medicine)
-        //   [7]
-        // Go to Patient 2
-        // Drop off Medicine (success delivering medicine)
-        // Check Patient 3 (Missing Meds)
-        // Go to Pharmacy
-        // Get Medicine (success picking up medicine)
-        //   [12]
-        // Go to Patient 3
-        // Drop off Medicine (success delivering medicine)
-        // Check Patient 4 (Has Meds)
-        // Done
-
-        AddQuestionOrder(2, 25.09f);
-        AddQuestionOrder(10, 43.75f);
-        AddQuestionOrder(7, 88.5f);
-        AddQuestionOrder(8, 138.7f);
-        AddQuestionOrder(1, 155.78f);
-        AddQuestionOrder(9, 245.37f);
-    }
-
-    // Config 2
+    // Questions Setup for Goal Based Navigation Task
+    // TODO: Put this in a seperate file
+    
     public void SetupConfig1()
     {
-        // Add the questions to the questionairOrder
-
-        // Init Condition
-        // Reversed = false; -> Normal
-        // MissingPatientMeds = 1001
-
-        // List out the states from the goal based naviation autonomy scheulder
-        /*  
-            SetFirstPatient
-                [1]
-            CheckPatient
-                [2][5][6][10]
-            GoToPharmacy
-                [2]
-            GetMedicine
-                [7]
-            GoDDeliverMedicine
-                [3][4][11]
-            DropOffMedicine
-                [2][8][9][11][12]
-            ChangePatient
-            Done
-        */
-
-        // Order of events ///////////////////////////
-
-        // Go to the first patient
-        // Check Patient 1 (Missing Meds)
-        //   [2] - After checking
-        // Go to Pharmacy
-        // Get Medicine (failed picking up medicine)
-        // Go to Patient 1
-        //   [4] - Before delivering medicine
-        // Drop off Medicine (failed delivering medicine)
-        // Check Patient 2 (Has Meds)
-        //   [5]
-        // Check Patient 3 (Has Meds)
-        // Check Patient 4 (Missing Meds)
-        //   [10] - before checking patient 4
-        // Go to Pharmacy
-        //   [1]
-        // Get Medicine (success picking up medicine)
-        //   [11]
-        // Go to Patient 4
-        // Drop off Medicine (success delivering medicine)
-        // Done
-
         AddQuestionOrder(2, 34.56f);
         AddQuestionOrder(4, 83.06f);
         AddQuestionOrder(5, 138.91f);
@@ -557,37 +452,18 @@ public class AskQuestionGUI : MonoBehaviour
         AddQuestionOrder(11, 243.86f);
     }
 
-    // Config 3
+    public void SetupConfig2()
+    {
+        AddQuestionOrder(2, 25.09f);
+        AddQuestionOrder(10, 43.75f);
+        AddQuestionOrder(7, 88.5f);
+        AddQuestionOrder(8, 138.7f);
+        AddQuestionOrder(1, 155.78f);
+        AddQuestionOrder(9, 245.37f);
+    }
+
     public void SetupCongig3()
     {
-
-        // Init Condition
-        // Reversed = true;
-        // MissingPatientMeds = 0101
-
-        // Order of events ///////////////////////////
-
-        // Go to the first patient
-        //   [1] - Before the entrance
-        // Check Patient 4 (Missing meds)
-        //   [2] - After checking
-        // Go to Pharmacy
-        // Get Medicine (failed picking up medicine)
-        //   [7]
-        // Go to Patient 4
-        //   [3] - Before delivering medicine
-        // Drop off Medicine (failed delivering medicine)
-        //   [10]
-        // Check Patient 3 (Has Meds)
-        // Check Patient 2 (Missing Meds)
-        // Go to Pharmacy
-        // Get Medicine (success picking up medicine)
-        //   [11]
-        // Go to Patient 2
-        // Drop off Medicine (success delivering medicine)
-        // Check Patient 1 (Has Meds)
-        // Done
-
         AddQuestionOrder(1, 11.83f);
         AddQuestionOrder(2, 43.09f);
         AddQuestionOrder(7, 86.90f);
@@ -595,9 +471,4 @@ public class AskQuestionGUI : MonoBehaviour
         AddQuestionOrder(10, 146.55f);
         AddQuestionOrder(11, 228.5f);
     }
-
-
-    
-    
-
 }
