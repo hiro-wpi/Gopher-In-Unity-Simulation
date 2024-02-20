@@ -171,16 +171,13 @@ public class RobotCollisionWarning : MonoBehaviour
 
             else
             {
-                if (wasInCollision)  // Check if leaving the collision state
-                {
-                    // Hide the warning
-                    HideWarningGameObject();
-                    warningUI.SetActive(false);
+                // Hide the warning
+                HideWarningGameObject();
+                warningUI.SetActive(false);
 
-                    // Hide the collision
-                    HideCollisionGameObject();
-                    collisionUI.SetActive(false);
-                }
+                // Hide the collision
+                HideCollisionGameObject();
+                collisionUI.SetActive(false);
 
                 wasInCollision = false;
             }

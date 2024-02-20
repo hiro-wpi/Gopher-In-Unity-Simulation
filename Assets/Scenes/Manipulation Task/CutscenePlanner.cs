@@ -35,7 +35,7 @@ public class CutscenePlanner : MonoBehaviour
     private float eyeARDuration = 1.5f;
 
     private float headTurnSpeed = 10.0f;
-    private float armMoveSpeed = 0.4f; 
+    private float armMoveSpeed = 0.3f; 
     private int currentMedicineIndex = 0;
 
     private enum CutsceneState
@@ -199,7 +199,7 @@ public class CutscenePlanner : MonoBehaviour
             
             Destroy(eyeAR);
             Destroy(handAR);
-            
+
             currentMedicineIndex++;
 
             ikController.LookAtTarget(monitor.position, headSpeed);

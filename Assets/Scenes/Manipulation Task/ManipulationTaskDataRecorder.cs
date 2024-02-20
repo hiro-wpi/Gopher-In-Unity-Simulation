@@ -11,13 +11,18 @@ public class ManipulationTaskDataRecorder : MonoBehaviour
     private string dataString = "";
     public string fileName;
     private TextWriter textWriter;
+
+    private bool taskEnd = false;
     
     private void Update()
     {
-        // if the task is completed, print the task duration and the number of collisions
-        if (graspingTask.CheckTaskCompletion())
+        if (!taskEnd)
         {
-            RecordData();
+            if (graspingTask.CheckTaskCompletion())
+            {
+                taskEnd = true;
+                RecordData();
+            }
         }
     }
 
@@ -31,8 +36,9 @@ public class ManipulationTaskDataRecorder : MonoBehaviour
         if (!isDataRecorded)
         {
             isDataRecorded = true;
-            dataString = "Completion Time, Number of Collisions\n" + graspingTask.taskDuration + "," + robotCollisionWarning.collisionCounter;
+            dataString = "Completion Time, Number of Collisions\n" + graspingTask.GetTaskDuration() + "," + robotCollisionWarning.collisionCounter;
             Debug.Log(dataString);
+
 
             textWriter = new StreamWriter(fileName + "_manipulation_task.csv", false);
             textWriter.WriteLine(dataString);

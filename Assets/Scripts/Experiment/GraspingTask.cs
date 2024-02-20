@@ -40,6 +40,16 @@ public class GraspingTask : Task
     {
         if (robot == null)
             return false;
+
+        // Experiment control
+        // Left shift + Return
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Return))
+        {
+            graphicalInterface.AddLogInfo("Task Completed!");
+            GUI.ShowPopUpMessage("Current Task Completed!");
+            return true;
+        }
+
         // Check if all task objects reach the neighbor of the current goal
         foreach (GameObject taskObject in taskObjects)
         {
@@ -48,7 +58,7 @@ public class GraspingTask : Task
         }
 
         // Calculate and store the task duration
-        taskDuration = Time.time - startTime;
+        taskDuration = Time.realtimeSinceStartup - startTime;
 
         goals[0].DisableGoalVisualEffect();
         graphicalInterface.AddLogInfo("Task Completed!");

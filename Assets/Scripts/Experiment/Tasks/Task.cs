@@ -91,8 +91,11 @@ public abstract class Task : MonoBehaviour
         // Default - if robot moves more than 0.1m
         if ((robot.transform.position - robotStartPosition).magnitude > 0.1)
         {
-            startTime = Time.time;
-            taskStarted = true;
+            if (!taskStarted)
+            {
+                taskStarted = true;
+                startTime = Time.realtimeSinceStartup;
+            }
             return true;
         }
         else
@@ -107,7 +110,7 @@ public abstract class Task : MonoBehaviour
         if (!taskStarted)
             return 0;
         else
-            return Time.time - startTime;
+            return Time.realtimeSinceStartup - startTime;
     }
 
     // Check if the current task is done

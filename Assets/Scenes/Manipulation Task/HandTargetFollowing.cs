@@ -12,13 +12,13 @@ public class HandTargetFollowing : MonoBehaviour
 
     void Update()
     {
-        // // Set the left hand target to follow the left hand home
-        // leftHandTarget.position = leftHandHome.position;
+        // Set the left hand target to follow the left hand home
+        leftHandTarget.position = leftHandHome.position;
+
+        // // Set the left hand target to follow the left hand raise
+        // leftHandTarget.position = leftHandRaise.position;
 
         // Set the right hand target to follow the right hand home
         rightHandTarget.position = rightHandHome.position;
-
-        // Set the left hand target to follow the left hand raise
-        leftHandTarget.position = leftHandRaise.position;
     }
 }
