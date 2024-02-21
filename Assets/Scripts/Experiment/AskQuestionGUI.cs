@@ -17,8 +17,8 @@ public class AskQuestionGUI : MonoBehaviour
     private bool isSimPaused = false;
     [SerializeField] private GameObject guiBlocker;
 
-    private float waitTimer = 0.0f;
-    private float waitDuration = 5.0f;
+    // private float waitTimer = 0.0f;
+    // private float waitDuration = 5.0f;
     public AudioSource buzzSound;
 
     private bool allowResume = false;
@@ -69,7 +69,7 @@ public class AskQuestionGUI : MonoBehaviour
 
     public List<List<float>> questionairOrder = new List<List<float>>(); // List of questions and answers
     // list<float> will have the simulation time to ask the question, and the question number
-    private float simStartDelay = 3.0f;  // Delay before the simulation starts
+    // private float simStartDelay = 3.0f;  // Delay before the simulation starts
 
     [SerializeField] private EyeTrackingNavigation eyeTracking;
     public string fileName;
@@ -131,7 +131,7 @@ public class AskQuestionGUI : MonoBehaviour
         // AddQuestion("[12] After delivering the medicine, which patient will the robot check?", new List<string> { "Patient 1", "Patient 2", "Patient 3", "Patient 4"});
 
         AddQuestion("[1.1] Which table was checked?", new List<string>{"Table 1", "Table 2", "Table 3", "Table 4"});
-        AddQuestion("[1.2] What is the status of the medicines on the table?", new List<string>{"SPatient has all their medicines", "Patient is missing some medicines"});
+        AddQuestion("[1.2] What is the status of the medicines on the table?", new List<string>{"Patient has all their medicines", "Patient is missing some medicines"});
         AddQuestion("[1.3] Where is the robot going to next?", new List<string>{"Next Table", "Pharmacy", "Nowhere - task is complete"});
 
         AddQuestion("[2.1] Which table is this medicine for?", new List<string>{"Table 1", "Table 2", "Table 3", "Table 4"});
@@ -155,14 +155,6 @@ public class AskQuestionGUI : MonoBehaviour
 
             Debug.Log("AudioSource is assigned to the BuzzSoundController.");
         }
-
-        // Time.timeScale = 2.0f;
-        Debug.Log(Time.timeScale);
-
-        // if(Time.timeScale != 0f || Time.timeScale != 2.0f)
-        // {
-        //     Time.timeScale = 2.0f;
-        // }
 
     }
 
@@ -343,7 +335,7 @@ public class AskQuestionGUI : MonoBehaviour
                                                             new List<int>{4, 5, 6}, 
                                                             new List<int>{1, 2, 3}};
 
-                List<float> startTimes1 = new List<float>{34.71f, 86.77f, 324.5f};
+                List<float> startTimes1 = new List<float>{17.29f, 43.35f, 88f};
 
                 StartCoroutine(AskSetOfQuestions(set1, startTimes1));
 
