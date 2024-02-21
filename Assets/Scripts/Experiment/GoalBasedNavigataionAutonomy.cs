@@ -86,9 +86,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     private GameObject pluckedMed;
     public bool reverseCheckingOrder = false;
 
-    public float simSpeed = 2.0f;
-
-
     // Pause and Resume Automation
 
     // private bool isSimPaused = false;
@@ -105,8 +102,6 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     void Start()
     {
-        Time.timeScale = simSpeed;
-
         if(reverseCheckingOrder)
         {
             currentpatient = patient.patient4;
@@ -206,6 +201,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         switch (state)
         {   
             case State.SetFirstpatient:
+
+                Time.timeScale = 2.0f;
 
                 // Autonomy starts here
                 graphicalInterface.AddLogInfo("Starting nurse request: check patient medicines");

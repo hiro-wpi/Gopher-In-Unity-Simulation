@@ -83,4 +83,10 @@ public class NavigationTask : Task
         return goalObjects;
     }
 
+    // TODO Change Later
+    public override float GetTaskDuration()
+    {
+        return base.GetTaskDuration()/Time.timeScale;
+    }
+
 }

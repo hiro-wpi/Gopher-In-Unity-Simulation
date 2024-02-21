@@ -317,7 +317,7 @@ public class GraphicalInterface : MonoBehaviour
         //     return;
         // taskDescriptionPanelText.text = currentTask.TaskDescription;
         taskStatusPanelText.text = "Task Duration: " 
-                                 + string.Format("{0:0.00}", (currentTask.GetTaskDuration())/Time.timeScale) + " s."
+                                 + string.Format("{0:0.00}", currentTask.GetTaskDuration()) + " s."
                                  + "\n\n"
                                  + "Current Task Status: " + "\n"
                                  + currentTask.GetTaskStatus();
