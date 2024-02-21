@@ -21,7 +21,7 @@ public class AskQuestionGUI : MonoBehaviour
     // private float waitDuration = 5.0f;
     public AudioSource buzzSound;
 
-    private bool allowResume = false;
+    // private bool allowResume = false;
 
     // Panels
     [SerializeField] private GameObject questionPanel;
@@ -166,7 +166,7 @@ public class AskQuestionGUI : MonoBehaviour
     {
         Time.timeScale = timeScale;
         isSimPaused = false;
-        allowResume = false;
+        // allowResume = false;
         // HideGuiBlocker();
     }
 
