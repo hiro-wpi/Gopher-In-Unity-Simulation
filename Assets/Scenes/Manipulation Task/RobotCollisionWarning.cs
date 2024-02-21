@@ -144,13 +144,13 @@ public class RobotCollisionWarning : MonoBehaviour
                         }
                         if (collisionReport == "")
                         {
-                            // collisionReport = Time.realtimeSinceStartup.ToString() + "," + name;
-                            collisionReport = task.GetTaskDuration().ToString() + "," + name;
+                            collisionReport = Time.realtimeSinceStartup.ToString() + "," + name;
+                            // collisionReport = task.GetTaskDuration().ToString() + "," + name;
                         }
                         else
                         {
-                            // collisionReport += "\n" + Time.realtimeSinceStartup.ToString() + "," + name;
-                            collisionReport += "\n" + task.GetTaskDuration().ToString() + "," + name;
+                            collisionReport += "\n" + Time.realtimeSinceStartup.ToString() + "," + name;
+                            // collisionReport += "\n" + task.GetTaskDuration().ToString() + "," + name;
                         }
                     }
 
