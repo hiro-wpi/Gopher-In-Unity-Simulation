@@ -2,9 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Policy;
-using Assimp.Unmanaged;
-using Unity.XR.CoreUtils;
+// using System.Numerics;
 
 
 // using System.Numerics;
@@ -85,6 +83,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     private GameObject pluckedMed;
     public bool reverseCheckingOrder = false;
+
+    // [SerializeField] private GameObject hide2DARUI; 
 
     // Pause and Resume Automation
 
@@ -188,6 +188,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
         ScheuldeNextTask();
         // HandleStopResumeAuto();
+
+        // Update2DARVisablity();
 
     }
 
@@ -293,7 +295,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 if (arNavAuto.reachedGoal)
                 {
                     graphicalInterface.AddLogInfo("Arrived at destination");
-                    graphicalInterface.AddLogInfo("Retrieving medicine");    
+                    graphicalInterface.AddLogInfo("Retrieving " + patientMissingMedsColors[(int)currentpatient] + " medicine");    
                     
                     // SetArmToMedTarget();
                     SetArmToMedTarget(patientMissingMedsColors[(int)currentpatient]);
@@ -611,6 +613,41 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
         return med_alt;
     }
+
+    // private void Update2DARVisablity()
+    // {
+    //     RaycastHit hit;
+    //     Vector3 patientPos = patientPosition[(int)currentpatient];
+    //     GameObject nearestCart = GetNearestCart(patientPos);
+
+    //     // Perform a raycast from objectA towards objectB
+    //     if (Physics.Raycast(robot.transform.position + Vector3.up * 1.5f, nearestCart.transform.position - (robot.transform.position + Vector3.up * 1.5f) , out hit))
+    //     {
+    //         // Check if the raycast hit an object with the specified tag
+    //         if (hit.collider.name == "monitor_cart")
+    //         {
+    //             // If the raycast hits an object with the specified tag, show objectA
+    //             hide2DARUI.SetActive(true);
+    //             // Debug.Log("Set Active");
+    //         }
+    //         else
+    //         {
+    //             // If the raycast doesn't hit an object with the specified tag, hide objectA
+    //             hide2DARUI.SetActive(false);
+    //             // Debug.Log("Deactive");
+                
+    //         }
+    //     }
+    //     else
+    //     {
+    //         // If the raycast doesn't hit anything, hide objectA
+    //         hide2DARUI.SetActive(false);
+    //         // Debug.Log("Deactive");
+    //     }
+
+    //     // Debug.DrawRay(robot.transform.position + Vector3.up * 1.5f, nearestCart.transform.position - (robot.transform.position + Vector3.up * 1.5f), Color.red);
+
+    // }
 
     
 
