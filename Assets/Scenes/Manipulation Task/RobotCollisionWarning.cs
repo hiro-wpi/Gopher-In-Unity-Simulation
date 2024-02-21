@@ -25,6 +25,7 @@ public class RobotCollisionWarning : MonoBehaviour
     public int collisionCounter = 0;
     public string collisionReport = "";
     private bool wasInCollision = false;  // New variable to track previous collision state
+    [SerializeField] private Task task;
 
     private void Update()
     {
@@ -143,11 +144,13 @@ public class RobotCollisionWarning : MonoBehaviour
                         }
                         if (collisionReport == "")
                         {
-                            collisionReport = Time.realtimeSinceStartup.ToString() + "," + name;
+                            // collisionReport = Time.realtimeSinceStartup.ToString() + "," + name;
+                            collisionReport = task.GetTaskDuration().ToString() + "," + name;
                         }
                         else
                         {
-                            collisionReport += "\n" + Time.realtimeSinceStartup.ToString() + "," + name;
+                            // collisionReport += "\n" + Time.realtimeSinceStartup.ToString() + "," + name;
+                            collisionReport += "\n" + task.GetTaskDuration().ToString() + "," + name;
                         }
                     }
 
