@@ -348,13 +348,13 @@ public class AskQuestionGUI : MonoBehaviour
                 navigationTask.patientMissingMedsColors = new List<string>{"Red", "None", "Blue", "None"};
 
                 // Questions Setup
-                // List<List<int>> set2 = new List<List<int>>{ new List<int>{4, 5, 6},
-                //                                             new List<int>{1, 2, 3}, 
-                //                                             new List<int>{1, 2, 3}};
+                List<List<int>> set2 = new List<List<int>>{ new List<int>{4, 5, 6},
+                                                            new List<int>{1, 2, 3}, 
+                                                            new List<int>{1, 2, 3}};
 
-                // List<float> startTimes2 = new List<float>{10f, 20f, 30f};
+                List<float> startTimes2 = new List<float>{35.40f, 72f, 80.5f};
 
-                // StartCoroutine(AskSetOfQuestions(set2, startTimes2));
+                StartCoroutine(AskSetOfQuestions(set2, startTimes2));
 
                 break;
             case Configuration.Config3:
@@ -365,13 +365,13 @@ public class AskQuestionGUI : MonoBehaviour
                 navigationTask.patientMissingMedsColors = new List<string>{"None", "Red", "Yellow", "None"};
 
                 // Questions Setup
-                // List<List<int>> set3 = new List<List<int>>{ new List<int>{1, 2, 3},
-                //                                             new List<int>{4, 5, 6}, 
-                //                                             new List<int>{1, 2, 3}};
+                List<List<int>> set3 = new List<List<int>>{ new List<int>{1, 2, 3},
+                                                            new List<int>{4, 5, 6}, 
+                                                            new List<int>{1, 2, 3}};
 
-                // List<float> startTimes3 = new List<float>{10f, 20f, 30f};
+                List<float> startTimes3 = new List<float>{17.30f, 99f, 138.8f};
 
-                // StartCoroutine(AskSetOfQuestions(set3, startTimes3));
+                StartCoroutine(AskSetOfQuestions(set3, startTimes3));
 
                 break;
         }
