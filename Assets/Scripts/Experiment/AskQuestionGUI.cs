@@ -54,7 +54,9 @@ public class AskQuestionGUI : MonoBehaviour
     {
         Config1,
         Config2,
-        Config3
+        Config3,
+
+        Familiarization
     }
 
     public enum GUI
@@ -372,6 +374,22 @@ public class AskQuestionGUI : MonoBehaviour
                 List<float> startTimes3 = new List<float>{17.30f, 99f, 138.8f};
 
                 StartCoroutine(AskSetOfQuestions(set3, startTimes3));
+                break;
+
+            case Configuration.Familiarization:
+
+                navigationTask.reverseCheckingOrder = false;
+                navigationTask.patientMissingMeds = new List<bool>{false, true, false, false};
+                navigationTask.patientMissingMedsColors = new List<string>{"None", "Red", "Yellow", "None"};
+
+                // Questions Setup
+                // List<List<int>> set3 = new List<List<int>>{ new List<int>{1, 2, 3},
+                //                                             new List<int>{4, 5, 6}, 
+                //                                             new List<int>{1, 2, 3}};
+
+                // List<float> startTimes3 = new List<float>{17.30f, 99f, 138.8f};
+
+                // StartCoroutine(AskSetOfQuestions(set3, startTimes3));
 
                 break;
         }
@@ -432,7 +450,7 @@ public class AskQuestionGUI : MonoBehaviour
 
         Debug.Log("All the questions were asked");
 
-        // SaveNavTaskResponsesToCSV();
+        SaveNavTaskResponsesToCSV();
 
     }
 
