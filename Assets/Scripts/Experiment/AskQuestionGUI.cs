@@ -147,6 +147,10 @@ public class AskQuestionGUI : MonoBehaviour
         AddQuestion("[2] Which medicine is the robot currently aiming to grab?", new List<string>{"Red", "Blue", "Green", "Yellow"});
         AddQuestion("[3] Upon grabbing the medicine, which table will the robot be delivering it to?", new List<string>{"Table 1", "Table 2", "Table 3", "Table 4"});
 
+        AddQuestion("[1] Which bird can't fly?", new List<string>{"Penguin", "Eagle", "Hummingbird", "Pigeon"});
+        AddQuestion("[2] What is the largest cat?", new List<string>{"Cheetah", "Lion", "Jaguar", "Tiger"});
+        AddQuestion("[3] What color are giraffes?", new List<string>{"Blue", "Orange", "Green", "Purple"});
+
         initNavigationTaskConfig();
     }
 
@@ -389,13 +393,11 @@ public class AskQuestionGUI : MonoBehaviour
                 navigationTask.patientMissingMedsColors = new List<string>{"None", "Red", "Yellow", "None"};
 
                 // Questions Setup
-                // List<List<int>> set3 = new List<List<int>>{ new List<int>{1, 2, 3},
-                //                                             new List<int>{4, 5, 6}, 
-                //                                             new List<int>{1, 2, 3}};
+                List<List<int>> set4 = new List<List<int>>{ new List<int>{7, 8, 9}};
 
-                // List<float> startTimes3 = new List<float>{17.30f, 99f, 138.8f};
+                List<float> startTimesConfig4 = new List<float>{75f};
 
-                // StartCoroutine(AskSetOfQuestions(set3, startTimes3));
+                StartCoroutine(AskSetOfQuestions(set4, startTimesConfig4));
 
                 break;
         }
