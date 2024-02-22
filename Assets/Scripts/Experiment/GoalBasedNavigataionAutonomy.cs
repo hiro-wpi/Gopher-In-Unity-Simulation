@@ -256,7 +256,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         // askQuestionGUI.AskQuestion(2, 0.2f);
 
                         // Change AR to indicate an issue
-                        graphicalInterface.AddLogInfo("Patient is missing an expected medicine");
+                        graphicalInterface.AddLogInfo("Patient is missing a " + patientMissingMedsColors[(int)currentpatient] + " medicine");
                         patientPos = patientPosition[(int)currentpatient];
                         ChangeNearestCartARColor(patientPos, Color.red);
                         ChangeNearestCartCanvasHighlightIcon(patientPos, icon3);
