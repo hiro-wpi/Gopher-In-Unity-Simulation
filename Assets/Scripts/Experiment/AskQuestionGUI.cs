@@ -66,6 +66,10 @@ public class AskQuestionGUI : MonoBehaviour
         RegularAR
     }
 
+    [SerializeField] private List<float> startTimesConfig1 = new List<float>{17.29f, 43.35f, 88.75f};
+    [SerializeField] private List<float> startTimesConfig2 = new List<float>{35.40f, 72.30f, 80.75f};
+    [SerializeField] private List<float> startTimesConfig3 = new List<float>{17.15f, 100f, 139f};
+
     public Configuration config = Configuration.Config1;
     public GUI gui = GUI.Regular;
 
@@ -337,9 +341,9 @@ public class AskQuestionGUI : MonoBehaviour
                                                             new List<int>{4, 5, 6}, 
                                                             new List<int>{1, 2, 3}};
 
-                List<float> startTimes1 = new List<float>{17.29f, 43.35f, 88f};
+                // List<float> startTimes1 = new List<float>{17.29f, 43.35f, 88.75f};
 
-                StartCoroutine(AskSetOfQuestions(set1, startTimes1));
+                StartCoroutine(AskSetOfQuestions(set1, startTimesConfig1));
 
                 break;
             case Configuration.Config2:
@@ -354,9 +358,9 @@ public class AskQuestionGUI : MonoBehaviour
                                                             new List<int>{1, 2, 3}, 
                                                             new List<int>{1, 2, 3}};
 
-                List<float> startTimes2 = new List<float>{35.40f, 72f, 80.5f};
+                // List<float> startTimes2 = new List<float>{35.40f, 72.30f, 80.75f};
 
-                StartCoroutine(AskSetOfQuestions(set2, startTimes2));
+                StartCoroutine(AskSetOfQuestions(set2, startTimesConfig2));
 
                 break;
             case Configuration.Config3:
@@ -371,9 +375,9 @@ public class AskQuestionGUI : MonoBehaviour
                                                             new List<int>{4, 5, 6}, 
                                                             new List<int>{1, 2, 3}};
 
-                List<float> startTimes3 = new List<float>{17.30f, 99f, 138.8f};
+                // List<float> startTimes3 = new List<float>{17.15f, 100f, 139f};
 
-                StartCoroutine(AskSetOfQuestions(set3, startTimes3));
+                StartCoroutine(AskSetOfQuestions(set3, startTimesConfig3));
                 break;
 
             case Configuration.Familiarization:
