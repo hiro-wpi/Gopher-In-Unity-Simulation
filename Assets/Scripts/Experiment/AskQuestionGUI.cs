@@ -136,16 +136,18 @@ public class AskQuestionGUI : MonoBehaviour
         // // [12] Can do it max 1 time, only before delivering the medicine 
         // AddQuestion("[12] After delivering the medicine, which patient will the robot check?", new List<string> { "Patient 1", "Patient 2", "Patient 3", "Patient 4"});
 
-        AddQuestion("[1.1] Which table was checked?", new List<string>{"Table 1", "Table 2", "Table 3", "Table 4"});
-        AddQuestion("[1.2] What is the status of the medicines on the table?", new List<string>{"Patient has all their medicines", "Patient is missing some medicines"});
-        AddQuestion("[1.3] Where is the robot going to next?", new List<string>{"Next Table", "Pharmacy", "Nowhere - task is complete"});
+        // Present Question
+        AddQuestion("[1] What is the status of the medicines on the table the robot just checked?", new List<string>{"Patient has all their medicines", "Patient is missing a medicine"});
+        // Past Question
+        AddQuestion("[2] Now that the robot has finished checking this table, which table were you at before arriving here?", new List<string>{"Robot was not at any table before arriving here", "Table 1", "Table 2", "Table 3"});
+        // Future Question
+        AddQuestion("[3] Where will the robot be going to next?", new List<string>{"Next Table", "Pharmacy", "Nowhere (Task is complete)"});
 
-        AddQuestion("[2.1] Which table is this medicine for?", new List<string>{"Table 1", "Table 2", "Table 3", "Table 4"});
-        AddQuestion("[2.2] Is this the first time the robot is at the pharmacy?", new List<string>{"Yes", "No"});
-        AddQuestion("[2.3] Which medicine is the robot going to grab?", new List<string>{"Red",  "Blue", "Yellow", "Green"});
+        AddQuestion("[1] Is this the first time the robot is at the pharmacy?", new List<string>{"Yes", "No"});
+        AddQuestion("[2] Which medicine is the robot currently aiming to grab?", new List<string>{"Red", "Blue", "Green", "Yellow"});
+        AddQuestion("[3] Upon grabbing the medicine, which table will the robot be delivering it to?", new List<string>{"Table 1", "Table 2", "Table 3", "Table 4"});
 
         initNavigationTaskConfig();
-
     }
 
     private void Update()
