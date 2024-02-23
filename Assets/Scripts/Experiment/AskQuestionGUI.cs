@@ -68,7 +68,8 @@ public class AskQuestionGUI : MonoBehaviour
 
     [SerializeField] private List<float> startTimesConfig1 = new List<float>{17.29f, 43.35f, 88.75f};
     [SerializeField] private List<float> startTimesConfig2 = new List<float>{35.40f, 72.30f, 80.75f};
-    [SerializeField] private List<float> startTimesConfig3 = new List<float>{17.15f, 100f, 139f};
+    [SerializeField] private List<float> startTimesConfig3 = new List<float>{17.15f, 100f, 140f};
+    [SerializeField] private List<float> startTimesFamiliarization = new List<float>{17.50f, 35.75f, 71.75f};
 
     public Configuration config = Configuration.Config1;
     public GUI gui = GUI.Regular;
@@ -389,15 +390,19 @@ public class AskQuestionGUI : MonoBehaviour
             case Configuration.Familiarization:
 
                 navigationTask.reverseCheckingOrder = false;
-                navigationTask.patientMissingMeds = new List<bool>{false, true, false, false};
-                navigationTask.patientMissingMedsColors = new List<string>{"None", "Red", "Yellow", "None"};
+                navigationTask.patientMissingMeds = new List<bool>{true, false, false, false};
+                navigationTask.patientMissingMedsColors = new List<string>{"Green", "None", "None", "None"};
 
                 // Questions Setup
-                List<List<int>> set4 = new List<List<int>>{ new List<int>{7, 8, 9}};
 
-                List<float> startTimesConfig4 = new List<float>{75f};
+                
+                List<List<int>> setFamiliarization = new List<List<int>>{ new List<int>{1, 2, 3},
+                                                                          new List<int>{4, 5, 6}, 
+                                                                          new List<int>{1, 2, 3}};
 
-                StartCoroutine(AskSetOfQuestions(set4, startTimesConfig4));
+                // List<float> startTimesFamiliarization = new List<float>{17.16f, 100f, 139f};
+
+                StartCoroutine(AskSetOfQuestions(setFamiliarization, startTimesFamiliarization));
 
                 break;
         }
@@ -456,19 +461,29 @@ public class AskQuestionGUI : MonoBehaviour
 
         }
 
-        Debug.Log("All the questions were asked");
+        Debug.Log("Saving Responses");
 
-        SaveNavTaskResponsesToCSV();
+        if(config != Configuration.Familiarization)
+        {
+            SaveNavTaskResponsesToCSV();
+            eyeTracking.LogResponse();
+        }
+        
 
     }
 
     // Takes the responses and saves it to a CSV
     IEnumerator SaveResponsesToCSV()
     {
-        yield return new WaitUntil(() => isSimPaused == false);
-        // Debug.Log("Responses: ");
-        SaveNavTaskResponsesToCSV();
-        eyeTracking.LogResponse();
+
+        if(config != Configuration.Familiarization)
+        {
+            yield return new WaitUntil(() => isSimPaused == false);
+            // Debug.Log("Responses: ");
+            SaveNavTaskResponsesToCSV();
+            eyeTracking.LogResponse();
+        }
+        
     }
 
     public void SaveNavTaskResponsesToCSV()
