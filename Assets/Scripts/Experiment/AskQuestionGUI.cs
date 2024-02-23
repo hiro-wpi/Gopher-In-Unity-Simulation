@@ -140,7 +140,9 @@ public class AskQuestionGUI : MonoBehaviour
         // Present Question
         AddQuestion("[1] What is the status of the medicines on the table the robot just checked?", new List<string>{"Patient has all their medicines", "Patient is missing a medicine"});
         // Past Question
-        AddQuestion("[2] Which table was the robot at before arriving here?", new List<string>{"Robot was not at any table before arriving here", "Table 1", "Table 2", "Table 3"});
+        // AddQuestion("[2] Which table was the robot at before arriving here?", new List<string>{"Robot was not at any table before arriving here", "Table 1", "Table 2", "Table 3"});
+        AddQuestion("[2] Which table is the robot currently at?", new List<string>{"Table 1", "Table 2", "Table 3", "Table 4"});
+
         // Future Question
         AddQuestion("[3] Where will the robot be going to next?", new List<string>{"Next Table", "Pharmacy", "Nowhere (Task is complete)"});
 
