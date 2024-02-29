@@ -13,7 +13,7 @@ using System.Security.Policy;
 public class AskQuestionGUI : MonoBehaviour
 {
     
-    [SerializeField] private GoalBasedNavigataionAutonomy navigationTask;
+    // [SerializeField] private GoalBasedNavigataionAutonomy navigationTask;
     private bool isSimPaused = false;
     [SerializeField] private GameObject guiBlocker;
 
@@ -50,36 +50,38 @@ public class AskQuestionGUI : MonoBehaviour
 
     // Log GUI
 
-    public enum Configuration
-    {
-        Config1,
-        Config2,
-        Config3,
+    // public enum Configuration
+    // {
+    //     Config1,
+    //     Config2,
+    //     Config3,
 
-        Familiarization
-    }
+    //     Familiarization
+    // }
 
-    public enum GUI
-    {
-        Regular,
-        AR,
-        RegularAR
-    }
+    // public enum GUI
+    // {
+    //     Regular,
+    //     AR,
+    //     RegularAR
+    // }
 
-    [SerializeField] private List<float> startTimesConfig1 = new List<float>{17.29f, 43.35f, 88.75f};
-    [SerializeField] private List<float> startTimesConfig2 = new List<float>{35.40f, 72.30f, 80.75f};
-    [SerializeField] private List<float> startTimesConfig3 = new List<float>{17.15f, 100f, 140f};
-    [SerializeField] private List<float> startTimesFamiliarization = new List<float>{17.50f, 35.75f, 71.75f};
+    // [SerializeField] private List<float> startTimesConfig1 = new List<float>{17.29f, 43.35f, 88.75f};
+    // [SerializeField] private List<float> startTimesConfig2 = new List<float>{35.40f, 72.30f, 80.75f};
+    // [SerializeField] private List<float> startTimesConfig3 = new List<float>{17.15f, 100f, 140f};
+    // [SerializeField] private List<float> startTimesFamiliarization = new List<float>{17.50f, 35.75f, 71.75f};
 
-    public Configuration config = Configuration.Config1;
-    public GUI gui = GUI.Regular;
+    // public Configuration config = Configuration.Config1;
+    // public GUI gui = GUI.Regular;
 
     public List<List<float>> questionairOrder = new List<List<float>>(); // List of questions and answers
     // list<float> will have the simulation time to ask the question, and the question number
     // private float simStartDelay = 3.0f;  // Delay before the simulation starts
 
     [SerializeField] private EyeTrackingNavigation eyeTracking;
-    public string fileName;
+    private string fileName = "responses";
+    private string fileExtension = ".csv"; // File Extension default, change if needed
+    private string taskSetupString = ""; // Add the task setup string to the response log
     private TextWriter textWriter;
 
     private bool respondedToQuestion = false;
@@ -88,7 +90,6 @@ public class AskQuestionGUI : MonoBehaviour
 
     private void Start()
     {
-        // Time.timeScale = 2.0f;
         // Question
         questionPanelText = questionPanel.GetComponentInChildren<TextMeshProUGUI>();
 
@@ -97,64 +98,6 @@ public class AskQuestionGUI : MonoBehaviour
         answerBPanelText = answerBPanel.GetComponentInChildren<TextMeshProUGUI>();
         answerCPanelText = answerCPanel.GetComponentInChildren<TextMeshProUGUI>();
         answerDPanelText = answerDPanel.GetComponentInChildren<TextMeshProUGUI>();
-        
-        // [0] Can be ran at any point
-        AddQuestion("[0] Test Question", new List<string> { "Answer A", "Answer B", "Answer C", "Answer D"});
-        
-        // // [1] Can do it max 2 times, it can be done in the beginning, or after a patient is checked
-        // AddQuestion("[1] Where is the robot going?", new List<string> { "To a patient on the left", "To a patient on the right", "To the pharmacy"});
-        
-        // // [2] Can do it max 4 times, it can be done in the beginning before reaching the patient, or after a patient is checked
-        // AddQuestion("[2] What has the robot determined about the patient's medicines?", new List<string> {"Patient has all their medicines", "Patient is missing some medicines", "Nothing yet, checking it right now"});
-        
-        // // [3] Can do it max 2 times, it can be done when we are delivering the first medicine, or after we have dropped off the medicine
-        // AddQuestion("[3] Does the robot have the medicine in hand?", new List<string> { "Yes", "No"});
-        
-        // // [4] Can do it max 2 times, it can be only done when it picked up the medicine and is delivering it
-        // AddQuestion("[4] Does the robot think it has successfully picked up the medicine?", new List<string> { "Yes - The robot thinks it picked up the medicine", "No - the robot thinks it failed picking up the medicine"});
-        
-        // // [5] Can do it max 1 times, it can be ran at any point in the simulation
-        // AddQuestion("[5] How many patients left does the robot need to check on?", new List<string> { "1", "2", "3", "4"});
-       
-        // // [6] Can do it max 1 time, it can be ran at any point in the simulation
-        // AddQuestion("[6] Which patient is the robot going to check on?", new List<string> { "Patient 1", "Patient 2", "Patient 3", "Patient 4"});
-        
-        // // [7] Can do it max 2 time, can only be ran when the robot it grasping the medicine at the pharmacy
-        // AddQuestion("[7] What row is the robot grabbing the medicine from?", new List<string> { "Top Row", "Bottom Row"});
-        
-        // // [8] Can be done max 1 time, only after dropping off the medicine
-        // AddQuestion("[8] Did the robot succeed in delivering the medicine to the patient?", new List<string> { "Yes - the robot delivered the medicine", "No - the robot did not deliver the medicine"});
-        
-        // // [9] (It's roughly the same as [8] but it's a different question, so we can ask it again if we want to), or swtich between 8 and 9
-        // AddQuestion("[9] Does the robot think it succeeded in delivering the medicine?", new List<string> { "Yes", "No"});
-        
-        // // [10] Can do it max 1 time, only after dropping off the medicine
-        // AddQuestion("[10] What will the robot conclude when it checks on the next patient?", new List<string> { "Patient has all their medicines", "Patient is missing some medicines"});
-        
-        // // [11] Can do it max 1 time, only only before delivering the medicine (can be interchanged with question 3 or 4)
-        // AddQuestion("[11] Will the robot succeed in delivering the medicine?", new List<string> { "Yes", "No"});
-
-        // // [12] Can do it max 1 time, only before delivering the medicine 
-        // AddQuestion("[12] After delivering the medicine, which patient will the robot check?", new List<string> { "Patient 1", "Patient 2", "Patient 3", "Patient 4"});
-
-        // Present Question
-        AddQuestion("[1] What is the status of the medicines on the table the robot just checked?", new List<string>{"Patient has all their medicines", "Patient is missing a medicine"});
-        // Past Question
-        // AddQuestion("[2] Which table was the robot at before arriving here?", new List<string>{"Robot was not at any table before arriving here", "Table 1", "Table 2", "Table 3"});
-        AddQuestion("[2] Which table is the robot currently at?", new List<string>{"Table 1", "Table 2", "Table 3", "Table 4"});
-
-        // Future Question
-        AddQuestion("[3] Where will the robot be going to next?", new List<string>{"Next Table", "Pharmacy", "Nowhere (Task is complete)"});
-
-        AddQuestion("[1] Is this the first time the robot is at the pharmacy?", new List<string>{"Yes", "No"});
-        AddQuestion("[2] Which medicine is the robot going to grab?", new List<string>{"Red", "Blue", "Green", "Yellow"});
-        AddQuestion("[3] Which table will the robot be delivering the medicine to?", new List<string>{"Table 1", "Table 2", "Table 3", "Table 4"});
-
-        AddQuestion("[1] Which bird can't fly?", new List<string>{"Penguin", "Eagle", "Hummingbird", "Pigeon"});
-        AddQuestion("[2] What is the largest cat?", new List<string>{"Cheetah", "Lion", "Jaguar", "Tiger"});
-        AddQuestion("[3] What color are giraffes?", new List<string>{"Blue", "Orange", "Green", "Purple"});
-
-        initNavigationTaskConfig();
     }
 
     private void Update()
@@ -179,8 +122,6 @@ public class AskQuestionGUI : MonoBehaviour
     {
         Time.timeScale = timeScale;
         isSimPaused = false;
-        // allowResume = false;
-        // HideGuiBlocker();
     }
 
     public void PlayBuzzSound()
@@ -334,87 +275,11 @@ public class AskQuestionGUI : MonoBehaviour
         responses.Add(new List<float> {realStartTime, duration, questionIndex, responseIndex});
     }
 
-    public void initNavigationTaskConfig()
-    {
-        switch(config)
-        {
-            case Configuration.Config1:
-
-                // Init Condition
-                navigationTask.reverseCheckingOrder = false;
-                navigationTask.patientMissingMeds = new List<bool>{false, true, false, true};
-                navigationTask.patientMissingMedsColors = new List<string>{"None", "Blue", "None", "Yellow"};
-
-                // Questions Setup
-                List<List<int>> set1 = new List<List<int>>{ new List<int>{1, 2, 3},
-                                                            new List<int>{4, 5, 6}, 
-                                                            new List<int>{1, 2, 3}};
-
-                // List<float> startTimes1 = new List<float>{17.29f, 43.35f, 88.75f};
-
-                StartCoroutine(AskSetOfQuestions(set1, startTimesConfig1));
-
-                break;
-            case Configuration.Config2:
-
-                // Init Condition
-                navigationTask.reverseCheckingOrder = false;
-                navigationTask.patientMissingMeds = new List<bool>{true, false, true, false};
-                navigationTask.patientMissingMedsColors = new List<string>{"Red", "None", "Blue", "None"};
-
-                // Questions Setup
-                List<List<int>> set2 = new List<List<int>>{ new List<int>{4, 5, 6},
-                                                            new List<int>{1, 2, 3}, 
-                                                            new List<int>{1, 2, 3}};
-
-                // List<float> startTimes2 = new List<float>{35.40f, 72.30f, 80.75f};
-
-                StartCoroutine(AskSetOfQuestions(set2, startTimesConfig2));
-
-                break;
-            case Configuration.Config3:
-                
-                // Init Condition 
-                navigationTask.reverseCheckingOrder = false;
-                navigationTask.patientMissingMeds = new List<bool>{false, true, true, false};
-                navigationTask.patientMissingMedsColors = new List<string>{"None", "Red", "Yellow", "None"};
-
-                // Questions Setup
-                List<List<int>> set3 = new List<List<int>>{ new List<int>{1, 2, 3},
-                                                            new List<int>{4, 5, 6}, 
-                                                            new List<int>{1, 2, 3}};
-
-                // List<float> startTimes3 = new List<float>{17.15f, 100f, 139f};
-
-                StartCoroutine(AskSetOfQuestions(set3, startTimesConfig3));
-                break;
-
-            case Configuration.Familiarization:
-
-                navigationTask.reverseCheckingOrder = false;
-                navigationTask.patientMissingMeds = new List<bool>{true, false, false, false};
-                navigationTask.patientMissingMedsColors = new List<string>{"Green", "None", "None", "None"};
-
-                // Questions Setup
-
-                
-                List<List<int>> setFamiliarization = new List<List<int>>{ new List<int>{1, 2, 3},
-                                                                          new List<int>{4, 5, 6}, 
-                                                                          new List<int>{1, 2, 3}};
-
-                // List<float> startTimesFamiliarization = new List<float>{17.16f, 100f, 139f};
-
-                StartCoroutine(AskSetOfQuestions(setFamiliarization, startTimesFamiliarization));
-
-                break;
-        }
-    }
-
     // Handles a set of question
     //      -- Loading the questions in a gui
     //      -- Cycle between 3 at a time
     //      -- Records the results afterward
-    IEnumerator AskSetOfQuestions(List<List<int>> setNums, List<float> delayTimesBeforePause)
+    public IEnumerator AskSetOfQuestions(List<List<int>> setNums, List<float> delayTimesBeforePause)
     {
         
         // Pause The Simulation
@@ -465,11 +330,14 @@ public class AskQuestionGUI : MonoBehaviour
 
         Debug.Log("Saving Responses");
 
-        if(config != Configuration.Familiarization)
-        {
-            SaveNavTaskResponsesToCSV();
-            eyeTracking.LogResponse();
-        }
+        // if(config != Configuration.Familiarization)
+        // {
+        //     SaveNavTaskResponsesToCSV();
+        //     eyeTracking.LogResponse();
+        // }
+
+        SaveResponsesToCSV();
+        eyeTracking.LogResponse();
         
 
     }
@@ -478,22 +346,29 @@ public class AskQuestionGUI : MonoBehaviour
     IEnumerator SaveResponsesToCSV()
     {
 
-        if(config != Configuration.Familiarization)
-        {
-            yield return new WaitUntil(() => isSimPaused == false);
-            // Debug.Log("Responses: ");
-            SaveNavTaskResponsesToCSV();
-            eyeTracking.LogResponse();
-        }
+        // if(config != Configuration.Familiarization)
+        // {
+        //     yield return new WaitUntil(() => isSimPaused == false);
+        //     // Debug.Log("Responses: ");
+        //     SaveNavTaskResponsesToCSV();
+        //     eyeTracking.LogResponse();
+        // }
+
+        yield return new WaitUntil(() => isSimPaused == false);
+        // Debug.Log("Responses: ");
+        LogResponse();
+        eyeTracking.LogResponse();
         
     }
 
-    public void SaveNavTaskResponsesToCSV()
+    public void LogResponse()
     {
         string responseString = "";
         // Add which configuration we are using
-        responseString += "GUI: ," + gui + "\n";
-        responseString += "Configuration: ," + config + "\n\n";
+        // responseString += "GUI: ," + gui + "\n";
+        // responseString += "Configuration: ," + config + "\n\n";
+
+        responseString += taskSetupString;
         
         responseString += "Start Time, Duration, Question, Response\n";
 
@@ -503,15 +378,24 @@ public class AskQuestionGUI : MonoBehaviour
             responseString += response[0] + ", " + response[1] + ", " + response[2] + ", " + response[3] + "\n";
         }
 
-        textWriter = new StreamWriter(fileName + "_navigation_task.csv", false);
+        textWriter = new StreamWriter(fileName + fileExtension, false);
         textWriter.WriteLine(responseString);
         textWriter.Close();
 
         // Debug.Log(responseString);
     }
 
+
+    // Set the file name, extention and any additional task setup information
+    public void setFileInformation(string name, string extension, string taskSetup)
+    {
+        fileName = name;
+        fileExtension = extension;
+        taskSetupString = taskSetup;
+    }
+
     void OnDestroy()
     {
-        SaveNavTaskResponsesToCSV();
+        LogResponse();
     }
 }
