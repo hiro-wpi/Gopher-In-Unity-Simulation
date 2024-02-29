@@ -84,7 +84,8 @@ public class AskQuestionGUI : MonoBehaviour
     private string taskSetupString = ""; // Add the task setup string to the response log
     private TextWriter textWriter;
 
-    private bool respondedToQuestion = false;
+    [ReadOnly] public bool respondedToQuestion = false;
+    public bool respondedToQuestionSet = false;
 
     // States
 
@@ -279,9 +280,9 @@ public class AskQuestionGUI : MonoBehaviour
     //      -- Loading the questions in a gui
     //      -- Cycle between 3 at a time
     //      -- Records the results afterward
-    public IEnumerator AskSetOfQuestions(List<List<int>> setNums, List<float> delayTimesBeforePause)
+    public IEnumerator AskSetOfQuestionsTime(List<List<int>> setNums, List<float> delayTimesBeforePause)
     {
-        
+        Debug.Log( "AskSetOfQuestionsTime");
         // Pause The Simulation
         // Wait until the desired time
         // yield return new WaitForSeconds(delayTimeBeforePause);
@@ -291,60 +292,62 @@ public class AskQuestionGUI : MonoBehaviour
         {
             List<int> questionNums = setNums[i];
             float delayTime = delayTimesBeforePause[i];
-
             // Wait until the time matches
             yield return new WaitUntil(() => Time.time > delayTime * Time.timeScale + 4f);
 
-            // Pause
-            Time.timeScale = 0f; 
+            respondedToQuestionSet = false;
+            StartCoroutine(AskSetOfQuestions(questionNums));
 
-            PlayBuzzSound();
-
-            yield return new WaitForSecondsRealtime(4f);
-            // allowResume = true;
-            
-
-            // Show all the questions
-            ShowGuiBlocker();
-
-            foreach(int questionNum in questionNums)
-            {
-                // Question Init
-                respondedToQuestion = false;
-                simStartTime = Time.time;
-                realStartTime = Time.realtimeSinceStartup;
-                currentQuestionIndex = questionNum;
-
-                ChangeText(questions[questionNum]);
-                // wait until we get a response;
-                yield return new WaitUntil(() => respondedToQuestion == true);
-            }
-
-            // Reset in case
-            respondedToQuestion = false;
-
-            HideGuiBlocker();
-            ResumeSim(2.0f);
+            yield return new WaitUntil(() => respondedToQuestionSet == true);
+            // Debug.Log("Responded to Question: " + i);
 
         }
-
-        Debug.Log("Saving Responses");
-
-        // if(config != Configuration.Familiarization)
-        // {
-        //     SaveNavTaskResponsesToCSV();
-        //     eyeTracking.LogResponse();
-        // }
-
-        SaveResponsesToCSV();
-        eyeTracking.LogResponse();
         
+        StartCoroutine(SaveResponsesToCSV());
+    }
+
+    public IEnumerator AskSetOfQuestions(List<int> questionNums)
+    {
+        
+        // Pause
+        Time.timeScale = 0f; 
+
+        PlayBuzzSound();
+
+        yield return new WaitForSecondsRealtime(4f);
+        // allowResume = true;
+        
+        // Show all the questions
+        ShowGuiBlocker();
+
+        // respondedToQuestionSet = false;
+
+        foreach(int questionNum in questionNums)
+        {
+            // Question Init
+            respondedToQuestion = false;
+            simStartTime = Time.time;
+            realStartTime = Time.realtimeSinceStartup;
+            currentQuestionIndex = questionNum;
+
+            ChangeText(questions[questionNum]);
+            // wait until we get a response;
+            yield return new WaitUntil(() => respondedToQuestion == true);
+        }
+
+        // Reset in case
+        respondedToQuestion = false;
+        respondedToQuestionSet = true;
+        HideGuiBlocker();
+        ResumeSim(2.0f);
 
     }
 
+
     // Takes the responses and saves it to a CSV
-    IEnumerator SaveResponsesToCSV()
+    public IEnumerator SaveResponsesToCSV()
     {
+        Debug.Log("Saving Responses");
 
         // if(config != Configuration.Familiarization)
         // {
@@ -354,8 +357,9 @@ public class AskQuestionGUI : MonoBehaviour
         //     eyeTracking.LogResponse();
         // }
 
-        yield return new WaitUntil(() => isSimPaused == false);
+        // yield return new WaitUntil(() => isSimPaused == false);
         // Debug.Log("Responses: ");
+        yield return new WaitUntil(() => isSimPaused == false);
         LogResponse();
         eyeTracking.LogResponse();
         
@@ -384,7 +388,6 @@ public class AskQuestionGUI : MonoBehaviour
 
         // Debug.Log(responseString);
     }
-
 
     // Set the file name, extention and any additional task setup information
     public void setFileInformation(string name, string extension, string taskSetup)

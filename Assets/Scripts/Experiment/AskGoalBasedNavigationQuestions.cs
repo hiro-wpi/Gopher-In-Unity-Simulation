@@ -75,7 +75,7 @@ public class AskGoalBasedNavigationQuestions : MonoBehaviour
 
                 // List<float> startTimes1 = new List<float>{17.29f, 43.35f, 88.75f};
 
-                StartCoroutine(askQuestionGui.AskSetOfQuestions(set1, startTimesConfig1));
+                StartCoroutine(askQuestionGui.AskSetOfQuestionsTime(set1, startTimesConfig1));
 
                 break;
             case Configuration.Config2:
@@ -92,7 +92,7 @@ public class AskGoalBasedNavigationQuestions : MonoBehaviour
 
                 // List<float> startTimes2 = new List<float>{35.40f, 72.30f, 80.75f};
 
-                StartCoroutine(askQuestionGui.AskSetOfQuestions(set2, startTimesConfig2));
+                StartCoroutine(askQuestionGui.AskSetOfQuestionsTime(set2, startTimesConfig2));
 
                 break;
             case Configuration.Config3:
@@ -109,7 +109,7 @@ public class AskGoalBasedNavigationQuestions : MonoBehaviour
 
                 // List<float> startTimes3 = new List<float>{17.15f, 100f, 139f};
 
-                StartCoroutine(askQuestionGui.AskSetOfQuestions(set3, startTimesConfig3));
+                StartCoroutine(askQuestionGui.AskSetOfQuestionsTime(set3, startTimesConfig3));
                 break;
 
             case Configuration.Familiarization:
@@ -127,7 +127,7 @@ public class AskGoalBasedNavigationQuestions : MonoBehaviour
 
                 // List<float> startTimesFamiliarization = new List<float>{17.16f, 100f, 139f};
 
-                StartCoroutine(askQuestionGui.AskSetOfQuestions(setFamiliarization, startTimesFamiliarization));
+                StartCoroutine(askQuestionGui.AskSetOfQuestionsTime(setFamiliarization, startTimesFamiliarization));
 
                 break;
         }
@@ -160,6 +160,41 @@ public class AskGoalBasedNavigationQuestions : MonoBehaviour
 
         // Update the file
         askQuestionGui.setFileInformation(fileName, fileExtension, taskSetupString);
+
+    }
+
+    public IEnumerator AskSetOfQuestions(List<List<int>> setNums, List<GoalBasedNavigataionAutonomy.State> states, List<GoalBasedNavigataionAutonomy.patient> patientNum )
+    {
+        
+        // Pause The Simulation
+        // Wait until the desired time
+        // yield return new WaitForSeconds(delayTimeBeforePause);
+
+        // iterate through all the sets of questions
+        for(int i = 0; i < setNums.Count; i++)
+        {
+            List<int> questionNums = setNums[i];
+            // float delayTime = delayTimesBeforePause[i];
+            // // Wait until the time matches
+            // yield return new WaitUntil(() => Time.time > delayTime * Time.timeScale + 4f);
+
+            StartCoroutine(askQuestionGui.AskSetOfQuestions(questionNums));
+
+            yield return new WaitUntil(() => askQuestionGui.respondedToQuestion == true);
+
+        }
+
+        Debug.Log("Saving Responses");
+
+        // if(config != Configuration.Familiarization)
+        // {
+        //     SaveNavTaskResponsesToCSV();
+        //     eyeTracking.LogResponse();
+        // }
+
+        askQuestionGui.SaveResponsesToCSV();
+        
+        
 
     }
 
