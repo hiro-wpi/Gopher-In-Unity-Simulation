@@ -282,11 +282,7 @@ public class AskQuestionGUI : MonoBehaviour
     //      -- Records the results afterward
     public IEnumerator AskSetOfQuestionsTime(List<List<int>> setNums, List<float> delayTimesBeforePause)
     {
-        Debug.Log( "AskSetOfQuestionsTime");
-        // Pause The Simulation
-        // Wait until the desired time
-        // yield return new WaitForSeconds(delayTimeBeforePause);
-
+        
         // iterate through all the sets of questions
         for(int i = 0; i < setNums.Count; i++)
         {
@@ -295,14 +291,13 @@ public class AskQuestionGUI : MonoBehaviour
             // Wait until the time matches
             yield return new WaitUntil(() => Time.time > delayTime * Time.timeScale + 4f);
 
+            // Ask the next set of questions
             respondedToQuestionSet = false;
             StartCoroutine(AskSetOfQuestions(questionNums));
-
             yield return new WaitUntil(() => respondedToQuestionSet == true);
-            // Debug.Log("Responded to Question: " + i);
 
         }
-        
+
         StartCoroutine(SaveResponsesToCSV());
     }
 
@@ -343,34 +338,19 @@ public class AskQuestionGUI : MonoBehaviour
 
     }
 
-
     // Takes the responses and saves it to a CSV
     public IEnumerator SaveResponsesToCSV()
     {
         Debug.Log("Saving Responses");
-
-        // if(config != Configuration.Familiarization)
-        // {
-        //     yield return new WaitUntil(() => isSimPaused == false);
-        //     // Debug.Log("Responses: ");
-        //     SaveNavTaskResponsesToCSV();
-        //     eyeTracking.LogResponse();
-        // }
-
-        // yield return new WaitUntil(() => isSimPaused == false);
-        // Debug.Log("Responses: ");
         yield return new WaitUntil(() => isSimPaused == false);
+
         LogResponse();
         eyeTracking.LogResponse();
-        
     }
 
     public void LogResponse()
     {
         string responseString = "";
-        // Add which configuration we are using
-        // responseString += "GUI: ," + gui + "\n";
-        // responseString += "Configuration: ," + config + "\n\n";
 
         responseString += taskSetupString;
         
@@ -386,7 +366,6 @@ public class AskQuestionGUI : MonoBehaviour
         textWriter.WriteLine(responseString);
         textWriter.Close();
 
-        // Debug.Log(responseString);
     }
 
     // Set the file name, extention and any additional task setup information

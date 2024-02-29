@@ -50,11 +50,11 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     // State Machines
     [SerializeField] public enum State { SetFirstPatient, CheckPatient, GoToPharmacy, GetMedicine, GoDeliverMedicine, DropOffMedicine, ChangePatient, Done};
-    [SerializeField, ReadOnly] public State state = State.SetFirstPatient;
+    [SerializeField, ReadOnly] public State currentState = State.SetFirstPatient;
 
-    [SerializeField] public enum patient { patient1, patient2, patient3, patient4};
+    [SerializeField] public enum patient { Patient1, Patient2, Patient3, Patient4};
 
-    [SerializeField, ReadOnly] public patient currentpatient = patient.patient1;
+    [SerializeField, ReadOnly] public patient currentPatient = patient.Patient1;
 
 
     // Patient Navigation Waypoints
@@ -175,7 +175,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         List<Vector3> rotTraj = new List<Vector3>();
         Vector3 patientPos;
 
-        switch (state)
+        switch (currentState)
         {   
             case State.SetFirstPatient:
 
@@ -187,15 +187,15 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // Create the waypoints to get to the first patient
                 posTraj = new List<Vector3>(transfereWaypointPositions);
                 rotTraj = new List<Vector3>(transferWaypointRotations);
-                posTraj.Add(patientPosition[(int)currentpatient]);
-                rotTraj.Add(patientRotations[(int)currentpatient]);
+                posTraj.Add(patientPosition[(int)currentPatient]);
+                rotTraj.Add(patientRotations[(int)currentPatient]);
                 arNavAuto.SetWaypoints(posTraj, rotTraj);
 
                 // Create AR for the cart nearest to the patient
-                patientPos = patientPosition[(int)currentpatient];
+                patientPos = patientPosition[(int)currentPatient];
                 GenerateARForNearestCart(patientPos);
 
-                state = State.CheckPatient;
+                currentState = State.CheckPatient;
 
                 break;
 
@@ -211,13 +211,13 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     
                     // Debug.Log("Checking the patient");
                     // TODO: Do this actually properly
-                    if (patientMissingMeds[(int)currentpatient])
+                    if (patientMissingMeds[(int)currentPatient])
                     {   
                         // askQuestionGUI.AskQuestion(2, 0.2f);
 
                         // Change AR to indicate an issue
-                        graphicalInterface.AddLogInfo("Patient is missing a " + patientMissingMedsColors[(int)currentpatient] + " medicine");
-                        patientPos = patientPosition[(int)currentpatient];
+                        graphicalInterface.AddLogInfo("Patient is missing a " + patientMissingMedsColors[(int)currentPatient] + " medicine");
+                        patientPos = patientPosition[(int)currentPatient];
                         ChangeNearestCartARColor(patientPos, Color.red);
                         ChangeNearestCartCanvasHighlightIcon(patientPos, icon3);
 
@@ -229,19 +229,19 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         rotTraj.Add(pharmacyRotation);
                         arNavAuto.SetWaypoints(posTraj, rotTraj);
 
-                        state = State.GoToPharmacy;
+                        currentState = State.GoToPharmacy;
                     }
                     else
                     {
                         // askQuestionGUI.AskQuestion(2, 0.2f);
                         // Change AR to indicate no issue
                         graphicalInterface.AddLogInfo("Patient has expected medicines");
-                        patientPos = patientPosition[(int)currentpatient];
+                        patientPos = patientPosition[(int)currentPatient];
                         ChangeNearestCartARColor(patientPos, Color.green);
                         ChangeNearestCartCanvasHighlightIcon(patientPos, icon2);
 
                         graphicalInterface.AddLogInfo("Going to next patient");
-                        state = State.ChangePatient;
+                        currentState = State.ChangePatient;
                     }
                     // state = State.ChangePatient;
                 }
@@ -255,12 +255,12 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 if (arNavAuto.reachedGoal)
                 {
                     graphicalInterface.AddLogInfo("Arrived at destination");
-                    graphicalInterface.AddLogInfo("Retrieving " + patientMissingMedsColors[(int)currentpatient] + " medicine");    
+                    graphicalInterface.AddLogInfo("Retrieving " + patientMissingMedsColors[(int)currentPatient] + " medicine");    
                     
                     // SetArmToMedTarget();
-                    SetArmToMedTarget(patientMissingMedsColors[(int)currentpatient]);
+                    SetArmToMedTarget(patientMissingMedsColors[(int)currentPatient]);
                     // askQuestionGUI.AskQuestion(7, 0.5f);
-                    state = State.GetMedicine;
+                    currentState = State.GetMedicine;
                 }
                 
                 break;
@@ -276,11 +276,11 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     // arManipAuto.HomeJoints();
                     posTraj = new List<Vector3>(transfereWaypointPositions);
                     rotTraj = new List<Vector3>(transferWaypointRotations);
-                    posTraj.Add(patientPosition[(int)currentpatient]);
-                    rotTraj.Add(patientRotations[(int)currentpatient]);
+                    posTraj.Add(patientPosition[(int)currentPatient]);
+                    rotTraj.Add(patientRotations[(int)currentPatient]);
                     arNavAuto.SetWaypoints(posTraj, rotTraj);
 
-                    state = State.GoDeliverMedicine;
+                    currentState = State.GoDeliverMedicine;
                     
                     // askQuestionGUI.AskQuestion(4, 10f);
                 }
@@ -296,7 +296,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
                     graphicalInterface.AddLogInfo("Arrived at destination");
 
-                    patientPos = patientPosition[(int)currentpatient];
+                    patientPos = patientPosition[(int)currentPatient];
                     GameObject nearestCart = GetNearestCart(patientPos);
                     // GenerateARForNearestCart(nearestCart.transform.position);
                     List<GameObject> arFeatures = arGenerator.GetARGameObject(nearestCart);
@@ -322,7 +322,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     }
 
                     // askQuestionGUI.AskQuestion(0.5f);
-                    state = State.DropOffMedicine;
+                    currentState = State.DropOffMedicine;
                 }
                 
                 break;
@@ -334,14 +334,14 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     // askQuestionGUI.AskQuestion(8, 0.25f);
                     graphicalInterface.AddLogInfo("Delivered medicine");
                     graphicalInterface.AddLogInfo("Issue resolved");
-                    patientPos = patientPosition[(int)currentpatient];
+                    patientPos = patientPosition[(int)currentPatient];
                     ChangeNearestCartARColor(patientPos, Color.green);
                     ChangeNearestCartCanvasHighlightIcon(patientPos, icon2);
 
                     arManipAuto.HomeJoints();
                     
                     graphicalInterface.AddLogInfo("Checking next patient medicines");
-                    state = State.ChangePatient;
+                    currentState = State.ChangePatient;
                 }
                 break;
 
@@ -353,53 +353,53 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                 // if we have changed the patient, go back to check the patient
                 
                 // Do the normal checking order
-                switch (currentpatient)
+                switch (currentPatient)
                 {
-                    case patient.patient1:
+                    case patient.Patient1:
                         // Set the next
-                        currentpatient = patient.patient2;
+                        currentPatient = patient.Patient2;
                         break;
-                    case patient.patient2:
+                    case patient.Patient2:
                         // Set the next patient
-                        currentpatient = patient.patient3;
+                        currentPatient = patient.Patient3;
                         break;
-                    case patient.patient3:
+                    case patient.Patient3:
                         // Set the next patient
-                        currentpatient = patient.patient4;
+                        currentPatient = patient.Patient4;
                         break;
-                    case patient.patient4:
+                    case patient.Patient4:
                         // Set the next patient
                         graphicalInterface.AddLogInfo("All patient medicines have been checked");
                         // Debug.Log("All patients have been checked");
-                        state = State.Done;
+                        currentState = State.Done;
                         break;
                     default:
                         break;
                 }
 
                 // Destroy the AR of the previous patient
-                StartCoroutine(RemoveARForPatient(patientPosition[(int)currentpatient - 1]));
+                StartCoroutine(RemoveARForPatient(patientPosition[(int)currentPatient - 1]));
                 
-                if(state == State.Done)
+                if(currentState == State.Done)
                 {
                     // Remove the AR for the last patient
-                    StartCoroutine(RemoveARForPatient(patientPosition[(int)currentpatient]));
+                    StartCoroutine(RemoveARForPatient(patientPosition[(int)currentPatient]));
                     // askQuestionGUI.DebugLogResponses();
                     // askQuestionGUI.PrintResponses();
                     return;
                 }
 
                 // Go to the next patient
-                arNavAuto.SetWaypoints(patientPosition[(int)currentpatient], patientRotations[(int)currentpatient]);
+                arNavAuto.SetWaypoints(patientPosition[(int)currentPatient], patientRotations[(int)currentPatient]);
 
                 // // Destroy the AR of the previous patient
                 // StartCoroutine(RemoveARForPatient(patientPosition[(int)currentpatient - 1]));
 
                 // Generate AR for the nearest cart
-                patientPos = patientPosition[(int)currentpatient];
+                patientPos = patientPosition[(int)currentPatient];
                 GenerateARForNearestCart(patientPos);
 
-                state = State.CheckPatient;
+                currentState = State.CheckPatient;
 
                 break;
 
@@ -418,13 +418,13 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     // Scheduler That considers time
     IEnumerator TimeSchedule()
     {
-        while(state != State.Done)
+        while(currentState != State.Done)
         {
             List<Vector3> posTraj = new List<Vector3>();
             List<Vector3> rotTraj = new List<Vector3>();
             Vector3 patientPos;
 
-            switch (state)
+            switch (currentState)
             {   
                 case State.SetFirstPatient:
 
@@ -437,15 +437,15 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     // Create the waypoints to get to the first patient
                     posTraj = new List<Vector3>(transfereWaypointPositions);
                     rotTraj = new List<Vector3>(transferWaypointRotations);
-                    posTraj.Add(patientPosition[(int)currentpatient]);
-                    rotTraj.Add(patientRotations[(int)currentpatient]);
+                    posTraj.Add(patientPosition[(int)currentPatient]);
+                    rotTraj.Add(patientRotations[(int)currentPatient]);
                     arNavAuto.SetWaypoints(posTraj, rotTraj);
 
                     // Create AR for the cart nearest to the patient
-                    patientPos = patientPosition[(int)currentpatient];
+                    patientPos = patientPosition[(int)currentPatient];
                     GenerateARForNearestCart(patientPos);
 
-                    state = State.CheckPatient;
+                    currentState = State.CheckPatient;
 
                     break;
 
@@ -461,13 +461,13 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
                         // Debug.Log("Checking the patient");
                         // TODO: Do this actually properly
-                        if (patientMissingMeds[(int)currentpatient])
+                        if (patientMissingMeds[(int)currentPatient])
                         {   
                             // askQuestionGUI.AskQuestion(2, 0.2f);
 
                             // Change AR to indicate an issue
-                            graphicalInterface.AddLogInfo("Patient is missing a " + patientMissingMedsColors[(int)currentpatient] + " medicine");
-                            patientPos = patientPosition[(int)currentpatient];
+                            graphicalInterface.AddLogInfo("Patient is missing a " + patientMissingMedsColors[(int)currentPatient] + " medicine");
+                            patientPos = patientPosition[(int)currentPatient];
                             ChangeNearestCartARColor(patientPos, Color.red);
                             ChangeNearestCartCanvasHighlightIcon(patientPos, icon3);
 
@@ -479,19 +479,19 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                             rotTraj.Add(pharmacyRotation);
                             arNavAuto.SetWaypoints(posTraj, rotTraj);
 
-                            state = State.GoToPharmacy;
+                            currentState = State.GoToPharmacy;
                         }
                         else
                         {
                             // askQuestionGUI.AskQuestion(2, 0.2f);
                             // Change AR to indicate no issue
                             graphicalInterface.AddLogInfo("Patient has expected medicines");
-                            patientPos = patientPosition[(int)currentpatient];
+                            patientPos = patientPosition[(int)currentPatient];
                             ChangeNearestCartARColor(patientPos, Color.green);
                             ChangeNearestCartCanvasHighlightIcon(patientPos, icon2);
 
                             graphicalInterface.AddLogInfo("Going to next patient");
-                            state = State.ChangePatient;
+                            currentState = State.ChangePatient;
                         }
                         // state = State.ChangePatient;
                     }
@@ -506,12 +506,12 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     if (arNavAuto.reachedGoal)
                     {
                         graphicalInterface.AddLogInfo("Arrived at destination");
-                        graphicalInterface.AddLogInfo("Retrieving " + patientMissingMedsColors[(int)currentpatient] + " medicine");    
+                        graphicalInterface.AddLogInfo("Retrieving " + patientMissingMedsColors[(int)currentPatient] + " medicine");    
                         
                         // SetArmToMedTarget();
-                        SetArmToMedTarget(patientMissingMedsColors[(int)currentpatient]);
+                        SetArmToMedTarget(patientMissingMedsColors[(int)currentPatient]);
                         // askQuestionGUI.AskQuestion(7, 0.5f);
-                        state = State.GetMedicine;
+                        currentState = State.GetMedicine;
                     }
                     
                     break;
@@ -529,11 +529,11 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         // arManipAuto.HomeJoints();
                         posTraj = new List<Vector3>(transfereWaypointPositions);
                         rotTraj = new List<Vector3>(transferWaypointRotations);
-                        posTraj.Add(patientPosition[(int)currentpatient]);
-                        rotTraj.Add(patientRotations[(int)currentpatient]);
+                        posTraj.Add(patientPosition[(int)currentPatient]);
+                        rotTraj.Add(patientRotations[(int)currentPatient]);
                         arNavAuto.SetWaypoints(posTraj, rotTraj);
 
-                        state = State.GoDeliverMedicine;
+                        currentState = State.GoDeliverMedicine;
                         
                         // askQuestionGUI.AskQuestion(4, 10f);
                     }
@@ -549,7 +549,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
                         graphicalInterface.AddLogInfo("Arrived at destination");
 
-                        patientPos = patientPosition[(int)currentpatient];
+                        patientPos = patientPosition[(int)currentPatient];
                         GameObject nearestCart = GetNearestCart(patientPos);
                         // GenerateARForNearestCart(nearestCart.transform.position);
                         List<GameObject> arFeatures = arGenerator.GetARGameObject(nearestCart);
@@ -575,7 +575,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         }
 
                         // askQuestionGUI.AskQuestion(0.5f);
-                        state = State.DropOffMedicine;
+                        currentState = State.DropOffMedicine;
                     }
                     
                     break;
@@ -589,14 +589,14 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         // askQuestionGUI.AskQuestion(8, 0.25f);
                         graphicalInterface.AddLogInfo("Delivered medicine");
                         graphicalInterface.AddLogInfo("Issue resolved");
-                        patientPos = patientPosition[(int)currentpatient];
+                        patientPos = patientPosition[(int)currentPatient];
                         ChangeNearestCartARColor(patientPos, Color.green);
                         ChangeNearestCartCanvasHighlightIcon(patientPos, icon2);
 
                         arManipAuto.HomeJoints();
                         
                         graphicalInterface.AddLogInfo("Checking next patient medicines");
-                        state = State.ChangePatient;
+                        currentState = State.ChangePatient;
                     }
                     break;
 
@@ -608,37 +608,37 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     // if we have changed the patient, go back to check the patient
                     
                     // Do the normal checking order
-                    switch (currentpatient)
+                    switch (currentPatient)
                     {
-                        case patient.patient1:
+                        case patient.Patient1:
                             // Set the next
-                            currentpatient = patient.patient2;
+                            currentPatient = patient.Patient2;
                             break;
-                        case patient.patient2:
+                        case patient.Patient2:
                             // Set the next patient
-                            currentpatient = patient.patient3;
+                            currentPatient = patient.Patient3;
                             break;
-                        case patient.patient3:
+                        case patient.Patient3:
                             // Set the next patient
-                            currentpatient = patient.patient4;
+                            currentPatient = patient.Patient4;
                             break;
-                        case patient.patient4:
+                        case patient.Patient4:
                             // Set the next patient
                             graphicalInterface.AddLogInfo("All patient medicines have been checked");
                             // Debug.Log("All patients have been checked");
-                            state = State.Done;
+                            currentState = State.Done;
                             break;
                         default:
                             break;
                     }
 
                     // Destroy the AR of the previous patient
-                    StartCoroutine(RemoveARForPatient(patientPosition[(int)currentpatient - 1]));
+                    StartCoroutine(RemoveARForPatient(patientPosition[(int)currentPatient - 1]));
                     
-                    if(state == State.Done)
+                    if(currentState == State.Done)
                     {
                         // Remove the AR for the last patient
-                        StartCoroutine(RemoveARForPatient(patientPosition[(int)currentpatient]));
+                        StartCoroutine(RemoveARForPatient(patientPosition[(int)currentPatient]));
                         // askQuestionGUI.DebugLogResponses();
                         // askQuestionGUI.PrintResponses();
                         
@@ -646,16 +646,16 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     else
                     {
                         // Go to the next patient
-                        arNavAuto.SetWaypoints(patientPosition[(int)currentpatient], patientRotations[(int)currentpatient]);
+                        arNavAuto.SetWaypoints(patientPosition[(int)currentPatient], patientRotations[(int)currentPatient]);
 
                         // // Destroy the AR of the previous patient
                         // StartCoroutine(RemoveARForPatient(patientPosition[(int)currentpatient - 1]));
 
                         // Generate AR for the nearest cart
-                        patientPos = patientPosition[(int)currentpatient];
+                        patientPos = patientPosition[(int)currentPatient];
                         GenerateARForNearestCart(patientPos);
 
-                        state = State.CheckPatient;
+                        currentState = State.CheckPatient;
                     }
 
                     break;

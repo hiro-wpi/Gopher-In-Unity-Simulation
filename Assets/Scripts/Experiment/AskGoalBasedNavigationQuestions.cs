@@ -74,8 +74,18 @@ public class AskGoalBasedNavigationQuestions : MonoBehaviour
                                                             new List<int>{1, 2, 3}};
 
                 // List<float> startTimes1 = new List<float>{17.29f, 43.35f, 88.75f};
+                List<GoalBasedNavigataionAutonomy.State> states1 = new List<GoalBasedNavigataionAutonomy.State>{
+                    GoalBasedNavigataionAutonomy.State.CheckPatient,                                                                                         
+                    GoalBasedNavigataionAutonomy.State.CheckPatient,
+                    GoalBasedNavigataionAutonomy.State.CheckPatient};
 
-                StartCoroutine(askQuestionGui.AskSetOfQuestionsTime(set1, startTimesConfig1));
+                List<GoalBasedNavigataionAutonomy.patient> patientNum1 = new List<GoalBasedNavigataionAutonomy.patient>{
+                    GoalBasedNavigataionAutonomy.patient.Patient1,                                                                                         
+                    GoalBasedNavigataionAutonomy.patient.Patient2, 
+                    GoalBasedNavigataionAutonomy.patient.Patient3};
+
+
+                StartCoroutine(AskSetOfQuestions(set1, states1, patientNum1));
 
                 break;
             case Configuration.Config2:
@@ -90,9 +100,19 @@ public class AskGoalBasedNavigationQuestions : MonoBehaviour
                                                             new List<int>{1, 2, 3}, 
                                                             new List<int>{1, 2, 3}};
 
+                List<GoalBasedNavigataionAutonomy.State> states2 = new List<GoalBasedNavigataionAutonomy.State>{
+                    GoalBasedNavigataionAutonomy.State.CheckPatient,                                                                                         
+                    GoalBasedNavigataionAutonomy.State.CheckPatient,
+                    GoalBasedNavigataionAutonomy.State.CheckPatient};
+
+                List<GoalBasedNavigataionAutonomy.patient> patientNum2 = new List<GoalBasedNavigataionAutonomy.patient>{
+                    GoalBasedNavigataionAutonomy.patient.Patient1,                                                                                         
+                    GoalBasedNavigataionAutonomy.patient.Patient2, 
+                    GoalBasedNavigataionAutonomy.patient.Patient3};
+
                 // List<float> startTimes2 = new List<float>{35.40f, 72.30f, 80.75f};
 
-                StartCoroutine(askQuestionGui.AskSetOfQuestionsTime(set2, startTimesConfig2));
+                StartCoroutine(AskSetOfQuestions(set2, states2, patientNum2));
 
                 break;
             case Configuration.Config3:
@@ -107,9 +127,19 @@ public class AskGoalBasedNavigationQuestions : MonoBehaviour
                                                             new List<int>{4, 5, 6}, 
                                                             new List<int>{1, 2, 3}};
 
+                List<GoalBasedNavigataionAutonomy.State> states3 = new List<GoalBasedNavigataionAutonomy.State>{
+                    GoalBasedNavigataionAutonomy.State.CheckPatient,                                                                                         
+                    GoalBasedNavigataionAutonomy.State.CheckPatient,
+                    GoalBasedNavigataionAutonomy.State.CheckPatient};
+
+                List<GoalBasedNavigataionAutonomy.patient> patientNum3 = new List<GoalBasedNavigataionAutonomy.patient>{
+                    GoalBasedNavigataionAutonomy.patient.Patient1,                                                                                         
+                    GoalBasedNavigataionAutonomy.patient.Patient2, 
+                    GoalBasedNavigataionAutonomy.patient.Patient3};
+
                 // List<float> startTimes3 = new List<float>{17.15f, 100f, 139f};
 
-                StartCoroutine(askQuestionGui.AskSetOfQuestionsTime(set3, startTimesConfig3));
+                StartCoroutine(AskSetOfQuestions(set3, states3, patientNum3));
                 break;
 
             case Configuration.Familiarization:
@@ -121,13 +151,23 @@ public class AskGoalBasedNavigationQuestions : MonoBehaviour
                 // Questions Setup
 
                 
-                List<List<int>> setFamiliarization = new List<List<int>>{ new List<int>{1, 2, 3},
+                List<List<int>> setFam = new List<List<int>>{ new List<int>{1, 2, 3},
                                                                           new List<int>{4, 5, 6}, 
                                                                           new List<int>{1, 2, 3}};
 
+                List<GoalBasedNavigataionAutonomy.State> statesFam = new List<GoalBasedNavigataionAutonomy.State>{
+                    GoalBasedNavigataionAutonomy.State.CheckPatient,                                                                                         
+                    GoalBasedNavigataionAutonomy.State.CheckPatient,
+                    GoalBasedNavigataionAutonomy.State.CheckPatient};
+
+                List<GoalBasedNavigataionAutonomy.patient> patientNumFam = new List<GoalBasedNavigataionAutonomy.patient>{
+                    GoalBasedNavigataionAutonomy.patient.Patient1,                                                                                         
+                    GoalBasedNavigataionAutonomy.patient.Patient2, 
+                    GoalBasedNavigataionAutonomy.patient.Patient3};
+
                 // List<float> startTimesFamiliarization = new List<float>{17.16f, 100f, 139f};
 
-                StartCoroutine(askQuestionGui.AskSetOfQuestionsTime(setFamiliarization, startTimesFamiliarization));
+                StartCoroutine(AskSetOfQuestions(setFam, statesFam, patientNumFam));
 
                 break;
         }
@@ -163,39 +203,32 @@ public class AskGoalBasedNavigationQuestions : MonoBehaviour
 
     }
 
-    public IEnumerator AskSetOfQuestions(List<List<int>> setNums, List<GoalBasedNavigataionAutonomy.State> states, List<GoalBasedNavigataionAutonomy.patient> patientNum )
+    // List<GoalBasedNavigataionAutonomy.State> states, List<GoalBasedNavigataionAutonomy.patient> patientNum
+    public IEnumerator AskSetOfQuestions(List<List<int>> setNums, 
+                                         List<GoalBasedNavigataionAutonomy.State> states, 
+                                         List<GoalBasedNavigataionAutonomy.patient> patientNum)
     {
         
-        // Pause The Simulation
-        // Wait until the desired time
-        // yield return new WaitForSeconds(delayTimeBeforePause);
-
         // iterate through all the sets of questions
         for(int i = 0; i < setNums.Count; i++)
         {
             List<int> questionNums = setNums[i];
             // float delayTime = delayTimesBeforePause[i];
-            // // Wait until the time matches
-            // yield return new WaitUntil(() => Time.time > delayTime * Time.timeScale + 4f);
+            GoalBasedNavigataionAutonomy.State state = states[i];
+            GoalBasedNavigataionAutonomy.patient patient = patientNum[i];
 
+            // Wait until the state and patient are the same
+            yield return new WaitUntil(() => navigationTask.currentState == state 
+                                            && navigationTask.currentPatient == patient);
+
+            // Ask the next set of questions
+            askQuestionGui.respondedToQuestionSet = false;
             StartCoroutine(askQuestionGui.AskSetOfQuestions(questionNums));
-
-            yield return new WaitUntil(() => askQuestionGui.respondedToQuestion == true);
+            yield return new WaitUntil(() => askQuestionGui.respondedToQuestionSet == true);
 
         }
 
-        Debug.Log("Saving Responses");
-
-        // if(config != Configuration.Familiarization)
-        // {
-        //     SaveNavTaskResponsesToCSV();
-        //     eyeTracking.LogResponse();
-        // }
-
-        askQuestionGui.SaveResponsesToCSV();
-        
-        
-
+        StartCoroutine(askQuestionGui.SaveResponsesToCSV());
     }
 
 
