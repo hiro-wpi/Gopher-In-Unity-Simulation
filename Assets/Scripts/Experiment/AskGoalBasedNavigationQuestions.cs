@@ -17,13 +17,6 @@ public class AskGoalBasedNavigationQuestions : MonoBehaviour
     [SerializeField] private Configuration config = Configuration.Config1;
     [SerializeField] private GUI gui = GUI.Regular;
     
-    // Start Times for the Questions
-    [SerializeField] private List<float> startTimesConfig1 = new List<float>{17.29f, 43.35f, 88.75f};
-    [SerializeField] private List<float> startTimesConfig2 = new List<float>{35.40f, 72.30f, 80.75f};
-    [SerializeField] private List<float> startTimesConfig3 = new List<float>{17.15f, 100f, 140f};
-    [SerializeField] private List<float> startTimesFamiliarization = new List<float>{17.50f, 35.75f, 71.75f};
-
-    
 
     // Start is called before the first frame update
     void Start()
@@ -53,6 +46,14 @@ public class AskGoalBasedNavigationQuestions : MonoBehaviour
         
     }
 
+
+    // when we are red
+    //      patient + go to pharmacy
+    // green
+    //      patient + 1 + checking
+    // when getting meds
+    //      patient + get medicine
+
     private void initNavigationTaskConfig()
     {
         // Setup the the data recorder file
@@ -76,13 +77,13 @@ public class AskGoalBasedNavigationQuestions : MonoBehaviour
                 // List<float> startTimes1 = new List<float>{17.29f, 43.35f, 88.75f};
                 List<GoalBasedNavigataionAutonomy.State> states1 = new List<GoalBasedNavigataionAutonomy.State>{
                     GoalBasedNavigataionAutonomy.State.CheckPatient,                                                                                         
-                    GoalBasedNavigataionAutonomy.State.CheckPatient,
-                    GoalBasedNavigataionAutonomy.State.CheckPatient};
+                    GoalBasedNavigataionAutonomy.State.GetMedicine,
+                    GoalBasedNavigataionAutonomy.State.GoToPharmacy};
 
                 List<GoalBasedNavigataionAutonomy.patient> patientNum1 = new List<GoalBasedNavigataionAutonomy.patient>{
-                    GoalBasedNavigataionAutonomy.patient.Patient1,                                                                                         
+                    GoalBasedNavigataionAutonomy.patient.Patient2,                                                                                         
                     GoalBasedNavigataionAutonomy.patient.Patient2, 
-                    GoalBasedNavigataionAutonomy.patient.Patient3};
+                    GoalBasedNavigataionAutonomy.patient.Patient4};
 
 
                 StartCoroutine(AskSetOfQuestions(set1, states1, patientNum1));
@@ -101,13 +102,13 @@ public class AskGoalBasedNavigationQuestions : MonoBehaviour
                                                             new List<int>{1, 2, 3}};
 
                 List<GoalBasedNavigataionAutonomy.State> states2 = new List<GoalBasedNavigataionAutonomy.State>{
-                    GoalBasedNavigataionAutonomy.State.CheckPatient,                                                                                         
+                    GoalBasedNavigataionAutonomy.State.GetMedicine,                                                                                         
                     GoalBasedNavigataionAutonomy.State.CheckPatient,
-                    GoalBasedNavigataionAutonomy.State.CheckPatient};
+                    GoalBasedNavigataionAutonomy.State.GoToPharmacy};
 
                 List<GoalBasedNavigataionAutonomy.patient> patientNum2 = new List<GoalBasedNavigataionAutonomy.patient>{
                     GoalBasedNavigataionAutonomy.patient.Patient1,                                                                                         
-                    GoalBasedNavigataionAutonomy.patient.Patient2, 
+                    GoalBasedNavigataionAutonomy.patient.Patient3, 
                     GoalBasedNavigataionAutonomy.patient.Patient3};
 
                 // List<float> startTimes2 = new List<float>{35.40f, 72.30f, 80.75f};
@@ -128,14 +129,14 @@ public class AskGoalBasedNavigationQuestions : MonoBehaviour
                                                             new List<int>{1, 2, 3}};
 
                 List<GoalBasedNavigataionAutonomy.State> states3 = new List<GoalBasedNavigataionAutonomy.State>{
-                    GoalBasedNavigataionAutonomy.State.CheckPatient,                                                                                         
-                    GoalBasedNavigataionAutonomy.State.CheckPatient,
-                    GoalBasedNavigataionAutonomy.State.CheckPatient};
+                    GoalBasedNavigataionAutonomy.State.GoToPharmacy,                                                                                         
+                    GoalBasedNavigataionAutonomy.State.GetMedicine,
+                    GoalBasedNavigataionAutonomy.State.Done};
 
                 List<GoalBasedNavigataionAutonomy.patient> patientNum3 = new List<GoalBasedNavigataionAutonomy.patient>{
-                    GoalBasedNavigataionAutonomy.patient.Patient1,                                                                                         
-                    GoalBasedNavigataionAutonomy.patient.Patient2, 
-                    GoalBasedNavigataionAutonomy.patient.Patient3};
+                    GoalBasedNavigataionAutonomy.patient.Patient2,                                                                                         
+                    GoalBasedNavigataionAutonomy.patient.Patient3, 
+                    GoalBasedNavigataionAutonomy.patient.Patient4};
 
                 // List<float> startTimes3 = new List<float>{17.15f, 100f, 139f};
 
@@ -156,13 +157,13 @@ public class AskGoalBasedNavigationQuestions : MonoBehaviour
                                                                           new List<int>{1, 2, 3}};
 
                 List<GoalBasedNavigataionAutonomy.State> statesFam = new List<GoalBasedNavigataionAutonomy.State>{
-                    GoalBasedNavigataionAutonomy.State.CheckPatient,                                                                                         
-                    GoalBasedNavigataionAutonomy.State.CheckPatient,
+                    GoalBasedNavigataionAutonomy.State.GoToPharmacy,                                                                                         
+                    GoalBasedNavigataionAutonomy.State.GetMedicine,
                     GoalBasedNavigataionAutonomy.State.CheckPatient};
 
                 List<GoalBasedNavigataionAutonomy.patient> patientNumFam = new List<GoalBasedNavigataionAutonomy.patient>{
                     GoalBasedNavigataionAutonomy.patient.Patient1,                                                                                         
-                    GoalBasedNavigataionAutonomy.patient.Patient2, 
+                    GoalBasedNavigataionAutonomy.patient.Patient1, 
                     GoalBasedNavigataionAutonomy.patient.Patient3};
 
                 // List<float> startTimesFamiliarization = new List<float>{17.16f, 100f, 139f};

@@ -3148,6 +3148,8 @@ MonoBehaviour:
   icon2: {fileID: 21300000, guid: 6204706b4ff9f174b9a2b3a28ed8dddb, type: 3}
   icon3: {fileID: 21300000, guid: 5e117f4a4b2594344abe6edc0473ad92, type: 3}
   robotName: Gopher
+  currentState: 0
+  currentPatient: 0
   patientPosition:
   - {x: -10.85, y: 0.1, z: 7.8}
   - {x: -10.85, y: 0.1, z: 4.4}
@@ -3180,6 +3182,7 @@ MonoBehaviour:
   - {fileID: 5931222874406895172, guid: 8a224b3a9f0312c418b51fc9c8daf0b7, type: 3}
   - {fileID: 1301469043717798922, guid: 1378e3e5e04df4f4cac79eda43433921, type: 3}
   reverseCheckingOrder: 0
+  isTaskInit: 0
 --- !u!114 &272281206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5160,6 +5163,8 @@ MonoBehaviour:
   answerCPanel: {fileID: 882840188}
   answerDPanel: {fileID: 1555239097}
   eyeTracking: {fileID: 398202625}
+  respondedToQuestion: 0
+  respondedToQuestionSet: 0
 --- !u!1 &401609230
 GameObject:
   m_ObjectHideFlags: 0
@@ -5393,6 +5398,8 @@ MonoBehaviour:
   icon2: {fileID: 21300000, guid: 6204706b4ff9f174b9a2b3a28ed8dddb, type: 3}
   icon3: {fileID: 21300000, guid: 5e117f4a4b2594344abe6edc0473ad92, type: 3}
   robotName: Gopher AR Culling Varient
+  currentState: 0
+  currentPatient: 0
   patientPosition:
   - {x: -10.85, y: 0.1, z: 7.8}
   - {x: -10.85, y: 0.1, z: 4.4}
@@ -5425,6 +5432,7 @@ MonoBehaviour:
   - {fileID: 5931222874406895172, guid: 8a224b3a9f0312c418b51fc9c8daf0b7, type: 3}
   - {fileID: 1301469043717798922, guid: 1378e3e5e04df4f4cac79eda43433921, type: 3}
   reverseCheckingOrder: 0
+  isTaskInit: 0
 --- !u!114 &416695944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7162,6 +7170,8 @@ MonoBehaviour:
   answerCPanel: {fileID: 422035690}
   answerDPanel: {fileID: 1878916750}
   eyeTracking: {fileID: 549620249}
+  respondedToQuestion: 0
+  respondedToQuestionSet: 0
 --- !u!114 &549620249
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7956,6 +7966,8 @@ MonoBehaviour:
   answerCPanel: {fileID: 422035690}
   answerDPanel: {fileID: 1878916750}
   eyeTracking: {fileID: 608779720}
+  respondedToQuestion: 0
+  respondedToQuestionSet: 0
 --- !u!114 &608779720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11578,6 +11590,8 @@ MonoBehaviour:
   answerCPanel: {fileID: 372167200}
   answerDPanel: {fileID: 749572757}
   eyeTracking: {fileID: 1069873756}
+  respondedToQuestion: 0
+  respondedToQuestionSet: 0
 --- !u!114 &921506931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12428,6 +12442,8 @@ MonoBehaviour:
   answerCPanel: {fileID: 882840188}
   answerDPanel: {fileID: 1555239097}
   eyeTracking: {fileID: 1042322629}
+  respondedToQuestion: 0
+  respondedToQuestionSet: 0
 --- !u!114 &1042322629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12456,7 +12472,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   askQuestionGui: {fileID: 1042322628}
   navigationTask: {fileID: 272281205}
-  config: 3
+  config: 0
   gui: 2
   startTimesConfig1:
   - 17.29
@@ -12851,6 +12867,8 @@ MonoBehaviour:
   answerCPanel: {fileID: 372167200}
   answerDPanel: {fileID: 749572757}
   eyeTracking: {fileID: 1069873756}
+  respondedToQuestion: 0
+  respondedToQuestionSet: 0
 --- !u!114 &1069873756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12922,6 +12940,8 @@ MonoBehaviour:
   answerCPanel: {fileID: 882840188}
   answerDPanel: {fileID: 1555239097}
   eyeTracking: {fileID: 1089257543}
+  respondedToQuestion: 0
+  respondedToQuestionSet: 0
 --- !u!114 &1089257543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13418,6 +13438,8 @@ MonoBehaviour:
   answerCPanel: {fileID: 372167200}
   answerDPanel: {fileID: 749572757}
   eyeTracking: {fileID: 1112827140}
+  respondedToQuestion: 0
+  respondedToQuestionSet: 0
 --- !u!1 &1132575217
 GameObject:
   m_ObjectHideFlags: 0
@@ -16328,6 +16350,8 @@ MonoBehaviour:
   answerCPanel: {fileID: 882840188}
   answerDPanel: {fileID: 1555239097}
   eyeTracking: {fileID: 1482878758}
+  respondedToQuestion: 0
+  respondedToQuestionSet: 0
 --- !u!114 &1482878758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17125,6 +17149,8 @@ MonoBehaviour:
   answerCPanel: {fileID: 372167200}
   answerDPanel: {fileID: 749572757}
   eyeTracking: {fileID: 1069873756}
+  respondedToQuestion: 0
+  respondedToQuestionSet: 0
 --- !u!114 &1537716352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18833,6 +18859,8 @@ MonoBehaviour:
   answerCPanel: {fileID: 422035690}
   answerDPanel: {fileID: 1878916750}
   eyeTracking: {fileID: 1623578296}
+  respondedToQuestion: 0
+  respondedToQuestionSet: 0
 --- !u!1 &1624058276
 GameObject:
   m_ObjectHideFlags: 0
@@ -22564,6 +22592,8 @@ MonoBehaviour:
   icon2: {fileID: 21300000, guid: 6204706b4ff9f174b9a2b3a28ed8dddb, type: 3}
   icon3: {fileID: 21300000, guid: 5e117f4a4b2594344abe6edc0473ad92, type: 3}
   robotName: Gopher
+  currentState: 0
+  currentPatient: 0
   patientPosition:
   - {x: -10.85, y: 0.1, z: 7.8}
   - {x: -10.85, y: 0.1, z: 4.4}
@@ -22596,6 +22626,7 @@ MonoBehaviour:
   - {fileID: 5931222874406895172, guid: 8a224b3a9f0312c418b51fc9c8daf0b7, type: 3}
   - {fileID: 1301469043717798922, guid: 1378e3e5e04df4f4cac79eda43433921, type: 3}
   reverseCheckingOrder: 0
+  isTaskInit: 0
 --- !u!114 &1964184700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23496,6 +23527,8 @@ MonoBehaviour:
   answerCPanel: {fileID: 422035690}
   answerDPanel: {fileID: 1878916750}
   eyeTracking: {fileID: 2134079129}
+  respondedToQuestion: 0
+  respondedToQuestionSet: 0
 --- !u!114 &2134079129
 MonoBehaviour:
   m_ObjectHideFlags: 0
