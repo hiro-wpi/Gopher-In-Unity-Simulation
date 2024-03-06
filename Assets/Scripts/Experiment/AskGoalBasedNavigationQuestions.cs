@@ -6,9 +6,8 @@ using UnityEngine;
 ///     Task Specific class to ask questions about goal based navigation
 ///     to the participant.
 /// </summary>
-public class AskGoalBasedNavigationQuestions : MonoBehaviour
+public class AskGoalBasedNavigationQuestions : AskQuestionGUI
 {
-    [SerializeField] private AskQuestionGUI askQuestionGui;
     [SerializeField] private GoalBasedNavigataionAutonomy navigationTask;
 
     // Setup of the navigation task
@@ -19,33 +18,28 @@ public class AskGoalBasedNavigationQuestions : MonoBehaviour
     
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
+        // Load everything that is apart of our inherented class
+        base.Start();
         
         // Task Specific Questions
-        askQuestionGui.AddQuestion("[0] Test Question", new List<string> { "Answer A", "Answer B", "Answer C", "Answer D"});
+        AddQuestion("[0] Test Question", new List<string> { "Answer A", "Answer B", "Answer C", "Answer D"});
 
-        askQuestionGui.AddQuestion("[1] What is the status of the medicines on the table the robot just checked?", new List<string>{"Patient has all their medicines", "Patient is missing a medicine"});
-        askQuestionGui.AddQuestion("[2] Which table is the robot currently at?", new List<string>{"Table 1", "Table 2", "Table 3", "Table 4"});
-        askQuestionGui.AddQuestion("[3] Where will the robot be going to next?", new List<string>{"Next Table", "Pharmacy", "Nowhere (Task is complete)"});
+        AddQuestion("[1] What is the status of the medicines on the table the robot just checked?", new List<string>{"Patient has all their medicines", "Patient is missing a medicine"});
+        AddQuestion("[2] Which table is the robot currently at?", new List<string>{"Table 1", "Table 2", "Table 3", "Table 4"});
+        AddQuestion("[3] Where will the robot be going to next?", new List<string>{"Next Table", "Pharmacy", "Nowhere (Task is complete)"});
 
-        askQuestionGui.AddQuestion("[1] Is this the first time the robot is at the pharmacy?", new List<string>{"Yes", "No"});
-        askQuestionGui.AddQuestion("[2] Which medicine is the robot going to grab?", new List<string>{"Red", "Blue", "Green", "Yellow"});
-        askQuestionGui.AddQuestion("[3] Which table will the robot be delivering the medicine to?", new List<string>{"Table 1", "Table 2", "Table 3", "Table 4"});
+        AddQuestion("[1] Is this the first time the robot is at the pharmacy?", new List<string>{"Yes", "No"});
+        AddQuestion("[2] Which medicine is the robot going to grab?", new List<string>{"Red", "Blue", "Green", "Yellow"});
+        AddQuestion("[3] Which table will the robot be delivering the medicine to?", new List<string>{"Table 1", "Table 2", "Table 3", "Table 4"});
 
-        askQuestionGui.AddQuestion("[1] Which bird can't fly?", new List<string>{"Penguin", "Eagle", "Hummingbird", "Pigeon"});
-        askQuestionGui.AddQuestion("[2] What is the largest cat?", new List<string>{"Cheetah", "Lion", "Jaguar", "Tiger"});
-        askQuestionGui.AddQuestion("[3] What color are giraffes?", new List<string>{"Blue", "Orange", "Green", "Purple"});
+        AddQuestion("[1] Which bird can't fly?", new List<string>{"Penguin", "Eagle", "Hummingbird", "Pigeon"});
+        AddQuestion("[2] What is the largest cat?", new List<string>{"Cheetah", "Lion", "Jaguar", "Tiger"});
+        AddQuestion("[3] What color are giraffes?", new List<string>{"Blue", "Orange", "Green", "Purple"});
 
         initNavigationTaskConfig();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
 
     // when we are red
     //      patient + go to pharmacy
@@ -200,7 +194,7 @@ public class AskGoalBasedNavigationQuestions : MonoBehaviour
         taskSetupString += "Configuration: ," + config + "\n\n";
 
         // Update the file
-        askQuestionGui.setFileInformation(fileName, fileExtension, taskSetupString);
+        setFileInformation(fileName, fileExtension, taskSetupString);
 
     }
 
@@ -223,13 +217,13 @@ public class AskGoalBasedNavigationQuestions : MonoBehaviour
                                             && navigationTask.currentPatient == patient);
 
             // Ask the next set of questions
-            askQuestionGui.respondedToQuestionSet = false;
-            StartCoroutine(askQuestionGui.AskSetOfQuestions(questionNums));
-            yield return new WaitUntil(() => askQuestionGui.respondedToQuestionSet == true);
+            respondedToQuestionSet = false;
+            StartCoroutine(AskSetOfQuestions(questionNums));
+            yield return new WaitUntil(() => respondedToQuestionSet == true);
 
         }
 
-        StartCoroutine(askQuestionGui.SaveResponsesToCSV());
+        StartCoroutine(SaveResponsesToCSV());
     }
 
 

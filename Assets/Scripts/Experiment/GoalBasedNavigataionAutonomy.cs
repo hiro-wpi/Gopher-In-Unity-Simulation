@@ -86,6 +86,9 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
     public bool isTaskInit = false;
 
+    private float showCartARForRealSeconds = 1.5f; // The amount of time to show the real AR
+    private float showArmTrajectoryARForRealSeconds = 0.25f; // The amount of time before transitioning to the next state
+
     void Start()
     {
     }
@@ -161,7 +164,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
         {
             isTaskInit = true;
             Time.timeScale = 2.0f;
-            StartCoroutine(TimeSchedule());
+            StartCoroutine(SchedulerCoroutine());
         }
 
         // ScheduleNextTask();
@@ -415,8 +418,8 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
     }
 
 
-    // Scheduler That considers time
-    IEnumerator TimeSchedule()
+    // Scheduler in the form of a coroutine
+    IEnumerator SchedulerCoroutine()
     {
         while(currentState != State.Done)
         {
@@ -471,6 +474,9 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                             ChangeNearestCartARColor(patientPos, Color.red);
                             ChangeNearestCartCanvasHighlightIcon(patientPos, icon3);
 
+                            // wait for AR to load using real seconds
+                            yield return new WaitForSecondsRealtime(showCartARForRealSeconds);
+
                             // Create the waypoints to get to the pharmacy
                             graphicalInterface.AddLogInfo("Going to pharmacy");
                             posTraj = new List<Vector3>{transfereWaypointPositions[1],transfereWaypointPositions[0]} ;
@@ -489,6 +495,9 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                             patientPos = patientPosition[(int)currentPatient];
                             ChangeNearestCartARColor(patientPos, Color.green);
                             ChangeNearestCartCanvasHighlightIcon(patientPos, icon2);
+
+                            // wait for AR to load using real seconds
+                            yield return new WaitForSecondsRealtime(showCartARForRealSeconds);
 
                             graphicalInterface.AddLogInfo("Going to next patient");
                             currentState = State.ChangePatient;
@@ -511,6 +520,9 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         // SetArmToMedTarget();
                         SetArmToMedTarget(patientMissingMedsColors[(int)currentPatient]);
                         // askQuestionGUI.AskQuestion(7, 0.5f);
+
+                        yield return new WaitForSecondsRealtime(showArmTrajectoryARForRealSeconds);
+
                         currentState = State.GetMedicine;
                     }
                     
@@ -592,6 +604,9 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         patientPos = patientPosition[(int)currentPatient];
                         ChangeNearestCartARColor(patientPos, Color.green);
                         ChangeNearestCartCanvasHighlightIcon(patientPos, icon2);
+
+                        // wait for AR to load using real seconds
+                        yield return new WaitForSecondsRealtime(showCartARForRealSeconds);
 
                         arManipAuto.HomeJoints();
                         

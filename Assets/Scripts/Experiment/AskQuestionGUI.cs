@@ -48,32 +48,6 @@ public class AskQuestionGUI : MonoBehaviour
     private float simStartTime = 0.0f;   // Get the simulation time when the question was asked
     private float realStartTime = 0.0f;  // Get the the time when we start asking the question
 
-    // Log GUI
-
-    // public enum Configuration
-    // {
-    //     Config1,
-    //     Config2,
-    //     Config3,
-
-    //     Familiarization
-    // }
-
-    // public enum GUI
-    // {
-    //     Regular,
-    //     AR,
-    //     RegularAR
-    // }
-
-    // [SerializeField] private List<float> startTimesConfig1 = new List<float>{17.29f, 43.35f, 88.75f};
-    // [SerializeField] private List<float> startTimesConfig2 = new List<float>{35.40f, 72.30f, 80.75f};
-    // [SerializeField] private List<float> startTimesConfig3 = new List<float>{17.15f, 100f, 140f};
-    // [SerializeField] private List<float> startTimesFamiliarization = new List<float>{17.50f, 35.75f, 71.75f};
-
-    // public Configuration config = Configuration.Config1;
-    // public GUI gui = GUI.Regular;
-
     public List<List<float>> questionairOrder = new List<List<float>>(); // List of questions and answers
     // list<float> will have the simulation time to ask the question, and the question number
     // private float simStartDelay = 3.0f;  // Delay before the simulation starts
@@ -84,12 +58,16 @@ public class AskQuestionGUI : MonoBehaviour
     private string taskSetupString = ""; // Add the task setup string to the response log
     private TextWriter textWriter;
 
-    [ReadOnly] public bool respondedToQuestion = false;
+    private bool respondedToQuestion = false;
     public bool respondedToQuestionSet = false;
+
+    private float waitForRealSeconds = 10f; // Determines the amount of time the user has to look at the screen before answering a question
+
+    
 
     // States
 
-    private void Start()
+    public void Start()
     {
         // Question
         questionPanelText = questionPanel.GetComponentInChildren<TextMeshProUGUI>();
@@ -309,7 +287,7 @@ public class AskQuestionGUI : MonoBehaviour
 
         PlayBuzzSound();
 
-        yield return new WaitForSecondsRealtime(4f);
+        yield return new WaitForSecondsRealtime(waitForRealSeconds);
         // allowResume = true;
         
         // Show all the questions
