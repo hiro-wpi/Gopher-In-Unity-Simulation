@@ -460,7 +460,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     if (arNavAuto.reachedGoal)
                     {
                         // graphicalInterface.AddLogInfo("Arrived at destination");
-                        graphicalInterface.AddLogInfo("Checking patient medicines");
+                        // graphicalInterface.AddLogInfo("Checking patient medicines");
 
                         // Debug.Log("Checking the patient");
                         // TODO: Do this actually properly
@@ -469,7 +469,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                             // askQuestionGUI.AskQuestion(2, 0.2f);
 
                             // Change AR to indicate an issue
-                            graphicalInterface.AddLogInfo("Patient is missing a " + patientMissingMedsColors[(int)currentPatient] + " medicine");
+                            graphicalInterface.AddLogInfo("Patient " + ((int)currentPatient+1) +" is missing a " + patientMissingMedsColors[(int)currentPatient] + " medicine");
                             patientPos = patientPosition[(int)currentPatient];
                             ChangeNearestCartARColor(patientPos, Color.red);
                             ChangeNearestCartCanvasHighlightIcon(patientPos, icon3);
@@ -478,7 +478,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                             yield return new WaitForSecondsRealtime(showCartARForRealSeconds);
 
                             // Create the waypoints to get to the pharmacy
-                            graphicalInterface.AddLogInfo("Going to pharmacy");
+                            // graphicalInterface.AddLogInfo("Going to pharmacy");
                             posTraj = new List<Vector3>{transfereWaypointPositions[1],transfereWaypointPositions[0]} ;
                             rotTraj = new List<Vector3>{transferReturnWaypointRotations[1], transferReturnWaypointRotations[0]};
                             posTraj.Add(pharmacyPosition);
@@ -491,7 +491,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                         {
                             // askQuestionGUI.AskQuestion(2, 0.2f);
                             // Change AR to indicate no issue
-                            graphicalInterface.AddLogInfo("Patient has expected medicines");
+                            graphicalInterface.AddLogInfo("Patient " + ((int)currentPatient+1) + " has expected medicines");
                             patientPos = patientPosition[(int)currentPatient];
                             ChangeNearestCartARColor(patientPos, Color.green);
                             ChangeNearestCartCanvasHighlightIcon(patientPos, icon2);
@@ -499,7 +499,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                             // wait for AR to load using real seconds
                             yield return new WaitForSecondsRealtime(showCartARForRealSeconds);
 
-                            graphicalInterface.AddLogInfo("Going to next patient");
+                            // graphicalInterface.AddLogInfo("Going to next patient");
                             currentState = State.ChangePatient;
                         }
                         // state = State.ChangePatient;
@@ -514,7 +514,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     // if we arrive at the pharmacy, get the medicine
                     if (arNavAuto.reachedGoal)
                     {
-                        graphicalInterface.AddLogInfo("Arrived at destination");
+                        // graphicalInterface.AddLogInfo("Arrived at destination");
                         graphicalInterface.AddLogInfo("Retrieving " + patientMissingMedsColors[(int)currentPatient] + " medicine");    
                         
                         // SetArmToMedTarget();
@@ -537,7 +537,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     {
                         // Debug.Log("Got Medicine");
                         graphicalInterface.AddLogInfo("Medicine in posession");
-                        graphicalInterface.AddLogInfo("Delivering medicine to patient");
+                        graphicalInterface.AddLogInfo("Delivering medicine to patient " +  + ((int)currentPatient+1));
                         // arManipAuto.HomeJoints();
                         posTraj = new List<Vector3>(transfereWaypointPositions);
                         rotTraj = new List<Vector3>(transferWaypointRotations);
@@ -559,7 +559,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     if (arNavAuto.reachedGoal)
                     {
 
-                        graphicalInterface.AddLogInfo("Arrived at destination");
+                        // graphicalInterface.AddLogInfo("Arrived at destination");
 
                         patientPos = patientPosition[(int)currentPatient];
                         GameObject nearestCart = GetNearestCart(patientPos);
@@ -582,7 +582,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                             List<Quaternion> rotations = new List<Quaternion>{hoverDropOffRot1, hoverDropOffRot2, hoverDropOffRot1};
                             List<int> gripperActions = new List<int>{-1, 0, -1, };
                             
-                            graphicalInterface.AddLogInfo("Delivering medicine");
+                            // graphicalInterface.AddLogInfo("Delivering medicine");
                             arManipAuto.SetArmWaypoints(positions, rotations, gripperActions);
                         }
 
@@ -599,7 +599,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
                     if(arManipAuto.reachedArmGoal)
                     {
                         // askQuestionGUI.AskQuestion(8, 0.25f);
-                        graphicalInterface.AddLogInfo("Delivered medicine");
+                        // graphicalInterface.AddLogInfo("Delivered medicine");
                         graphicalInterface.AddLogInfo("Issue resolved");
                         patientPos = patientPosition[(int)currentPatient];
                         ChangeNearestCartARColor(patientPos, Color.green);
@@ -610,7 +610,7 @@ public class GoalBasedNavigataionAutonomy : MonoBehaviour
 
                         arManipAuto.HomeJoints();
                         
-                        graphicalInterface.AddLogInfo("Checking next patient medicines");
+                        // graphicalInterface.AddLogInfo("Checking next patient medicines");
                         currentState = State.ChangePatient;
                     }
                     break;
