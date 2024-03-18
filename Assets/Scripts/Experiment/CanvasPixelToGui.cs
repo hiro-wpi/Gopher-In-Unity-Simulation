@@ -23,6 +23,7 @@ public class CanvasPixelToGui : MonoBehaviour
         if(Input.GetMouseButtonDown(0))
         {
             Debug.Log(GetPixelToGui(Input.mousePosition));
+            Debug.Log(Input.mousePosition);
         }
     }
 
