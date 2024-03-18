@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 
 /// <summary>
@@ -11,6 +13,8 @@ public class CanvasPixelToGui : MonoBehaviour
 
     // TODO Consider using GraphicRaycaster.Raycast
     [SerializeField] List<GameObject> guiElements = new List<GameObject>();
+    [SerializeField] private GraphicRaycaster graphicRaycaster;
+    
 
     void Update()
     {
@@ -23,16 +27,38 @@ public class CanvasPixelToGui : MonoBehaviour
     }
 
     // Get the name of the gameobject related to the pixel coordinate
+    // public string GetPixelToGui(Vector2 pixelPosition)
+    // {
+    //     // Check each gui element
+    //     foreach(GameObject gui in guiElements)
+    //     {
+    //         Rect rect = gui.GetComponent<RectTransform>().rect;
+    //         if(RectContains(gui.GetComponent<RectTransform>(), pixelPosition))
+    //         {
+    //             return gui.name;
+    //         }
+    //     }
+
+    //     return "none";
+    // }
+
+    // Get the name of the gameobject related to the pixel coordinate using the GraphicRaycaster
     public string GetPixelToGui(Vector2 pixelPosition)
     {
         // Check each gui element
-        foreach(GameObject gui in guiElements)
+
+        // Save the pixel position
+        PointerEventData pointerEventData = new PointerEventData(null);
+        pointerEventData.position = pixelPosition;
+
+        // Results
+        List<RaycastResult> results = new List<RaycastResult>();
+
+        graphicRaycaster.Raycast(pointerEventData, results);
+
+        if(results.Count > 0)
         {
-            Rect rect = gui.GetComponent<RectTransform>().rect;
-            if(RectContains(gui.GetComponent<RectTransform>(), pixelPosition))
-            {
-                return gui.name;
-            }
+            return results[0].gameObject.name;
         }
 
         return "none";
@@ -70,4 +96,5 @@ public class CanvasPixelToGui : MonoBehaviour
                 && pixelPosition.y < rectYMax;
     }
 
+    
 }
