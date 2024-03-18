@@ -26,22 +26,6 @@ public class CanvasPixelToGui : MonoBehaviour
         }
     }
 
-    // Get the name of the gameobject related to the pixel coordinate
-    // public string GetPixelToGui(Vector2 pixelPosition)
-    // {
-    //     // Check each gui element
-    //     foreach(GameObject gui in guiElements)
-    //     {
-    //         Rect rect = gui.GetComponent<RectTransform>().rect;
-    //         if(RectContains(gui.GetComponent<RectTransform>(), pixelPosition))
-    //         {
-    //             return gui.name;
-    //         }
-    //     }
-
-    //     return "none";
-    // }
-
     // Get the name of the gameobject related to the pixel coordinate using the GraphicRaycaster
     public string GetPixelToGui(Vector2 pixelPosition)
     {
@@ -58,11 +42,39 @@ public class CanvasPixelToGui : MonoBehaviour
 
         if(results.Count > 0)
         {
-            return results[0].gameObject.name;
+            // iterate throught the results to get a string connecting the parent gameobject "Canvas" to the hit object
+            return GetPathString(GetPathToCanvas(results[0].gameObject, "Canvas"));
+            // return results[0].gameObject.name;
         }
 
         return "none";
     }
+
+    private List<GameObject> GetPathToCanvas(GameObject obj, string parentName)
+    {
+        List<GameObject> path = new List<GameObject>();
+        GameObject current = obj;
+
+        while(current.name != parentName)
+        {
+            path.Add(current);
+            current = current.transform.parent.gameObject;
+        }
+
+        return path;
+    }
+
+    private string GetPathString(List<GameObject> path)
+    {
+        string pathString = "";
+        foreach(GameObject obj in path)
+        {
+            pathString = obj.name + "/" + pathString;
+        }
+
+        return pathString;
+    }
+
 
     private bool RectContains(RectTransform rect, Vector2 pixelPosition)
     {
