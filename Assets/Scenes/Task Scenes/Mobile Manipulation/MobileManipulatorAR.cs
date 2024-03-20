@@ -55,6 +55,7 @@ public class MobileManipulatorAR : MonoBehaviour
 
     [SerializeField] private Camera[] cameras;
     [SerializeField] private GameObject mapCover;
+    [SerializeField] private GameObject secondaryCameraCover;
     private int interfaceIndex = 0;
 
     void Start()
@@ -263,10 +264,12 @@ public class MobileManipulatorAR : MonoBehaviour
         if (interfaceIndex == 1 || interfaceIndex == 2)
         {
             mapCover.SetActive(false);
+            secondaryCameraCover.SetActive(false);
         }
         else
         {
             mapCover.SetActive(true);
+            secondaryCameraCover.SetActive(true);
         }
     }
 }
