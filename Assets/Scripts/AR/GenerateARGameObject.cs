@@ -140,7 +140,8 @@ public class GenerateARGameObject : MonoBehaviour
         var colliders = arObject.GetComponentsInChildren<Collider>();
         foreach (var collider in colliders)
         {
-            collider.enabled = false;
+            // collider.enabled = false;
+            collider.isTrigger = true;
         }
 
         // If no color provided, do not override material

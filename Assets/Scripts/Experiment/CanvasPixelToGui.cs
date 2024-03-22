@@ -13,16 +13,35 @@ public class CanvasPixelToGui : MonoBehaviour
 
     // TODO Consider using GraphicRaycaster.Raycast
     [SerializeField] private GraphicRaycaster graphicRaycaster;
-    
+    [SerializeField] private GraphicalInterface graphicalInterface;
+    private Camera cam;
+    [SerializeField] RectTransform cameraRect;
+
+    // Quick note, ARObject is both a tag and a layer
+    private string stringARTag = "ARObject";
     void Update()
     {
+
+        if (cam == null)
+        {
+            // Get all the active cameras referanced in the graphical interface
+            Camera[] cameras =  graphicalInterface.GetCurrentActiveCameras();
+            if (cameras.Length > 0)
+            {
+                cam = cameras[0];
+
+            }
+        }
+
         // Quick Test
         // Left Click
         if(Input.GetMouseButtonDown(0))
         {
             Debug.Log(GetPixelToGui(Input.mousePosition));
+            Debug.Log(GetARGameObject(Input.mousePosition));
             Debug.Log(Input.mousePosition);
         }
+
     }
 
     // Get the name of the gameobject related to the pixel coordinate using the GraphicRaycaster
@@ -74,38 +93,38 @@ public class CanvasPixelToGui : MonoBehaviour
         return pathString;
     }
 
-
-    private bool RectContains(RectTransform rect, Vector2 pixelPosition)
+    // Get if a gameobject is selected given a 2D position
+    private (bool, GameObject) GetARGameObject( Vector2 selectedPosition )
     {
-
-        // Placeholder for rect corners
-        Vector3[] v = new Vector3[4];
-        rect.GetWorldCorners(v);
-
-        // Quickly check that the canvas is normalized
-        foreach(Vector3 corner in v)
+        // Check if hitting the proper RectTransform
+        if (
+            !RectTransformUtility.RectangleContainsScreenPoint(
+                cameraRect, selectedPosition
+            )
+        )
         {
-            if(corner.z != 0.0f)
-            {
-                Debug.LogError("Corner Position.Z is not zero. Canvas is rotated.");
-                return false;
-            }
-
+            return (false, null);
         }
 
-        // Breakdown each corner
-        float rectXMin = v[0].x;
-        float rectXMax = v[2].x;
-        float rectYMin = v[0].y;
-        float rectYMax = v[2].y;
-
-        Debug.Log("V: " + "" + v[0].ToString() + " " + v[2].ToString());
-
-        return  pixelPosition.x > rectXMin 
-                && pixelPosition.x < rectXMax
-                && pixelPosition.y > rectYMin
-                && pixelPosition.y < rectYMax;
+        // Check if we are hitting the ARObject
+        RaycastHit hit;
+        Ray ray = cam.ScreenPointToRay(selectedPosition);
+        // Find collision and check if it is the floor
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider.gameObject.tag == stringARTag)
+            {
+                return (true, hit.collider.gameObject);
+            }
+            
+        }
+        
+        return (false, null);
     }
+
+
+
+
 
     
 }
