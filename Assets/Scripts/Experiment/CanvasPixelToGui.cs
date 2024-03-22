@@ -12,10 +12,8 @@ public class CanvasPixelToGui : MonoBehaviour
 {
 
     // TODO Consider using GraphicRaycaster.Raycast
-    [SerializeField] List<GameObject> guiElements = new List<GameObject>();
     [SerializeField] private GraphicRaycaster graphicRaycaster;
     
-
     void Update()
     {
         // Quick Test

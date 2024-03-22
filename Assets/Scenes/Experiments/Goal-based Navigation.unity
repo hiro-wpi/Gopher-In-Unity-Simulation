@@ -475,7 +475,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &46239019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1013,7 +1013,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1042322630}
+      - m_Target: {fileID: 291083024}
         m_TargetAssemblyTypeName: AskQuestionGUI, Assembly-CSharp
         m_MethodName: OnClickUnsure
         m_Mode: 1
@@ -2366,7 +2366,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1042322630}
+      - m_Target: {fileID: 291083024}
         m_TargetAssemblyTypeName: AskQuestionGUI, Assembly-CSharp
         m_MethodName: OnClickAnswerB
         m_Mode: 1
@@ -3358,6 +3358,95 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 289420446}
   m_CullTransparentMesh: 1
+--- !u!1 &291083023
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 291083027}
+  - component: {fileID: 291083025}
+  - component: {fileID: 291083024}
+  - component: {fileID: 291083026}
+  m_Layer: 5
+  m_Name: Config
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &291083024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 291083023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09bdb33693e5c70429dc9961ac536b77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guiBlocker: {fileID: 1599424884}
+  buzzSound: {fileID: 613521060}
+  questionPanel: {fileID: 608164828}
+  answerAPanel: {fileID: 1624058276}
+  answerBPanel: {fileID: 192376003}
+  answerCPanel: {fileID: 882840188}
+  answerDPanel: {fileID: 1555239097}
+  eyeTracking: {fileID: 291083025}
+  respondedToQuestionSet: 0
+  navigationTask: {fileID: 272281205}
+  config: 0
+  gui: 2
+--- !u!114 &291083025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 291083023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f514777e69e894b95a325d01595c51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Pixel: {x: 0, y: 0}
+  fileName: GUI_AR
+--- !u!114 &291083026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 291083023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1711976a1ed6a8743a5a79b9afb2d94e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  graphicRaycaster: {fileID: 1264190033}
+--- !u!224 &291083027
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 291083023}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 581905340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &292554775
 GameObject:
   m_ObjectHideFlags: 0
@@ -4630,7 +4719,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1112827141}
+      - m_Target: {fileID: 1085492278}
         m_TargetAssemblyTypeName: AskQuestionGUI, Assembly-CSharp
         m_MethodName: OnClickAnswerC
         m_Mode: 1
@@ -6967,13 +7056,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1711976a1ed6a8743a5a79b9afb2d94e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guiElements:
-  - {fileID: 584533532}
-  - {fileID: 871809221}
-  - {fileID: 1168348716}
-  - {fileID: 154159153}
-  - {fileID: 292554775}
-  - {fileID: 154159153}
   graphicRaycaster: {fileID: 408820769}
 --- !u!1 &550526386
 GameObject:
@@ -7387,7 +7469,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1042322627}
+  - {fileID: 291083027}
   m_Father: {fileID: 1622921146}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -9663,7 +9745,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1112827141}
+      - m_Target: {fileID: 1085492278}
         m_TargetAssemblyTypeName: AskQuestionGUI, Assembly-CSharp
         m_MethodName: OnClickAnswerD
         m_Mode: 1
@@ -10880,7 +10962,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1042322630}
+      - m_Target: {fileID: 291083024}
         m_TargetAssemblyTypeName: AskQuestionGUI, Assembly-CSharp
         m_MethodName: OnClickAnswerC
         m_Mode: 1
@@ -11582,7 +11664,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1112827141}
+      - m_Target: {fileID: 1085492278}
         m_TargetAssemblyTypeName: AskQuestionGUI, Assembly-CSharp
         m_MethodName: OnClickUnsure
         m_Mode: 1
@@ -11916,81 +11998,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1029640463}
   m_CullTransparentMesh: 1
---- !u!1 &1042322626
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1042322627}
-  - component: {fileID: 1042322629}
-  - component: {fileID: 1042322630}
-  m_Layer: 5
-  m_Name: Config
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1042322627
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1042322626}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 581905340}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1042322629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1042322626}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03f514777e69e894b95a325d01595c51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Pixel: {x: 0, y: 0}
-  fileName: GUI_AR
---- !u!114 &1042322630
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1042322626}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09bdb33693e5c70429dc9961ac536b77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  guiBlocker: {fileID: 1599424884}
-  buzzSound: {fileID: 613521060}
-  questionPanel: {fileID: 608164828}
-  answerAPanel: {fileID: 1624058276}
-  answerBPanel: {fileID: 192376003}
-  answerCPanel: {fileID: 882840188}
-  answerDPanel: {fileID: 1555239097}
-  eyeTracking: {fileID: 1042322629}
-  respondedToQuestionSet: 0
-  navigationTask: {fileID: 272281205}
-  config: 0
-  gui: 2
 --- !u!1 &1050560555
 GameObject:
   m_ObjectHideFlags: 0
@@ -12310,6 +12317,95 @@ RectTransform:
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 80, y: 80}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1085492277
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1085492281}
+  - component: {fileID: 1085492279}
+  - component: {fileID: 1085492278}
+  - component: {fileID: 1085492280}
+  m_Layer: 5
+  m_Name: Config
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1085492278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1085492277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09bdb33693e5c70429dc9961ac536b77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guiBlocker: {fileID: 1675704829}
+  buzzSound: {fileID: 518475503}
+  questionPanel: {fileID: 155305737}
+  answerAPanel: {fileID: 1236848017}
+  answerBPanel: {fileID: 1608255093}
+  answerCPanel: {fileID: 372167200}
+  answerDPanel: {fileID: 749572757}
+  eyeTracking: {fileID: 1085492279}
+  respondedToQuestionSet: 1
+  navigationTask: {fileID: 416695943}
+  config: 0
+  gui: 0
+--- !u!114 &1085492279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1085492277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f514777e69e894b95a325d01595c51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Pixel: {x: 0, y: 0}
+  fileName: GUI
+--- !u!114 &1085492280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1085492277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1711976a1ed6a8743a5a79b9afb2d94e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  graphicRaycaster: {fileID: 2079880844}
+--- !u!224 &1085492281
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1085492277}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1622168113}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1089883546
 GameObject:
@@ -12722,81 +12818,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1112091845}
   m_CullTransparentMesh: 1
---- !u!1 &1112827138
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1112827139}
-  - component: {fileID: 1112827140}
-  - component: {fileID: 1112827141}
-  m_Layer: 5
-  m_Name: Config
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1112827139
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1112827138}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1622168113}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1112827140
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1112827138}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03f514777e69e894b95a325d01595c51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Pixel: {x: 0, y: 0}
-  fileName: GUI
---- !u!114 &1112827141
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1112827138}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09bdb33693e5c70429dc9961ac536b77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  guiBlocker: {fileID: 1675704829}
-  buzzSound: {fileID: 518475503}
-  questionPanel: {fileID: 155305737}
-  answerAPanel: {fileID: 1236848017}
-  answerBPanel: {fileID: 1608255093}
-  answerCPanel: {fileID: 372167200}
-  answerDPanel: {fileID: 749572757}
-  eyeTracking: {fileID: 1112827140}
-  respondedToQuestionSet: 0
-  navigationTask: {fileID: 416695943}
-  config: 1
-  gui: 0
 --- !u!1 &1132575217
 GameObject:
   m_ObjectHideFlags: 0
@@ -13868,7 +13889,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1112827141}
+      - m_Target: {fileID: 1085492278}
         m_TargetAssemblyTypeName: AskQuestionGUI, Assembly-CSharp
         m_MethodName: OnClickAnswerA
         m_Mode: 1
@@ -16709,7 +16730,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1042322630}
+      - m_Target: {fileID: 291083024}
         m_TargetAssemblyTypeName: AskQuestionGUI, Assembly-CSharp
         m_MethodName: OnClickAnswerD
         m_Mode: 1
@@ -17584,7 +17605,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1112827141}
+      - m_Target: {fileID: 1085492278}
         m_TargetAssemblyTypeName: AskQuestionGUI, Assembly-CSharp
         m_MethodName: OnClickAnswerB
         m_Mode: 1
@@ -17832,7 +17853,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1112827139}
+  - {fileID: 1085492281}
   m_Father: {fileID: 613532804}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -17856,7 +17877,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1622921146
 Transform:
   m_ObjectHideFlags: 0
@@ -17951,7 +17972,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1042322630}
+      - m_Target: {fileID: 291083024}
         m_TargetAssemblyTypeName: AskQuestionGUI, Assembly-CSharp
         m_MethodName: OnClickAnswerA
         m_Mode: 1
