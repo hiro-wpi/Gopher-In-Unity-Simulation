@@ -21,6 +21,7 @@ public class EyeTrackingNavigation : MonoBehaviour
     private TextWriter textWriter;
 
     [SerializeField] private CanvasPixelToGui canvasPixelToGui;
+    [SerializeField] private GameObject guiBlocker;
 
 
     // [SerializeField] private RectTransform gaze;
@@ -33,20 +34,61 @@ public class EyeTrackingNavigation : MonoBehaviour
         // }    
     }
 
+    void Update()
+    {
+        // Check if the simulation is paused
+        if(Time.deltaTime == 0f)
+        {
+            // Simulation is paused, pass a point that is not on the screen
+            Pixel.x = -3000;
+            Pixel.y = -3000;
+            return;
+        }
+    }
+
     void FixedUpdate()
     {
-        // TODO Check that the canvas Pixel to Gui is ready
-        // TODO Request for the ar gameobject and gui
+
+        // Check if the gui blocker is active in the scene
+        if(guiBlocker.activeInHierarchy)  
+        {
+            return;
+        }
+
+        // Check that the canvas Pixel to Gui is ready
+        if(!canvasPixelToGui.isReady)
+        {
+            return;
+        }
+
+        // TODO (Remove) Testing without eye tracking
+        // Check if the gui blocker is active in the scene
+        
+        Pixel = Input.mousePosition;
+        string guiString;
+        string ar2d;
+        string ar3d;
+        (guiString, ar2d, ar3d) = canvasPixelToGui.GetGUIAR(Pixel);
+        dataString += Time.realtimeSinceStartup.ToString() + "," + Pixel.x + "," + Pixel.y + "," + guiString + "," + ar2d + "," + ar3d + "\n";
+
+        // Debug.Log(GetGUIAR(Input.mousePosition));
+
+        
+
         // TODO Add it to the data string to get converted over to csv
+
 
         // Update gaze position
         // if (gazePoint.IsValid)
         // {
         //     gazePoint = TobiiAPI.GetGazePoint();
         //     Pixel = gazePoint.Screen;
-
-        //     // add the gaze point to the data string separated by a comma
-        //     dataString += Time.realtimeSinceStartup.ToString() + "," + Pixel.x + "," + Pixel.y + "\n";
+        
+        //     string guiString;
+        //    string ar2d;
+        //    string ar3d;
+        //    (guiString, ar2d, ar3d) = canvasPixelToGui.GetGUIAR(Pixel);
+        //    dataString += Time.realtimeSinceStartup.ToString() + "," + Pixel.x + "," + Pixel.y + "," + guiString + "," + ar2d + "," + ar3d + "\n";
 
         //     // if (gaze != null)
         //     // {
@@ -57,6 +99,8 @@ public class EyeTrackingNavigation : MonoBehaviour
         //     // }
         //}
     }
+
+
 
     void OnDestroy()
     {

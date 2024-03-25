@@ -20,7 +20,7 @@ public class CanvasPixelToGui : MonoBehaviour
     // Quick note, ARObject is both a tag and a layer
     private string stringARTag = "ARObject";
 
-    [SerializeField, ReadOnly] bool ready = false;
+    [SerializeField, ReadOnly] public bool isReady = false;
     void Update()
     {
 
@@ -36,20 +36,20 @@ public class CanvasPixelToGui : MonoBehaviour
             }
         }
 
-        ready = cam != null && cameraRect != null;
+        isReady = cam != null && cameraRect != null;
 
         // Quick Test
         // Left Click
-        if(Input.GetMouseButtonDown(0))
-        {
-            Debug.Log(GetGUIAR(Input.mousePosition));
-        }
+        // if(Input.GetMouseButtonDown(0))
+        // {
+        //     Debug.Log(GetGUIAR(Input.mousePosition));
+        // }
 
     }
 
     public (string, string, string) GetGUIAR(Vector2 pixelPosition)
     {
-        if(!ready)
+        if(!isReady)
         {
             return ("None", "None", "None");
         }
