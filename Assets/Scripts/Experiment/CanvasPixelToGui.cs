@@ -40,17 +40,28 @@ public class CanvasPixelToGui : MonoBehaviour
 
         // Quick Test
         // Left Click
-        // if(Input.GetMouseButtonDown(0))
-        // {
-        //     Debug.Log(GetPixelToGui(Input.mousePosition));
-        //     Debug.Log(GetARGameObject(Input.mousePosition));
-        //     Debug.Log(Input.mousePosition);
-        // }
+        if(Input.GetMouseButtonDown(0))
+        {
+            Debug.Log(GetGUIAR(Input.mousePosition));
+        }
 
     }
 
+    public (string, string, string) GetGUIAR(Vector2 pixelPosition)
+    {
+        if(!ready)
+        {
+            return ("None", "None", "None");
+        }
+
+        (string, string) gui = GetPixelToGui(pixelPosition);
+        (bool, string) ar = Get3DAR(pixelPosition);
+
+        return (gui.Item1, gui.Item2, ar.Item2);
+    }
+
     // Get the name of the gameobject related to the pixel coordinate using the GraphicRaycaster
-    public string GetPixelToGui(Vector2 pixelPosition)
+    private (string, string) GetPixelToGui(Vector2 pixelPosition)
     {
         // Check each gui element
 
@@ -66,12 +77,24 @@ public class CanvasPixelToGui : MonoBehaviour
         if(results.Count > 0)
         {
             // iterate throught the results to get a string connecting the parent gameobject "Canvas" to the hit object
-            return GetPathString(GetPathToCanvas(results[0].gameObject, "Canvas"));
-            // return results[0].gameObject.name;
+            // List<GameObject> guiList= GetPathToCanvas(results[0].gameObject, "Canvas");
+            List<GameObject> guiList = GetPathToCanvas(results[0].gameObject, "Canvas");
+            string guiString = GetPathString(guiList);    
+
+
+            if(guiList.Contains(cameraRect.gameObject) && results[0].gameObject != cameraRect.gameObject)
+            {
+                string mainDisplayToCanvas = GetPathString(GetPathToCanvas(cameraRect.gameObject, "Canvas"));
+                return (cameraRect.gameObject.name, results[0].gameObject.name);
+            }
+
+            return (results[0].gameObject.name, "None");
         }
 
-        return "none";
+        return ("None", "None");
     }
+
+
 
     private List<GameObject> GetPathToCanvas(GameObject obj, string parentName)
     {
@@ -99,7 +122,7 @@ public class CanvasPixelToGui : MonoBehaviour
     }
 
     // Get if a gameobject is selected given a 2D position
-    private (bool, GameObject) GetARGameObject( Vector2 selectedPosition )
+    private (bool, string) Get3DAR( Vector2 selectedPosition )
     {
         // Check if hitting the proper RectTransform
         if (
@@ -108,7 +131,7 @@ public class CanvasPixelToGui : MonoBehaviour
             )
         )
         {
-            return (false, null);
+            return (false, "None");
         }
 
         // Check if we are hitting the ARObject
@@ -119,12 +142,12 @@ public class CanvasPixelToGui : MonoBehaviour
         {
             if (hit.collider.gameObject.tag == stringARTag)
             {
-                return (true, hit.collider.gameObject);
+                return (true, hit.collider.gameObject.name);
             }
             
         }
         
-        return (false, null);
+        return (false, "None");
     }
 
 
